@@ -1,0 +1,3334 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Journal Entry · MCQ Learner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
+    </script>
+    <style>
+        /* ===== RESET & VARIABLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --bg-body: #eef2f7;
+            --glass-bg: rgba(255, 255, 255, 0.50);
+            --glass-border: rgba(255, 255, 255, 0.70);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            --glass-blur: 20px;
+            --text-primary: #1a1a2e;
+            --text-secondary: #3d3d5c;
+            --text-muted: #7a7a9e;
+            --accent-1: #5b4bd5;
+            --accent-2: #0fb88a;
+            --accent-3: #e6a800;
+            --accent-4: #d94f4f;
+            --gradient-1: linear-gradient(135deg, #5b4bd5, #2a7de1);
+            --gradient-2: linear-gradient(135deg, #0fb88a, #1ac0a0);
+            --gradient-3: linear-gradient(135deg, #e6a800, #f0b800);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --radius-xs: 8px;
+            --transition: 0.25s ease;
+            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --font-bn: 'Noto Sans Bengali', 'Bangla', 'SolaimanLipi', sans-serif;
+            --toast-bg: rgba(30, 30, 50, 0.92);
+            --toast-text: #f0f4ff;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px 16px 40px;
+            background-image: radial-gradient(circle at 10% 20%, rgba(91, 75, 213, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(15, 184, 138, 0.06) 0%, transparent 50%);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-body);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-1);
+            border-radius: 10px;
+        }
+
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+            padding: 24px 28px;
+        }
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.10);
+        }
+
+        /* ===== HEADER ===== */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+            padding: 16px 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-1);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.3px;
+        }
+        .logo-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .stat-pill {
+            background: rgba(255, 255, 255, 0.50);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 6px 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(6px);
+        }
+        .stat-pill .num {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        .stat-pill i {
+            font-size: 14px;
+            width: 18px;
+            text-align: center;
+        }
+        .stat-pill .num.points {
+            color: var(--accent-3);
+        }
+        .stat-pill .num.xp {
+            color: var(--accent-1);
+        }
+
+        /* ===== NAV TABS ===== */
+        .nav-tabs {
+            display: flex;
+            gap: 6px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 6px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            box-shadow: var(--glass-shadow);
+        }
+        .nav-tab {
+            padding: 10px 22px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: var(--font);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            flex: 1 1 auto;
+            text-align: center;
+            min-width: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .nav-tab:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.40);
+        }
+        .nav-tab.active {
+            background: var(--gradient-1);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(91, 75, 213, 0.30);
+        }
+        .nav-tab i {
+            font-size: 16px;
+        }
+
+        /* ===== SECTIONS ===== */
+        .section-panel {
+            display: none;
+            animation: fadeUp 0.35s ease;
+        }
+        .section-panel.active {
+            display: block;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== QUIZ ===== */
+        .quiz-container {
+            max-width: 820px;
+            margin: 0 auto;
+        }
+        .quiz-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .quiz-difficulty {
+            display: flex;
+            gap: 8px;
+        }
+        .diff-btn {
+            padding: 6px 18px;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.30);
+            color: var(--text-secondary);
+            font-family: var(--font);
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .diff-btn:hover {
+            background: rgba(255, 255, 255, 0.55);
+            color: var(--text-primary);
+        }
+        .diff-btn.active {
+            background: var(--accent-1);
+            border-color: var(--accent-1);
+            color: #fff;
+        }
+        .diff-btn.easy.active {
+            background: var(--accent-2);
+            border-color: var(--accent-2);
+        }
+        .diff-btn.medium.active {
+            background: var(--accent-3);
+            border-color: var(--accent-3);
+            color: #1a1a2e;
+        }
+        .diff-btn.hard.active {
+            background: var(--accent-4);
+            border-color: var(--accent-4);
+        }
+
+        .quiz-progress-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .quiz-progress-text strong {
+            color: var(--text-primary);
+        }
+
+        /* Business State Mini */
+        .business-mini {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: var(--radius-xs);
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+            transition: var(--transition);
+        }
+        .business-mini.hidden {
+            display: none;
+        }
+        .business-mini span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .business-mini i {
+            color: var(--accent-1);
+            width: 16px;
+        }
+        .business-mini .amt {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Question Card */
+        .question-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            box-shadow: var(--glass-shadow);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+        .transaction-display {
+            font-family: var(--font-bn);
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            padding: 16px 0 8px;
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 70px;
+        }
+        .transaction-display .amount {
+            color: var(--accent-3);
+        }
+        .transaction-display .no-amount {
+            color: var(--text-secondary);
+            font-weight: 400;
+            font-size: 18px;
+        }
+        .account-prompt {
+            text-align: center;
+            font-size: 17px;
+            color: var(--text-secondary);
+            margin: 12px 0 8px;
+        }
+        .account-prompt strong {
+            color: var(--text-primary);
+            font-size: 22px;
+            display: block;
+            margin-top: 4px;
+            font-family: var(--font-bn);
+        }
+        .quiz-options {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        .quiz-opt {
+            padding: 14px 48px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.30);
+            color: var(--text-primary);
+            font-family: var(--font);
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .quiz-opt:hover {
+            background: rgba(255, 255, 255, 0.55);
+            border-color: rgba(255, 255, 255, 0.80);
+            transform: translateY(-2px);
+        }
+        .quiz-opt.debit:hover {
+            border-color: var(--accent-2);
+            box-shadow: 0 0 24px rgba(15, 184, 138, 0.15);
+        }
+        .quiz-opt.credit:hover {
+            border-color: var(--accent-4);
+            box-shadow: 0 0 24px rgba(217, 79, 79, 0.15);
+        }
+        .quiz-opt:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+            transform: none !important;
+        }
+        .quiz-opt.correct {
+            border-color: var(--accent-2) !important;
+            background: rgba(15, 184, 138, 0.20) !important;
+            box-shadow: 0 0 30px rgba(15, 184, 138, 0.15);
+        }
+        .quiz-opt.wrong {
+            border-color: var(--accent-4) !important;
+            background: rgba(217, 79, 79, 0.20) !important;
+            box-shadow: 0 0 30px rgba(217, 79, 79, 0.15);
+        }
+        .quiz-opt.show-correct {
+            border-color: var(--accent-2) !important;
+            background: rgba(15, 184, 138, 0.10) !important;
+        }
+
+        /* Feedback */
+        .feedback-box {
+            margin-top: 24px;
+            padding: 18px 22px;
+            border-radius: var(--radius-sm);
+            display: none;
+            animation: fadeUp 0.3s ease;
+        }
+        .feedback-box.show {
+            display: block;
+        }
+        .feedback-box.correct {
+            background: rgba(15, 184, 138, 0.12);
+            border: 1px solid rgba(15, 184, 138, 0.30);
+        }
+        .feedback-box.wrong {
+            background: rgba(217, 79, 79, 0.12);
+            border: 1px solid rgba(217, 79, 79, 0.30);
+        }
+        .feedback-box .fb-head {
+            font-size: 17px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .feedback-box .fb-head i {
+            font-size: 22px;
+        }
+        .feedback-box .fb-body {
+            margin-top: 8px;
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        .feedback-box .fb-body strong {
+            color: var(--text-primary);
+        }
+        .feedback-box .fb-rule {
+            margin-top: 8px;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.40);
+            border-radius: var(--radius-xs);
+            font-size: 14px;
+            border-left: 3px solid var(--accent-1);
+            color: var(--text-secondary);
+        }
+        .feedback-box .fb-rule strong {
+            color: var(--text-primary);
+        }
+
+        /* Auto-next */
+        .auto-next-indicator {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .auto-next-indicator i {
+            font-size: 14px;
+            color: var(--accent-1);
+        }
+        .auto-next-indicator .countdown {
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 20px;
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: space-between;
+            margin-top: 16px;
+        }
+        .quick-stats span {
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .quick-stats span i {
+            font-size: 14px;
+            width: 18px;
+            text-align: center;
+        }
+        .quick-stats span strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* ===== MODE TOGGLES ===== */
+        .mode-toggles {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .mode-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px 6px 12px;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.30);
+            color: var(--text-secondary);
+            font-family: var(--font);
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .mode-toggle:hover {
+            background: rgba(255, 255, 255, 0.50);
+        }
+        .mode-toggle.active {
+            border-color: var(--accent-1);
+            background: rgba(91, 75, 213, 0.10);
+            color: var(--text-primary);
+        }
+        .mode-toggle .toggle-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            transition: var(--transition);
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .mode-toggle.active .toggle-dot {
+            background: var(--accent-1);
+            box-shadow: 0 0 16px rgba(91, 75, 213, 0.30);
+        }
+        .mode-toggle i {
+            font-size: 14px;
+        }
+
+        /* ===== DASHBOARD ===== */
+        .dash-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .dash-stat {
+            text-align: center;
+            padding: 20px 12px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+        }
+        .dash-stat .val {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .dash-stat .val.green {
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .dash-stat .val.gold {
+            background: var(--gradient-3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .dash-stat .val.accent4 {
+            background: var(--accent-4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .dash-stat .val.points-color {
+            color: var(--accent-3);
+            background: none;
+            -webkit-text-fill-color: var(--accent-3);
+        }
+        .dash-stat .label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* XP Bar */
+        .xp-bar-wrap {
+            background: rgba(255, 255, 255, 0.40);
+            border-radius: 30px;
+            height: 8px;
+            overflow: hidden;
+            margin: 8px 0 4px;
+        }
+        .xp-bar-fill {
+            height: 100%;
+            border-radius: 30px;
+            background: var(--gradient-1);
+            transition: width 0.6s ease;
+            width: 0%;
+        }
+        .xp-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Chart */
+        .chart-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .chart-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .chart-title i {
+            font-size: 18px;
+            color: var(--accent-1);
+        }
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            height: 130px;
+            padding-top: 10px;
+        }
+        .chart-bar-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .chart-bar {
+            width: 100%;
+            max-width: 36px;
+            border-radius: 6px 6px 0 0;
+            min-height: 4px;
+            transition: height 0.6s ease;
+            background: var(--gradient-1);
+        }
+        .chart-bar-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Badges */
+        .badges-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .badge-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px 6px 12px;
+            border-radius: 30px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .badge-item i {
+            font-size: 18px;
+            color: var(--accent-3);
+            width: 22px;
+            text-align: center;
+        }
+        .badge-item.locked {
+            opacity: 0.35;
+            filter: grayscale(0.6);
+        }
+        .badge-item.locked i {
+            color: var(--text-muted);
+        }
+
+        /* Weak Topics */
+        .weak-topic-item {
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.30);
+            border-radius: var(--radius-xs);
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .weak-topic-item .count {
+            color: var(--accent-4);
+            font-weight: 600;
+        }
+
+        /* ===== REVISION ===== */
+        .revision-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .revision-item {
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.30);
+            border-radius: var(--radius-xs);
+            border-left: 3px solid var(--accent-4);
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .revision-item strong {
+            color: var(--text-primary);
+        }
+        .revision-item .meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+        .revision-item .badge-wrong {
+            background: var(--accent-4);
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* ===== LEADERBOARD ===== */
+        .lb-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .lb-table th {
+            text-align: left;
+            padding: 10px 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .lb-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        .lb-table tr:hover td {
+            background: rgba(255, 255, 255, 0.30);
+        }
+        .lb-rank {
+            font-weight: 700;
+            color: var(--accent-3);
+        }
+        .lb-rank.gold {
+            color: #c8a000;
+        }
+        .lb-rank.silver {
+            color: #a0a0b0;
+        }
+        .lb-rank.bronze {
+            color: #b87a40;
+        }
+        .lb-user-row td {
+            background: rgba(91, 75, 213, 0.06);
+        }
+        .lb-filter-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .lb-filter-btn {
+            padding: 6px 18px;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.30);
+            color: var(--text-secondary);
+            font-family: var(--font);
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .lb-filter-btn:hover {
+            background: rgba(255, 255, 255, 0.55);
+        }
+        .lb-filter-btn.active {
+            border-color: var(--accent-1);
+            background: rgba(91, 75, 213, 0.08);
+            color: var(--text-primary);
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        .empty-state i {
+            font-size: 40px;
+            margin-bottom: 12px;
+            opacity: 0.4;
+            color: var(--text-muted);
+        }
+        .empty-state h3 {
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        /* ===== TOAST NOTIFICATION ===== */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+            max-width: 360px;
+            width: 100%;
+        }
+        .toast {
+            background: var(--toast-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: var(--radius-sm);
+            padding: 14px 20px;
+            color: var(--toast-text);
+            font-family: var(--font);
+            font-size: 14px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            transform: translateX(120%);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast.hide {
+            transform: translateX(120%);
+            opacity: 0;
+        }
+        .toast .toast-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+            width: 32px;
+            text-align: center;
+        }
+        .toast .toast-icon.gain {
+            color: var(--accent-2);
+        }
+        .toast .toast-icon.loss {
+            color: var(--accent-4);
+        }
+        .toast .toast-icon.xp-gain {
+            color: var(--accent-1);
+        }
+        .toast .toast-content {
+            flex: 1;
+        }
+        .toast .toast-content .toast-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .toast .toast-content .toast-desc {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+        .toast .toast-content .toast-desc .highlight-gain {
+            color: var(--accent-2);
+            font-weight: 600;
+        }
+        .toast .toast-content .toast-desc .highlight-loss {
+            color: var(--accent-4);
+            font-weight: 600;
+        }
+        .toast .toast-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+            transition: var(--transition);
+            pointer-events: auto;
+        }
+        .toast .toast-close:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* ===== LOGIN OVERLAY ===== */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .login-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .login-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 48px 40px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.20);
+            text-align: center;
+            transform: scale(0.95);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .login-overlay:not(.hidden) .login-card {
+            transform: scale(1);
+        }
+        .login-card .login-icon {
+            font-size: 52px;
+            color: var(--accent-1);
+            margin-bottom: 16px;
+        }
+        .login-card h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+        .login-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+        .login-card .login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 14px 24px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: #fff;
+            color: #1a1a2e;
+            font-family: var(--font);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        .login-card .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+        }
+        .login-card .login-btn i {
+            font-size: 22px;
+            color: #4285f4;
+        }
+        .login-card .login-btn .btn-text {
+            flex: 1;
+            text-align: center;
+        }
+        .login-card .login-loader {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 24px;
+            width: 100%;
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.30);
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+        .login-card .login-loader .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 0, 0, 0.10);
+            border-top-color: var(--accent-1);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== USER AVATAR IN HEADER ===== */
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--glass-border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .user-avatar:hover {
+            border-color: var(--accent-1);
+            transform: scale(1.05);
+        }
+        .user-menu {
+            position: relative;
+            display: inline-block;
+        }
+        .user-dropdown {
+            position: absolute;
+            top: 44px;
+            right: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 12px 0;
+            min-width: 180px;
+            box-shadow: var(--glass-shadow);
+            display: none;
+            z-index: 100;
+        }
+        .user-dropdown.show {
+            display: block;
+        }
+        .user-dropdown .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            background: none;
+            width: 100%;
+            font-family: var(--font);
+            text-align: left;
+        }
+        .user-dropdown .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.20);
+            color: var(--text-primary);
+        }
+        .user-dropdown .dropdown-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 15px;
+            color: var(--accent-1);
+        }
+        .user-dropdown .dropdown-divider {
+            height: 1px;
+            background: var(--glass-border);
+            margin: 6px 16px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px 10px 30px;
+            }
+            .app-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                padding: 16px;
+            }
+            .logo-area {
+                justify-content: center;
+            }
+            .header-stats {
+                justify-content: center;
+                gap: 10px;
+            }
+            .header-stats .stat-pill {
+                font-size: 11px;
+                padding: 4px 10px;
+            }
+            .nav-tabs {
+                gap: 4px;
+                padding: 4px;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+            .nav-tab {
+                padding: 8px 14px;
+                font-size: 13px;
+                min-width: 70px;
+                flex: 0 0 auto;
+                white-space: nowrap;
+            }
+            .nav-tab i {
+                font-size: 13px;
+            }
+            .nav-tab .rev-count {
+                font-size: 10px;
+                padding: 0 6px;
+            }
+            .glass-card {
+                padding: 18px 14px;
+            }
+            .question-card {
+                padding: 20px 14px;
+            }
+            .transaction-display {
+                font-size: 20px;
+                padding: 12px 0;
+                min-height: 60px;
+            }
+            .account-prompt strong {
+                font-size: 20px;
+            }
+            .quiz-opt {
+                padding: 12px 20px;
+                font-size: 15px;
+                min-width: 90px;
+                flex: 1;
+            }
+            .quiz-options {
+                gap: 10px;
+            }
+            .dash-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .dash-stat {
+                padding: 14px 8px;
+            }
+            .dash-stat .val {
+                font-size: 22px;
+            }
+            .chart-bars {
+                height: 100px;
+                gap: 8px;
+            }
+            .logo-text {
+                font-size: 18px;
+            }
+            .stat-pill {
+                font-size: 11px;
+                padding: 4px 12px;
+            }
+            .mode-toggles {
+                justify-content: center;
+            }
+            .quiz-difficulty {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .quiz-header-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .quick-stats {
+                justify-content: center;
+                gap: 8px;
+            }
+            .quick-stats span {
+                font-size: 12px;
+            }
+            .business-mini {
+                font-size: 12px;
+                gap: 4px 12px;
+                padding: 10px 14px;
+            }
+            .toast-container {
+                top: 16px;
+                right: 16px;
+                max-width: 300px;
+            }
+            .toast {
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+            .revision-item {
+                font-size: 13px;
+                padding: 8px 12px;
+            }
+            .login-card {
+                padding: 32px 24px;
+                margin: 0 16px;
+            }
+            .login-card h2 {
+                font-size: 22px;
+            }
+            .lb-table {
+                font-size: 12px;
+            }
+            .lb-table th,
+            .lb-table td {
+                padding: 6px 8px;
+            }
+            .user-avatar {
+                width: 30px;
+                height: 30px;
+            }
+            .user-dropdown {
+                right: -10px;
+                min-width: 160px;
+            }
+        }
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 14px 10px;
+            }
+            .question-card {
+                padding: 16px 12px;
+            }
+            .transaction-display {
+                font-size: 17px;
+                min-height: 50px;
+            }
+            .quiz-opt {
+                padding: 10px 14px;
+                font-size: 13px;
+                min-width: 70px;
+            }
+            .dash-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .dash-stat {
+                padding: 12px 6px;
+            }
+            .dash-stat .val {
+                font-size: 18px;
+            }
+            .feedback-box {
+                padding: 14px 14px;
+            }
+            .feedback-box .fb-head {
+                font-size: 15px;
+            }
+            .toast-container {
+                top: 12px;
+                right: 12px;
+                max-width: 260px;
+            }
+            .toast {
+                padding: 10px 14px;
+                font-size: 12px;
+            }
+            .toast .toast-icon {
+                font-size: 18px;
+                width: 26px;
+            }
+            .revision-item {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+            .login-card {
+                padding: 24px 18px;
+            }
+            .login-card .login-btn {
+                font-size: 14px;
+                padding: 12px 18px;
+            }
+            .lb-table {
+                font-size: 11px;
+            }
+            .lb-table th,
+            .lb-table td {
+                padding: 4px 6px;
+            }
+            .header-stats .stat-pill {
+                font-size: 10px;
+                padding: 3px 8px;
+            }
+            .header-stats .stat-pill .num {
+                font-size: 11px;
+            }
+        }
+
+        .text-center {
+            text-align: center;
+        }
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mt-16 {
+            margin-top: 16px;
+        }
+        .mt-24 {
+            margin-top: 24px;
+        }
+        .flex-wrap {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .items-center {
+            align-items: center;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .w-full {
+            width: 100%;
+        }
+
+        /* ===== REVISION COUNT BADGE ===== */
+        .rev-count {
+            display: inline-block;
+            background: var(--accent-4);
+            color: #fff;
+            font-size: 11px;
+            padding: 0 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+        .rev-count.zero {
+            background: var(--text-muted);
+        }
+
+        /* ===== LOADING SHIMMER ===== */
+        .shimmer-loading {
+            background: linear-gradient(90deg, var(--glass-bg) 25%, rgba(255, 255, 255, 0.15) 50%, var(--glass-bg) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: var(--radius-xs);
+        }
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container" id="app">
+
+        <!-- ===== TOAST CONTAINER ===== -->
+        <div class="toast-container" id="toastContainer"></div>
+
+        <!-- ===== LOGIN OVERLAY ===== -->
+        <div class="login-overlay" id="loginOverlay">
+            <div class="login-card">
+                <div class="login-icon"><i class="fas fa-book-open"></i></div>
+                <h2>Journal Entry</h2>
+                <p>MCQ Learner · Sign in to track your progress, save your stats, and compete on the leaderboard.</p>
+                <button class="login-btn" id="loginBtn">
+                    <i class="fab fa-google"></i>
+                    <span class="btn-text">Sign in with Google</span>
+                </button>
+                <div class="login-loader" id="loginLoader">
+                    <div class="spinner"></div>
+                    <span>Signing in...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== HEADER ===== -->
+        <header class="app-header" id="appHeader">
+            <div class="logo-area">
+                <div class="logo-icon"><i class="fas fa-book-open"></i></div>
+                <div>
+                    <div class="logo-text">Journal Entry</div>
+                    <div class="logo-sub">MCQ Learner</div>
+                </div>
+            </div>
+            <div class="header-stats" id="headerStats">
+                <span class="stat-pill"><i class="fas fa-star"></i> Points <span class="num points" id="hPoints">0</span></span>
+                <span class="stat-pill"><i class="fas fa-bolt"></i> XP <span class="num xp" id="hXp">0</span></span>
+                <span class="stat-pill"><i class="fas fa-trophy"></i> Level <span class="num" id="hLevel">1</span></span>
+                <span class="stat-pill"><i class="fas fa-fire"></i> <span class="num" id="hStreak">0</span></span>
+                <div class="user-menu">
+                    <img class="user-avatar" id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=5b4bd5&color=fff&size=36" alt="User" />
+                    <div class="user-dropdown" id="userDropdown">
+                        <button class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== NAV ===== -->
+        <nav class="nav-tabs" id="navTabs">
+            <button class="nav-tab active" data-section="quiz"><i class="fas fa-pen-fancy"></i> Quiz</button>
+            <button class="nav-tab" data-section="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
+            <button class="nav-tab" data-section="revision"><i class="fas fa-rotate-left"></i> Revision <span class="rev-count zero" id="revCountBadge">0</span></button>
+            <button class="nav-tab" data-section="leaderboard"><i class="fas fa-ranking-star"></i> Leaderboard</button>
+        </nav>
+
+        <!-- ============================================================
+        SECTION: QUIZ
+        ============================================================ -->
+        <section class="section-panel active" id="section-quiz">
+            <div class="quiz-container">
+
+                <div class="quiz-header-bar">
+                    <div class="quiz-difficulty" id="difficultyGroup">
+                        <button class="diff-btn easy active" data-diff="easy"><i class="fas fa-seedling"></i> Easy</button>
+                        <button class="diff-btn medium" data-diff="medium"><i class="fas fa-chart-simple"></i> Medium</button>
+                        <button class="diff-btn hard" data-diff="hard"><i class="fas fa-bolt"></i> Hard</button>
+                    </div>
+                    <div class="quiz-progress-text">
+                        Q <strong id="qNum">1</strong> / <span id="qTotal">10</span>
+                        &nbsp;·&nbsp; <i class="fas fa-check-circle" style="color:var(--accent-2);"></i> <span id="qCorrect">0</span>
+                        &nbsp; <i class="fas fa-times-circle" style="color:var(--accent-4);"></i> <span id="qWrong">0</span>
+                    </div>
+                </div>
+
+                <!-- Business State Mini -->
+                <div class="business-mini" id="businessMini">
+                    <span><i class="fas fa-coins"></i> Cash: <span class="amt" id="bCash">0</span></span>
+                    <span><i class="fas fa-university"></i> Bank: <span class="amt" id="bBank">0</span></span>
+                    <span><i class="fas fa-building"></i> Assets: <span class="amt" id="bAssets">0</span></span>
+                    <span><i class="fas fa-handshake"></i> Liabilities: <span class="amt" id="bLiabilities">0</span></span>
+                    <span><i class="fas fa-user-tie"></i> Capital: <span class="amt" id="bCapital">0</span></span>
+                </div>
+
+                <!-- Mode Toggles -->
+                <div class="mode-toggles">
+                    <button class="mode-toggle" id="smartToggle">
+                        <span class="toggle-dot"></span> <i class="fas fa-brain"></i> Smart Mode
+                    </button>
+                    <button class="mode-toggle" id="revisionToggle">
+                        <span class="toggle-dot"></span> <i class="fas fa-rotate-left"></i> Revision Mode
+                        <span class="rev-count zero" id="revToggleCount">0</span>
+                    </button>
+                </div>
+
+                <!-- Question Card -->
+                <div class="question-card" id="questionCard">
+                    <div class="transaction-display" id="transactionDisplay">
+                        Loading...
+                    </div>
+                    <div class="account-prompt">
+                        Which account is <strong>Debit</strong> or <strong>Credit</strong>?
+                        <strong id="accountName">—</strong>
+                    </div>
+
+                    <div class="quiz-options" id="quizOptions">
+                        <button class="quiz-opt debit" data-answer="debit"><i class="fas fa-arrow-right"></i> Debit</button>
+                        <button class="quiz-opt credit" data-answer="credit"><i class="fas fa-arrow-left"></i> Credit</button>
+                    </div>
+
+                    <div class="feedback-box" id="feedbackBox">
+                        <div class="fb-head"><i class="fas fa-check-circle" id="fbIcon"></i> <span id="fbTitle">Correct!</span></div>
+                        <div class="fb-body" id="fbBody">Explanation...</div>
+                        <div class="fb-rule" id="fbRule">Rule: Asset ↑ = Debit</div>
+                    </div>
+
+                    <div class="auto-next-indicator" id="autoNextIndicator">
+                        <i class="fas fa-clock"></i> Next question in <span class="countdown" id="countdownNum">2</span>s
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="glass-card" style="margin-top:16px;">
+                    <div class="quick-stats">
+                        <span><i class="fas fa-check-circle" style="color:var(--accent-2);"></i> Correct: <strong id="qCorr2">0</strong></span>
+                        <span><i class="fas fa-times-circle" style="color:var(--accent-4);"></i> Wrong: <strong id="qWron2">0</strong></span>
+                        <span><i class="fas fa-bullseye" style="color:var(--accent-3);"></i> Accuracy: <strong id="qAcc2">0%</strong></span>
+                        <span><i class="fas fa-fire" style="color:var(--accent-4);"></i> Streak: <strong id="qStreak2">0</strong></span>
+                        <span><i class="fas fa-crown" style="color:var(--accent-3);"></i> Best: <strong id="qBestStreak2">0</strong></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+        SECTION: DASHBOARD
+        ============================================================ -->
+        <section class="section-panel" id="section-dashboard">
+            <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+                <i class="fas fa-chart-pie" style="color:var(--accent-1);"></i> Dashboard
+            </h2>
+            <div class="dash-grid" id="dashGrid">
+                <div class="dash-stat"><div class="val" id="dTotal">0</div><div class="label">Total Q</div></div>
+                <div class="dash-stat"><div class="val green" id="dCorrect">0</div><div class="label">Correct</div></div>
+                <div class="dash-stat"><div class="val accent4" id="dWrong">0</div><div class="label">Wrong</div></div>
+                <div class="dash-stat"><div class="val gold" id="dAccuracy">0%</div><div class="label">Accuracy</div></div>
+                <div class="dash-stat"><div class="val" id="dPoints">0</div><div class="label">Points</div></div>
+                <div class="dash-stat"><div class="val" id="dXp">0</div><div class="label">XP</div></div>
+                <div class="dash-stat"><div class="val gold" id="dLevel">1</div><div class="label">Level</div></div>
+                <div class="dash-stat"><div class="val" id="dStreak">0</div><div class="label">Streak</div></div>
+            </div>
+
+            <div class="glass-card" style="margin-bottom:20px;">
+                <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--text-secondary);">
+                    <span><i class="fas fa-bolt" style="color:var(--accent-1);"></i> XP Progress</span>
+                    <span id="xpProgressText">0 / 100</span>
+                </div>
+                <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBarFill" style="width:0%;"></div></div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title"><i class="fas fa-chart-line"></i> Accuracy (last 7 days)</div>
+                <div class="chart-bars" id="accuracyChart"></div>
+            </div>
+
+            <div class="glass-card" style="margin-bottom:20px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                    <span style="font-weight:600;"><i class="fas fa-award" style="color:var(--accent-3);"></i> Badges</span>
+                    <span style="font-size:13px;color:var(--text-muted);" id="badgeCount">0 / 6</span>
+                </div>
+                <div class="badges-grid" id="badgesGrid"></div>
+            </div>
+
+            <div class="glass-card">
+                <div style="font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+                    <i class="fas fa-triangle-exclamation" style="color:var(--accent-4);"></i> Weak Topics
+                </div>
+                <div id="weakTopics" class="text-center" style="color:var(--text-muted);padding:12px 0;">
+                    No weak topics identified yet.
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+        SECTION: REVISION
+        ============================================================ -->
+        <section class="section-panel" id="section-revision">
+            <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+                <i class="fas fa-rotate-left" style="color:var(--accent-1);"></i> Revision Mode
+            </h2>
+            <div class="glass-card">
+                <p style="color:var(--text-secondary);margin-bottom:16px;">
+                    Your wrong answers are saved to the cloud. Activate <strong>Revision Mode</strong> in the Quiz to
+                    practice these questions again. Correct answers will be removed from the list.
+                </p>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+                    <button class="mode-toggle active" id="revisionModeBtn" style="margin-bottom:0;">
+                        <span class="toggle-dot" style="background:var(--accent-1);"></span>
+                        <i class="fas fa-rotate-left"></i> Revision Mode Active
+                    </button>
+                    <button class="mode-toggle" id="refreshRevisionBtn" style="margin-bottom:0;">
+                        <i class="fas fa-sync"></i> Refresh
+                    </button>
+                </div>
+                <div id="revisionListContainer">
+                    <div class="revision-list" id="revisionList">
+                        <div class="empty-state" style="padding:20px;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <h3>Loading...</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+        SECTION: LEADERBOARD
+        ============================================================ -->
+        <section class="section-panel" id="section-leaderboard">
+            <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+                <i class="fas fa-ranking-star" style="color:var(--accent-1);"></i> Leaderboard
+            </h2>
+            <div class="glass-card">
+                <div class="lb-filter-group" id="lbFilterGroup">
+                    <button class="lb-filter-btn active" data-lb="xp"><i class="fas fa-bolt"></i> Top XP</button>
+                    <button class="lb-filter-btn" data-lb="points"><i class="fas fa-star"></i> Top Points</button>
+                    <button class="lb-filter-btn" data-lb="accuracy"><i class="fas fa-bullseye"></i> Top Accuracy</button>
+                </div>
+                <div id="leaderboardContainer">
+                    <table class="lb-table">
+                        <thead><tr><th>#</th><th>User</th><th>XP</th><th>Points</th><th>Accuracy</th></tr></thead>
+                        <tbody id="lbBody"></tbody>
+                    </table>
+                    <div id="lbEmpty" class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No data yet</h3>
+                        <p>Complete some quizzes to appear on the leaderboard!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT – COMPLETE SYSTEM with FIREBASE AUTH & FIRESTORE
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // 0. FIREBASE INITIALIZATION
+        // ================================================================
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCvEyo8iJg-sGb5MVINjTR_q3ANMPeTd0o",
+            authDomain: "javeda-21ddd.firebaseapp.com",
+            projectId: "javeda-21ddd",
+            storageBucket: "javeda-21ddd.firebasestorage.app",
+            messagingSenderId: "72745884521",
+            appId: "1:72745884521:web:cd6c4818b97cc4ec8dbbf8",
+            measurementId: "G-J4Y1WJBL6K"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // ================================================================
+        // 1. ACCOUNTING RULES & DATA (same as before)
+        // ================================================================
+
+        const ACCOUNT_RULES = {
+            asset: { increase: 'debit', decrease: 'credit', label: 'Asset' },
+            liability: { increase: 'credit', decrease: 'debit', label: 'Liability' },
+            capital: { increase: 'credit', decrease: 'debit', label: 'Capital' },
+            revenue: { increase: 'credit', decrease: 'debit', label: 'Revenue' },
+            expense: { increase: 'debit', decrease: 'credit', label: 'Expense' },
+            drawing: { increase: 'debit', decrease: 'credit', label: 'Drawing' }
+        };
+
+        const ACCOUNT_NAMES = {
+            asset: ['Cash', 'Bank', 'Furniture', 'Computer', 'Equipment', 'Building', 'Land', 'Inventory', 'Office Supplies'],
+            liability: ['Creditors', 'Bank Loan', 'Salary Payable', 'Rent Payable', 'Debentures'],
+            capital: ['Capital', 'Drawings'],
+            revenue: ['Service Revenue', 'Commission Revenue', 'Rent Revenue', 'Sales Revenue', 'Interest Revenue'],
+            expense: ['Salary', 'Electricity Bill', 'Rent', 'Transport', 'Advertisement', 'Insurance', 'Repairs',
+                'Office Expenses'
+            ],
+            drawing: ['Drawings']
+        };
+
+        const BENGALI_NAMES = {
+            'Cash': 'নগদান',
+            'Bank': 'ব্যাংক',
+            'Furniture': 'আসবাবপত্র',
+            'Computer': 'কম্পিউটার',
+            'Equipment': 'যন্ত্রপাতি',
+            'Building': 'ভবন',
+            'Land': 'জমি',
+            'Inventory': 'পণ্য',
+            'Office Supplies': 'অফিস সরঞ্জাম',
+            'Creditors': 'পাওনাদার',
+            'Bank Loan': 'ব্যাংক ঋণ',
+            'Salary Payable': 'বকেয়া বেতন',
+            'Rent Payable': 'বকেয়া ভাড়া',
+            'Debentures': 'ঋণপত্র',
+            'Capital': 'মূলধন',
+            'Drawings': 'উত্তোলন',
+            'Service Revenue': 'সেবা আয়',
+            'Commission Revenue': 'কমিশন আয়',
+            'Rent Revenue': 'ভাড়া আয়',
+            'Sales Revenue': 'বিক্রয় আয়',
+            'Interest Revenue': 'সুদের আয়',
+            'Salary': 'বেতন',
+            'Electricity Bill': 'বিদ্যুৎ বিল',
+            'Rent': 'ভাড়া',
+            'Transport': 'পরিবহন খরচ',
+            'Advertisement': 'বিজ্ঞাপন ব্যয়',
+            'Insurance': 'বিমা খরচ',
+            'Repairs': 'মেরামত খরচ',
+            'Office Expenses': 'অফিস খরচ'
+        };
+
+        // Easy mode templates
+        const EASY_TEMPLATES = {
+            asset: { increase: 'নগদে {account} ক্রয় করা হয়েছে', decrease: 'নগদে {account} বিক্রয় করা হয়েছে' },
+            liability: { increase: '{account} তৈরি হয়েছে', decrease: '{account} পরিশোধ করা হয়েছে' },
+            capital: { increase: 'মালিক {account} এ বিনিয়োগ করেছেন', decrease: 'মালিক {account} উত্তোলন করেছেন' },
+            revenue: { increase: '{account} প্রাপ্তি হয়েছে', decrease: '{account} ফেরত দেওয়া হয়েছে' },
+            expense: { increase: '{account} খরচ হয়েছে', decrease: '{account} খরচ কমেছে' },
+            drawing: { increase: 'মালিক উত্তোলন করেছেন', decrease: 'মালিক উত্তোলন ফেরত দিয়েছেন' }
+        };
+
+        // ================================================================
+        // 2. BUSINESS STATE
+        // ================================================================
+
+        class Business {
+            constructor() {
+                this.cash = 500000;
+                this.bank = 200000;
+                this.assets = {
+                    'Furniture': 30000,
+                    'Computer': 50000,
+                    'Equipment': 40000,
+                    'Building': 0,
+                    'Land': 0,
+                    'Inventory': 60000,
+                    'Office Supplies': 10000
+                };
+                this.liabilities = {
+                    'Creditors': 20000,
+                    'Bank Loan': 0,
+                    'Salary Payable': 0,
+                    'Rent Payable': 0
+                };
+                this.capital = 650000;
+                this.revenue = 0;
+                this.expenses = 0;
+                this.name = 'ABC Trading';
+            }
+
+            get totalAssets() {
+                let sum = this.cash + this.bank;
+                for (const k in this.assets) sum += this.assets[k];
+                return sum;
+            }
+            get totalLiabilities() {
+                let sum = 0;
+                for (const k in this.liabilities) sum += this.liabilities[k];
+                return sum;
+            }
+            get equity() { return this.capital + this.revenue - this.expenses; }
+
+            addAsset(name, amount) {
+                if (!this.assets[name]) this.assets[name] = 0;
+                this.assets[name] += amount;
+            }
+            subAsset(name, amount) {
+                if (this.assets[name]) this.assets[name] -= amount;
+                if (this.assets[name] < 0) this.assets[name] = 0;
+            }
+            addLiability(name, amount) {
+                if (!this.liabilities[name]) this.liabilities[name] = 0;
+                this.liabilities[name] += amount;
+            }
+            subLiability(name, amount) {
+                if (this.liabilities[name]) this.liabilities[name] -= amount;
+                if (this.liabilities[name] < 0) this.liabilities[name] = 0;
+            }
+            addCash(amount) { this.cash += amount; }
+            subCash(amount) { this.cash -= amount; }
+            addBank(amount) { this.bank += amount; }
+            subBank(amount) { this.bank -= amount; }
+            addCapital(amount) { this.capital += amount; }
+            subCapital(amount) { this.capital -= amount; }
+            addRevenue(amount) { this.revenue += amount; }
+            addExpense(amount) { this.expenses += amount; }
+
+            clone() {
+                const b = new Business();
+                Object.assign(b, this);
+                b.assets = { ...this.assets };
+                b.liabilities = { ...this.liabilities };
+                return b;
+            }
+            getDisplay() {
+                return {
+                    cash: this.cash,
+                    bank: this.bank,
+                    assets: this.totalAssets,
+                    liabilities: this.totalLiabilities,
+                    capital: this.equity
+                };
+            }
+        }
+
+        // ================================================================
+        // 3. HELPERS
+        // ================================================================
+
+        function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        function getRuleExplanation(accountType, effect, accountName) {
+            const rule = ACCOUNT_RULES[accountType];
+            const typeLabel = rule ? rule.label : 'Account';
+            const effectLabel = effect === 'increase' ? 'increases' : 'decreases';
+            const answer = rule ? rule[effect] : 'debit';
+            const answerLabel = answer === 'debit' ? 'Debit' : 'Credit';
+            return {
+                answer: answer,
+                explanation: `"${accountName}" is an ${typeLabel}. When ${typeLabel} ${effectLabel}, it is ${answerLabel}.`,
+                ruleText: `${typeLabel} ${effectLabel} = ${answerLabel}`
+            };
+        }
+
+        function getXPThreshold(level) {
+            if (level <= 1) return 0;
+            return 100 + (level - 2) * 10;
+        }
+
+        function calculateLevel(xp) {
+            let level = 1;
+            while (xp >= getXPThreshold(level + 1)) level++;
+            return level;
+        }
+
+        function getNextLevelXP(level) { return getXPThreshold(level + 1); }
+
+        function getRewards(difficulty, isCorrect) {
+            const rules = {
+                'easy': { points: 5, xp: 2, penalty: 2 },
+                'medium': { points: 10, xp: 5, penalty: 5 },
+                'hard': { points: 15, xp: 8, penalty: 10 }
+            };
+            const rule = rules[difficulty] || rules['easy'];
+            if (isCorrect) return { points: rule.points, xp: rule.xp };
+            else return { points: -rule.penalty, xp: 0 };
+        }
+
+        function checkBadges(data) {
+            const badges = [];
+            const total = data.correct + data.wrong;
+            const acc = total > 0 ? (data.correct / total) : 0;
+            if (data.totalQuestions >= 10) badges.push({ id: 'beginner', icon: 'fa-seedling', label: 'Beginner' });
+            if (data.totalQuestions >= 50) badges.push({ id: 'learner', icon: 'fa-book', label: 'Learner' });
+            if (data.totalQuestions >= 100) badges.push({ id: 'scholar', icon: 'fa-graduation-cap', label: 'Scholar' });
+            if (data.correct >= 20 && total >= 25 && acc >= 0.8) badges.push({ id: 'accurate', icon: 'fa-bullseye',
+                label: 'Accurate' });
+            if (data.streak >= 5) badges.push({ id: 'streak5', icon: 'fa-fire', label: 'Streak 5' });
+            if (data.streak >= 10) badges.push({ id: 'streak10', icon: 'fa-bolt', label: 'Streak 10' });
+            if (data.level >= 3) badges.push({ id: 'level3', icon: 'fa-star', label: 'Level 3' });
+            if (data.level >= 5) badges.push({ id: 'level5', icon: 'fa-crown', label: 'Level 5' });
+            const seen = new Set();
+            return badges.filter(b => { if (seen.has(b.id)) return false;
+                seen.add(b.id); return true; });
+        }
+
+        function analyzeWeakRules(data) {
+            const weakTypes = {};
+            const history = data.quizHistory || [];
+            for (const entry of history) {
+                if (entry.userAnswer !== entry.correctAnswer) {
+                    weakTypes[entry.type] = (weakTypes[entry.type] || 0) + 1;
+                }
+            }
+            return { weakTypes };
+        }
+
+        // ================================================================
+        // 4. TRANSACTION GENERATOR
+        // ================================================================
+
+        function generateEasyTransaction() {
+            const categories = ['asset', 'liability', 'capital', 'revenue', 'expense', 'drawing'];
+            const category = pickRandom(categories);
+            let account = pickRandom(ACCOUNT_NAMES[category] || ['Account']);
+            const effect = pickRandom(['increase', 'decrease']);
+            const templates = EASY_TEMPLATES[category] || EASY_TEMPLATES.asset;
+            let template = templates[effect] || templates.increase;
+            if (category === 'drawing') {
+                account = 'Drawings';
+                template = effect === 'increase' ? 'মালিক উত্তোলন করেছেন' : 'মালিক উত্তোলন ফেরত দিয়েছেন';
+            }
+            let desc = template.replace('{account}', BENGALI_NAMES[account] || account);
+            const rule = ACCOUNT_RULES[category];
+            const correctAnswer = rule ? rule[effect] : 'debit';
+            const askAboutCash = Math.random() < 0.3;
+            let questionAccount = account,
+                questionType = category,
+                questionEffect = effect;
+            if (askAboutCash && (desc.includes('নগদে') || desc.includes('নগद'))) {
+                questionAccount = 'Cash';
+                questionType = 'asset';
+                if (category === 'asset' && effect === 'increase') questionEffect = 'decrease';
+                else if (category === 'asset' && effect === 'decrease') questionEffect = 'increase';
+                else if (category === 'expense' && effect === 'increase') questionEffect = 'decrease';
+                else if (category === 'expense' && effect === 'decrease') questionEffect = 'increase';
+                else if (category === 'liability' && effect === 'increase') questionEffect = 'increase';
+                else if (category === 'liability' && effect === 'decrease') questionEffect = 'decrease';
+                else if (category === 'capital' && effect === 'increase') questionEffect = 'increase';
+                else if (category === 'capital' && effect === 'decrease') questionEffect = 'decrease';
+                else if (category === 'revenue' && effect === 'increase') questionEffect = 'increase';
+                else if (category === 'revenue' && effect === 'decrease') questionEffect = 'decrease';
+                else questionEffect = effect === 'increase' ? 'decrease' : 'increase';
+            }
+            return {
+                type: 'easy_' + category + '_' + effect,
+                method: 'none',
+                accountType: category,
+                effect: effect,
+                account: account,
+                amount: 0,
+                desc: desc,
+                display: desc,
+                noAmount: true,
+                isEasy: true,
+                primaryType: category,
+                primaryEffect: effect,
+                questionAccount: questionAccount,
+                questionType: questionType,
+                questionEffect: questionEffect,
+                category: category
+            };
+        }
+
+        function generateRegularTransaction(business, difficulty) {
+            const isHard = difficulty === 'hard';
+            let allowedTypes = ['asset', 'expense'];
+            if (difficulty === 'medium') allowedTypes = ['asset', 'expense', 'liability', 'revenue'];
+            else if (isHard) allowedTypes = ['asset', 'expense', 'liability', 'revenue', 'capital'];
+            const types = [];
+            const assetKeys = Object.keys(business.assets);
+            const availAssets = assetKeys.filter(k => business.assets[k] !== undefined);
+            if (availAssets.length > 0) {
+                if (business.cash > 1000) types.push({ type: 'purchase_asset_cash', method: 'cash', accountType: 'asset',
+                        effect: 'increase', desc: (a, amt) =>
+                            `${BENGALI_NAMES[a] || a} ক্রয় করা হয়েছে নগদে ${amt.toLocaleString()} টাকা`, hasAmount: true });
+                if (business.bank > 1000) types.push({ type: 'purchase_asset_bank', method: 'bank', accountType: 'asset',
+                        effect: 'increase', desc: (a, amt) =>
+                            `${BENGALI_NAMES[a] || a} ক্রয় করা হয়েছে ব্যাংক থেকে ${amt.toLocaleString()} টাকা`, hasAmount: true });
+            }
+            const liabKeys = Object.keys(business.liabilities).filter(k => business.liabilities[k] > 500);
+            if (liabKeys.length > 0) {
+                if (business.cash > 500) types.push({ type: 'pay_liability_cash', method: 'cash', accountType: 'liability',
+                        effect: 'decrease', desc: (a, amt) =>
+                            `${BENGALI_NAMES[a] || a} পরিশোধ করা হয়েছে নগদে ${amt.toLocaleString()} টাকা`, hasAmount: true });
+                if (business.bank > 500) types.push({ type: 'pay_liability_bank', method: 'bank', accountType: 'liability',
+                        effect: 'decrease', desc: (a, amt) =>
+                            `${BENGALI_NAMES[a] || a} পরিশোধ করা হয়েছে ব্যাংক থেকে ${amt.toLocaleString()} টাকা`, hasAmount: true });
+            }
+            const revNames = ['Service Revenue', 'Commission Revenue', 'Rent Revenue', 'Sales Revenue', 'Interest Revenue'];
+            if (business.cash < 2000000) types.push({ type: 'revenue_cash', method: 'cash', accountType: 'revenue',
+                    effect: 'increase', desc: (a, amt) =>
+                        `${BENGALI_NAMES[a] || a} হিসেবে নগদ প্রাপ্তি ${amt.toLocaleString()} টাকা`, hasAmount: true });
+            if (business.bank < 2000000) types.push({ type: 'revenue_bank', method: 'bank', accountType: 'revenue',
+                    effect: 'increase', desc: (a, amt) =>
+                        `${BENGALI_NAMES[a] || a} হিসেবে ব্যাংক প্রাপ্তি ${amt.toLocaleString()} টাকা`, hasAmount: true });
+            const expNames = ['Salary', 'Electricity Bill', 'Rent', 'Transport', 'Advertisement', 'Insurance', 'Repairs',
+                'Office Expenses'
+            ];
+            if (business.cash > 500) types.push({ type: 'expense_cash', method: 'cash', accountType: 'expense',
+                    effect: 'increase', desc: (a, amt) =>
+                        `${BENGALI_NAMES[a] || a} পরিশোধ করা হয়েছে নগদে ${amt.toLocaleString()} টাকা`, hasAmount: true });
+            if (business.bank > 500) types.push({ type: 'expense_bank', method: 'bank', accountType: 'expense',
+                    effect: 'increase', desc: (a, amt) =>
+                        `${BENGALI_NAMES[a] || a} পরিশোধ করা হয়েছে ব্যাংক থেকে ${amt.toLocaleString()} টাকা`, hasAmount: true });
+            if (isHard) {
+                if (business.cash < 2000000) types.push({ type: 'capital_invest', method: 'cash', accountType: 'capital',
+                        effect: 'increase', desc: (a, amt) =>
+                            `মালিক ${BENGALI_NAMES[a] || a} এ বিনিয়োগ করেছেন ${amt.toLocaleString()} টাকা`, hasAmount: true });
+                if (business.cash > 10000 && business.capital > 10000) types.push({ type: 'capital_withdraw',
+                        method: 'cash', accountType: 'capital', effect: 'decrease', desc: (a, amt) =>
+                            `মালিক উত্তোলন করেছেন ${amt.toLocaleString()} টাকা`, hasAmount: true });
+                if (business.liabilities['Bank Loan'] < 500000 && business.bank < 2000000) types.push({ type: 'bank_loan',
+                        method: 'bank', accountType: 'liability', effect: 'increase', desc: (a, amt) =>
+                            `ব্যাংক ঋণ গ্রহণ করা হয়েছে ${amt.toLocaleString()} টাকা`, hasAmount: true });
+                const assetsWithVal = Object.keys(business.assets).filter(k => business.assets[k] > 1000);
+                if (assetsWithVal.length > 0) types.push({ type: 'sell_asset_cash', method: 'cash', accountType: 'asset',
+                        effect: 'decrease', desc: (a, amt) =>
+                            `${BENGALI_NAMES[a] || a} বিক্রয় করা হয়েছে নগদে ${amt.toLocaleString()} টাকা`, hasAmount: true });
+            }
+            if (types.length === 0) {
+                return { type: 'revenue_cash', method: 'cash', accountType: 'revenue', effect: 'increase',
+                    account: 'Service Revenue', amount: 5000, desc: `সেবা আয় হিসেবে নগদ প্রাপ্তি ৫,০০০ টাকা`,
+                    display: `সেবা আয় হিসেবে নগদ প্রাপ্তি ৫,০০০ টাকা`, hasAmount: true, noAmount: false, isEasy: false };
+            }
+            const chosen = pickRandom(types);
+            let amount = 0,
+                account = '';
+            let maxAmt = 50000;
+            if (chosen.method === 'cash') maxAmt = Math.min(50000, business.cash * 0.4);
+            else if (chosen.method === 'bank') maxAmt = Math.min(50000, business.bank * 0.4);
+            if (chosen.accountType === 'liability' && chosen.effect === 'decrease') {
+                const liabKeys2 = Object.keys(business.liabilities).filter(k => business.liabilities[k] > 0);
+                if (liabKeys2.length > 0) maxAmt = Math.min(maxAmt, Math.max(...liabKeys2.map(k => business.liabilities[
+                    k])));
+            }
+            if (chosen.type === 'sell_asset_cash') {
+                const assetsWithVal2 = Object.keys(business.assets).filter(k => business.assets[k] > 1000);
+                if (assetsWithVal2.length > 0) maxAmt = Math.min(maxAmt, Math.max(...assetsWithVal2.map(k => business
+                    .assets[k])));
+            }
+            const minAmt = 500;
+            amount = Math.max(500, Math.min(50000, Math.round((minAmt + Math.random() * (maxAmt - minAmt)) / 500) * 500));
+            if (chosen.method === 'cash' && amount > business.cash * 0.5) amount = Math.floor(business.cash * 0.3);
+            if (chosen.method === 'bank' && amount > business.bank * 0.5) amount = Math.floor(business.bank * 0.3);
+            amount = Math.max(500, Math.min(50000, amount));
+            if (chosen.accountType === 'asset') {
+                const avail = Object.keys(business.assets).filter(k => {
+                    if (chosen.effect === 'increase') return true;
+                    return business.assets[k] >= amount;
+                });
+                account = pickRandom(avail.length > 0 ? avail : Object.keys(business.assets));
+            } else if (chosen.accountType === 'liability') {
+                const avail = Object.keys(business.liabilities).filter(k => {
+                    if (chosen.effect === 'increase') return true;
+                    return business.liabilities[k] >= amount;
+                });
+                account = pickRandom(avail.length > 0 ? avail : Object.keys(business.liabilities));
+            } else if (chosen.accountType === 'revenue') account = pickRandom(revNames);
+            else if (chosen.accountType === 'expense') account = pickRandom(expNames);
+            else if (chosen.accountType === 'capital') account = chosen.effect === 'increase' ? 'Capital' : 'Drawings';
+            let desc = chosen.desc(account, amount);
+            let otherAccount = '',
+                otherType = '';
+            if (chosen.method === 'cash') { otherAccount = 'Cash';
+                otherType = 'asset'; } else if (chosen.method === 'bank') { otherAccount = 'Bank';
+                otherType = 'asset'; }
+            let secEffect = 'decrease';
+            if (chosen.type === 'revenue_cash' || chosen.type === 'revenue_bank' ||
+                chosen.type === 'sell_asset_cash' || chosen.type === 'capital_invest' || chosen.type === 'bank_loan')
+                secEffect = 'increase';
+            return {
+                ...chosen,
+                account: account,
+                amount: amount,
+                desc: desc,
+                display: desc,
+                otherAccount: otherAccount,
+                otherType: otherType,
+                noAmount: false,
+                isEasy: false,
+                primaryType: chosen.accountType,
+                primaryEffect: chosen.effect,
+                secondaryType: otherType,
+                secondaryEffect: secEffect,
+                hasAmount: true
+            };
+        }
+
+        function generateTransaction(business, difficulty, weakTypes) {
+            if (difficulty === 'easy') return generateEasyTransaction();
+            let trans = generateRegularTransaction(business, difficulty);
+            if (weakTypes && Object.keys(weakTypes).length > 0) {
+                const weakType = pickRandom(Object.keys(weakTypes));
+                for (let attempt = 0; attempt < 4; attempt++) {
+                    const testTrans = generateRegularTransaction(business, difficulty);
+                    if (testTrans.primaryType === weakType) { trans = testTrans; break; }
+                }
+            }
+            return trans;
+        }
+
+        function applyTransaction(business, transaction) {
+            const b = business.clone();
+            const { type, method, accountType, effect, account, amount } = transaction;
+            if (transaction.isEasy) {
+                if (accountType === 'asset' && effect === 'increase') b.addAsset(account, 1000);
+                else if (accountType === 'asset' && effect === 'decrease') b.subAsset(account, 1000);
+                else if (accountType === 'expense' && effect === 'increase') b.addExpense(1000);
+                else if (accountType === 'liability' && effect === 'increase') b.addLiability(account, 1000);
+                else if (accountType === 'liability' && effect === 'decrease') b.subLiability(account, 1000);
+                else if (accountType === 'revenue' && effect === 'increase') b.addRevenue(1000);
+                else if (accountType === 'capital' && effect === 'increase') b.addCapital(1000);
+                else if (accountType === 'capital' && effect === 'decrease') b.subCapital(1000);
+                else if (accountType === 'drawing') { if (effect === 'increase') b.subCapital(1000);
+                    else b.addCapital(1000); }
+                return b;
+            }
+            if (accountType === 'asset') { if (effect === 'increase') b.addAsset(account, amount);
+                else b.subAsset(account, amount); } else if (accountType === 'liability') { if (effect === 'increase') b
+                    .addLiability(account, amount);
+                else b.subLiability(account, amount); } else if (accountType === 'capital') { if (effect === 'increase') b
+                    .addCapital(amount);
+                else b.subCapital(amount); } else if (accountType === 'revenue') b.addRevenue(amount);
+            else if (accountType === 'expense') b.addExpense(amount);
+            if (method === 'cash' && amount > 0) {
+                if (type.includes('purchase') || type.includes('pay') || type.includes('expense') || type ===
+                    'capital_withdraw') b.subCash(amount);
+                else if (type === 'revenue_cash' || type === 'sell_asset_cash' || type === 'capital_invest') b.addCash(
+                    amount);
+            } else if (method === 'bank' && amount > 0) {
+                if (type.includes('purchase') || type.includes('pay') || type.includes('expense')) b.subBank(amount);
+                else if (type === 'revenue_bank' || type === 'bank_loan') b.addBank(amount);
+            }
+            return b;
+        }
+
+        // ================================================================
+        // 5. TOAST SYSTEM
+        // ================================================================
+
+        function showToast(title, desc, icon, type) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            const iconClass = type === 'gain' ? 'gain' : (type === 'loss' ? 'loss' : 'xp-gain');
+            toast.innerHTML =
+                `<div class="toast-icon ${iconClass}"><i class="fas ${icon}"></i></div><div class="toast-content"><div class="toast-title">${title}</div><div class="toast-desc">${desc}</div></div><button class="toast-close"><i class="fas fa-times"></i></button>`;
+            container.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.add('show'));
+            toast.querySelector('.toast-close').addEventListener('click', () => dismissToast(toast));
+            const timeout = setTimeout(() => dismissToast(toast), 3000);
+            toast._timeout = timeout;
+            const toasts = container.querySelectorAll('.toast');
+            if (toasts.length > 3) dismissToast(toasts[0]);
+        }
+
+        function dismissToast(toast) {
+            if (toast._dismissed) return;
+            toast._dismissed = true;
+            if (toast._timeout) { clearTimeout(toast._timeout);
+                toast._timeout = null; }
+            toast.classList.remove('show');
+            toast.classList.add('hide');
+            setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 400);
+        }
+
+        function showPointsToast(pointsChange, xpChange, isCorrect) {
+            let title = isCorrect ? 'Correct!' : 'Wrong!';
+            let icon = isCorrect ? 'fa-check-circle' : 'fa-times-circle';
+            let type = isCorrect ? 'gain' : 'loss';
+            let descParts = [];
+            if (pointsChange > 0) descParts.push(`<span class="highlight-gain">+${pointsChange} pts</span>`);
+            else if (pointsChange < 0) descParts.push(`<span class="highlight-loss">${pointsChange} pts</span>`);
+            if (xpChange > 0) descParts.push(`<span class="highlight-gain">+${xpChange} XP</span>`);
+            const desc = descParts.length > 0 ? descParts.join(' · ') : 'No change';
+            showToast(title, desc, icon, type);
+        }
+
+        // ================================================================
+        // 6. FIRESTORE USER DATA & REVISION
+        // ================================================================
+
+        const USERS_COLLECTION = 'users';
+        const REVISION_COLLECTION = 'revisionQuestions';
+
+        async function saveUserStats(userId, data) {
+            try {
+                const userRef = db.collection(USERS_COLLECTION).doc(userId);
+                await userRef.set({
+                    displayName: auth.currentUser ? auth.currentUser.displayName || 'User' : 'User',
+                    photoURL: auth.currentUser ? auth.currentUser.photoURL || '' : '',
+                    email: auth.currentUser ? auth.currentUser.email || '' : '',
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    ...data
+                }, { merge: true });
+                return true;
+            } catch (e) { console.error('Save user stats error:', e); return false; }
+        }
+
+        async function saveRevisionQuestion(questionData, transactionData) {
+            try {
+                const doc = {
+                    userId: auth.currentUser ? auth.currentUser.uid : 'anonymous',
+                    timestamp: Date.now(),
+                    question: {
+                        accountName: questionData.accountName,
+                        accountType: questionData.accountType,
+                        effect: questionData.effect,
+                        correctAnswer: questionData.correctAnswer,
+                        explanation: questionData.explanation,
+                        ruleText: questionData.ruleText,
+                        isEasy: questionData.isEasy || false,
+                    },
+                    transaction: {
+                        display: transactionData.display || transactionData.desc,
+                        account: transactionData.account,
+                        accountType: transactionData.accountType,
+                        effect: transactionData.effect,
+                        isEasy: transactionData.isEasy || false,
+                        desc: transactionData.desc,
+                        category: transactionData.category || '',
+                        amount: transactionData.amount || 0,
+                        noAmount: transactionData.noAmount || false,
+                        pattern: {
+                            type: transactionData.primaryType || transactionData.accountType,
+                            effect: transactionData.primaryEffect || transactionData.effect,
+                            account: transactionData.account,
+                            category: transactionData.category || transactionData.accountType,
+                        }
+                    },
+                    displayText: transactionData.display || transactionData.desc,
+                    accountDisplay: questionData.accountName,
+                    questionAccount: questionData.accountName,
+                    questionType: questionData.accountType,
+                    questionEffect: questionData.effect,
+                    pattern: {
+                        type: transactionData.primaryType || transactionData.accountType,
+                        effect: transactionData.primaryEffect || transactionData.effect,
+                        account: transactionData.account,
+                        category: transactionData.category || transactionData.accountType,
+                    }
+                };
+                if (transactionData.isEasy) {
+                    doc.displayText = (doc.displayText || '').replace(/\s*\d{1,3}(?:,\d{3})*(?:\s*টাকা)?/g, '').trim();
+                }
+                const ref = await db.collection(REVISION_COLLECTION).add(doc);
+                return ref.id;
+            } catch (e) { console.error('Save revision error:', e); return null; }
+        }
+
+        async function fetchRevisionQuestions() {
+            try {
+                const uid = auth.currentUser ? auth.currentUser.uid : null;
+                if (!uid) return [];
+                const snapshot = await db.collection(REVISION_COLLECTION).where('userId', '==', uid).get();
+                const docs = [];
+                snapshot.forEach(doc => docs.push({ id: doc.id, ...doc.data() }));
+                docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                return docs;
+            } catch (e) { console.error('Fetch revision error:', e); return []; }
+        }
+
+        async function deleteRevisionQuestion(docId) {
+            try {
+                await db.collection(REVISION_COLLECTION).doc(docId).delete();
+                return true;
+            } catch (e) { console.error('Delete revision error:', e); return false; }
+        }
+
+        async function getRevisionCount() {
+            try {
+                const uid = auth.currentUser ? auth.currentUser.uid : null;
+                if (!uid) return 0;
+                const snapshot = await db.collection(REVISION_COLLECTION).where('userId', '==', uid).get();
+                return snapshot.size;
+            } catch (e) { return 0; }
+        }
+
+        // ================================================================
+        // 7. QUIZ STATE
+        // ================================================================
+
+        let state = {
+            data: null, // will be loaded from Firebase
+            currentQuestion: null,
+            currentTransaction: null,
+            answered: false,
+            sessionCorrect: 0,
+            sessionWrong: 0,
+            sessionTotal: 0,
+            difficulty: 'easy',
+            smartMode: false,
+            revisionMode: false,
+            maxQuestions: 10,
+            revisionQueue: [],
+            autoTimer: null,
+            countdown: 2,
+            questionIndex: 0,
+            questionList: [],
+            isRevisionQuestion: false,
+            currentRevisionDocId: null,
+            business: new Business(),
+            // Local copy of user stats
+            stats: {
+                totalQuestions: 0,
+                correct: 0,
+                wrong: 0,
+                streak: 0,
+                bestStreak: 0,
+                xp: 0,
+                points: 0,
+                level: 1,
+                accuracyHistory: [],
+                weakRules: {},
+                badges: [],
+                quizHistory: [],
+            },
+            // Firestore listener unsubscribers
+            unsubUser: null,
+            unsubRevision: null,
+            unsubLeaderboard: null,
+        };
+
+        // ================================================================
+        // 8. UI HELPERS
+        // ================================================================
+
+        const $ = (sel) => document.querySelector(sel);
+        const $$ = (sel) => document.querySelectorAll(sel);
+
+        // ================================================================
+        // 9. RENDER FUNCTIONS
+        // ================================================================
+
+        function renderBusinessMini() {
+            const isEasy = state.difficulty === 'easy';
+            const mini = $('#businessMini');
+            if (isEasy) { mini.classList.add('hidden'); return; }
+            mini.classList.remove('hidden');
+            const display = state.business.getDisplay();
+            $('#bCash').textContent = display.cash.toLocaleString();
+            $('#bBank').textContent = display.bank.toLocaleString();
+            $('#bAssets').textContent = display.assets.toLocaleString();
+            $('#bLiabilities').textContent = display.liabilities.toLocaleString();
+            $('#bCapital').textContent = display.capital.toLocaleString();
+        }
+
+        function updateHeaderStats() {
+            const s = state.stats;
+            $('#hPoints').textContent = s.points;
+            $('#hXp').textContent = s.xp;
+            $('#hLevel').textContent = s.level;
+            $('#hStreak').textContent = s.streak;
+            // Update avatar
+            if (auth.currentUser && auth.currentUser.photoURL) {
+                $('#userAvatar').src = auth.currentUser.photoURL;
+            }
+        }
+
+        function updateQuizProgress() {
+            const s = state.stats;
+            $('#qNum').textContent = state.sessionTotal + 1;
+            $('#qTotal').textContent = state.maxQuestions;
+            $('#qCorrect').textContent = state.sessionCorrect;
+            $('#qWrong').textContent = state.sessionWrong;
+            $('#qCorr2').textContent = s.correct;
+            $('#qWron2').textContent = s.wrong;
+            const total = s.correct + s.wrong;
+            const acc = total > 0 ? Math.round((s.correct / total) * 100) : 0;
+            $('#qAcc2').textContent = acc + '%';
+            $('#qStreak2').textContent = s.streak;
+            $('#qBestStreak2').textContent = s.bestStreak;
+        }
+
+        function renderQuestion() {
+            const q = state.currentQuestion;
+            if (!q) {
+                $('#transactionDisplay').textContent = 'Session complete!';
+                $('#accountName').textContent = '—';
+                $$('.quiz-opt').forEach(b => b.disabled = true);
+                $('#feedbackBox').classList.remove('show');
+                $('#autoNextIndicator').style.display = 'none';
+                return;
+            }
+            const trans = q.transaction;
+            const isEasy = state.difficulty === 'easy';
+            let displayText = trans.display || trans.desc;
+            if (isEasy || trans.isEasy) {
+                displayText = displayText.replace(/\s*\d{1,3}(?:,\d{3})*(?:\s*টাকা)?/g, '').trim();
+                displayText = displayText.replace(/\s+/g, ' ');
+            }
+            const revisionBadge = state.isRevisionQuestion ? ' 🔄' : '';
+            $('#transactionDisplay').innerHTML = `"${displayText}"${revisionBadge}`;
+            const bnName = BENGALI_NAMES[q.accountName] || q.accountName;
+            $('#accountName').textContent = bnName + ' হিসাব';
+            $$('.quiz-opt').forEach(b => { b.disabled = false;
+                b.className = 'quiz-opt ' + b.dataset.answer; });
+            $('#feedbackBox').classList.remove('show');
+            $('#autoNextIndicator').style.display = 'flex';
+            $('#countdownNum').textContent = '2';
+            state.answered = false;
+            state.countdown = 2;
+            updateQuizProgress();
+            renderBusinessMini();
+            if (state.autoTimer) { clearInterval(state.autoTimer);
+                state.autoTimer = null; }
+        }
+
+        function showFeedback(isCorrect, q) {
+            const box = $('#feedbackBox');
+            box.className = 'feedback-box show ' + (isCorrect ? 'correct' : 'wrong');
+            const icon = $('#fbIcon');
+            icon.className = 'fas ' + (isCorrect ? 'fa-check-circle' : 'fa-times-circle');
+            $('#fbTitle').textContent = isCorrect ? 'Correct!' : 'Wrong!';
+            const answerLabel = q.correctAnswer === 'debit' ? 'Debit' : 'Credit';
+            if (!isCorrect) {
+                $('#fbBody').innerHTML = `The correct answer was <strong>${answerLabel}</strong>.<br>${q.explanation}`;
+            } else {
+                $('#fbBody').innerHTML = q.explanation;
+            }
+            $('#fbRule').innerHTML = `<strong>Rule:</strong> ${q.ruleText}`;
+            $$('.quiz-opt').forEach(b => {
+                b.disabled = true;
+                if (b.dataset.answer === q.correctAnswer) b.classList.add('show-correct');
+                if (b.dataset.answer === q.correctAnswer && isCorrect) b.classList.add('correct');
+                if (b.dataset.answer !== q.correctAnswer && !isCorrect && b.dataset.answer === state.userAnswer) b
+                    .classList.add('wrong');
+                if (b.dataset.answer === q.correctAnswer && !isCorrect) b.classList.add('show-correct');
+            });
+            state.countdown = 2;
+            $('#countdownNum').textContent = '2';
+            $('#autoNextIndicator').style.display = 'flex';
+            if (state.autoTimer) clearInterval(state.autoTimer);
+            state.autoTimer = setInterval(() => {
+                state.countdown -= 0.5;
+                if (state.countdown <= 0) {
+                    clearInterval(state.autoTimer);
+                    state.autoTimer = null;
+                    $('#countdownNum').textContent = '0';
+                    advanceQuestion();
+                } else {
+                    $('#countdownNum').textContent = Math.ceil(state.countdown);
+                }
+            }, 500);
+        }
+
+        function advanceQuestion() {
+            state.questionIndex++;
+            if (state.questionIndex < state.questionList.length) {
+                state.currentQuestion = state.questionList[state.questionIndex];
+                renderQuestion();
+            } else {
+                const trans = state.currentTransaction;
+                if (trans) {
+                    state.business = applyTransaction(state.business, trans);
+                }
+                if (state.sessionTotal < state.maxQuestions) {
+                    generateNextQuestionSet();
+                } else {
+                    $('#transactionDisplay').textContent = '🎉 Session Complete!';
+                    $('#accountName').textContent = '—';
+                    $$('.quiz-opt').forEach(b => b.disabled = true);
+                    $('#feedbackBox').classList.remove('show');
+                    $('#autoNextIndicator').style.display = 'none';
+                    renderBusinessMini();
+                }
+            }
+        }
+
+        // ================================================================
+        // 10. QUESTION GENERATOR
+        // ================================================================
+
+        function generateQuestionsFromTransaction(transaction) {
+            const questions = [];
+            if (transaction.isEasy) {
+                const qAccount = transaction.questionAccount || transaction.account;
+                const qType = transaction.questionType || transaction.primaryType;
+                const qEffect = transaction.questionEffect || transaction.primaryEffect;
+                const rule = getRuleExplanation(qType, qEffect, qAccount);
+                questions.push({
+                    accountName: qAccount,
+                    accountType: qType,
+                    effect: qEffect,
+                    correctAnswer: rule.answer,
+                    explanation: rule.explanation,
+                    ruleText: rule.ruleText,
+                    transaction: transaction,
+                    isEasy: true
+                });
+            } else {
+                const primaryAccount = transaction.account;
+                const primaryType = transaction.primaryType;
+                const primaryEffect = transaction.primaryEffect;
+                const rule1 = getRuleExplanation(primaryType, primaryEffect, primaryAccount);
+                questions.push({
+                    accountName: primaryAccount,
+                    accountType: primaryType,
+                    effect: primaryEffect,
+                    correctAnswer: rule1.answer,
+                    explanation: rule1.explanation,
+                    ruleText: rule1.ruleText,
+                    transaction: transaction,
+                    isEasy: false
+                });
+                if (transaction.otherAccount && transaction.hasAmount) {
+                    const secEffect = transaction.secondaryEffect || 'decrease';
+                    const rule2 = getRuleExplanation(transaction.otherType, secEffect, transaction.otherAccount);
+                    questions.push({
+                        accountName: transaction.otherAccount,
+                        accountType: transaction.otherType,
+                        effect: secEffect,
+                        correctAnswer: rule2.answer,
+                        explanation: rule2.explanation,
+                        ruleText: rule2.ruleText,
+                        transaction: transaction,
+                        isEasy: false
+                    });
+                }
+            }
+            return questions;
+        }
+
+        function generateNextQuestionSet() {
+            const isEasy = state.difficulty === 'easy';
+
+            if (state.revisionMode) {
+                if (state.revisionQueue.length > 0) {
+                    const revData = state.revisionQueue.shift();
+                    const docId = revData.docId;
+                    const qData = revData.question;
+                    const transData = revData.transaction;
+                    let transaction = {
+                        display: transData.display || transData.desc,
+                        desc: transData.desc || transData.display,
+                        account: transData.account || qData.accountName,
+                        accountType: transData.accountType || qData.accountType,
+                        effect: transData.effect || qData.effect,
+                        isEasy: transData.isEasy || qData.isEasy || false,
+                        noAmount: transData.noAmount || false,
+                        amount: transData.amount || 0,
+                        primaryType: transData.accountType || qData.accountType,
+                        primaryEffect: transData.effect || qData.effect,
+                        category: transData.category || qData.accountType,
+                        questionAccount: qData.accountName,
+                        questionType: qData.accountType,
+                        questionEffect: qData.effect,
+                    };
+                    if (isEasy) {
+                        transaction.noAmount = true;
+                        transaction.amount = 0;
+                        transaction.isEasy = true;
+                        transaction.display = (transaction.display || '').replace(/\s*\d{1,3}(?:,\d{3})*(?:\s*টাকা)?/g, '')
+                            .trim();
+                        transaction.desc = transaction.display;
+                    }
+                    const question = {
+                        accountName: qData.accountName,
+                        accountType: qData.accountType,
+                        effect: qData.effect,
+                        correctAnswer: qData.correctAnswer,
+                        explanation: qData.explanation,
+                        ruleText: qData.ruleText,
+                        transaction: transaction,
+                        isEasy: qData.isEasy || false,
+                        _revisionDocId: docId,
+                    };
+                    state.currentQuestion = question;
+                    state.currentTransaction = transaction;
+                    state.isRevisionQuestion = true;
+                    state.currentRevisionDocId = docId;
+                    updateRevisionBadges();
+                    renderQuestion();
+                    return;
+                } else {
+                    state.revisionMode = false;
+                    state.isRevisionQuestion = false;
+                    state.currentRevisionDocId = null;
+                    $('#revisionToggle').classList.remove('active');
+                    $('#revisionToggle').querySelector('.toggle-dot').style.background = 'var(--text-muted)';
+                    showToast('Revision Complete', 'All revision questions answered!', 'fa-check-circle', 'gain');
+                    updateRevisionBadges();
+                }
+            }
+
+            state.isRevisionQuestion = false;
+            state.currentRevisionDocId = null;
+
+            let weakTypes = null;
+            if (state.smartMode) {
+                const analysis = analyzeWeakRules(state.stats);
+                weakTypes = analysis.weakTypes;
+            }
+
+            let trans;
+            if (isEasy) {
+                trans = generateEasyTransaction();
+                if (weakTypes && Object.keys(weakTypes).length > 0) {
+                    const weakType = pickRandom(Object.keys(weakTypes));
+                    for (let attempt = 0; attempt < 5; attempt++) {
+                        const testTrans = generateEasyTransaction();
+                        if (testTrans.category === weakType) { trans = testTrans; break; }
+                    }
+                }
+            } else {
+                trans = generateTransaction(state.business, state.difficulty, weakTypes);
+            }
+
+            const questions = generateQuestionsFromTransaction(trans);
+            state.questionList = questions;
+            state.questionIndex = 0;
+            if (questions.length > 0) {
+                state.currentQuestion = questions[0];
+                state.currentTransaction = trans;
+                renderQuestion();
+            } else {
+                generateFreshQuestionSet();
+            }
+        }
+
+        function generateFreshQuestionSet() {
+            const isEasy = state.difficulty === 'easy';
+            let trans = isEasy ? generateEasyTransaction() : generateTransaction(state.business, state.difficulty, null);
+            const questions = generateQuestionsFromTransaction(trans);
+            state.questionList = questions;
+            state.questionIndex = 0;
+            if (questions.length > 0) {
+                state.currentQuestion = questions[0];
+                state.currentTransaction = trans;
+                renderQuestion();
+            }
+        }
+
+        // ================================================================
+        // 11. ANSWER HANDLING
+        // ================================================================
+
+        async function handleAnswer(answer) {
+            if (state.answered || !state.currentQuestion) return;
+            state.answered = true;
+            state.userAnswer = answer;
+
+            const q = state.currentQuestion;
+            const s = state.stats;
+            const isCorrect = answer === q.correctAnswer;
+            const rewards = getRewards(state.difficulty, isCorrect);
+
+            state.sessionTotal++;
+            let pointsChanged = 0,
+                xpChanged = 0;
+            const isRevision = state.isRevisionQuestion && state.currentRevisionDocId;
+
+            if (isCorrect) {
+                state.sessionCorrect++;
+                s.correct++;
+                s.streak++;
+                if (s.streak > s.bestStreak) s.bestStreak = s.streak;
+                s.points += rewards.points;
+                s.xp += rewards.xp;
+                pointsChanged = rewards.points;
+                xpChanged = rewards.xp;
+                if (isRevision && state.currentRevisionDocId) {
+                    await deleteRevisionQuestion(state.currentRevisionDocId);
+                    await updateRevisionBadges();
+                }
+            } else {
+                state.sessionWrong++;
+                s.wrong++;
+                s.streak = 0;
+                s.points += rewards.points;
+                pointsChanged = rewards.points;
+                const key = `${q.accountType}.${q.effect}`;
+                s.weakRules[key] = (s.weakRules[key] || 0) + 1;
+                if (!state.isRevisionQuestion) {
+                    await saveRevisionQuestion(q, q.transaction);
+                    await updateRevisionBadges();
+                }
+            }
+
+            s.totalQuestions++;
+            if (s.points < 0) s.points = 0;
+            const newLevel = calculateLevel(s.xp);
+            if (newLevel > s.level) {
+                s.level = newLevel;
+                setTimeout(() => showToast('Level Up!', `You are now Level ${s.level}`, 'fa-trophy', 'gain'), 300);
+            } else {
+                s.level = newLevel;
+            }
+
+            s.quizHistory.push({
+                type: q.accountType,
+                effect: q.effect,
+                account: q.accountName,
+                userAnswer: answer,
+                correctAnswer: q.correctAnswer,
+                ruleKey: `${q.accountType}.${q.effect}`,
+                timestamp: Date.now()
+            });
+            if (s.quizHistory.length > 200) s.quizHistory.shift();
+
+            const total = s.correct + s.wrong;
+            const acc = total > 0 ? Math.round((s.correct / total) * 100) : 0;
+            const today = new Date().getDay();
+            if (s.accuracyHistory.length < 7) {
+                while (s.accuracyHistory.length < 7) s.accuracyHistory.push(0);
+            }
+            s.accuracyHistory[today % 7] = acc;
+            s.badges = checkBadges(s);
+
+            // Save to Firebase
+            await saveUserStats(auth.currentUser.uid, s);
+
+            updateHeaderStats();
+            updateQuizProgress();
+            if (pointsChanged !== 0 || xpChanged !== 0) {
+                showPointsToast(pointsChanged, xpChanged, isCorrect);
+            }
+            if (isRevision && isCorrect) {
+                state.isRevisionQuestion = false;
+                state.currentRevisionDocId = null;
+            }
+            showFeedback(isCorrect, q);
+            updateDashboard();
+            updateBadges();
+            updateWeakTopics();
+            updateLeaderboard();
+        }
+
+        // ================================================================
+        // 12. DASHBOARD UPDATES
+        // ================================================================
+
+        function updateDashboard() {
+            const s = state.stats;
+            const total = s.correct + s.wrong;
+            const acc = total > 0 ? Math.round((s.correct / total) * 100) : 0;
+            $('#dTotal').textContent = total;
+            $('#dCorrect').textContent = s.correct;
+            $('#dWrong').textContent = s.wrong;
+            $('#dAccuracy').textContent = acc + '%';
+            $('#dPoints').textContent = s.points;
+            $('#dXp').textContent = s.xp;
+            $('#dLevel').textContent = s.level;
+            $('#dStreak').textContent = s.streak;
+            const nextLevelXP = getNextLevelXP(s.level);
+            const currentLevelXP = getXPThreshold(s.level);
+            const progress = s.xp - currentLevelXP;
+            const needed = nextLevelXP - currentLevelXP;
+            const pct = needed > 0 ? Math.min(100, (progress / needed) * 100) : 100;
+            $('#xpBarFill').style.width = pct + '%';
+            $('#xpProgressText').textContent = `${s.xp} / ${nextLevelXP} XP`;
+            renderChart(s.accuracyHistory);
+        }
+
+        function renderChart(history) {
+            const container = $('#accuracyChart');
+            container.innerHTML = '';
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const today = new Date().getDay();
+            const maxVal = Math.max(100, ...history);
+            for (let i = 0; i < 7; i++) {
+                const idx = (today - 6 + i + 7) % 7;
+                const val = history[idx] || 0;
+                const pct = maxVal > 0 ? (val / maxVal) * 100 : 0;
+                const wrap = document.createElement('div');
+                wrap.className = 'chart-bar-wrap';
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = Math.max(4, pct * 0.85) + '%';
+                bar.style.background = val >= 80 ? 'var(--gradient-2)' : val >= 50 ? 'var(--gradient-3)' :
+                'var(--gradient-1)';
+                const label = document.createElement('div');
+                label.className = 'chart-bar-label';
+                label.textContent = days[i];
+                wrap.appendChild(bar);
+                wrap.appendChild(label);
+                container.appendChild(wrap);
+            }
+        }
+
+        function updateBadges() {
+            const s = state.stats;
+            const allBadges = checkBadges(s);
+            const grid = $('#badgesGrid');
+            grid.innerHTML = '';
+            const badgeDefs = [
+                { id: 'beginner', icon: 'fa-seedling', label: 'Beginner' },
+                { id: 'learner', icon: 'fa-book', label: 'Learner' },
+                { id: 'scholar', icon: 'fa-graduation-cap', label: 'Scholar' },
+                { id: 'accurate', icon: 'fa-bullseye', label: 'Accurate' },
+                { id: 'streak5', icon: 'fa-fire', label: 'Streak 5' },
+                { id: 'streak10', icon: 'fa-bolt', label: 'Streak 10' },
+                { id: 'level3', icon: 'fa-star', label: 'Level 3' },
+                { id: 'level5', icon: 'fa-crown', label: 'Level 5' },
+            ];
+            const earned = new Set(allBadges.map(b => b.id));
+            let count = 0;
+            for (const def of badgeDefs) {
+                const has = earned.has(def.id);
+                if (has) count++;
+                const el = document.createElement('div');
+                el.className = 'badge-item' + (has ? '' : ' locked');
+                el.innerHTML = `<i class="fas ${def.icon}"></i> ${def.label}`;
+                if (!has) el.title = 'Not earned yet';
+                grid.appendChild(el);
+            }
+            $('#badgeCount').textContent = `${count} / ${badgeDefs.length}`;
+        }
+
+        function updateWeakTopics() {
+            const s = state.stats;
+            const container = $('#weakTopics');
+            const analysis = analyzeWeakRules(s);
+            const weakTypes = analysis.weakTypes;
+            const typeLabels = { asset: 'Asset', liability: 'Liability', capital: 'Capital', revenue: 'Revenue',
+                expense: 'Expense', drawing: 'Drawing' };
+            const entries = Object.entries(weakTypes).sort((a, b) => b[1] - a[1]);
+            if (entries.length === 0) {
+                container.innerHTML =
+                    '<div style="padding:8px 0;color:var(--accent-2);"><i class="fas fa-check-circle"></i> Excellent! No weak topics.</div>';
+                return;
+            }
+            container.innerHTML = entries.map(([type, count]) =>
+                `<div class="weak-topic-item"><span>${typeLabels[type] || type}</span><span class="count">${count} wrong</span></div>`
+            ).join('');
+        }
+
+        // ================================================================
+        // 13. REVISION & LEADERBOARD
+        // ================================================================
+
+        async function updateRevisionBadges() {
+            const count = await getRevisionCount();
+            const badgeEl = document.getElementById('revCountBadge');
+            const toggleBadge = document.getElementById('revToggleCount');
+            if (badgeEl) { badgeEl.textContent = count;
+                badgeEl.className = 'rev-count' + (count === 0 ? ' zero' : ''); }
+            if (toggleBadge) { toggleBadge.textContent = count;
+                toggleBadge.className = 'rev-count' + (count === 0 ? ' zero' : ''); }
+            if (count === 0 && state.revisionMode) {
+                state.revisionMode = false;
+                state.isRevisionQuestion = false;
+                state.currentRevisionDocId = null;
+                $('#revisionToggle').classList.remove('active');
+                $('#revisionToggle').querySelector('.toggle-dot').style.background = 'var(--text-muted)';
+                state.revisionQueue = [];
+                showToast('Revision Mode Off', 'No revision questions left.', 'fa-info-circle', 'gain');
+            }
+        }
+
+        async function loadRevisionList() {
+            const container = $('#revisionList');
+            try {
+                const docs = await fetchRevisionQuestions();
+                if (docs.length === 0) {
+                    container.innerHTML =
+                        `<div class="empty-state"><i class="fas fa-check-circle" style="color:var(--accent-2);"></i><h3>No mistakes yet!</h3><p>Keep up the great work! Wrong answers will appear here for revision.</p></div>`;
+                    return;
+                }
+                container.innerHTML = docs.map(doc => {
+                    const displayText = doc.displayText || 'Transaction';
+                    const accountName = doc.accountDisplay || doc.questionAccount || 'Account';
+                    const bnName = BENGALI_NAMES[accountName] || accountName;
+                    const time = new Date(doc.timestamp).toLocaleString();
+                    return `<div class="revision-item"><div><strong>"${displayText}"</strong><span class="meta">${bnName} হিসাব · ${time}</span></div><span class="badge-wrong">Wrong</span></div>`;
+                }).join('');
+            } catch (e) {
+                container.innerHTML =
+                    `<div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:var(--accent-4);"></i><h3>Error loading revision data</h3><p>Please try again later.</p></div>`;
+            }
+        }
+
+        async function loadRevisionQueue() {
+            try {
+                const docs = await fetchRevisionQuestions();
+                state.revisionQueue = [];
+                for (const doc of docs) {
+                    const qData = doc.question || {};
+                    const transData = doc.transaction || {};
+                    if (!qData.accountName || !qData.accountType) {
+                        const pattern = doc.pattern || {};
+                        qData.accountName = qData.accountName || pattern.account || 'Account';
+                        qData.accountType = qData.accountType || pattern.type || 'asset';
+                        qData.effect = qData.effect || pattern.effect || 'increase';
+                        qData.correctAnswer = qData.correctAnswer || 'debit';
+                        qData.explanation = qData.explanation || 'Review this transaction.';
+                        qData.ruleText = qData.ruleText || 'Review the rule.';
+                        qData.isEasy = qData.isEasy || false;
+                    }
+                    state.revisionQueue.push({
+                        docId: doc.id,
+                        question: qData,
+                        transaction: transData,
+                        displayText: doc.displayText || 'Transaction',
+                        accountDisplay: doc.accountDisplay || qData.accountName,
+                    });
+                }
+                return state.revisionQueue.length;
+            } catch (e) { state.revisionQueue = []; return 0; }
+        }
+
+        // ================================================================
+        // 14. LEADERBOARD (real-time from Firestore)
+        // ================================================================
+
+        function updateLeaderboard() {
+            // This is called by the real-time listener
+            // The actual data is fetched from Firestore via listener
+        }
+
+        function setupLeaderboardListener() {
+            if (state.unsubLeaderboard) {
+                state.unsubLeaderboard();
+                state.unsubLeaderboard = null;
+            }
+            state.unsubLeaderboard = db.collection(USERS_COLLECTION)
+                .orderBy('xp', 'desc')
+                .limit(50)
+                .onSnapshot((snapshot) => {
+                    const tbody = $('#lbBody');
+                    const empty = $('#lbEmpty');
+                    const activeFilter = document.querySelector('.lb-filter-btn.active');
+                    const sortBy = activeFilter ? activeFilter.dataset.lb : 'xp';
+
+                    let users = [];
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        const total = (data.correct || 0) + (data.wrong || 0);
+                        const acc = total > 0 ? Math.round(((data.correct || 0) / total) * 100) : 0;
+                        const isUser = doc.id === (auth.currentUser ? auth.currentUser.uid : null);
+                        users.push({
+                            id: doc.id,
+                            name: data.displayName || 'User',
+                            xp: data.xp || 0,
+                            points: data.points || 0,
+                            accuracy: acc,
+                            isUser: isUser,
+                            photoURL: data.photoURL || '',
+                            streak: data.streak || 0,
+                            level: data.level || 1,
+                        });
+                    });
+
+                    // Sort based on filter
+                    if (sortBy === 'xp') users.sort((a, b) => b.xp - a.xp);
+                    else if (sortBy === 'points') users.sort((a, b) => b.points - a.points);
+                    else if (sortBy === 'accuracy') users.sort((a, b) => b.accuracy - a.accuracy);
+
+                    if (users.length === 0) {
+                        empty.style.display = 'block';
+                        tbody.innerHTML = '';
+                        return;
+                    }
+                    empty.style.display = 'none';
+
+                    // Move current user to top if not already
+                    const userIdx = users.findIndex(u => u.isUser);
+                    if (userIdx > 0) {
+                        const user = users.splice(userIdx, 1)[0];
+                        // Insert at position based on rank
+                        let insertPos = 0;
+                        if (sortBy === 'xp') {
+                            while (insertPos < users.length && users[insertPos].xp > user.xp) insertPos++;
+                        } else if (sortBy === 'points') {
+                            while (insertPos < users.length && users[insertPos].points > user.points) insertPos++;
+                        } else if (sortBy === 'accuracy') {
+                            while (insertPos < users.length && users[insertPos].accuracy > user.accuracy) insertPos++;
+                        }
+                        users.splice(insertPos, 0, user);
+                    }
+
+                    tbody.innerHTML = users.map((e, i) => {
+                        const rank = i + 1;
+                        let rc = 'lb-rank';
+                        if (rank === 1) rc += ' gold';
+                        else if (rank === 2) rc += ' silver';
+                        else if (rank === 3) rc += ' bronze';
+                        const isUser = e.isUser ? ' class="lb-user-row"' : '';
+                        const avatar = e.photoURL ?
+                            `<img src="${e.photoURL}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-right:6px;" />` :
+                            '';
+                        return `<tr${isUser}>
+                            <td><span class="${rc}">#${rank}</span></td>
+                            <td>${avatar}${e.name} ${e.isUser ? '<i class="fas fa-star" style="color:var(--accent-3);font-size:12px;margin-left:4px;"></i>' : ''}</td>
+                            <td>${e.xp}</td>
+                            <td>${e.points}</td>
+                            <td>${e.accuracy}%</td>
+                        </tr>`;
+                    }).join('');
+                }, (error) => {
+                    console.error('Leaderboard listener error:', error);
+                });
+        }
+
+        // ================================================================
+        // 15. USER DATA LISTENER (real-time)
+        // ================================================================
+
+        function setupUserDataListener(uid) {
+            if (state.unsubUser) {
+                state.unsubUser();
+                state.unsubUser = null;
+            }
+            state.unsubUser = db.collection(USERS_COLLECTION).doc(uid)
+                .onSnapshot((doc) => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        // Merge with existing stats, but preserve local session data
+                        const oldStats = { ...state.stats };
+                        // Only update from Firebase if the data is newer or we're initializing
+                        state.stats = {
+                            totalQuestions: data.totalQuestions || 0,
+                            correct: data.correct || 0,
+                            wrong: data.wrong || 0,
+                            streak: data.streak || 0,
+                            bestStreak: data.bestStreak || 0,
+                            xp: data.xp || 0,
+                            points: data.points || 0,
+                            level: data.level || 1,
+                            accuracyHistory: data.accuracyHistory || [],
+                            weakRules: data.weakRules || {},
+                            badges: data.badges || [],
+                            quizHistory: data.quizHistory || [],
+                        };
+                        // Restore business state from local storage or keep existing
+                        // Business is kept in memory per session
+                        updateHeaderStats();
+                        updateDashboard();
+                        updateBadges();
+                        updateWeakTopics();
+                        updateQuizProgress();
+                    } else {
+                        // New user: create initial stats
+                        const initialStats = {
+                            totalQuestions: 0,
+                            correct: 0,
+                            wrong: 0,
+                            streak: 0,
+                            bestStreak: 0,
+                            xp: 0,
+                            points: 0,
+                            level: 1,
+                            accuracyHistory: [],
+                            weakRules: {},
+                            badges: [],
+                            quizHistory: [],
+                        };
+                        state.stats = initialStats;
+                        saveUserStats(uid, initialStats);
+                        updateHeaderStats();
+                        updateDashboard();
+                        updateBadges();
+                        updateWeakTopics();
+                        updateQuizProgress();
+                    }
+                }, (error) => {
+                    console.error('User data listener error:', error);
+                });
+        }
+
+        // ================================================================
+        // 16. AUTH HANDLING
+        // ================================================================
+
+        function showLogin() {
+            document.getElementById('loginOverlay').classList.remove('hidden');
+            document.getElementById('appHeader').style.opacity = '0.3';
+            document.getElementById('navTabs').style.opacity = '0.3';
+            document.querySelectorAll('.section-panel').forEach(el => el.style.opacity = '0.3');
+        }
+
+        function hideLogin() {
+            document.getElementById('loginOverlay').classList.add('hidden');
+            document.getElementById('appHeader').style.opacity = '1';
+            document.getElementById('navTabs').style.opacity = '1';
+            document.querySelectorAll('.section-panel').forEach(el => el.style.opacity = '1');
+        }
+
+        function handleAuthState(user) {
+            const loginBtn = document.getElementById('loginBtn');
+            const loginLoader = document.getElementById('loginLoader');
+
+            if (user) {
+                hideLogin();
+                // Setup user data listener
+                setupUserDataListener(user.uid);
+                // Setup revision listener
+                updateRevisionBadges();
+                // Setup leaderboard listener
+                setupLeaderboardListener();
+                // Load revision list
+                loadRevisionList();
+                // Start quiz
+                generateNextQuestionSet();
+                // Update avatar
+                if (user.photoURL) {
+                    $('#userAvatar').src = user.photoURL;
+                }
+                // Show welcome toast
+                showToast('Welcome!', `Signed in as ${user.displayName || 'User'}`, 'fa-smile', 'gain');
+            } else {
+                showLogin();
+                // Clean up listeners
+                if (state.unsubUser) { state.unsubUser();
+                    state.unsubUser = null; }
+                if (state.unsubLeaderboard) { state.unsubLeaderboard();
+                    state.unsubLeaderboard = null; }
+                // Reset stats
+                state.stats = {
+                    totalQuestions: 0,
+                    correct: 0,
+                    wrong: 0,
+                    streak: 0,
+                    bestStreak: 0,
+                    xp: 0,
+                    points: 0,
+                    level: 1,
+                    accuracyHistory: [],
+                    weakRules: {},
+                    badges: [],
+                    quizHistory: [],
+                };
+                updateHeaderStats();
+                updateDashboard();
+                updateBadges();
+                updateWeakTopics();
+                updateQuizProgress();
+            }
+        }
+
+        // ================================================================
+        // 17. NAVIGATION
+        // ================================================================
+
+        function navigateTo(section) {
+            $$('.section-panel').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById('section-' + section);
+            if (target) target.classList.add('active');
+            $$('.nav-tab').forEach(el => {
+                el.classList.toggle('active', el.dataset.section === section);
+            });
+            if (section === 'dashboard') {
+                updateDashboard();
+                updateBadges();
+                updateWeakTopics();
+            }
+            if (section === 'revision') loadRevisionList();
+            if (section === 'leaderboard') {
+                // Leaderboard is updated by listener
+            }
+        }
+
+        // ================================================================
+        // 18. INIT
+        // ================================================================
+
+        function init() {
+            // --- Auth ---
+            auth.onAuthStateChanged(handleAuthState);
+
+            // --- Login button ---
+            document.getElementById('loginBtn').addEventListener('click', async function() {
+                const btn = this;
+                const loader = document.getElementById('loginLoader');
+                btn.style.display = 'none';
+                loader.style.display = 'flex';
+                try {
+                    const provider = new firebase.auth.GoogleAuthProvider();
+                    await auth.signInWithPopup(provider);
+                } catch (error) {
+                    console.error('Login error:', error);
+                    showToast('Login Failed', error.message || 'Please try again.', 'fa-exclamation-circle', 'loss');
+                    btn.style.display = 'flex';
+                    loader.style.display = 'none';
+                }
+            });
+
+            // --- User dropdown ---
+            $('#userAvatar').addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.getElementById('userDropdown').classList.toggle('show');
+            });
+            document.addEventListener('click', function() {
+                document.getElementById('userDropdown').classList.remove('show');
+            });
+
+            // --- Logout ---
+            document.getElementById('logoutBtn').addEventListener('click', async function() {
+                try {
+                    await auth.signOut();
+                    document.getElementById('userDropdown').classList.remove('show');
+                    showToast('Signed Out', 'You have been signed out.', 'fa-sign-out-alt', 'gain');
+                } catch (e) {
+                    console.error('Logout error:', e);
+                }
+            });
+
+            // --- Difficulty ---
+            $$('.diff-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    $$('.diff-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    state.difficulty = this.dataset.diff;
+                    state.sessionTotal = 0;
+                    state.sessionCorrect = 0;
+                    state.sessionWrong = 0;
+                    if (state.revisionMode) loadRevisionQueue();
+                    if (state.autoTimer) { clearInterval(state.autoTimer);
+                        state.autoTimer = null; }
+                    renderBusinessMini();
+                    generateNextQuestionSet();
+                });
+            });
+
+            // --- Quiz options ---
+            $$('.quiz-opt').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (state.answered) return;
+                    handleAnswer(this.dataset.answer);
+                });
+            });
+
+            // --- Navigation ---
+            $$('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    navigateTo(this.dataset.section);
+                });
+            });
+
+            // --- Smart Mode ---
+            $('#smartToggle').addEventListener('click', function() {
+                state.smartMode = !state.smartMode;
+                this.classList.toggle('active');
+                const dot = this.querySelector('.toggle-dot');
+                dot.style.background = state.smartMode ? 'var(--accent-1)' : 'var(--text-muted)';
+                state.sessionTotal = 0;
+                state.sessionCorrect = 0;
+                state.sessionWrong = 0;
+                if (state.autoTimer) { clearInterval(state.autoTimer);
+                    state.autoTimer = null; }
+                generateNextQuestionSet();
+            });
+
+            // --- Revision Mode ---
+            $('#revisionToggle').addEventListener('click', async function() {
+                const count = await getRevisionCount();
+                if (count === 0) {
+                    showToast('No Revision', 'No wrong answers to revise. Keep practicing!', 'fa-info-circle',
+                    'gain');
+                    return;
+                }
+                state.revisionMode = !state.revisionMode;
+                this.classList.toggle('active');
+                const dot = this.querySelector('.toggle-dot');
+                dot.style.background = state.revisionMode ? 'var(--accent-1)' : 'var(--text-muted)';
+                if (state.revisionMode) {
+                    await loadRevisionQueue();
+                    if (state.revisionQueue.length === 0) {
+                        state.revisionMode = false;
+                        this.classList.remove('active');
+                        dot.style.background = 'var(--text-muted)';
+                        showToast('No Revision', 'No revision questions available.', 'fa-info-circle', 'gain');
+                        return;
+                    }
+                    showToast('Revision Mode On', `${state.revisionQueue.length} questions to revise.`,
+                        'fa-rotate-left', 'gain');
+                } else {
+                    state.revisionQueue = [];
+                    state.isRevisionQuestion = false;
+                    state.currentRevisionDocId = null;
+                    showToast('Revision Mode Off', 'Switched to regular mode.', 'fa-info-circle', 'gain');
+                }
+                state.sessionTotal = 0;
+                state.sessionCorrect = 0;
+                state.sessionWrong = 0;
+                if (state.autoTimer) { clearInterval(state.autoTimer);
+                    state.autoTimer = null; }
+                generateNextQuestionSet();
+            });
+
+            // --- Revision Mode button ---
+            $('#revisionModeBtn').addEventListener('click', async function() {
+                const count = await getRevisionCount();
+                if (count === 0) {
+                    showToast('No Revision', 'No wrong answers to revise. Keep practicing!', 'fa-info-circle',
+                    'gain');
+                    return;
+                }
+                if (!state.revisionMode) {
+                    $('#revisionToggle').click();
+                } else {
+                    await loadRevisionQueue();
+                    if (state.revisionQueue.length === 0) {
+                        state.revisionMode = false;
+                        $('#revisionToggle').classList.remove('active');
+                        $('#revisionToggle').querySelector('.toggle-dot').style.background = 'var(--text-muted)';
+                        showToast('No Revision', 'No revision questions available.', 'fa-info-circle', 'gain');
+                    } else {
+                        showToast('Revision Reloaded', `${state.revisionQueue.length} questions to revise.`,
+                            'fa-rotate-left', 'gain');
+                    }
+                    state.sessionTotal = 0;
+                    state.sessionCorrect = 0;
+                    state.sessionWrong = 0;
+                    if (state.autoTimer) { clearInterval(state.autoTimer);
+                        state.autoTimer = null; }
+                    generateNextQuestionSet();
+                }
+                navigateTo('quiz');
+            });
+
+            // --- Refresh Revision ---
+            $('#refreshRevisionBtn').addEventListener('click', function() {
+                loadRevisionList();
+                updateRevisionBadges();
+                showToast('Refreshed', 'Revision list updated.', 'fa-sync', 'gain');
+            });
+
+            // --- Leaderboard filters ---
+            $$('.lb-filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    $$('.lb-filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    // The listener will re-sort automatically
+                });
+            });
+
+            // --- Start with login state ---
+            if (auth.currentUser) {
+                handleAuthState(auth.currentUser);
+            } else {
+                showLogin();
+            }
+
+            // Set initial states for toggles
+            if (state.smartMode) {
+                $('#smartToggle').classList.add('active');
+                $('#smartToggle').querySelector('.toggle-dot').style.background = 'var(--accent-1)';
+            }
+
+            console.log('📘 Journal Entry · MCQ Learner (v5 - Auth + Real-time)');
+        }
+
+        // ================================================================
+        // 19. START
+        // ================================================================
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
