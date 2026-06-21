@@ -65,7 +65,29 @@
             background: var(--accent-1);
             border-radius: 10px;
         }
-
+        .learn-more {
+            padding: 10px 24px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--glass-border);
+            background: rgba(255, 215, 0, 0.15);
+            color: rgb(97, 97, 142);
+            font-family: var(--font);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px auto 0 auto;
+            width: 68%;
+            text-decoration: none;
+            justify-content: center;
+        }
+        .learn-more:hover {
+            background: rgba(255, 215, 0, 0.25);
+            transform: translateY(-2px);
+        }
         .app-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -1442,6 +1464,11 @@
             .hint-shop-grid {
                 grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             }
+            .learn-more {
+                width: 85%;
+                font-size: 13px;
+                padding: 8px 18px;
+            }
         }
         @media (max-width: 480px) {
             .glass-card {
@@ -1513,6 +1540,11 @@
             }
             .hint-pack .pack-price {
                 font-size: 18px;
+            }
+            .learn-more {
+                width: 92%;
+                font-size: 12px;
+                padding: 8px 14px;
             }
         }
 
@@ -1612,7 +1644,7 @@
         </nav>
 
         <!-- ============================================================
-        SECTION: QUIZ
+        SECTION: QUIZ  (Learn button placed inside here)
         ============================================================ -->
         <section class="section-panel active" id="section-quiz">
             <div class="quiz-container">
@@ -1647,7 +1679,7 @@
                 <div class="question-card" id="questionCard">
                     <div class="transaction-display" id="transactionDisplay">Loading...</div>
                     <div class="account-prompt">
-                        Which account is <strong>Debit</strong> or <strong>Credit</strong>?
+                        Solve The Question <strong>Debit</strong> or <strong>Credit</strong>?
                         <strong id="accountName">—</strong>
                     </div>
 
@@ -1688,6 +1720,14 @@
                         <span><i class="fas fa-crown" style="color:var(--accent-3);"></i> Best: <strong id="qBestStreak2">0</strong></span>
                     </div>
                 </div>
+
+                <!-- ===== LEARN MORE BUTTON — only inside Quiz section ===== -->
+                <div class="Lern" style="margin-top:18px;">
+                    <a href="lern.html" class="learn-more">
+                        <i class="fas fa-book-open"></i> Learn Javeda
+                    </a>
+                </div>
+
             </div>
         </section>
 
@@ -1747,7 +1787,7 @@
         ============================================================ -->
         <section class="section-panel" id="section-hintshop">
             <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
-                <i class="fas fa-store" style="color:var(--accent-3);"></i> Hint Shop
+                <i class="fas fa-store" style="color:var(--accent-3);"></i> Shop
             </h2>
             <div class="glass-card">
                 <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
