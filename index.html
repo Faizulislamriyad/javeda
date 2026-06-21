@@ -1644,7 +1644,7 @@
         </nav>
 
         <!-- ============================================================
-        SECTION: QUIZ  (Learn button placed inside here)
+        SECTION: QUIZ
         ============================================================ -->
         <section class="section-panel active" id="section-quiz">
             <div class="quiz-container">
@@ -1679,7 +1679,7 @@
                 <div class="question-card" id="questionCard">
                     <div class="transaction-display" id="transactionDisplay">Loading...</div>
                     <div class="account-prompt">
-                        Solve The Question <strong>Debit</strong> or <strong>Credit</strong>?
+                        Which Account is <strong>Debit</strong> or <strong>Credit</strong>?
                         <strong id="accountName">—</strong>
                     </div>
 
@@ -1721,7 +1721,7 @@
                     </div>
                 </div>
 
-                <!-- ===== LEARN MORE BUTTON — only inside Quiz section ===== -->
+                <!-- ===== LEARN MORE BUTTON ===== -->
                 <div class="Lern" style="margin-top:18px;">
                     <a href="lern.html" class="learn-more">
                         <i class="fas fa-book-open"></i> Learn Javeda
@@ -1892,7 +1892,7 @@
     </div>
 
     <!-- ============================================================
-    JAVASCRIPT – COMPLETE FIXED SYSTEM
+    JAVASCRIPT – COMPLETE FIXED SYSTEM WITH UPGRADED MEDIUM/HARD
     ============================================================ -->
     <script>
         // ================================================================
@@ -1966,11 +1966,35 @@
             'Prepaid Expense': 'অগ্রিম খরচ',
             'Accrued Revenue': 'অর্জিত আয়',
             'Interest Payable': 'প্রদেয় সুদ',
-            'Prepaid Insurance': 'অগ্রিম বিমা'
+            'Prepaid Insurance': 'অগ্রিম বিমা',
+            'Sales': 'বিক্রয়',
+            'Purchases': 'ক্রয়',
+            'Discount Allowed': 'বাট্টা প্রদান',
+            'Discount Received': 'বাট্টা পাওয়া',
+            'Bad Debts': 'কুঋণ',
+            'Bank Charges': 'ব্যাংক চার্জ',
+            'Commission': 'কমিশন',
+            'Interest': 'সুদ',
+            'Loan': 'ঋণ',
+            'Debtor': 'দেনাদার',
+            'Creditor': 'পাওনাদার',
+            'Return Inward': 'বিক্রয় ফেরত',
+            'Return Outward': 'ক্রয় ফেরত',
+            'Depreciation': 'অবচয়'
         };
 
         // ================================================================
-        // 2. TRANSACTION TEMPLATES (EASY, MEDIUM, HARD)
+        // 2. BENGALI NAMES FOR TRANSACTIONS
+        // ================================================================
+
+        const BENGALI_PERSON_NAMES = [
+            'রহিম', 'করিম', 'আলম', 'রিয়াদ', 'সুমন', 'হাসান', 'রনি',
+            'তাজিম', 'ফাহিম', 'লিমন', 'জসিম', 'রাফি', 'শাওন', 'নাঈম',
+            'রাসেল', 'সজিব', 'আরিফ', 'তুহিন', 'শুভ', 'নাবিল'
+        ];
+
+        // ================================================================
+        // 3. TRANSACTION TEMPLATES - EASY MODE (No amounts, simple)
         // ================================================================
 
         const EASY_TEMPLATES = [{
@@ -2026,62 +2050,111 @@
             ]
         }];
 
+        // ================================================================
+        // 4. TRANSACTION TEMPLATES - MEDIUM MODE (Exam-style with names)
+        // ================================================================
+
         const MEDIUM_TEMPLATES = [{
-            id: 'med_asset_purchase_cash',
+            id: 'med_purchase_cash',
             category: 'asset',
-            description: 'নগদে {amount} টাকায় {asset} ক্রয় করা হয়েছে',
+            description: 'নগদে {amount} টাকার মাল ক্রয় করা হলো',
             journal: [
-                { account: '{asset}', type: 'asset', side: 'debit' },
+                { account: 'Inventory', type: 'asset', side: 'debit' },
                 { account: 'Cash', type: 'asset', side: 'credit' }
             ],
-            assetPool: ['Computer', 'Furniture', 'Equipment', 'Inventory', 'Office Supplies'],
             amountRange: [5000, 80000]
         }, {
-            id: 'med_asset_purchase_bank',
-            category: 'asset',
-            description: 'ব্যাংক থেকে {amount} টাকায় {asset} ক্রয় করা হয়েছে',
-            journal: [
-                { account: '{asset}', type: 'asset', side: 'debit' },
-                { account: 'Bank', type: 'asset', side: 'credit' }
-            ],
-            assetPool: ['Computer', 'Furniture', 'Equipment', 'Building'],
-            amountRange: [20000, 200000]
-        }, {
-            id: 'med_bank_loan',
+            id: 'med_purchase_credit',
             category: 'liability',
-            description: 'ব্যাংক ঋণ হিসেবে {amount} টাকা গ্রহণ করা হয়েছে',
+            description: '{name} এর নিকট হতে {amount} টাকার মাল ক্রয় করা হলো',
+            journal: [
+                { account: 'Inventory', type: 'asset', side: 'debit' },
+                { account: 'Creditors', type: 'liability', side: 'credit' }
+            ],
+            amountRange: [10000, 100000],
+            useName: true
+        }, {
+            id: 'med_sale_cash',
+            category: 'revenue',
+            description: 'নগদে {amount} টাকার মাল বিক্রয় করা হলো',
+            journal: [
+                { account: 'Cash', type: 'asset', side: 'debit' },
+                { account: 'Sales Revenue', type: 'revenue', side: 'credit' }
+            ],
+            amountRange: [5000, 75000]
+        }, {
+            id: 'med_sale_credit',
+            category: 'revenue',
+            description: '{name} এর নিকট {amount} টাকার মাল বিক্রয় করা হলো',
+            journal: [
+                { account: 'Accounts Receivable', type: 'asset', side: 'debit' },
+                { account: 'Sales Revenue', type: 'revenue', side: 'credit' }
+            ],
+            amountRange: [10000, 90000],
+            useName: true
+        }, {
+            id: 'med_bank_deposit',
+            category: 'asset',
+            description: 'ব্যাংকে {amount} টাকা জমা দেওয়া হলো',
             journal: [
                 { account: 'Bank', type: 'asset', side: 'debit' },
-                { account: 'Bank Loan', type: 'liability', side: 'credit' }
-            ],
-            amountRange: [50000, 300000]
-        }, {
-            id: 'med_salary_expense',
-            category: 'expense',
-            description: 'বেতন বাবদ {amount} টাকা প্রদান করা হয়েছে',
-            journal: [
-                { account: 'Salary', type: 'expense', side: 'debit' },
                 { account: 'Cash', type: 'asset', side: 'credit' }
             ],
             amountRange: [5000, 50000]
         }, {
-            id: 'med_service_revenue',
-            category: 'revenue',
-            description: 'সেবা প্রদান করে {amount} টাকা আয় করা হয়েছে',
+            id: 'med_bank_withdrawal',
+            category: 'asset',
+            description: 'ব্যাংক থেকে {amount} টাকা উত্তোলন করা হলো',
             journal: [
                 { account: 'Cash', type: 'asset', side: 'debit' },
-                { account: 'Service Revenue', type: 'revenue', side: 'credit' }
-            ],
-            amountRange: [5000, 75000]
-        }, {
-            id: 'med_pay_creditors',
-            category: 'liability',
-            description: 'পাওনাদারকে {amount} টাকা প্রদান করা হয়েছে',
-            journal: [
-                { account: 'Creditors', type: 'liability', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
+                { account: 'Bank', type: 'asset', side: 'credit' }
             ],
             amountRange: [5000, 40000]
+        }, {
+            id: 'med_salary_pay',
+            category: 'expense',
+            description: 'কর্মচারীর বেতন {amount} টাকা প্রদান করা হলো',
+            journal: [
+                { account: 'Salary', type: 'expense', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [3000, 30000]
+        }, {
+            id: 'med_salary_cheque',
+            category: 'expense',
+            description: 'চেকের মাধ্যমে কর্মচারীর বেতন {amount} টাকা প্রদান করা হলো',
+            journal: [
+                { account: 'Salary', type: 'expense', side: 'debit' },
+                { account: 'Bank', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [3000, 30000]
+        }, {
+            id: 'med_advertisement_cash',
+            category: 'expense',
+            description: 'বিজ্ঞাপন খরচ বাবদ {amount} টাকা নগদ প্রদান করা হলো',
+            journal: [
+                { account: 'Advertisement', type: 'expense', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [2000, 20000]
+        }, {
+            id: 'med_advertisement_cheque',
+            category: 'expense',
+            description: 'বিজ্ঞাপন খরচ বাবদ {amount} টাকা চেক প্রদান করা হলো',
+            journal: [
+                { account: 'Advertisement', type: 'expense', side: 'debit' },
+                { account: 'Bank', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [2000, 20000]
+        }, {
+            id: 'med_rent_pay',
+            category: 'expense',
+            description: 'ভাড়া বাবদ {amount} টাকা প্রদান করা হলো',
+            journal: [
+                { account: 'Rent', type: 'expense', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [5000, 30000]
         }, {
             id: 'med_revenue_bank',
             category: 'revenue',
@@ -2092,17 +2165,7 @@
             ],
             amountRange: [10000, 100000]
         }, {
-            id: 'med_expense_bank',
-            category: 'expense',
-            description: 'ব্যাংক থেকে {amount} টাকা {expense} পরিশোধ',
-            journal: [
-                { account: '{expense}', type: 'expense', side: 'debit' },
-                { account: 'Bank', type: 'asset', side: 'credit' }
-            ],
-            expensePool: ['Rent', 'Insurance', 'Electricity Bill'],
-            amountRange: [5000, 50000]
-        }, {
-            id: 'med_drawing',
+            id: 'med_drawing_cash',
             category: 'drawing',
             description: 'মালিক {amount} টাকা উত্তোলন করেছেন',
             journal: [
@@ -2110,21 +2173,112 @@
                 { account: 'Cash', type: 'asset', side: 'credit' }
             ],
             amountRange: [5000, 30000]
+        }, {
+            id: 'med_drawing_bank',
+            category: 'drawing',
+            description: 'মালিক ব্যাংক হতে {amount} টাকা উত্তোলন করেছেন',
+            journal: [
+                { account: 'Drawings', type: 'drawing', side: 'debit' },
+                { account: 'Bank', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [5000, 30000]
+        }, {
+            id: 'med_collection_cheque',
+            category: 'asset',
+            description: '{name} এর নিকট হতে {amount} টাকার চেক পাওয়া গেল',
+            journal: [
+                { account: 'Bank', type: 'asset', side: 'debit' },
+                { account: 'Accounts Receivable', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [5000, 50000],
+            useName: true
+        }, {
+            id: 'med_payment_cheque',
+            category: 'liability',
+            description: '{name} এর নিকট {amount} টাকার চেক প্রদান করা হলো',
+            journal: [
+                { account: 'Creditors', type: 'liability', side: 'debit' },
+                { account: 'Bank', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [5000, 40000],
+            useName: true
+        }, {
+            id: 'med_bank_loan',
+            category: 'liability',
+            description: 'ব্যাংক ঋণ হিসেবে {amount} টাকা গ্রহণ করা হয়েছে',
+            journal: [
+                { account: 'Bank', type: 'asset', side: 'debit' },
+                { account: 'Bank Loan', type: 'liability', side: 'credit' }
+            ],
+            amountRange: [50000, 300000]
+        }, {
+            id: 'med_commission_received',
+            category: 'revenue',
+            description: 'কমিশন বাবদ {amount} টাকা পাওয়া গেল',
+            journal: [
+                { account: 'Cash', type: 'asset', side: 'debit' },
+                { account: 'Commission Revenue', type: 'revenue', side: 'credit' }
+            ],
+            amountRange: [500, 10000]
+        }, {
+            id: 'med_discount_allowed',
+            category: 'expense',
+            description: '{name} কে {amount} টাকা বাট্টা প্রদান করা হলো',
+            journal: [
+                { account: 'Discount Allowed', type: 'expense', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [200, 5000],
+            useName: true
+        }, {
+            id: 'med_discount_received',
+            category: 'revenue',
+            description: '{name} হতে {amount} টাকা বাট্টা পাওয়া গেল',
+            journal: [
+                { account: 'Cash', type: 'asset', side: 'debit' },
+                { account: 'Discount Received', type: 'revenue', side: 'credit' }
+            ],
+            amountRange: [200, 5000],
+            useName: true
+        }, {
+            id: 'med_return_inward',
+            category: 'revenue',
+            description: '{name} কর্তৃক {amount} টাকার বিক্রিত পণ্য ফেরত',
+            journal: [
+                { account: 'Sales Revenue', type: 'revenue', side: 'debit' },
+                { account: 'Accounts Receivable', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [1000, 15000],
+            useName: true
+        }, {
+            id: 'med_return_outward',
+            category: 'asset',
+            description: '{name} কে {amount} টাকার ক্রয়কৃত পণ্য ফেরত',
+            journal: [
+                { account: 'Creditors', type: 'liability', side: 'debit' },
+                { account: 'Inventory', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [1000, 15000],
+            useName: true
         }];
+
+        // ================================================================
+        // 5. TRANSACTION TEMPLATES - HARD MODE (Advanced/Complex)
+        // ================================================================
 
         const HARD_TEMPLATES = [{
             id: 'hard_salary_payable',
             category: 'liability',
-            description: 'বকেয়া বেতন সমন্বয় করা হয়েছে {amount} টাকা',
+            description: 'বকেয়া বেতন {amount} টাকা সমন্বয় করা হয়েছে',
             journal: [
                 { account: 'Salary', type: 'expense', side: 'debit' },
                 { account: 'Salary Payable', type: 'liability', side: 'credit' }
             ],
             amountRange: [10000, 60000]
         }, {
-            id: 'hard_prepaid_rent',
+            id: 'hard_prepaid_rent_adj',
             category: 'asset',
-            description: 'অগ্রিম ভাড়ার সমন্বয় করা হয়েছে {amount} টাকা',
+            description: '{amount} টাকা অগ্রিম ভাড়ার সমন্বয় করা হয়েছে',
             journal: [
                 { account: 'Rent', type: 'expense', side: 'debit' },
                 { account: 'Prepaid Rent', type: 'asset', side: 'credit' }
@@ -2143,16 +2297,17 @@
         }, {
             id: 'hard_collection_receivable',
             category: 'asset',
-            description: 'গ্রাহকের নিকট হতে পূর্বে বকেয়া {amount} টাকা পাওনা আদায় করা হয়েছে',
+            description: '{name} এর নিকট হতে পূর্বে বকেয়া {amount} টাকা পাওনা আদায় করা হয়েছে',
             journal: [
                 { account: 'Cash', type: 'asset', side: 'debit' },
                 { account: 'Accounts Receivable', type: 'asset', side: 'credit' }
             ],
-            amountRange: [10000, 80000]
+            amountRange: [10000, 80000],
+            useName: true
         }, {
             id: 'hard_prepaid_expense_adj',
             category: 'expense',
-            description: 'পূর্বে প্রদত্ত {amount} টাকা অগ্রিম খরচ সমন্বয় করা হয়েছে',
+            description: '{amount} টাকা পূর্বে প্রদত্ত অগ্রিম খরচ সমন্বয় করা হয়েছে',
             journal: [
                 { account: '{expense}', type: 'expense', side: 'debit' },
                 { account: 'Prepaid Expense', type: 'asset', side: 'credit' }
@@ -2162,7 +2317,7 @@
         }, {
             id: 'hard_accrued_revenue',
             category: 'revenue',
-            description: 'অর্জিত কিন্তু অপ্রাপ্ত {amount} টাকা আয় সমন্বয় করা হয়েছে',
+            description: '{amount} টাকা অর্জিত কিন্তু অপ্রাপ্ত আয় সমন্বয় করা হয়েছে',
             journal: [
                 { account: 'Accounts Receivable', type: 'asset', side: 'debit' },
                 { account: 'Service Revenue', type: 'revenue', side: 'credit' }
@@ -2178,27 +2333,130 @@
             ],
             amountRange: [2000, 15000]
         }, {
-            id: 'hard_drawings',
+            id: 'hard_drawings_goods',
             category: 'drawing',
-            description: 'মালিক {amount} টাকা পণ্য উত্তোলন করেছেন',
+            description: 'মালিক {amount} টাকার পণ্য উত্তোলন করেছেন',
             journal: [
                 { account: 'Drawings', type: 'drawing', side: 'debit' },
                 { account: 'Inventory', type: 'asset', side: 'credit' }
             ],
             amountRange: [5000, 25000]
         }, {
-            id: 'hard_prepaid_insurance',
+            id: 'hard_prepaid_insurance_adj',
             category: 'asset',
-            description: 'অগ্রিম {amount} টাকা বিমা খরচ সমন্বয় করা হয়েছে',
+            description: '{amount} টাকা অগ্রিম বিমা খরচ সমন্বয় করা হয়েছে',
             journal: [
                 { account: 'Insurance', type: 'expense', side: 'debit' },
                 { account: 'Prepaid Insurance', type: 'asset', side: 'credit' }
             ],
             amountRange: [3000, 25000]
+        }, {
+            id: 'hard_bad_debts',
+            category: 'expense',
+            description: '{name} এর নিকট {amount} টাকা অনাদায়ী দেনা ধার্য করা হলো',
+            journal: [
+                { account: 'Bad Debts', type: 'expense', side: 'debit' },
+                { account: 'Accounts Receivable', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [1000, 10000],
+            useName: true
+        }, {
+            id: 'hard_bank_charges',
+            category: 'expense',
+            description: 'ব্যাংক কর্তৃক {amount} টাকা চার্জ ধার্য করা হলো',
+            journal: [
+                { account: 'Bank Charges', type: 'expense', side: 'debit' },
+                { account: 'Bank', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [100, 1000]
+        }, {
+            id: 'hard_interest_received',
+            category: 'revenue',
+            description: 'ব্যাংক কর্তৃক {amount} টাকা সুদ মঞ্জুর করা হয়েছে',
+            journal: [
+                { account: 'Bank', type: 'asset', side: 'debit' },
+                { account: 'Interest Revenue', type: 'revenue', side: 'credit' }
+            ],
+            amountRange: [300, 3000]
+        }, {
+            id: 'hard_commission_payable',
+            category: 'liability',
+            description: '{name} কে {amount} টাকা কমিশন প্রদেয় সমন্বয়',
+            journal: [
+                { account: 'Commission Revenue', type: 'expense', side: 'debit' },
+                { account: 'Creditors', type: 'liability', side: 'credit' }
+            ],
+            amountRange: [1000, 15000],
+            useName: true
+        }, {
+            id: 'hard_income_tax',
+            category: 'expense',
+            description: 'আয়কর বাবদ {amount} টাকা প্রদান করা হলো',
+            journal: [
+                { account: 'Income Tax', type: 'expense', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [500, 10000]
+        }, {
+            id: 'hard_donation',
+            category: 'expense',
+            description: '{amount} টাকা দান করা হয়েছে',
+            journal: [
+                { account: 'Donation', type: 'expense', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [500, 5000]
+        }, {
+            id: 'hard_insurance_premium',
+            category: 'expense',
+            description: 'জীবন বীমা প্রিমিয়াম বাবদ {amount} টাকা প্রদান',
+            journal: [
+                { account: 'Insurance', type: 'expense', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [1000, 10000]
+        }, {
+            id: 'hard_loan_received',
+            category: 'liability',
+            description: '{name} এর কাছ থেকে {amount} টাকা ঋণ গ্রহণ করা হলো',
+            journal: [
+                { account: 'Cash', type: 'asset', side: 'debit' },
+                { account: 'Loan', type: 'liability', side: 'credit' }
+            ],
+            amountRange: [10000, 100000],
+            useName: true
+        }, {
+            id: 'hard_loan_payment',
+            category: 'liability',
+            description: '{name} কে {amount} টাকা ঋণ পরিশোধ করা হলো',
+            journal: [
+                { account: 'Loan', type: 'liability', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [5000, 50000],
+            useName: true
+        }, {
+            id: 'hard_interest_on_capital',
+            category: 'expense',
+            description: 'মূলধনের উপর {amount} টাকা সুদ ধার্য করা হয়েছে',
+            journal: [
+                { account: 'Interest Expense', type: 'expense', side: 'debit' },
+                { account: 'Capital', type: 'capital', side: 'credit' }
+            ],
+            amountRange: [1000, 10000]
+        }, {
+            id: 'hard_purchase_commission',
+            category: 'expense',
+            description: 'ক্রয় কমিশন বাবদ {amount} টাকা প্রদান',
+            journal: [
+                { account: 'Commission Expense', type: 'expense', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [500, 8000]
         }];
 
         // ================================================================
-        // 3. BUSINESS STATE
+        // 6. BUSINESS STATE
         // ================================================================
 
         class Business {
@@ -2223,7 +2481,8 @@
                     'Bank Loan': 0,
                     'Salary Payable': 0,
                     'Rent Payable': 0,
-                    'Interest Payable': 0
+                    'Interest Payable': 0,
+                    'Loan': 0
                 };
                 this.capital = 650000;
                 this.revenue = 0;
@@ -2275,7 +2534,7 @@
         }
 
         // ================================================================
-        // 4. HELPERS
+        // 7. HELPERS
         // ================================================================
 
         function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -2285,6 +2544,10 @@
             const step = 500;
             const val = min + Math.random() * (max - min);
             return Math.round(val / step) * step;
+        }
+
+        function getRandomName() {
+            return pickRandom(BENGALI_PERSON_NAMES);
         }
 
         function getRuleExplanation(type, effect, name) {
@@ -2331,7 +2594,7 @@
         const COINS_PER_CORRECT = 2;
 
         // ================================================================
-        // 5. 50 BADGES
+        // 8. 50 BADGES
         // ================================================================
 
         const ALL_BADGES = [
@@ -2457,7 +2720,7 @@
         }
 
         // ================================================================
-        // 6. TOAST SYSTEM
+        // 9. TOAST SYSTEM
         // ================================================================
 
         function showToast(title, desc, icon, type) {
@@ -2497,13 +2760,8 @@
                 'fa-coins', 'hint');
         }
 
-        function showHintToast(used) {
-            if (used) showToast('Hint Used', '1 hint consumed', 'fa-lightbulb', 'hint');
-            else showToast('Hint Purchased', 'Added to your inventory!', 'fa-coins', 'hint');
-        }
-
         // ================================================================
-        // 7. FIRESTORE HELPERS
+        // 10. FIRESTORE HELPERS
         // ================================================================
 
         const USERS_COLLECTION = 'users';
@@ -2584,7 +2842,7 @@
         }
 
         // ================================================================
-        // 8. TRANSACTION GENERATOR
+        // 11. TRANSACTION GENERATOR (UPDATED for Medium/Hard)
         // ================================================================
 
         function generateTransactionFromTemplate(template, mode) {
@@ -2597,6 +2855,12 @@
             let asset = '',
                 expense = '',
                 liability = '';
+            let name = '';
+
+            if (template.useName) {
+                name = getRandomName();
+            }
+
             if (template.assetPool) asset = pickRandom(template.assetPool);
             if (template.expensePool) expense = pickRandom(template.expensePool);
             if (template.liabilityPool) liability = pickRandom(template.liabilityPool);
@@ -2605,6 +2869,7 @@
             if (template.assetPool) desc = desc.replace(/{asset}/g, BENGALI_NAMES[asset] || asset);
             if (template.expensePool) desc = desc.replace(/{expense}/g, BENGALI_NAMES[expense] || expense);
             if (template.liabilityPool) desc = desc.replace(/{liability}/g, BENGALI_NAMES[liability] || liability);
+            if (template.useName) desc = desc.replace(/{name}/g, name);
 
             if (hasAmount && template.amountRange) {
                 desc = desc.replace(/{amount}/g, amount.toLocaleString());
@@ -2631,6 +2896,7 @@
                 primaryAccount: journal[0].account,
                 primaryType: journal[0].type,
                 primarySide: journal[0].side,
+                personName: name || null,
             };
         }
 
@@ -2656,7 +2922,7 @@
         }
 
         // ================================================================
-        // 9. SMART TRACKER
+        // 12. SMART TRACKER
         // ================================================================
 
         const SMART_TRACKER = {
@@ -2731,7 +2997,7 @@
         };
 
         // ================================================================
-        // 10. QUIZ STATE
+        // 13. QUIZ STATE
         // ================================================================
 
         let state = {
@@ -2784,7 +3050,7 @@
         };
 
         // ================================================================
-        // 11. UI HELPERS
+        // 14. UI HELPERS
         // ================================================================
 
         const $ = (sel) => document.querySelector(sel);
@@ -2796,7 +3062,7 @@
         }
 
         // ================================================================
-        // 12. RENDER FUNCTIONS
+        // 15. RENDER FUNCTIONS
         // ================================================================
 
         function renderBusinessMini() {
@@ -2976,15 +3242,12 @@
             const hintBtn = document.getElementById('hintBtn');
             if (hintBtn) hintBtn.disabled = true;
 
-            // Clear any existing timer
             if (state.autoTimer) {
                 clearTimeout(state.autoTimer);
                 state.autoTimer = null;
             }
 
-            // Auto-advance logic: correct → 0.5s, wrong → 5s countdown
             if (isCorrect) {
-                // Correct: advance after 0.5s
                 state.autoTimer = setTimeout(() => {
                     state.autoTimer = null;
                     advanceQuestion();
@@ -2994,7 +3257,6 @@
                 const nextBtn = document.getElementById('nextBtnFallback');
                 if (nextBtn) nextBtn.classList.remove('show');
             } else {
-                // Wrong: show countdown for 5 seconds
                 state.countdown = 5;
                 const countdownEl = document.getElementById('countdownNum');
                 if (countdownEl) countdownEl.textContent = '5';
@@ -3059,7 +3321,7 @@
         }
 
         // ================================================================
-        // 13. QUESTION GENERATOR
+        // 16. QUESTION GENERATOR
         // ================================================================
 
         function generateNextQuestionSet() {
@@ -3164,7 +3426,7 @@
         }
 
         // ================================================================
-        // 14. ANSWER HANDLING – FIXED: pointsChanged used consistently
+        // 17. ANSWER HANDLING
         // ================================================================
 
         async function handleAnswer(answer) {
@@ -3264,7 +3526,6 @@
 
             s.focusCount = (s.focusCount || 0) + 1;
 
-            // Save to Firebase or localStorage
             if (!state.isGuest && auth.currentUser) {
                 await saveUserStats(auth.currentUser.uid, s);
             } else {
@@ -3276,7 +3537,6 @@
             updateHeaderStats();
             updateQuizProgress();
 
-            // Show points/XP toast – using pointsChanged (correct)
             if (pointsChanged !== 0 || xpChanged !== 0) {
                 let title = isCorrect ? 'Correct!' : 'Wrong!';
                 let icon = isCorrect ? 'fa-check-circle' : 'fa-times-circle';
@@ -3302,7 +3562,7 @@
         }
 
         // ================================================================
-        // 15. HINT SYSTEM – FIXED
+        // 18. HINT SYSTEM
         // ================================================================
 
         function useHint() {
@@ -3342,7 +3602,7 @@
         }
 
         // ================================================================
-        // 16. HINT SHOP
+        // 19. HINT SHOP
         // ================================================================
 
         function buyHints(hints, price) {
@@ -3376,7 +3636,7 @@
         }
 
         // ================================================================
-        // 17. DASHBOARD
+        // 20. DASHBOARD
         // ================================================================
 
         function updateDashboard() {
@@ -3475,7 +3735,7 @@
         }
 
         // ================================================================
-        // 18. REVISION
+        // 21. REVISION
         // ================================================================
 
         async function updateRevisionBadges() {
@@ -3555,7 +3815,7 @@
         }
 
         // ================================================================
-        // 19. LEADERBOARD
+        // 22. LEADERBOARD
         // ================================================================
 
         function setupLeaderboardListener() {
@@ -3659,7 +3919,7 @@
         }
 
         // ================================================================
-        // 20. USER DATA LISTENER
+        // 23. USER DATA LISTENER
         // ================================================================
 
         function setupUserDataListener(uid) {
@@ -3739,7 +3999,7 @@
         }
 
         // ================================================================
-        // 21. AUTH HANDLING
+        // 24. AUTH HANDLING
         // ================================================================
 
         function showLogin() {
@@ -3808,7 +4068,7 @@
         }
 
         // ================================================================
-        // 22. NAVIGATION
+        // 25. NAVIGATION
         // ================================================================
 
         function navigateTo(section) {
@@ -3830,13 +4090,12 @@
         }
 
         // ================================================================
-        // 23. INIT – FIXED: event listeners properly bound
+        // 26. INIT
         // ================================================================
 
         function init() {
             auth.onAuthStateChanged(handleAuthState);
 
-            // Login
             document.getElementById('loginBtn').addEventListener('click', async function() {
                 const btn = this,
                     loader = document.getElementById('loginLoader');
@@ -3883,7 +4142,6 @@
                 showToast('Guest Mode', 'Your progress is saved locally.', 'fa-user', 'gain');
             });
 
-            // Avatar dropdown
             const avatar = document.getElementById('userAvatar');
             if (avatar) {
                 avatar.addEventListener('click', function(e) {
@@ -3927,7 +4185,7 @@
                 });
             });
 
-            // Quiz options – FIXED: properly bound
+            // Quiz options
             $$('.quiz-opt').forEach(btn => {
                 btn.addEventListener('click', function() {
                     if (state.answered) return;
@@ -4088,12 +4346,13 @@
                 if (indicator) indicator.style.display = 'inline-block';
             }
 
-            console.log('📘 Journal Entry · MCQ Learner (FULLY FIXED)');
+            console.log('📘 Journal Entry · MCQ Learner (UPGRADED Medium/Hard)');
             console.log('🏅 50 badges available!');
+            console.log('📊 Medium & Hard modes now use real exam-style transactions with names!');
         }
 
         // ================================================================
-        // 24. START
+        // 27. START
         // ================================================================
 
         document.addEventListener('DOMContentLoaded', init);
