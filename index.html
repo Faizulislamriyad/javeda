@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Journal Entry · MCQ Learner</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
     </script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js">
@@ -89,7 +88,6 @@
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.10);
         }
 
-        /* ===== HEADER ===== */
         .app-header {
             display: flex;
             align-items: center;
@@ -167,8 +165,10 @@
         .stat-pill .num.xp {
             color: var(--accent-1);
         }
+        .stat-pill .num.coins {
+            color: #d4a017;
+        }
 
-        /* ===== NAV TABS ===== */
         .nav-tabs {
             display: flex;
             gap: 6px;
@@ -213,7 +213,6 @@
             font-size: 16px;
         }
 
-        /* ===== SECTIONS ===== */
         .section-panel {
             display: none;
             animation: fadeUp 0.35s ease;
@@ -232,7 +231,6 @@
             }
         }
 
-        /* ===== QUIZ ===== */
         .quiz-container {
             max-width: 820px;
             margin: 0 auto;
@@ -286,15 +284,6 @@
             border-color: var(--accent-4);
         }
 
-        .quiz-progress-text {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-        .quiz-progress-text strong {
-            color: var(--text-primary);
-        }
-
-        /* Business State Mini */
         .business-mini {
             display: flex;
             flex-wrap: wrap;
@@ -325,7 +314,6 @@
             color: var(--text-primary);
         }
 
-        /* Question Card */
         .question-card {
             background: var(--glass-bg);
             backdrop-filter: blur(var(--glass-blur));
@@ -345,14 +333,6 @@
             color: var(--text-primary);
             line-height: 1.6;
             min-height: 70px;
-        }
-        .transaction-display .amount {
-            color: var(--accent-3);
-        }
-        .transaction-display .no-amount {
-            color: var(--text-secondary);
-            font-weight: 400;
-            font-size: 18px;
         }
         .account-prompt {
             text-align: center;
@@ -424,7 +404,6 @@
             background: rgba(15, 184, 138, 0.10) !important;
         }
 
-        /* Feedback */
         .feedback-box {
             margin-top: 24px;
             padding: 18px 22px;
@@ -453,16 +432,26 @@
         .feedback-box .fb-head i {
             font-size: 22px;
         }
-        .feedback-box .fb-body {
-            margin-top: 8px;
+        .feedback-box .fb-result {
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .feedback-box .fb-result.correct-text {
+            color: var(--accent-2);
+        }
+        .feedback-box .fb-result.wrong-text {
+            color: var(--accent-4);
+        }
+        .feedback-box .fb-detail {
+            margin-top: 6px;
             color: var(--text-secondary);
             font-size: 15px;
             line-height: 1.8;
         }
-        .feedback-box .fb-body strong {
+        .feedback-box .fb-detail strong {
             color: var(--text-primary);
         }
-        .feedback-box .fb-rule {
+        .feedback-box .fb-rule-box {
             margin-top: 8px;
             padding: 10px 16px;
             background: rgba(255, 255, 255, 0.40);
@@ -471,20 +460,22 @@
             border-left: 3px solid var(--accent-1);
             color: var(--text-secondary);
         }
-        .feedback-box .fb-rule strong {
+        .feedback-box .fb-rule-box strong {
             color: var(--text-primary);
         }
 
-        /* Auto-next */
         .auto-next-indicator {
             text-align: center;
             margin-top: 16px;
             font-size: 13px;
             color: var(--text-muted);
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             gap: 8px;
+        }
+        .auto-next-indicator.show {
+            display: flex;
         }
         .auto-next-indicator i {
             font-size: 14px;
@@ -496,7 +487,46 @@
             min-width: 20px;
         }
 
-        /* Quick Stats */
+        .quiz-action-bar {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .hint-btn {
+            padding: 10px 24px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--glass-border);
+            background: rgba(255, 215, 0, 0.15);
+            color: var(--text-primary);
+            font-family: var(--font);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .hint-btn:hover:not(:disabled) {
+            background: rgba(255, 215, 0, 0.25);
+            transform: translateY(-2px);
+        }
+        .hint-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .hint-btn i {
+            color: #d4a017;
+        }
+        .hint-btn .hint-count {
+            background: rgba(0, 0, 0, 0.10);
+            padding: 0 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
         .quick-stats {
             display: flex;
             flex-wrap: wrap;
@@ -521,7 +551,6 @@
             font-weight: 600;
         }
 
-        /* ===== MODE TOGGLES ===== */
         .mode-toggles {
             display: flex;
             gap: 12px;
@@ -567,7 +596,6 @@
             font-size: 14px;
         }
 
-        /* ===== DASHBOARD ===== */
         .dash-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -608,10 +636,10 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        .dash-stat .val.points-color {
-            color: var(--accent-3);
+        .dash-stat .val.coin-val {
+            color: #d4a017;
             background: none;
-            -webkit-text-fill-color: var(--accent-3);
+            -webkit-text-fill-color: #d4a017;
         }
         .dash-stat .label {
             font-size: 13px;
@@ -619,7 +647,6 @@
             margin-top: 4px;
         }
 
-        /* XP Bar */
         .xp-bar-wrap {
             background: rgba(255, 255, 255, 0.40);
             border-radius: 30px;
@@ -641,7 +668,6 @@
             justify-content: space-between;
         }
 
-        /* Chart */
         .chart-container {
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
@@ -691,39 +717,51 @@
             text-align: center;
         }
 
-        /* Badges */
         .badges-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 8px;
             margin-top: 12px;
         }
         .badge-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 6px 16px 6px 12px;
-            border-radius: 30px;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-secondary);
+            transition: var(--transition);
         }
-        .badge-item i {
-            font-size: 18px;
-            color: var(--accent-3);
-            width: 22px;
+        .badge-item .b-icon {
+            font-size: 20px;
+            width: 28px;
             text-align: center;
+            flex-shrink: 0;
         }
-        .badge-item.locked {
-            opacity: 0.35;
-            filter: grayscale(0.6);
+        .badge-item .b-icon.unlocked {
+            color: var(--accent-3);
         }
-        .badge-item.locked i {
+        .badge-item .b-icon.locked {
+            color: var(--text-muted);
+            opacity: 0.4;
+        }
+        .badge-item .b-info .b-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 12px;
+        }
+        .badge-item .b-info .b-desc {
+            font-size: 10px;
             color: var(--text-muted);
         }
+        .badge-item.locked {
+            opacity: 0.5;
+            filter: grayscale(0.4);
+        }
 
-        /* Weak Topics */
         .weak-topic-item {
             padding: 8px 14px;
             background: rgba(255, 255, 255, 0.30);
@@ -740,7 +778,6 @@
             font-weight: 600;
         }
 
-        /* ===== REVISION ===== */
         .revision-list {
             display: flex;
             flex-direction: column;
@@ -778,7 +815,6 @@
             font-weight: 600;
         }
 
-        /* ===== LEADERBOARD ===== */
         .lb-table {
             width: 100%;
             border-collapse: collapse;
@@ -858,7 +894,6 @@
             margin-bottom: 6px;
         }
 
-        /* ===== TOAST NOTIFICATION ===== */
         .toast-container {
             position: fixed;
             top: 24px;
@@ -874,7 +909,6 @@
         .toast {
             background: var(--toast-bg);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: var(--radius-sm);
             padding: 14px 20px;
@@ -910,8 +944,8 @@
         .toast .toast-icon.loss {
             color: var(--accent-4);
         }
-        .toast .toast-icon.xp-gain {
-            color: var(--accent-1);
+        .toast .toast-icon.coin {
+            color: #d4a017;
         }
         .toast .toast-content {
             flex: 1;
@@ -933,6 +967,10 @@
             color: var(--accent-4);
             font-weight: 600;
         }
+        .toast .toast-content .toast-desc .highlight-coin {
+            color: #d4a017;
+            font-weight: 600;
+        }
         .toast .toast-close {
             background: none;
             border: none;
@@ -947,7 +985,6 @@
             color: rgba(255, 255, 255, 0.8);
         }
 
-        /* ===== LOGIN OVERLAY ===== */
         .login-overlay {
             position: fixed;
             top: 0;
@@ -970,7 +1007,6 @@
         .login-card {
             background: var(--glass-bg);
             backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius);
             padding: 48px 40px;
@@ -998,7 +1034,7 @@
         .login-card p {
             color: var(--text-secondary);
             font-size: 15px;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
             line-height: 1.6;
         }
         .login-card .login-btn {
@@ -1056,8 +1092,38 @@
                 transform: rotate(360deg);
             }
         }
+        .login-card .skip-btn {
+            display: inline-block;
+            margin-top: 14px;
+            color: var(--text-muted);
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: none;
+            border: none;
+            font-family: var(--font);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        .login-card .skip-btn:hover {
+            color: var(--text-primary);
+        }
+        .login-card .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 16px 0;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        .login-card .divider::before,
+        .login-card .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--glass-border);
+        }
 
-        /* ===== USER AVATAR IN HEADER ===== */
         .user-avatar {
             width: 36px;
             height: 36px;
@@ -1081,7 +1147,6 @@
             right: 0;
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-sm);
             padding: 12px 0;
@@ -1118,13 +1183,133 @@
             font-size: 15px;
             color: var(--accent-1);
         }
-        .user-dropdown .dropdown-divider {
-            height: 1px;
-            background: var(--glass-border);
-            margin: 6px 16px;
+
+        .rev-count {
+            display: inline-block;
+            background: var(--accent-4);
+            color: #fff;
+            font-size: 11px;
+            padding: 0 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+        .rev-count.zero {
+            background: var(--text-muted);
         }
 
-        /* ===== RESPONSIVE ===== */
+        .mode-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 20px;
+            margin-left: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .mode-badge.easy {
+            background: var(--accent-2);
+            color: #fff;
+        }
+        .mode-badge.medium {
+            background: var(--accent-3);
+            color: #1a1a2e;
+        }
+        .mode-badge.hard {
+            background: var(--accent-4);
+            color: #fff;
+        }
+
+        .smart-indicator {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 20px;
+            background: var(--accent-1);
+            color: #fff;
+            margin-left: 6px;
+        }
+
+        .hint-shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .hint-pack {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            text-align: center;
+            transition: var(--transition);
+        }
+        .hint-pack:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--glass-shadow);
+        }
+        .hint-pack .pack-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .hint-pack .pack-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #d4a017;
+            margin: 8px 0;
+        }
+        .hint-pack .pack-hints {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+        .hint-pack .pack-buy {
+            padding: 10px 28px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: var(--gradient-1);
+            color: #fff;
+            font-family: var(--font);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .hint-pack .pack-buy:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(91, 75, 213, 0.30);
+        }
+        .hint-pack .pack-buy:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .next-btn-fallback {
+            margin-top: 12px;
+            padding: 10px 24px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: var(--gradient-1);
+            color: #fff;
+            font-family: var(--font);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: none;
+            width: 100%;
+        }
+        .next-btn-fallback:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(91, 75, 213, 0.30);
+        }
+        .next-btn-fallback.show {
+            display: block;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 12px 10px 30px;
@@ -1162,10 +1347,6 @@
             }
             .nav-tab i {
                 font-size: 13px;
-            }
-            .nav-tab .rev-count {
-                font-size: 10px;
-                padding: 0 6px;
             }
             .glass-card {
                 padding: 18px 14px;
@@ -1226,9 +1407,6 @@
                 justify-content: center;
                 gap: 8px;
             }
-            .quick-stats span {
-                font-size: 12px;
-            }
             .business-mini {
                 font-size: 12px;
                 gap: 4px 12px;
@@ -1243,16 +1421,9 @@
                 padding: 12px 16px;
                 font-size: 13px;
             }
-            .revision-item {
-                font-size: 13px;
-                padding: 8px 12px;
-            }
             .login-card {
                 padding: 32px 24px;
                 margin: 0 16px;
-            }
-            .login-card h2 {
-                font-size: 22px;
             }
             .lb-table {
                 font-size: 12px;
@@ -1265,9 +1436,11 @@
                 width: 30px;
                 height: 30px;
             }
-            .user-dropdown {
-                right: -10px;
-                min-width: 160px;
+            .badges-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+            .hint-shop-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             }
         }
         @media (max-width: 480px) {
@@ -1299,9 +1472,6 @@
             .feedback-box {
                 padding: 14px 14px;
             }
-            .feedback-box .fb-head {
-                font-size: 15px;
-            }
             .toast-container {
                 top: 12px;
                 right: 12px;
@@ -1311,20 +1481,8 @@
                 padding: 10px 14px;
                 font-size: 12px;
             }
-            .toast .toast-icon {
-                font-size: 18px;
-                width: 26px;
-            }
-            .revision-item {
-                font-size: 12px;
-                padding: 6px 10px;
-            }
             .login-card {
                 padding: 24px 18px;
-            }
-            .login-card .login-btn {
-                font-size: 14px;
-                padding: 12px 18px;
             }
             .lb-table {
                 font-size: 11px;
@@ -1333,12 +1491,28 @@
             .lb-table td {
                 padding: 4px 6px;
             }
-            .header-stats .stat-pill {
-                font-size: 10px;
-                padding: 3px 8px;
+            .badges-grid {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
             }
-            .header-stats .stat-pill .num {
+            .badge-item {
                 font-size: 11px;
+                padding: 6px 8px;
+            }
+            .badge-item .b-icon {
+                font-size: 16px;
+                width: 22px;
+            }
+            .hint-shop-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .hint-pack {
+                padding: 14px;
+            }
+            .hint-pack .pack-name {
+                font-size: 16px;
+            }
+            .hint-pack .pack-price {
+                font-size: 18px;
             }
         }
 
@@ -1358,45 +1532,23 @@
             display: flex;
             flex-wrap: wrap;
         }
-        .items-center {
-            align-items: center;
-        }
         .gap-8 {
             gap: 8px;
         }
         .w-full {
             width: 100%;
         }
-
-        /* ===== REVISION COUNT BADGE ===== */
-        .rev-count {
-            display: inline-block;
-            background: var(--accent-4);
-            color: #fff;
-            font-size: 11px;
-            padding: 0 8px;
-            border-radius: 20px;
-            font-weight: 600;
-            margin-left: 4px;
+        .badge-toast {
+            border-left: 4px solid var(--accent-3) !important;
         }
-        .rev-count.zero {
-            background: var(--text-muted);
+        .badge-toast .toast-icon {
+            color: var(--accent-3) !important;
         }
-
-        /* ===== LOADING SHIMMER ===== */
-        .shimmer-loading {
-            background: linear-gradient(90deg, var(--glass-bg) 25%, rgba(255, 255, 255, 0.15) 50%, var(--glass-bg) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: var(--radius-xs);
+        .hint-toast {
+            border-left: 4px solid #d4a017 !important;
         }
-        @keyframes shimmer {
-            0% {
-                background-position: -200% 0;
-            }
-            100% {
-                background-position: 200% 0;
-            }
+        .hint-toast .toast-icon {
+            color: #d4a017 !important;
         }
     </style>
 </head>
@@ -1404,7 +1556,6 @@
 
     <div class="app-container" id="app">
 
-        <!-- ===== TOAST CONTAINER ===== -->
         <div class="toast-container" id="toastContainer"></div>
 
         <!-- ===== LOGIN OVERLAY ===== -->
@@ -1421,6 +1572,9 @@
                     <div class="spinner"></div>
                     <span>Signing in...</span>
                 </div>
+                <div class="divider">or</div>
+                <button class="skip-btn" id="skipLoginBtn">Skip &amp; Continue as Guest</button>
+                <p style="font-size:12px;color:var(--text-muted);margin-top:12px;">Guest progress is saved locally.</p>
             </div>
         </div>
 
@@ -1434,12 +1588,13 @@
                 </div>
             </div>
             <div class="header-stats" id="headerStats">
+                <span class="stat-pill"><i class="fas fa-coins"></i> Coins <span class="num coins" id="hCoins">0</span></span>
                 <span class="stat-pill"><i class="fas fa-star"></i> Points <span class="num points" id="hPoints">0</span></span>
                 <span class="stat-pill"><i class="fas fa-bolt"></i> XP <span class="num xp" id="hXp">0</span></span>
                 <span class="stat-pill"><i class="fas fa-trophy"></i> Level <span class="num" id="hLevel">1</span></span>
                 <span class="stat-pill"><i class="fas fa-fire"></i> <span class="num" id="hStreak">0</span></span>
                 <div class="user-menu">
-                    <img class="user-avatar" id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=5b4bd5&color=fff&size=36" alt="User" />
+                    <img class="user-avatar" id="userAvatar" src="https://ui-avatars.com/api/?name=Guest&background=5b4bd5&color=fff&size=36" alt="User" />
                     <div class="user-dropdown" id="userDropdown">
                         <button class="dropdown-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
                     </div>
@@ -1451,6 +1606,7 @@
         <nav class="nav-tabs" id="navTabs">
             <button class="nav-tab active" data-section="quiz"><i class="fas fa-pen-fancy"></i> Quiz</button>
             <button class="nav-tab" data-section="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
+            <button class="nav-tab" data-section="hintshop"><i class="fas fa-store"></i> Hint Shop</button>
             <button class="nav-tab" data-section="revision"><i class="fas fa-rotate-left"></i> Revision <span class="rev-count zero" id="revCountBadge">0</span></button>
             <button class="nav-tab" data-section="leaderboard"><i class="fas fa-ranking-star"></i> Leaderboard</button>
         </nav>
@@ -1467,14 +1623,8 @@
                         <button class="diff-btn medium" data-diff="medium"><i class="fas fa-chart-simple"></i> Medium</button>
                         <button class="diff-btn hard" data-diff="hard"><i class="fas fa-bolt"></i> Hard</button>
                     </div>
-                    <div class="quiz-progress-text">
-                        Q <strong id="qNum">1</strong> / <span id="qTotal">10</span>
-                        &nbsp;·&nbsp; <i class="fas fa-check-circle" style="color:var(--accent-2);"></i> <span id="qCorrect">0</span>
-                        &nbsp; <i class="fas fa-times-circle" style="color:var(--accent-4);"></i> <span id="qWrong">0</span>
-                    </div>
                 </div>
 
-                <!-- Business State Mini -->
                 <div class="business-mini" id="businessMini">
                     <span><i class="fas fa-coins"></i> Cash: <span class="amt" id="bCash">0</span></span>
                     <span><i class="fas fa-university"></i> Bank: <span class="amt" id="bBank">0</span></span>
@@ -1483,10 +1633,10 @@
                     <span><i class="fas fa-user-tie"></i> Capital: <span class="amt" id="bCapital">0</span></span>
                 </div>
 
-                <!-- Mode Toggles -->
                 <div class="mode-toggles">
                     <button class="mode-toggle" id="smartToggle">
                         <span class="toggle-dot"></span> <i class="fas fa-brain"></i> Smart Mode
+                        <span class="smart-indicator" id="smartLevelIndicator" style="display:none;">Adaptive</span>
                     </button>
                     <button class="mode-toggle" id="revisionToggle">
                         <span class="toggle-dot"></span> <i class="fas fa-rotate-left"></i> Revision Mode
@@ -1494,11 +1644,8 @@
                     </button>
                 </div>
 
-                <!-- Question Card -->
                 <div class="question-card" id="questionCard">
-                    <div class="transaction-display" id="transactionDisplay">
-                        Loading...
-                    </div>
+                    <div class="transaction-display" id="transactionDisplay">Loading...</div>
                     <div class="account-prompt">
                         Which account is <strong>Debit</strong> or <strong>Credit</strong>?
                         <strong id="accountName">—</strong>
@@ -1509,18 +1656,29 @@
                         <button class="quiz-opt credit" data-answer="credit"><i class="fas fa-arrow-left"></i> Credit</button>
                     </div>
 
+                    <div class="quiz-action-bar">
+                        <button class="hint-btn" id="hintBtn" disabled>
+                            <i class="fas fa-lightbulb"></i> Use Hint
+                            <span class="hint-count" id="hintCountDisplay">0</span>
+                        </button>
+                    </div>
+
                     <div class="feedback-box" id="feedbackBox">
-                        <div class="fb-head"><i class="fas fa-check-circle" id="fbIcon"></i> <span id="fbTitle">Correct!</span></div>
-                        <div class="fb-body" id="fbBody">Explanation...</div>
-                        <div class="fb-rule" id="fbRule">Rule: Asset ↑ = Debit</div>
+                        <div class="fb-head">
+                            <i class="fas fa-check-circle" id="fbIcon"></i>
+                            <span class="fb-result" id="fbResult">Correct!</span>
+                        </div>
+                        <div class="fb-detail" id="fbDetail">Explanation...</div>
+                        <div class="fb-rule-box" id="fbRuleBox">Rule: Asset ↑ = Debit</div>
                     </div>
 
                     <div class="auto-next-indicator" id="autoNextIndicator">
-                        <i class="fas fa-clock"></i> Next question in <span class="countdown" id="countdownNum">2</span>s
+                        <i class="fas fa-clock"></i> Next question in <span class="countdown" id="countdownNum">5</span>s
                     </div>
+
+                    <button class="next-btn-fallback" id="nextBtnFallback">Next Question →</button>
                 </div>
 
-                <!-- Quick Stats -->
                 <div class="glass-card" style="margin-top:16px;">
                     <div class="quick-stats">
                         <span><i class="fas fa-check-circle" style="color:var(--accent-2);"></i> Correct: <strong id="qCorr2">0</strong></span>
@@ -1545,16 +1703,18 @@
                 <div class="dash-stat"><div class="val green" id="dCorrect">0</div><div class="label">Correct</div></div>
                 <div class="dash-stat"><div class="val accent4" id="dWrong">0</div><div class="label">Wrong</div></div>
                 <div class="dash-stat"><div class="val gold" id="dAccuracy">0%</div><div class="label">Accuracy</div></div>
+                <div class="dash-stat"><div class="val coin-val" id="dCoins">0</div><div class="label">Coins</div></div>
                 <div class="dash-stat"><div class="val" id="dPoints">0</div><div class="label">Points</div></div>
                 <div class="dash-stat"><div class="val" id="dXp">0</div><div class="label">XP</div></div>
                 <div class="dash-stat"><div class="val gold" id="dLevel">1</div><div class="label">Level</div></div>
                 <div class="dash-stat"><div class="val" id="dStreak">0</div><div class="label">Streak</div></div>
+                <div class="dash-stat"><div class="val" id="dHints">0</div><div class="label">Hints Available</div></div>
             </div>
 
             <div class="glass-card" style="margin-bottom:20px;">
                 <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--text-secondary);">
                     <span><i class="fas fa-bolt" style="color:var(--accent-1);"></i> XP Progress</span>
-                    <span id="xpProgressText">0 / 100</span>
+                    <span id="xpProgressText">0 / 0</span>
                 </div>
                 <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBarFill" style="width:0%;"></div></div>
             </div>
@@ -1567,7 +1727,7 @@
             <div class="glass-card" style="margin-bottom:20px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
                     <span style="font-weight:600;"><i class="fas fa-award" style="color:var(--accent-3);"></i> Badges</span>
-                    <span style="font-size:13px;color:var(--text-muted);" id="badgeCount">0 / 6</span>
+                    <span style="font-size:13px;color:var(--text-muted);" id="badgeCount">0 / 50</span>
                 </div>
                 <div class="badges-grid" id="badgesGrid"></div>
             </div>
@@ -1583,6 +1743,54 @@
         </section>
 
         <!-- ============================================================
+        SECTION: HINT SHOP
+        ============================================================ -->
+        <section class="section-panel" id="section-hintshop">
+            <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+                <i class="fas fa-store" style="color:var(--accent-3);"></i> Hint Shop
+            </h2>
+            <div class="glass-card">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+                    <span style="font-size:16px;color:var(--text-secondary);">
+                        <i class="fas fa-coins" style="color:#d4a017;"></i> Your Coins: <strong id="shopCoins" style="color:var(--text-primary);">0</strong>
+                    </span>
+                    <span style="font-size:16px;color:var(--text-secondary);">
+                        <i class="fas fa-lightbulb" style="color:#d4a017;"></i> Hints: <strong id="shopHints" style="color:var(--text-primary);">0</strong>
+                    </span>
+                </div>
+                <div class="hint-shop-grid" id="hintShopGrid">
+                    <div class="hint-pack">
+                        <div class="pack-name">Single Hint</div>
+                        <div class="pack-price">6 <i class="fas fa-coins" style="font-size:16px;"></i></div>
+                        <div class="pack-hints">1 Hint</div>
+                        <button class="pack-buy" data-hints="1" data-price="6">Buy</button>
+                    </div>
+                    <div class="hint-pack">
+                        <div class="pack-name">Starter Pack</div>
+                        <div class="pack-price">48 <i class="fas fa-coins" style="font-size:16px;"></i></div>
+                        <div class="pack-hints">10 Hints</div>
+                        <button class="pack-buy" data-hints="10" data-price="48">Buy</button>
+                    </div>
+                    <div class="hint-pack">
+                        <div class="pack-name">Pro Pack</div>
+                        <div class="pack-price">94 <i class="fas fa-coins" style="font-size:16px;"></i></div>
+                        <div class="pack-hints">20 Hints</div>
+                        <button class="pack-buy" data-hints="20" data-price="94">Buy</button>
+                    </div>
+                    <div class="hint-pack">
+                        <div class="pack-name">Master Pack</div>
+                        <div class="pack-price">230 <i class="fas fa-coins" style="font-size:16px;"></i></div>
+                        <div class="pack-hints">50 Hints</div>
+                        <button class="pack-buy" data-hints="50" data-price="230">Buy</button>
+                    </div>
+                </div>
+                <div class="text-center" style="margin-top:16px;font-size:13px;color:var(--text-muted);">
+                    <i class="fas fa-info-circle"></i> Use hints during quiz to see the rule before answering.
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
         SECTION: REVISION
         ============================================================ -->
         <section class="section-panel" id="section-revision">
@@ -1591,8 +1799,7 @@
             </h2>
             <div class="glass-card">
                 <p style="color:var(--text-secondary);margin-bottom:16px;">
-                    Your wrong answers are saved to the cloud. Activate <strong>Revision Mode</strong> in the Quiz to
-                    practice these questions again. Correct answers will be removed from the list.
+                    Your wrong answers are saved. Activate <strong>Revision Mode</strong> in the Quiz to practice them again.
                 </p>
                 <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
                     <button class="mode-toggle active" id="revisionModeBtn" style="margin-bottom:0;">
@@ -1626,10 +1833,11 @@
                     <button class="lb-filter-btn active" data-lb="xp"><i class="fas fa-bolt"></i> Top XP</button>
                     <button class="lb-filter-btn" data-lb="points"><i class="fas fa-star"></i> Top Points</button>
                     <button class="lb-filter-btn" data-lb="accuracy"><i class="fas fa-bullseye"></i> Top Accuracy</button>
+                    <button class="lb-filter-btn" data-lb="badges"><i class="fas fa-award"></i> Top Badges</button>
                 </div>
                 <div id="leaderboardContainer">
                     <table class="lb-table">
-                        <thead><tr><th>#</th><th>User</th><th>XP</th><th>Points</th><th>Accuracy</th></tr></thead>
+                        <thead><tr><th>#</th><th>User</th><th>XP</th><th>Points</th><th>Accuracy</th><th>Badges</th></tr></thead>
                         <tbody id="lbBody"></tbody>
                     </table>
                     <div id="lbEmpty" class="empty-state">
@@ -1644,11 +1852,11 @@
     </div>
 
     <!-- ============================================================
-    JAVASCRIPT – COMPLETE SYSTEM with FIREBASE AUTH & FIRESTORE
+    JAVASCRIPT – COMPLETE FIXED SYSTEM
     ============================================================ -->
     <script>
         // ================================================================
-        // 0. FIREBASE INITIALIZATION
+        // 0. FIREBASE INIT
         // ================================================================
 
         const firebaseConfig = {
@@ -1666,7 +1874,7 @@
         const db = firebase.firestore();
 
         // ================================================================
-        // 1. ACCOUNTING RULES & DATA (same as before)
+        // 1. ACCOUNTING RULES
         // ================================================================
 
         const ACCOUNT_RULES = {
@@ -1678,22 +1886,14 @@
             drawing: { increase: 'debit', decrease: 'credit', label: 'Drawing' }
         };
 
-        const ACCOUNT_NAMES = {
-            asset: ['Cash', 'Bank', 'Furniture', 'Computer', 'Equipment', 'Building', 'Land', 'Inventory', 'Office Supplies'],
-            liability: ['Creditors', 'Bank Loan', 'Salary Payable', 'Rent Payable', 'Debentures'],
-            capital: ['Capital', 'Drawings'],
-            revenue: ['Service Revenue', 'Commission Revenue', 'Rent Revenue', 'Sales Revenue', 'Interest Revenue'],
-            expense: ['Salary', 'Electricity Bill', 'Rent', 'Transport', 'Advertisement', 'Insurance', 'Repairs',
-                'Office Expenses'
-            ],
-            drawing: ['Drawings']
-        };
-
         const BENGALI_NAMES = {
             'Cash': 'নগদান',
             'Bank': 'ব্যাংক',
             'Furniture': 'আসবাবপত্র',
             'Computer': 'কম্পিউটার',
+            'Mobile': 'মোবাইল',
+            'Book': 'বই',
+            'Notebook': 'খাতা',
             'Equipment': 'যন্ত্রপাতি',
             'Building': 'ভবন',
             'Land': 'জমি',
@@ -1718,21 +1918,247 @@
             'Advertisement': 'বিজ্ঞাপন ব্যয়',
             'Insurance': 'বিমা খরচ',
             'Repairs': 'মেরামত খরচ',
-            'Office Expenses': 'অফিস খরচ'
-        };
-
-        // Easy mode templates
-        const EASY_TEMPLATES = {
-            asset: { increase: 'নগদে {account} ক্রয় করা হয়েছে', decrease: 'নগদে {account} বিক্রয় করা হয়েছে' },
-            liability: { increase: '{account} তৈরি হয়েছে', decrease: '{account} পরিশোধ করা হয়েছে' },
-            capital: { increase: 'মালিক {account} এ বিনিয়োগ করেছেন', decrease: 'মালিক {account} উত্তোলন করেছেন' },
-            revenue: { increase: '{account} প্রাপ্তি হয়েছে', decrease: '{account} ফেরত দেওয়া হয়েছে' },
-            expense: { increase: '{account} খরচ হয়েছে', decrease: '{account} খরচ কমেছে' },
-            drawing: { increase: 'মালিক উত্তোলন করেছেন', decrease: 'মালিক উত্তোলন ফেরত দিয়েছেন' }
+            'Office Expenses': 'অফিস খরচ',
+            'Prepaid Rent': 'অগ্রিম ভাড়া',
+            'Depreciation Expense': 'অবচয় খরচ',
+            'Accumulated Depreciation': 'সঞ্চিত অবচয়',
+            'Accounts Receivable': 'আগ্রহী পাওনা',
+            'Prepaid Expense': 'অগ্রিম খরচ',
+            'Accrued Revenue': 'অর্জিত আয়',
+            'Interest Payable': 'প্রদেয় সুদ',
+            'Prepaid Insurance': 'অগ্রিম বিমা'
         };
 
         // ================================================================
-        // 2. BUSINESS STATE
+        // 2. TRANSACTION TEMPLATES (EASY, MEDIUM, HARD)
+        // ================================================================
+
+        const EASY_TEMPLATES = [{
+            id: 'easy_asset_purchase',
+            category: 'asset',
+            description: 'নগদে {asset} ক্রয় করা হয়েছে',
+            journal: [
+                { account: '{asset}', type: 'asset', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ],
+            assetPool: ['Computer', 'Mobile', 'Book', 'Notebook', 'Furniture', 'Office Supplies']
+        }, {
+            id: 'easy_expense_pay',
+            category: 'expense',
+            description: 'নগদে {expense} পরিশোধ করা হয়েছে',
+            journal: [
+                { account: '{expense}', type: 'expense', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ],
+            expensePool: ['Electricity Bill', 'Rent', 'Transport', 'Advertisement', 'Office Expenses']
+        }, {
+            id: 'easy_capital_invest',
+            category: 'capital',
+            description: 'মালিক ব্যবসায়ে নগদ বিনিয়োগ করেছেন',
+            journal: [
+                { account: 'Cash', type: 'asset', side: 'debit' },
+                { account: 'Capital', type: 'capital', side: 'credit' }
+            ]
+        }, {
+            id: 'easy_revenue_cash',
+            category: 'revenue',
+            description: 'সেবা প্রদান করে নগদ গ্রহণ করা হয়েছে',
+            journal: [
+                { account: 'Cash', type: 'asset', side: 'debit' },
+                { account: 'Service Revenue', type: 'revenue', side: 'credit' }
+            ]
+        }, {
+            id: 'easy_liability_pay',
+            category: 'liability',
+            description: '{liability} পরিশোধ করা হয়েছে',
+            journal: [
+                { account: '{liability}', type: 'liability', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ],
+            liabilityPool: ['Creditors', 'Rent Payable']
+        }, {
+            id: 'easy_drawing',
+            category: 'drawing',
+            description: 'মালিক উত্তোলন করেছেন',
+            journal: [
+                { account: 'Drawings', type: 'drawing', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ]
+        }];
+
+        const MEDIUM_TEMPLATES = [{
+            id: 'med_asset_purchase_cash',
+            category: 'asset',
+            description: 'নগদে {amount} টাকায় {asset} ক্রয় করা হয়েছে',
+            journal: [
+                { account: '{asset}', type: 'asset', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ],
+            assetPool: ['Computer', 'Furniture', 'Equipment', 'Inventory', 'Office Supplies'],
+            amountRange: [5000, 80000]
+        }, {
+            id: 'med_asset_purchase_bank',
+            category: 'asset',
+            description: 'ব্যাংক থেকে {amount} টাকায় {asset} ক্রয় করা হয়েছে',
+            journal: [
+                { account: '{asset}', type: 'asset', side: 'debit' },
+                { account: 'Bank', type: 'asset', side: 'credit' }
+            ],
+            assetPool: ['Computer', 'Furniture', 'Equipment', 'Building'],
+            amountRange: [20000, 200000]
+        }, {
+            id: 'med_bank_loan',
+            category: 'liability',
+            description: 'ব্যাংক ঋণ হিসেবে {amount} টাকা গ্রহণ করা হয়েছে',
+            journal: [
+                { account: 'Bank', type: 'asset', side: 'debit' },
+                { account: 'Bank Loan', type: 'liability', side: 'credit' }
+            ],
+            amountRange: [50000, 300000]
+        }, {
+            id: 'med_salary_expense',
+            category: 'expense',
+            description: 'বেতন বাবদ {amount} টাকা প্রদান করা হয়েছে',
+            journal: [
+                { account: 'Salary', type: 'expense', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [5000, 50000]
+        }, {
+            id: 'med_service_revenue',
+            category: 'revenue',
+            description: 'সেবা প্রদান করে {amount} টাকা আয় করা হয়েছে',
+            journal: [
+                { account: 'Cash', type: 'asset', side: 'debit' },
+                { account: 'Service Revenue', type: 'revenue', side: 'credit' }
+            ],
+            amountRange: [5000, 75000]
+        }, {
+            id: 'med_pay_creditors',
+            category: 'liability',
+            description: 'পাওনাদারকে {amount} টাকা প্রদান করা হয়েছে',
+            journal: [
+                { account: 'Creditors', type: 'liability', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [5000, 40000]
+        }, {
+            id: 'med_revenue_bank',
+            category: 'revenue',
+            description: 'ব্যাংকে {amount} টাকা সেবা আয় প্রাপ্তি',
+            journal: [
+                { account: 'Bank', type: 'asset', side: 'debit' },
+                { account: 'Service Revenue', type: 'revenue', side: 'credit' }
+            ],
+            amountRange: [10000, 100000]
+        }, {
+            id: 'med_expense_bank',
+            category: 'expense',
+            description: 'ব্যাংক থেকে {amount} টাকা {expense} পরিশোধ',
+            journal: [
+                { account: '{expense}', type: 'expense', side: 'debit' },
+                { account: 'Bank', type: 'asset', side: 'credit' }
+            ],
+            expensePool: ['Rent', 'Insurance', 'Electricity Bill'],
+            amountRange: [5000, 50000]
+        }, {
+            id: 'med_drawing',
+            category: 'drawing',
+            description: 'মালিক {amount} টাকা উত্তোলন করেছেন',
+            journal: [
+                { account: 'Drawings', type: 'drawing', side: 'debit' },
+                { account: 'Cash', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [5000, 30000]
+        }];
+
+        const HARD_TEMPLATES = [{
+            id: 'hard_salary_payable',
+            category: 'liability',
+            description: 'বকেয়া বেতন সমন্বয় করা হয়েছে {amount} টাকা',
+            journal: [
+                { account: 'Salary', type: 'expense', side: 'debit' },
+                { account: 'Salary Payable', type: 'liability', side: 'credit' }
+            ],
+            amountRange: [10000, 60000]
+        }, {
+            id: 'hard_prepaid_rent',
+            category: 'asset',
+            description: 'অগ্রিম ভাড়ার সমন্বয় করা হয়েছে {amount} টাকা',
+            journal: [
+                { account: 'Rent', type: 'expense', side: 'debit' },
+                { account: 'Prepaid Rent', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [5000, 40000]
+        }, {
+            id: 'hard_depreciation',
+            category: 'expense',
+            description: '{asset} এর উপর {amount} টাকা অবচয় ধার্য করা হয়েছে',
+            journal: [
+                { account: 'Depreciation Expense', type: 'expense', side: 'debit' },
+                { account: 'Accumulated Depreciation', type: 'asset', side: 'credit' }
+            ],
+            assetPool: ['Furniture', 'Equipment', 'Computer', 'Building'],
+            amountRange: [2000, 30000]
+        }, {
+            id: 'hard_collection_receivable',
+            category: 'asset',
+            description: 'গ্রাহকের নিকট হতে পূর্বে বকেয়া {amount} টাকা পাওনা আদায় করা হয়েছে',
+            journal: [
+                { account: 'Cash', type: 'asset', side: 'debit' },
+                { account: 'Accounts Receivable', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [10000, 80000]
+        }, {
+            id: 'hard_prepaid_expense_adj',
+            category: 'expense',
+            description: 'পূর্বে প্রদত্ত {amount} টাকা অগ্রিম খরচ সমন্বয় করা হয়েছে',
+            journal: [
+                { account: '{expense}', type: 'expense', side: 'debit' },
+                { account: 'Prepaid Expense', type: 'asset', side: 'credit' }
+            ],
+            expensePool: ['Insurance', 'Rent', 'Advertisement'],
+            amountRange: [5000, 40000]
+        }, {
+            id: 'hard_accrued_revenue',
+            category: 'revenue',
+            description: 'অর্জিত কিন্তু অপ্রাপ্ত {amount} টাকা আয় সমন্বয় করা হয়েছে',
+            journal: [
+                { account: 'Accounts Receivable', type: 'asset', side: 'debit' },
+                { account: 'Service Revenue', type: 'revenue', side: 'credit' }
+            ],
+            amountRange: [10000, 70000]
+        }, {
+            id: 'hard_interest_payable',
+            category: 'liability',
+            description: 'ব্যাংক ঋণের {amount} টাকা সুদ বকেয়া সমন্বয় করা হয়েছে',
+            journal: [
+                { account: 'Interest Expense', type: 'expense', side: 'debit' },
+                { account: 'Interest Payable', type: 'liability', side: 'credit' }
+            ],
+            amountRange: [2000, 15000]
+        }, {
+            id: 'hard_drawings',
+            category: 'drawing',
+            description: 'মালিক {amount} টাকা পণ্য উত্তোলন করেছেন',
+            journal: [
+                { account: 'Drawings', type: 'drawing', side: 'debit' },
+                { account: 'Inventory', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [5000, 25000]
+        }, {
+            id: 'hard_prepaid_insurance',
+            category: 'asset',
+            description: 'অগ্রিম {amount} টাকা বিমা খরচ সমন্বয় করা হয়েছে',
+            journal: [
+                { account: 'Insurance', type: 'expense', side: 'debit' },
+                { account: 'Prepaid Insurance', type: 'asset', side: 'credit' }
+            ],
+            amountRange: [3000, 25000]
+        }];
+
+        // ================================================================
+        // 3. BUSINESS STATE
         // ================================================================
 
         class Business {
@@ -1746,20 +2172,24 @@
                     'Building': 0,
                     'Land': 0,
                     'Inventory': 60000,
-                    'Office Supplies': 10000
+                    'Office Supplies': 10000,
+                    'Prepaid Rent': 0,
+                    'Prepaid Insurance': 0,
+                    'Accounts Receivable': 0,
+                    'Accumulated Depreciation': 0
                 };
                 this.liabilities = {
                     'Creditors': 20000,
                     'Bank Loan': 0,
                     'Salary Payable': 0,
-                    'Rent Payable': 0
+                    'Rent Payable': 0,
+                    'Interest Payable': 0
                 };
                 this.capital = 650000;
                 this.revenue = 0;
                 this.expenses = 0;
                 this.name = 'ABC Trading';
             }
-
             get totalAssets() {
                 let sum = this.cash + this.bank;
                 for (const k in this.assets) sum += this.assets[k];
@@ -1771,32 +2201,21 @@
                 return sum;
             }
             get equity() { return this.capital + this.revenue - this.expenses; }
-
-            addAsset(name, amount) {
-                if (!this.assets[name]) this.assets[name] = 0;
-                this.assets[name] += amount;
-            }
-            subAsset(name, amount) {
-                if (this.assets[name]) this.assets[name] -= amount;
-                if (this.assets[name] < 0) this.assets[name] = 0;
-            }
-            addLiability(name, amount) {
-                if (!this.liabilities[name]) this.liabilities[name] = 0;
-                this.liabilities[name] += amount;
-            }
-            subLiability(name, amount) {
-                if (this.liabilities[name]) this.liabilities[name] -= amount;
-                if (this.liabilities[name] < 0) this.liabilities[name] = 0;
-            }
-            addCash(amount) { this.cash += amount; }
-            subCash(amount) { this.cash -= amount; }
-            addBank(amount) { this.bank += amount; }
-            subBank(amount) { this.bank -= amount; }
-            addCapital(amount) { this.capital += amount; }
-            subCapital(amount) { this.capital -= amount; }
-            addRevenue(amount) { this.revenue += amount; }
-            addExpense(amount) { this.expenses += amount; }
-
+            addAsset(n, a) { if (!this.assets[n]) this.assets[n] = 0;
+                this.assets[n] += a; }
+            subAsset(n, a) { if (this.assets[n]) { this.assets[n] -= a; if (this.assets[n] < 0) this.assets[n] = 0; } }
+            addLiability(n, a) { if (!this.liabilities[n]) this.liabilities[n] = 0;
+                this.liabilities[n] += a; }
+            subLiability(n, a) { if (this.liabilities[n]) { this.liabilities[n] -= a; if (this.liabilities[n] < 0) this
+                        .liabilities[n] = 0; } }
+            addCash(a) { this.cash += a; }
+            subCash(a) { this.cash -= a; }
+            addBank(a) { this.bank += a; }
+            subBank(a) { this.bank -= a; }
+            addCapital(a) { this.capital += a; }
+            subCapital(a) { this.capital -= a; }
+            addRevenue(a) { this.revenue += a; }
+            addExpense(a) { this.expenses += a; }
             clone() {
                 const b = new Business();
                 Object.assign(b, this);
@@ -1816,325 +2235,207 @@
         }
 
         // ================================================================
-        // 3. HELPERS
+        // 4. HELPERS
         // ================================================================
 
         function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-        function getRuleExplanation(accountType, effect, accountName) {
-            const rule = ACCOUNT_RULES[accountType];
-            const typeLabel = rule ? rule.label : 'Account';
+        function getAmount(range) {
+            const [min, max] = range;
+            const step = 500;
+            const val = min + Math.random() * (max - min);
+            return Math.round(val / step) * step;
+        }
+
+        function getRuleExplanation(type, effect, name) {
+            const rule = ACCOUNT_RULES[type];
+            const label = rule ? rule.label : 'Account';
             const effectLabel = effect === 'increase' ? 'increases' : 'decreases';
             const answer = rule ? rule[effect] : 'debit';
             const answerLabel = answer === 'debit' ? 'Debit' : 'Credit';
+            const bnName = BENGALI_NAMES[name] || name;
             return {
-                answer: answer,
-                explanation: `"${accountName}" is an ${typeLabel}. When ${typeLabel} ${effectLabel}, it is ${answerLabel}.`,
-                ruleText: `${typeLabel} ${effectLabel} = ${answerLabel}`
+                answer,
+                explanation: `"${bnName}" is an ${label}. When ${label} ${effectLabel}, it is ${answerLabel}.`,
+                ruleText: `${label} ${effectLabel} = ${answerLabel}`
             };
         }
 
-        function getXPThreshold(level) {
+        function getXPForLevel(level) {
             if (level <= 1) return 0;
-            return 100 + (level - 2) * 10;
+            const n = level - 1;
+            return n * 100 + 10 * (n - 1) * n / 2;
         }
 
-        function calculateLevel(xp) {
+        function getLevelFromXP(xp) {
             let level = 1;
-            while (xp >= getXPThreshold(level + 1)) level++;
+            while (xp >= getXPForLevel(level + 1)) level++;
             return level;
         }
 
-        function getNextLevelXP(level) { return getXPThreshold(level + 1); }
-
-        function getRewards(difficulty, isCorrect) {
-            const rules = {
-                'easy': { points: 5, xp: 2, penalty: 2 },
-                'medium': { points: 10, xp: 5, penalty: 5 },
-                'hard': { points: 15, xp: 8, penalty: 10 }
-            };
-            const rule = rules[difficulty] || rules['easy'];
-            if (isCorrect) return { points: rule.points, xp: rule.xp };
-            else return { points: -rule.penalty, xp: 0 };
+        function getXPProgress(xp) {
+            const level = getLevelFromXP(xp);
+            const current = getXPForLevel(level);
+            const next = getXPForLevel(level + 1);
+            const progress = next > current ? (xp - current) / (next - current) : 0;
+            return { level, current, next, progress: Math.min(1, progress) };
         }
 
-        function checkBadges(data) {
-            const badges = [];
-            const total = data.correct + data.wrong;
-            const acc = total > 0 ? (data.correct / total) : 0;
-            if (data.totalQuestions >= 10) badges.push({ id: 'beginner', icon: 'fa-seedling', label: 'Beginner' });
-            if (data.totalQuestions >= 50) badges.push({ id: 'learner', icon: 'fa-book', label: 'Learner' });
-            if (data.totalQuestions >= 100) badges.push({ id: 'scholar', icon: 'fa-graduation-cap', label: 'Scholar' });
-            if (data.correct >= 20 && total >= 25 && acc >= 0.8) badges.push({ id: 'accurate', icon: 'fa-bullseye',
-                label: 'Accurate' });
-            if (data.streak >= 5) badges.push({ id: 'streak5', icon: 'fa-fire', label: 'Streak 5' });
-            if (data.streak >= 10) badges.push({ id: 'streak10', icon: 'fa-bolt', label: 'Streak 10' });
-            if (data.level >= 3) badges.push({ id: 'level3', icon: 'fa-star', label: 'Level 3' });
-            if (data.level >= 5) badges.push({ id: 'level5', icon: 'fa-crown', label: 'Level 5' });
-            const seen = new Set();
-            return badges.filter(b => { if (seen.has(b.id)) return false;
-                seen.add(b.id); return true; });
+        function getRewards(diff, correct) {
+            const rules = { 'easy': { points: 5, xp: 2, penalty: 2 }, 'medium': { points: 10, xp: 5, penalty: 5 },
+                'hard': { points: 15, xp: 8, penalty: 10 } };
+            const r = rules[diff] || rules['easy'];
+            return correct ? { points: r.points, xp: r.xp } : { points: -r.penalty, xp: 0 };
         }
 
-        function analyzeWeakRules(data) {
-            const weakTypes = {};
-            const history = data.quizHistory || [];
-            for (const entry of history) {
-                if (entry.userAnswer !== entry.correctAnswer) {
-                    weakTypes[entry.type] = (weakTypes[entry.type] || 0) + 1;
+        const COINS_PER_CORRECT = 2;
+
+        // ================================================================
+        // 5. 50 BADGES
+        // ================================================================
+
+        const ALL_BADGES = [
+            { id: 'b1', icon: '🔰', name: 'First Step' },
+            { id: 'b2', icon: '👣', name: 'Beginner' },
+            { id: 'b3', icon: '💳', name: 'Debit Starter' },
+            { id: 'b4', icon: '💳', name: 'Credit Starter' },
+            { id: 'b5', icon: '🔥', name: 'Warmed Up' },
+            { id: 'b6', icon: '✨', name: 'No Mistake Start' },
+            { id: 'b7', icon: '📓', name: 'Journal Rookie' },
+            { id: 'b8', icon: '🗺️', name: 'Accounting Explorer' },
+            { id: 'b9', icon: '📊', name: 'Ledger Learner' },
+            { id: 'b10', icon: '⚖️', name: 'Trial Balance Maker' },
+            { id: 'b11', icon: '👨‍💼', name: 'Entry Master' },
+            { id: 'b12', icon: '👑', name: 'Entry King' },
+            { id: 'b13', icon: '🧠', name: 'Sharp Mind' },
+            { id: 'b14', icon: '🎯', name: 'Precision Player' },
+            { id: 'b15', icon: '🏃', name: 'Perfect Run' },
+            { id: 'b16', icon: '💎', name: 'Flawless Brain' },
+            { id: 'b17', icon: '🛡️', name: 'Zero Error Zone' },
+            { id: 'b18', icon: '🔥', name: 'Streak 5x' },
+            { id: 'b19', icon: '🔥', name: 'Streak 10x' },
+            { id: 'b20', icon: '🔥', name: 'Streak 25x' },
+            { id: 'b21', icon: '🔥', name: 'Streak 50x' },
+            { id: 'b22', icon: '👑', name: 'Streak King' },
+            { id: 'b23', icon: '🏦', name: 'Asset Expert' },
+            { id: 'b24', icon: '📉', name: 'Liability Genius' },
+            { id: 'b25', icon: '💰', name: 'Capital Controller' },
+            { id: 'b26', icon: '📈', name: 'Revenue Master' },
+            { id: 'b27', icon: '💸', name: 'Expense Specialist' },
+            { id: 'b28', icon: '✏️', name: 'Drawing Handler' },
+            { id: 'b29', icon: '🔧', name: 'Rule Breaker' },
+            { id: 'b30', icon: '⚖️', name: 'Balance Thinker' },
+            { id: 'b31', icon: '⚡', name: 'Fast Decision' },
+            { id: 'b32', icon: '💪', name: 'No Hesitation' },
+            { id: 'b33', icon: '📝', name: 'First Entry' },
+            { id: 'b34', icon: '🌟', name: 'Perfect Quiz' },
+            { id: 'b35', icon: '🏅', name: '100 Questions' },
+            { id: 'b36', icon: '🥈', name: '500 Questions' },
+            { id: 'b37', icon: '🥇', name: '1000 Questions' },
+            { id: 'b38', icon: '🏆', name: 'Accounting Pro' },
+            { id: 'b39', icon: '🏆', name: 'Debit-Credit Champ' },
+            { id: 'b40', icon: '👼', name: 'Journal God' },
+            { id: 'b41', icon: '📜', name: 'Ledger Legend' },
+            { id: 'b42', icon: '🧠', name: 'Financial Brain' },
+            { id: 'b43', icon: '🔍', name: 'Error Hunter' },
+            { id: 'b44', icon: '🎯', name: 'Focus Mode' },
+            { id: 'b45', icon: '🤫', name: 'Silent Accountant' },
+            { id: 'b46', icon: '💡', name: 'Smart Thinker' },
+            { id: 'b47', icon: '⚡', name: 'Quick Ledger Mind' },
+            { id: 'b48', icon: '🎖️', name: 'Dedicated Learner' },
+            { id: 'b49', icon: '🏅', name: 'Quiz Master' },
+            { id: 'b50', icon: '👑', name: 'Ultimate Accountant' }
+        ];
+
+        function checkBadges(stats) {
+            const earned = [];
+            const total = stats.correct + stats.wrong;
+            const acc = total > 0 ? (stats.correct / total) : 0;
+            const accPct = Math.round(acc * 100);
+
+            const typeCounts = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
+            if (stats.quizHistory) {
+                for (const h of stats.quizHistory) {
+                    if (h.userAnswer === h.correctAnswer) {
+                        if (typeCounts[h.type] !== undefined) typeCounts[h.type]++;
+                    }
                 }
             }
-            return { weakTypes };
+
+            if (stats.correct >= 1) earned.push('b1', 'b2', 'b33');
+            if (stats.correct >= 1 && stats.quizHistory && stats.quizHistory.some(h => h.correctAnswer === 'debit' && h
+                    .userAnswer === 'debit')) earned.push('b3');
+            if (stats.correct >= 1 && stats.quizHistory && stats.quizHistory.some(h => h.correctAnswer === 'credit' && h
+                    .userAnswer === 'credit')) earned.push('b4');
+            if (stats.correct >= 5) earned.push('b5');
+            if (stats.correct >= 3 && stats.wrong === 0) earned.push('b6');
+            if (stats.correct >= 10) earned.push('b7');
+            if (stats.correct >= 25) earned.push('b8');
+            if (stats.correct >= 50) earned.push('b9');
+            if (stats.correct >= 100) earned.push('b10');
+            if (stats.correct >= 200) earned.push('b11');
+            if (stats.correct >= 1000) earned.push('b12');
+            if (accPct >= 80 && total >= 10) earned.push('b13');
+            if (accPct >= 90 && total >= 20) earned.push('b14');
+            if (stats.bestStreak >= 10) earned.push('b15');
+            if (stats.bestStreak >= 20) earned.push('b16');
+            if (stats.wrong === 0 && total >= 50) earned.push('b17');
+            if (stats.bestStreak >= 5) earned.push('b18');
+            if (stats.bestStreak >= 10) earned.push('b19');
+            if (stats.bestStreak >= 25) earned.push('b20');
+            if (stats.bestStreak >= 50) earned.push('b21');
+            if (stats.bestStreak >= 100) earned.push('b22');
+            if (typeCounts.asset >= 10) earned.push('b23');
+            if (typeCounts.liability >= 10) earned.push('b24');
+            if (typeCounts.capital >= 10) earned.push('b25');
+            if (typeCounts.revenue >= 10) earned.push('b26');
+            if (typeCounts.expense >= 10) earned.push('b27');
+            if (typeCounts.drawing >= 5) earned.push('b28');
+            if (stats.ruleBreakerCount && stats.ruleBreakerCount >= 1) earned.push('b29');
+            if (stats.correct >= 15) earned.push('b30');
+            if (stats.fastAnswers && stats.fastAnswers >= 1) earned.push('b31');
+            if (stats.fastAnswers && stats.fastAnswers >= 10) earned.push('b32');
+            if (stats.correct >= 10 && stats.wrong === 0 && total >= 10) earned.push('b34');
+            if (total >= 100) earned.push('b35');
+            if (total >= 500) earned.push('b36');
+            if (total >= 1000) earned.push('b37');
+            if (stats.level >= 10) earned.push('b38');
+            if (stats.correct >= 500) earned.push('b39');
+            if (stats.correct >= 1000) earned.push('b40');
+            if (total >= 2000) earned.push('b41');
+            if (accPct >= 95 && total >= 100) earned.push('b42');
+            if (stats.wrong > 0 && (stats.wrong / total) < 0.1 && total >= 20) earned.push('b43');
+            if (stats.focusCount && stats.focusCount >= 20) earned.push('b44');
+            if (stats.wrong === 0 && total >= 50) earned.push('b45');
+            if (stats.smartModeCount && stats.smartModeCount >= 50) earned.push('b46');
+            if (stats.fastAnswers && stats.fastAnswers >= 100) earned.push('b47');
+            if (stats.correct >= 500) earned.push('b48');
+            if (stats.correct >= 1000) earned.push('b49');
+            if (stats.correct >= 5000) earned.push('b50');
+
+            return [...new Set(earned)];
         }
 
         // ================================================================
-        // 4. TRANSACTION GENERATOR
-        // ================================================================
-
-        function generateEasyTransaction() {
-            const categories = ['asset', 'liability', 'capital', 'revenue', 'expense', 'drawing'];
-            const category = pickRandom(categories);
-            let account = pickRandom(ACCOUNT_NAMES[category] || ['Account']);
-            const effect = pickRandom(['increase', 'decrease']);
-            const templates = EASY_TEMPLATES[category] || EASY_TEMPLATES.asset;
-            let template = templates[effect] || templates.increase;
-            if (category === 'drawing') {
-                account = 'Drawings';
-                template = effect === 'increase' ? 'মালিক উত্তোলন করেছেন' : 'মালিক উত্তোলন ফেরত দিয়েছেন';
-            }
-            let desc = template.replace('{account}', BENGALI_NAMES[account] || account);
-            const rule = ACCOUNT_RULES[category];
-            const correctAnswer = rule ? rule[effect] : 'debit';
-            const askAboutCash = Math.random() < 0.3;
-            let questionAccount = account,
-                questionType = category,
-                questionEffect = effect;
-            if (askAboutCash && (desc.includes('নগদে') || desc.includes('নগद'))) {
-                questionAccount = 'Cash';
-                questionType = 'asset';
-                if (category === 'asset' && effect === 'increase') questionEffect = 'decrease';
-                else if (category === 'asset' && effect === 'decrease') questionEffect = 'increase';
-                else if (category === 'expense' && effect === 'increase') questionEffect = 'decrease';
-                else if (category === 'expense' && effect === 'decrease') questionEffect = 'increase';
-                else if (category === 'liability' && effect === 'increase') questionEffect = 'increase';
-                else if (category === 'liability' && effect === 'decrease') questionEffect = 'decrease';
-                else if (category === 'capital' && effect === 'increase') questionEffect = 'increase';
-                else if (category === 'capital' && effect === 'decrease') questionEffect = 'decrease';
-                else if (category === 'revenue' && effect === 'increase') questionEffect = 'increase';
-                else if (category === 'revenue' && effect === 'decrease') questionEffect = 'decrease';
-                else questionEffect = effect === 'increase' ? 'decrease' : 'increase';
-            }
-            return {
-                type: 'easy_' + category + '_' + effect,
-                method: 'none',
-                accountType: category,
-                effect: effect,
-                account: account,
-                amount: 0,
-                desc: desc,
-                display: desc,
-                noAmount: true,
-                isEasy: true,
-                primaryType: category,
-                primaryEffect: effect,
-                questionAccount: questionAccount,
-                questionType: questionType,
-                questionEffect: questionEffect,
-                category: category
-            };
-        }
-
-        function generateRegularTransaction(business, difficulty) {
-            const isHard = difficulty === 'hard';
-            let allowedTypes = ['asset', 'expense'];
-            if (difficulty === 'medium') allowedTypes = ['asset', 'expense', 'liability', 'revenue'];
-            else if (isHard) allowedTypes = ['asset', 'expense', 'liability', 'revenue', 'capital'];
-            const types = [];
-            const assetKeys = Object.keys(business.assets);
-            const availAssets = assetKeys.filter(k => business.assets[k] !== undefined);
-            if (availAssets.length > 0) {
-                if (business.cash > 1000) types.push({ type: 'purchase_asset_cash', method: 'cash', accountType: 'asset',
-                        effect: 'increase', desc: (a, amt) =>
-                            `${BENGALI_NAMES[a] || a} ক্রয় করা হয়েছে নগদে ${amt.toLocaleString()} টাকা`, hasAmount: true });
-                if (business.bank > 1000) types.push({ type: 'purchase_asset_bank', method: 'bank', accountType: 'asset',
-                        effect: 'increase', desc: (a, amt) =>
-                            `${BENGALI_NAMES[a] || a} ক্রয় করা হয়েছে ব্যাংক থেকে ${amt.toLocaleString()} টাকা`, hasAmount: true });
-            }
-            const liabKeys = Object.keys(business.liabilities).filter(k => business.liabilities[k] > 500);
-            if (liabKeys.length > 0) {
-                if (business.cash > 500) types.push({ type: 'pay_liability_cash', method: 'cash', accountType: 'liability',
-                        effect: 'decrease', desc: (a, amt) =>
-                            `${BENGALI_NAMES[a] || a} পরিশোধ করা হয়েছে নগদে ${amt.toLocaleString()} টাকা`, hasAmount: true });
-                if (business.bank > 500) types.push({ type: 'pay_liability_bank', method: 'bank', accountType: 'liability',
-                        effect: 'decrease', desc: (a, amt) =>
-                            `${BENGALI_NAMES[a] || a} পরিশোধ করা হয়েছে ব্যাংক থেকে ${amt.toLocaleString()} টাকা`, hasAmount: true });
-            }
-            const revNames = ['Service Revenue', 'Commission Revenue', 'Rent Revenue', 'Sales Revenue', 'Interest Revenue'];
-            if (business.cash < 2000000) types.push({ type: 'revenue_cash', method: 'cash', accountType: 'revenue',
-                    effect: 'increase', desc: (a, amt) =>
-                        `${BENGALI_NAMES[a] || a} হিসেবে নগদ প্রাপ্তি ${amt.toLocaleString()} টাকা`, hasAmount: true });
-            if (business.bank < 2000000) types.push({ type: 'revenue_bank', method: 'bank', accountType: 'revenue',
-                    effect: 'increase', desc: (a, amt) =>
-                        `${BENGALI_NAMES[a] || a} হিসেবে ব্যাংক প্রাপ্তি ${amt.toLocaleString()} টাকা`, hasAmount: true });
-            const expNames = ['Salary', 'Electricity Bill', 'Rent', 'Transport', 'Advertisement', 'Insurance', 'Repairs',
-                'Office Expenses'
-            ];
-            if (business.cash > 500) types.push({ type: 'expense_cash', method: 'cash', accountType: 'expense',
-                    effect: 'increase', desc: (a, amt) =>
-                        `${BENGALI_NAMES[a] || a} পরিশোধ করা হয়েছে নগদে ${amt.toLocaleString()} টাকা`, hasAmount: true });
-            if (business.bank > 500) types.push({ type: 'expense_bank', method: 'bank', accountType: 'expense',
-                    effect: 'increase', desc: (a, amt) =>
-                        `${BENGALI_NAMES[a] || a} পরিশোধ করা হয়েছে ব্যাংক থেকে ${amt.toLocaleString()} টাকা`, hasAmount: true });
-            if (isHard) {
-                if (business.cash < 2000000) types.push({ type: 'capital_invest', method: 'cash', accountType: 'capital',
-                        effect: 'increase', desc: (a, amt) =>
-                            `মালিক ${BENGALI_NAMES[a] || a} এ বিনিয়োগ করেছেন ${amt.toLocaleString()} টাকা`, hasAmount: true });
-                if (business.cash > 10000 && business.capital > 10000) types.push({ type: 'capital_withdraw',
-                        method: 'cash', accountType: 'capital', effect: 'decrease', desc: (a, amt) =>
-                            `মালিক উত্তোলন করেছেন ${amt.toLocaleString()} টাকা`, hasAmount: true });
-                if (business.liabilities['Bank Loan'] < 500000 && business.bank < 2000000) types.push({ type: 'bank_loan',
-                        method: 'bank', accountType: 'liability', effect: 'increase', desc: (a, amt) =>
-                            `ব্যাংক ঋণ গ্রহণ করা হয়েছে ${amt.toLocaleString()} টাকা`, hasAmount: true });
-                const assetsWithVal = Object.keys(business.assets).filter(k => business.assets[k] > 1000);
-                if (assetsWithVal.length > 0) types.push({ type: 'sell_asset_cash', method: 'cash', accountType: 'asset',
-                        effect: 'decrease', desc: (a, amt) =>
-                            `${BENGALI_NAMES[a] || a} বিক্রয় করা হয়েছে নগদে ${amt.toLocaleString()} টাকা`, hasAmount: true });
-            }
-            if (types.length === 0) {
-                return { type: 'revenue_cash', method: 'cash', accountType: 'revenue', effect: 'increase',
-                    account: 'Service Revenue', amount: 5000, desc: `সেবা আয় হিসেবে নগদ প্রাপ্তি ৫,০০০ টাকা`,
-                    display: `সেবা আয় হিসেবে নগদ প্রাপ্তি ৫,০০০ টাকা`, hasAmount: true, noAmount: false, isEasy: false };
-            }
-            const chosen = pickRandom(types);
-            let amount = 0,
-                account = '';
-            let maxAmt = 50000;
-            if (chosen.method === 'cash') maxAmt = Math.min(50000, business.cash * 0.4);
-            else if (chosen.method === 'bank') maxAmt = Math.min(50000, business.bank * 0.4);
-            if (chosen.accountType === 'liability' && chosen.effect === 'decrease') {
-                const liabKeys2 = Object.keys(business.liabilities).filter(k => business.liabilities[k] > 0);
-                if (liabKeys2.length > 0) maxAmt = Math.min(maxAmt, Math.max(...liabKeys2.map(k => business.liabilities[
-                    k])));
-            }
-            if (chosen.type === 'sell_asset_cash') {
-                const assetsWithVal2 = Object.keys(business.assets).filter(k => business.assets[k] > 1000);
-                if (assetsWithVal2.length > 0) maxAmt = Math.min(maxAmt, Math.max(...assetsWithVal2.map(k => business
-                    .assets[k])));
-            }
-            const minAmt = 500;
-            amount = Math.max(500, Math.min(50000, Math.round((minAmt + Math.random() * (maxAmt - minAmt)) / 500) * 500));
-            if (chosen.method === 'cash' && amount > business.cash * 0.5) amount = Math.floor(business.cash * 0.3);
-            if (chosen.method === 'bank' && amount > business.bank * 0.5) amount = Math.floor(business.bank * 0.3);
-            amount = Math.max(500, Math.min(50000, amount));
-            if (chosen.accountType === 'asset') {
-                const avail = Object.keys(business.assets).filter(k => {
-                    if (chosen.effect === 'increase') return true;
-                    return business.assets[k] >= amount;
-                });
-                account = pickRandom(avail.length > 0 ? avail : Object.keys(business.assets));
-            } else if (chosen.accountType === 'liability') {
-                const avail = Object.keys(business.liabilities).filter(k => {
-                    if (chosen.effect === 'increase') return true;
-                    return business.liabilities[k] >= amount;
-                });
-                account = pickRandom(avail.length > 0 ? avail : Object.keys(business.liabilities));
-            } else if (chosen.accountType === 'revenue') account = pickRandom(revNames);
-            else if (chosen.accountType === 'expense') account = pickRandom(expNames);
-            else if (chosen.accountType === 'capital') account = chosen.effect === 'increase' ? 'Capital' : 'Drawings';
-            let desc = chosen.desc(account, amount);
-            let otherAccount = '',
-                otherType = '';
-            if (chosen.method === 'cash') { otherAccount = 'Cash';
-                otherType = 'asset'; } else if (chosen.method === 'bank') { otherAccount = 'Bank';
-                otherType = 'asset'; }
-            let secEffect = 'decrease';
-            if (chosen.type === 'revenue_cash' || chosen.type === 'revenue_bank' ||
-                chosen.type === 'sell_asset_cash' || chosen.type === 'capital_invest' || chosen.type === 'bank_loan')
-                secEffect = 'increase';
-            return {
-                ...chosen,
-                account: account,
-                amount: amount,
-                desc: desc,
-                display: desc,
-                otherAccount: otherAccount,
-                otherType: otherType,
-                noAmount: false,
-                isEasy: false,
-                primaryType: chosen.accountType,
-                primaryEffect: chosen.effect,
-                secondaryType: otherType,
-                secondaryEffect: secEffect,
-                hasAmount: true
-            };
-        }
-
-        function generateTransaction(business, difficulty, weakTypes) {
-            if (difficulty === 'easy') return generateEasyTransaction();
-            let trans = generateRegularTransaction(business, difficulty);
-            if (weakTypes && Object.keys(weakTypes).length > 0) {
-                const weakType = pickRandom(Object.keys(weakTypes));
-                for (let attempt = 0; attempt < 4; attempt++) {
-                    const testTrans = generateRegularTransaction(business, difficulty);
-                    if (testTrans.primaryType === weakType) { trans = testTrans; break; }
-                }
-            }
-            return trans;
-        }
-
-        function applyTransaction(business, transaction) {
-            const b = business.clone();
-            const { type, method, accountType, effect, account, amount } = transaction;
-            if (transaction.isEasy) {
-                if (accountType === 'asset' && effect === 'increase') b.addAsset(account, 1000);
-                else if (accountType === 'asset' && effect === 'decrease') b.subAsset(account, 1000);
-                else if (accountType === 'expense' && effect === 'increase') b.addExpense(1000);
-                else if (accountType === 'liability' && effect === 'increase') b.addLiability(account, 1000);
-                else if (accountType === 'liability' && effect === 'decrease') b.subLiability(account, 1000);
-                else if (accountType === 'revenue' && effect === 'increase') b.addRevenue(1000);
-                else if (accountType === 'capital' && effect === 'increase') b.addCapital(1000);
-                else if (accountType === 'capital' && effect === 'decrease') b.subCapital(1000);
-                else if (accountType === 'drawing') { if (effect === 'increase') b.subCapital(1000);
-                    else b.addCapital(1000); }
-                return b;
-            }
-            if (accountType === 'asset') { if (effect === 'increase') b.addAsset(account, amount);
-                else b.subAsset(account, amount); } else if (accountType === 'liability') { if (effect === 'increase') b
-                    .addLiability(account, amount);
-                else b.subLiability(account, amount); } else if (accountType === 'capital') { if (effect === 'increase') b
-                    .addCapital(amount);
-                else b.subCapital(amount); } else if (accountType === 'revenue') b.addRevenue(amount);
-            else if (accountType === 'expense') b.addExpense(amount);
-            if (method === 'cash' && amount > 0) {
-                if (type.includes('purchase') || type.includes('pay') || type.includes('expense') || type ===
-                    'capital_withdraw') b.subCash(amount);
-                else if (type === 'revenue_cash' || type === 'sell_asset_cash' || type === 'capital_invest') b.addCash(
-                    amount);
-            } else if (method === 'bank' && amount > 0) {
-                if (type.includes('purchase') || type.includes('pay') || type.includes('expense')) b.subBank(amount);
-                else if (type === 'revenue_bank' || type === 'bank_loan') b.addBank(amount);
-            }
-            return b;
-        }
-
-        // ================================================================
-        // 5. TOAST SYSTEM
+        // 6. TOAST SYSTEM
         // ================================================================
 
         function showToast(title, desc, icon, type) {
             const container = document.getElementById('toastContainer');
+            if (!container) return;
             const toast = document.createElement('div');
-            toast.className = 'toast';
-            const iconClass = type === 'gain' ? 'gain' : (type === 'loss' ? 'loss' : 'xp-gain');
+            toast.className = 'toast' + (type === 'badge' ? ' badge-toast' : '') + (type === 'hint' ? ' hint-toast' : '');
+            const iconClass = type === 'gain' ? 'gain' : (type === 'loss' ? 'loss' : (type === 'badge' ? '' : (type ===
+                'hint' ? 'coin' : 'xp-gain')));
             toast.innerHTML =
                 `<div class="toast-icon ${iconClass}"><i class="fas ${icon}"></i></div><div class="toast-content"><div class="toast-title">${title}</div><div class="toast-desc">${desc}</div></div><button class="toast-close"><i class="fas fa-times"></i></button>`;
             container.appendChild(toast);
             requestAnimationFrame(() => toast.classList.add('show'));
             toast.querySelector('.toast-close').addEventListener('click', () => dismissToast(toast));
-            const timeout = setTimeout(() => dismissToast(toast), 3000);
+            const timeout = setTimeout(() => dismissToast(toast), 3500);
             toast._timeout = timeout;
             const toasts = container.querySelectorAll('.toast');
-            if (toasts.length > 3) dismissToast(toasts[0]);
+            if (toasts.length > 4) dismissToast(toasts[0]);
         }
 
         function dismissToast(toast) {
@@ -2147,143 +2448,270 @@
             setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 400);
         }
 
-        function showPointsToast(pointsChange, xpChange, isCorrect) {
-            let title = isCorrect ? 'Correct!' : 'Wrong!';
-            let icon = isCorrect ? 'fa-check-circle' : 'fa-times-circle';
-            let type = isCorrect ? 'gain' : 'loss';
-            let descParts = [];
-            if (pointsChange > 0) descParts.push(`<span class="highlight-gain">+${pointsChange} pts</span>`);
-            else if (pointsChange < 0) descParts.push(`<span class="highlight-loss">${pointsChange} pts</span>`);
-            if (xpChange > 0) descParts.push(`<span class="highlight-gain">+${xpChange} XP</span>`);
-            const desc = descParts.length > 0 ? descParts.join(' · ') : 'No change';
-            showToast(title, desc, icon, type);
+        function showBadgeToast(badge) {
+            showToast(`Badge Unlocked: ${badge.name}`, badge.icon + ' ' + badge.name, 'fa-award', 'badge');
+        }
+
+        function showCoinToast(coins) {
+            if (coins > 0) showToast('Coins Earned!', `+${coins} <i class="fas fa-coins" style="color:#d4a017;"></i>`,
+                'fa-coins', 'hint');
+        }
+
+        function showHintToast(used) {
+            if (used) showToast('Hint Used', '1 hint consumed', 'fa-lightbulb', 'hint');
+            else showToast('Hint Purchased', 'Added to your inventory!', 'fa-coins', 'hint');
         }
 
         // ================================================================
-        // 6. FIRESTORE USER DATA & REVISION
+        // 7. FIRESTORE HELPERS
         // ================================================================
 
         const USERS_COLLECTION = 'users';
         const REVISION_COLLECTION = 'revisionQuestions';
 
-        async function saveUserStats(userId, data) {
+        async function saveUserStats(uid, data) {
             try {
-                const userRef = db.collection(USERS_COLLECTION).doc(userId);
-                await userRef.set({
-                    displayName: auth.currentUser ? auth.currentUser.displayName || 'User' : 'User',
+                await db.collection(USERS_COLLECTION).doc(uid).set({
+                    displayName: auth.currentUser ? auth.currentUser.displayName || 'User' : 'Guest',
                     photoURL: auth.currentUser ? auth.currentUser.photoURL || '' : '',
                     email: auth.currentUser ? auth.currentUser.email || '' : '',
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     ...data
                 }, { merge: true });
                 return true;
-            } catch (e) { console.error('Save user stats error:', e); return false; }
+            } catch (e) { console.error('Save error:', e); return false; }
         }
 
-        async function saveRevisionQuestion(questionData, transactionData) {
+        async function saveRevisionQuestion(qData, tData, journal) {
             try {
+                const uid = auth.currentUser ? auth.currentUser.uid : 'guest_' + (localStorage.getItem('guest_id') ||
+                    'anonymous');
                 const doc = {
-                    userId: auth.currentUser ? auth.currentUser.uid : 'anonymous',
+                    userId: uid,
                     timestamp: Date.now(),
                     question: {
-                        accountName: questionData.accountName,
-                        accountType: questionData.accountType,
-                        effect: questionData.effect,
-                        correctAnswer: questionData.correctAnswer,
-                        explanation: questionData.explanation,
-                        ruleText: questionData.ruleText,
-                        isEasy: questionData.isEasy || false,
+                        accountName: qData.accountName,
+                        accountType: qData.accountType,
+                        effect: qData.effect,
+                        correctAnswer: qData.correctAnswer,
+                        explanation: qData.explanation,
+                        ruleText: qData.ruleText,
                     },
                     transaction: {
-                        display: transactionData.display || transactionData.desc,
-                        account: transactionData.account,
-                        accountType: transactionData.accountType,
-                        effect: transactionData.effect,
-                        isEasy: transactionData.isEasy || false,
-                        desc: transactionData.desc,
-                        category: transactionData.category || '',
-                        amount: transactionData.amount || 0,
-                        noAmount: transactionData.noAmount || false,
-                        pattern: {
-                            type: transactionData.primaryType || transactionData.accountType,
-                            effect: transactionData.primaryEffect || transactionData.effect,
-                            account: transactionData.account,
-                            category: transactionData.category || transactionData.accountType,
-                        }
+                        display: tData.description,
+                        account: qData.accountName,
+                        accountType: qData.accountType,
+                        effect: qData.effect,
+                        amount: tData.amount || 0,
                     },
-                    displayText: transactionData.display || transactionData.desc,
-                    accountDisplay: questionData.accountName,
-                    questionAccount: questionData.accountName,
-                    questionType: questionData.accountType,
-                    questionEffect: questionData.effect,
-                    pattern: {
-                        type: transactionData.primaryType || transactionData.accountType,
-                        effect: transactionData.primaryEffect || transactionData.effect,
-                        account: transactionData.account,
-                        category: transactionData.category || transactionData.accountType,
-                    }
+                    displayText: tData.description,
+                    accountDisplay: qData.accountName,
+                    questionAccount: qData.accountName,
+                    questionType: qData.accountType,
+                    questionEffect: qData.effect,
+                    pattern: { type: qData.accountType, effect: qData.effect, account: qData.accountName,
+                    category: qData.accountType },
+                    journal: journal.map(j => ({ account: j.account, type: j.type, side: j.side, amount: j.amount }))
                 };
-                if (transactionData.isEasy) {
-                    doc.displayText = (doc.displayText || '').replace(/\s*\d{1,3}(?:,\d{3})*(?:\s*টাকা)?/g, '').trim();
-                }
-                const ref = await db.collection(REVISION_COLLECTION).add(doc);
-                return ref.id;
-            } catch (e) { console.error('Save revision error:', e); return null; }
+                await db.collection(REVISION_COLLECTION).add(doc);
+                return true;
+            } catch (e) { console.error('Save revision error:', e); return false; }
         }
 
         async function fetchRevisionQuestions() {
             try {
-                const uid = auth.currentUser ? auth.currentUser.uid : null;
-                if (!uid) return [];
-                const snapshot = await db.collection(REVISION_COLLECTION).where('userId', '==', uid).get();
+                const uid = auth.currentUser ? auth.currentUser.uid : 'guest_' + (localStorage.getItem('guest_id') ||
+                    'anonymous');
+                const s = await db.collection(REVISION_COLLECTION).where('userId', '==', uid).get();
                 const docs = [];
-                snapshot.forEach(doc => docs.push({ id: doc.id, ...doc.data() }));
+                s.forEach(d => docs.push({ id: d.id, ...d.data() }));
                 docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
                 return docs;
-            } catch (e) { console.error('Fetch revision error:', e); return []; }
+            } catch (e) { return []; }
         }
 
-        async function deleteRevisionQuestion(docId) {
-            try {
-                await db.collection(REVISION_COLLECTION).doc(docId).delete();
-                return true;
-            } catch (e) { console.error('Delete revision error:', e); return false; }
+        async function deleteRevisionQuestion(id) {
+            try { await db.collection(REVISION_COLLECTION).doc(id).delete(); return true; } catch (e) { return false; }
         }
 
         async function getRevisionCount() {
             try {
-                const uid = auth.currentUser ? auth.currentUser.uid : null;
-                if (!uid) return 0;
-                const snapshot = await db.collection(REVISION_COLLECTION).where('userId', '==', uid).get();
-                return snapshot.size;
+                const uid = auth.currentUser ? auth.currentUser.uid : 'guest_' + (localStorage.getItem('guest_id') ||
+                    'anonymous');
+                const s = await db.collection(REVISION_COLLECTION).where('userId', '==', uid).get();
+                return s.size;
             } catch (e) { return 0; }
         }
 
         // ================================================================
-        // 7. QUIZ STATE
+        // 8. TRANSACTION GENERATOR
+        // ================================================================
+
+        function generateTransactionFromTemplate(template, mode) {
+            const hasAmount = mode !== 'easy';
+            let amount = 0;
+            if (hasAmount && template.amountRange) {
+                amount = getAmount(template.amountRange);
+            }
+
+            let asset = '',
+                expense = '',
+                liability = '';
+            if (template.assetPool) asset = pickRandom(template.assetPool);
+            if (template.expensePool) expense = pickRandom(template.expensePool);
+            if (template.liabilityPool) liability = pickRandom(template.liabilityPool);
+
+            let desc = template.description;
+            if (template.assetPool) desc = desc.replace(/{asset}/g, BENGALI_NAMES[asset] || asset);
+            if (template.expensePool) desc = desc.replace(/{expense}/g, BENGALI_NAMES[expense] || expense);
+            if (template.liabilityPool) desc = desc.replace(/{liability}/g, BENGALI_NAMES[liability] || liability);
+
+            if (hasAmount && template.amountRange) {
+                desc = desc.replace(/{amount}/g, amount.toLocaleString());
+            } else {
+                desc = desc.replace(/\s*{amount}\s*/g, ' ');
+                desc = desc.replace(/\s+/g, ' ');
+            }
+
+            const journal = template.journal.map(entry => {
+                let acc = entry.account;
+                if (acc === '{asset}' && asset) acc = asset;
+                else if (acc === '{expense}' && expense) acc = expense;
+                else if (acc === '{liability}' && liability) acc = liability;
+                return { account: acc, type: entry.type, side: entry.side, amount: hasAmount ? amount : 0 };
+            });
+
+            return {
+                templateId: template.id,
+                description: desc,
+                category: template.category,
+                amount: amount,
+                hasAmount: hasAmount,
+                journal: journal,
+                primaryAccount: journal[0].account,
+                primaryType: journal[0].type,
+                primarySide: journal[0].side,
+            };
+        }
+
+        function pickTemplate(mode, smartBias) {
+            let templates = [];
+            if (mode === 'easy') templates = EASY_TEMPLATES;
+            else if (mode === 'medium') templates = MEDIUM_TEMPLATES;
+            else templates = HARD_TEMPLATES;
+
+            if (!smartBias || Object.keys(smartBias).length === 0) return pickRandom(templates);
+
+            const weights = templates.map(t => {
+                const cat = t.category;
+                return smartBias[cat] || 1;
+            });
+            const total = weights.reduce((a, b) => a + b, 0);
+            let rand = Math.random() * total;
+            for (let i = 0; i < templates.length; i++) {
+                rand -= weights[i];
+                if (rand <= 0) return templates[i];
+            }
+            return templates[templates.length - 1];
+        }
+
+        // ================================================================
+        // 9. SMART TRACKER
+        // ================================================================
+
+        const SMART_TRACKER = {
+            categoryCounts: {},
+            consecutiveCorrect: 0,
+            consecutiveWrong: 0,
+            baseMode: 'easy',
+            smartDifficulty: 'easy',
+
+            update(category, isCorrect, mode) {
+                if (!this.categoryCounts[category]) this.categoryCounts[category] = { total: 0, correct: 0 };
+                this.categoryCounts[category].total++;
+                if (isCorrect) this.categoryCounts[category].correct++;
+
+                if (isCorrect) { this.consecutiveCorrect++;
+                    this.consecutiveWrong = 0; } else { this.consecutiveWrong++;
+                    this.consecutiveCorrect = 0; }
+                this.baseMode = mode;
+                this._adjustDifficulty();
+            },
+
+            _adjustDifficulty() {
+                const modes = ['easy', 'medium', 'hard'];
+                const idx = modes.indexOf(this.baseMode);
+                if (idx === -1) return;
+                if (this.consecutiveCorrect >= 5 && this.smartDifficulty !== 'hard') {
+                    const nextIdx = Math.min(idx + 1, modes.length - 1);
+                    this.smartDifficulty = modes[nextIdx];
+                    this.consecutiveCorrect = 0;
+                    showToast('⚡ Smart Mode', `Difficulty increased to ${this.smartDifficulty.toUpperCase()}`, 'fa-arrow-up',
+                        'gain');
+                    return;
+                }
+                if (this.consecutiveWrong >= 3 && this.smartDifficulty !== 'easy') {
+                    const prevIdx = Math.max(idx - 1, 0);
+                    this.smartDifficulty = modes[prevIdx];
+                    this.consecutiveWrong = 0;
+                    showToast('🔄 Smart Mode', `Difficulty decreased to ${this.smartDifficulty.toUpperCase()}`, 'fa-arrow-down',
+                        'gain');
+                    return;
+                }
+                if (!this.smartDifficulty) this.smartDifficulty = this.baseMode;
+            },
+
+            getBiases() {
+                const biases = {};
+                const cats = ['asset', 'liability', 'capital', 'revenue', 'expense', 'drawing'];
+                for (const cat of cats) {
+                    if (this.categoryCounts[cat] && this.categoryCounts[cat].total > 0) {
+                        const acc = this.categoryCounts[cat].correct / this.categoryCounts[cat].total;
+                        biases[cat] = Math.max(0.5, 1 - acc + 0.3);
+                    } else biases[cat] = 1;
+                }
+                const sum = Object.values(biases).reduce((a, b) => a + b, 0);
+                for (const cat in biases) biases[cat] = biases[cat] / sum * 100;
+                return biases;
+            },
+
+            getEffectiveMode() {
+                const modes = ['easy', 'medium', 'hard'];
+                const baseIdx = modes.indexOf(this.baseMode);
+                const smartIdx = modes.indexOf(this.smartDifficulty);
+                return modes[Math.min(baseIdx, Math.max(0, smartIdx))];
+            },
+
+            reset() {
+                this.categoryCounts = {};
+                this.consecutiveCorrect = 0;
+                this.consecutiveWrong = 0;
+                this.smartDifficulty = this.baseMode;
+            }
+        };
+
+        // ================================================================
+        // 10. QUIZ STATE
         // ================================================================
 
         let state = {
-            data: null, // will be loaded from Firebase
             currentQuestion: null,
             currentTransaction: null,
+            currentJournal: null,
             answered: false,
             sessionCorrect: 0,
             sessionWrong: 0,
-            sessionTotal: 0,
             difficulty: 'easy',
             smartMode: false,
             revisionMode: false,
-            maxQuestions: 10,
             revisionQueue: [],
             autoTimer: null,
-            countdown: 2,
+            countdown: 5,
             questionIndex: 0,
             questionList: [],
             isRevisionQuestion: false,
             currentRevisionDocId: null,
             business: new Business(),
-            // Local copy of user stats
             stats: {
                 totalQuestions: 0,
                 correct: 0,
@@ -2292,220 +2720,310 @@
                 bestStreak: 0,
                 xp: 0,
                 points: 0,
+                coins: 0,
+                hints: 0,
                 level: 1,
                 accuracyHistory: [],
                 weakRules: {},
-                badges: [],
                 quizHistory: [],
+                fastAnswers: 0,
+                ruleBreakerCount: 0,
+                focusCount: 0,
+                smartModeCount: 0,
+                earnedBadges: [],
+                smartCategoryData: {},
+                effectiveDifficulty: 'easy',
             },
-            // Firestore listener unsubscribers
             unsubUser: null,
-            unsubRevision: null,
             unsubLeaderboard: null,
+            isGuest: false,
+            guestId: null,
+            questionStartTime: 0,
+            hintUsedForQuestion: false,
+            advancePending: false,
         };
 
         // ================================================================
-        // 8. UI HELPERS
+        // 11. UI HELPERS
         // ================================================================
 
         const $ = (sel) => document.querySelector(sel);
         const $$ = (sel) => document.querySelectorAll(sel);
 
+        function setText(id, value) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+        }
+
         // ================================================================
-        // 9. RENDER FUNCTIONS
+        // 12. RENDER FUNCTIONS
         // ================================================================
 
         function renderBusinessMini() {
             const isEasy = state.difficulty === 'easy';
             const mini = $('#businessMini');
+            if (!mini) return;
             if (isEasy) { mini.classList.add('hidden'); return; }
             mini.classList.remove('hidden');
             const display = state.business.getDisplay();
-            $('#bCash').textContent = display.cash.toLocaleString();
-            $('#bBank').textContent = display.bank.toLocaleString();
-            $('#bAssets').textContent = display.assets.toLocaleString();
-            $('#bLiabilities').textContent = display.liabilities.toLocaleString();
-            $('#bCapital').textContent = display.capital.toLocaleString();
+            setText('bCash', display.cash.toLocaleString());
+            setText('bBank', display.bank.toLocaleString());
+            setText('bAssets', display.assets.toLocaleString());
+            setText('bLiabilities', display.liabilities.toLocaleString());
+            setText('bCapital', display.capital.toLocaleString());
         }
 
         function updateHeaderStats() {
             const s = state.stats;
-            $('#hPoints').textContent = s.points;
-            $('#hXp').textContent = s.xp;
-            $('#hLevel').textContent = s.level;
-            $('#hStreak').textContent = s.streak;
-            // Update avatar
-            if (auth.currentUser && auth.currentUser.photoURL) {
-                $('#userAvatar').src = auth.currentUser.photoURL;
+            setText('hCoins', s.coins);
+            setText('hPoints', s.points);
+            setText('hXp', s.xp);
+            const level = getLevelFromXP(s.xp);
+            setText('hLevel', level);
+            setText('hStreak', s.streak);
+            const avatar = document.getElementById('userAvatar');
+            if (auth.currentUser && auth.currentUser.photoURL && avatar) {
+                avatar.src = auth.currentUser.photoURL;
             }
+            const hintCount = document.getElementById('hintCountDisplay');
+            if (hintCount) hintCount.textContent = s.hints || 0;
         }
 
         function updateQuizProgress() {
             const s = state.stats;
-            $('#qNum').textContent = state.sessionTotal + 1;
-            $('#qTotal').textContent = state.maxQuestions;
-            $('#qCorrect').textContent = state.sessionCorrect;
-            $('#qWrong').textContent = state.sessionWrong;
-            $('#qCorr2').textContent = s.correct;
-            $('#qWron2').textContent = s.wrong;
+            setText('qCorr2', s.correct);
+            setText('qWron2', s.wrong);
             const total = s.correct + s.wrong;
             const acc = total > 0 ? Math.round((s.correct / total) * 100) : 0;
-            $('#qAcc2').textContent = acc + '%';
-            $('#qStreak2').textContent = s.streak;
-            $('#qBestStreak2').textContent = s.bestStreak;
+            setText('qAcc2', acc + '%');
+            setText('qStreak2', s.streak);
+            setText('qBestStreak2', s.bestStreak);
         }
 
         function renderQuestion() {
             const q = state.currentQuestion;
+            const transactionDisplay = document.getElementById('transactionDisplay');
+            const accountName = document.getElementById('accountName');
             if (!q) {
-                $('#transactionDisplay').textContent = 'Session complete!';
-                $('#accountName').textContent = '—';
+                if (transactionDisplay) transactionDisplay.textContent = 'Loading...';
+                if (accountName) accountName.textContent = '—';
                 $$('.quiz-opt').forEach(b => b.disabled = true);
-                $('#feedbackBox').classList.remove('show');
-                $('#autoNextIndicator').style.display = 'none';
+                const fb = document.getElementById('feedbackBox');
+                if (fb) fb.classList.remove('show');
+                const autoNext = document.getElementById('autoNextIndicator');
+                if (autoNext) autoNext.classList.remove('show');
+                const nextBtn = document.getElementById('nextBtnFallback');
+                if (nextBtn) nextBtn.classList.remove('show');
+                const hintBtn = document.getElementById('hintBtn');
+                if (hintBtn) hintBtn.disabled = true;
                 return;
             }
-            const trans = q.transaction;
-            const isEasy = state.difficulty === 'easy';
-            let displayText = trans.display || trans.desc;
-            if (isEasy || trans.isEasy) {
-                displayText = displayText.replace(/\s*\d{1,3}(?:,\d{3})*(?:\s*টাকা)?/g, '').trim();
-                displayText = displayText.replace(/\s+/g, ' ');
-            }
-            const revisionBadge = state.isRevisionQuestion ? ' 🔄' : '';
-            $('#transactionDisplay').innerHTML = `"${displayText}"${revisionBadge}`;
+
+            const trans = state.currentTransaction;
+            let displayText = trans ? trans.description : '';
+
+            if (transactionDisplay) transactionDisplay.innerHTML = `"${displayText}"`;
+
             const bnName = BENGALI_NAMES[q.accountName] || q.accountName;
-            $('#accountName').textContent = bnName + ' হিসাব';
+            if (accountName) accountName.textContent = bnName + ' হিসাব';
+
             $$('.quiz-opt').forEach(b => { b.disabled = false;
                 b.className = 'quiz-opt ' + b.dataset.answer; });
-            $('#feedbackBox').classList.remove('show');
-            $('#autoNextIndicator').style.display = 'flex';
-            $('#countdownNum').textContent = '2';
+            const fb = document.getElementById('feedbackBox');
+            if (fb) fb.classList.remove('show');
+            const autoNext = document.getElementById('autoNextIndicator');
+            if (autoNext) autoNext.classList.remove('show');
+            const nextBtn = document.getElementById('nextBtnFallback');
+            if (nextBtn) nextBtn.classList.remove('show');
             state.answered = false;
-            state.countdown = 2;
+            state.countdown = 5;
+            state.questionStartTime = Date.now();
+            state.hintUsedForQuestion = false;
+            state.advancePending = false;
+
+            const hintBtn = document.getElementById('hintBtn');
+            if (hintBtn) {
+                if (state.stats.hints > 0) {
+                    hintBtn.disabled = false;
+                    hintBtn.innerHTML =
+                        `<i class="fas fa-lightbulb"></i> Use Hint <span class="hint-count">${state.stats.hints}</span>`;
+                } else {
+                    hintBtn.disabled = true;
+                    hintBtn.innerHTML = `<i class="fas fa-lightbulb"></i> No Hints`;
+                }
+            }
+
+            const indicator = document.getElementById('smartLevelIndicator');
+            if (indicator) {
+                if (state.smartMode) {
+                    indicator.style.display = 'inline-block';
+                    const eff = SMART_TRACKER.getEffectiveMode();
+                    indicator.textContent = `Adaptive: ${eff.toUpperCase()}`;
+                } else {
+                    indicator.style.display = 'none';
+                }
+            }
+
             updateQuizProgress();
             renderBusinessMini();
             if (state.autoTimer) { clearInterval(state.autoTimer);
                 state.autoTimer = null; }
         }
 
-        function showFeedback(isCorrect, q) {
-            const box = $('#feedbackBox');
+        function showFeedback(isCorrect, q, journal, trans) {
+            const box = document.getElementById('feedbackBox');
+            if (!box) return;
             box.className = 'feedback-box show ' + (isCorrect ? 'correct' : 'wrong');
-            const icon = $('#fbIcon');
-            icon.className = 'fas ' + (isCorrect ? 'fa-check-circle' : 'fa-times-circle');
-            $('#fbTitle').textContent = isCorrect ? 'Correct!' : 'Wrong!';
-            const answerLabel = q.correctAnswer === 'debit' ? 'Debit' : 'Credit';
-            if (!isCorrect) {
-                $('#fbBody').innerHTML = `The correct answer was <strong>${answerLabel}</strong>.<br>${q.explanation}`;
-            } else {
-                $('#fbBody').innerHTML = q.explanation;
+
+            const icon = document.getElementById('fbIcon');
+            if (icon) icon.className = 'fas ' + (isCorrect ? 'fa-check-circle' : 'fa-times-circle');
+
+            const resultEl = document.getElementById('fbResult');
+            if (resultEl) {
+                resultEl.textContent = isCorrect ? 'Correct!' : 'Wrong!';
+                resultEl.className = 'fb-result ' + (isCorrect ? 'correct-text' : 'wrong-text');
             }
-            $('#fbRule').innerHTML = `<strong>Rule:</strong> ${q.ruleText}`;
+
+            const entry = journal.find(j => j.account === q.accountName);
+            let explanation = '',
+                ruleText = '';
+            const detailEl = document.getElementById('fbDetail');
+            const ruleBox = document.getElementById('fbRuleBox');
+
+            if (entry) {
+                const rule = ACCOUNT_RULES[entry.type];
+                const label = rule ? rule.label : 'Account';
+                const side = entry.side === 'debit' ? 'ডেবিট' : 'ক্রেডিট';
+                const sideLabel = entry.side === 'debit' ? 'Debit' : 'Credit';
+                const bnName = BENGALI_NAMES[entry.account] || entry.account;
+                const amtStr = trans && trans.amount && trans.hasAmount ? ` ${trans.amount.toLocaleString()} টাকা` : '';
+                const correctAns = q.correctAnswer === 'debit' ? 'Debit' : 'Credit';
+
+                if (!isCorrect) {
+                    explanation =
+                        `সঠিক উত্তর ছিল <strong>${correctAns}</strong>।\n${bnName}${amtStr} একটি ${label}। ${label} ${side} হয়েছে, তাই ${bnName} হিসাব ${sideLabel} হবে।`;
+                } else {
+                    explanation =
+                        `${bnName}${amtStr} একটি ${label}। ${label} ${side} হয়েছে, তাই ${bnName} হিসাব ${sideLabel} হবে।`;
+                }
+                ruleText = `${label} ${side} = ${sideLabel}`;
+            } else {
+                const correctAns = q.correctAnswer === 'debit' ? 'Debit' : 'Credit';
+                explanation = isCorrect ? q.explanation || 'সঠিক উত্তর!' :
+                    `সঠিক উত্তর ছিল <strong>${correctAns}</strong>।\n${q.explanation || 'Review the accounting rules.'}`;
+                ruleText = q.ruleText || 'Check the rule.';
+            }
+
+            if (detailEl) detailEl.innerHTML = explanation;
+            if (ruleBox) ruleBox.innerHTML = `<strong>Rule:</strong> ${ruleText}`;
+
             $$('.quiz-opt').forEach(b => {
                 b.disabled = true;
-                if (b.dataset.answer === q.correctAnswer) b.classList.add('show-correct');
-                if (b.dataset.answer === q.correctAnswer && isCorrect) b.classList.add('correct');
-                if (b.dataset.answer !== q.correctAnswer && !isCorrect && b.dataset.answer === state.userAnswer) b
-                    .classList.add('wrong');
-                if (b.dataset.answer === q.correctAnswer && !isCorrect) b.classList.add('show-correct');
-            });
-            state.countdown = 2;
-            $('#countdownNum').textContent = '2';
-            $('#autoNextIndicator').style.display = 'flex';
-            if (state.autoTimer) clearInterval(state.autoTimer);
-            state.autoTimer = setInterval(() => {
-                state.countdown -= 0.5;
-                if (state.countdown <= 0) {
-                    clearInterval(state.autoTimer);
-                    state.autoTimer = null;
-                    $('#countdownNum').textContent = '0';
-                    advanceQuestion();
-                } else {
-                    $('#countdownNum').textContent = Math.ceil(state.countdown);
+                if (b.dataset.answer === q.correctAnswer) {
+                    b.classList.add('show-correct');
                 }
-            }, 500);
+                if (b.dataset.answer === q.correctAnswer && isCorrect) {
+                    b.classList.add('correct');
+                }
+                if (b.dataset.answer !== q.correctAnswer && !isCorrect && b.dataset.answer === state.userAnswer) {
+                    b.classList.add('wrong');
+                }
+                if (b.dataset.answer === q.correctAnswer && !isCorrect) {
+                    b.classList.add('show-correct');
+                }
+            });
+
+            const hintBtn = document.getElementById('hintBtn');
+            if (hintBtn) hintBtn.disabled = true;
+
+            // Clear any existing timer
+            if (state.autoTimer) {
+                clearTimeout(state.autoTimer);
+                state.autoTimer = null;
+            }
+
+            // Auto-advance logic: correct → 0.5s, wrong → 5s countdown
+            if (isCorrect) {
+                // Correct: advance after 0.5s
+                state.autoTimer = setTimeout(() => {
+                    state.autoTimer = null;
+                    advanceQuestion();
+                }, 500);
+                const autoNext = document.getElementById('autoNextIndicator');
+                if (autoNext) autoNext.classList.remove('show');
+                const nextBtn = document.getElementById('nextBtnFallback');
+                if (nextBtn) nextBtn.classList.remove('show');
+            } else {
+                // Wrong: show countdown for 5 seconds
+                state.countdown = 5;
+                const countdownEl = document.getElementById('countdownNum');
+                if (countdownEl) countdownEl.textContent = '5';
+                const autoNext = document.getElementById('autoNextIndicator');
+                if (autoNext) autoNext.classList.add('show');
+                const nextBtn = document.getElementById('nextBtnFallback');
+                if (nextBtn) nextBtn.classList.remove('show');
+
+                state.autoTimer = setInterval(() => {
+                    state.countdown -= 0.5;
+                    if (state.countdown <= 0) {
+                        clearInterval(state.autoTimer);
+                        state.autoTimer = null;
+                        if (countdownEl) countdownEl.textContent = '0';
+                        if (autoNext) autoNext.classList.remove('show');
+                        advanceQuestion();
+                    } else {
+                        if (countdownEl) countdownEl.textContent = Math.ceil(state.countdown);
+                    }
+                }, 500);
+            }
         }
 
         function advanceQuestion() {
+            if (state.advancePending) return;
+            state.advancePending = true;
+
             state.questionIndex++;
             if (state.questionIndex < state.questionList.length) {
                 state.currentQuestion = state.questionList[state.questionIndex];
+                state.advancePending = false;
                 renderQuestion();
             } else {
                 const trans = state.currentTransaction;
-                if (trans) {
-                    state.business = applyTransaction(state.business, trans);
-                }
-                if (state.sessionTotal < state.maxQuestions) {
-                    generateNextQuestionSet();
-                } else {
-                    $('#transactionDisplay').textContent = '🎉 Session Complete!';
-                    $('#accountName').textContent = '—';
-                    $$('.quiz-opt').forEach(b => b.disabled = true);
-                    $('#feedbackBox').classList.remove('show');
-                    $('#autoNextIndicator').style.display = 'none';
-                    renderBusinessMini();
-                }
+                if (trans) state.business = applyTransaction(state.business, trans);
+                state.advancePending = false;
+                generateNextQuestionSet();
             }
         }
 
-        // ================================================================
-        // 10. QUESTION GENERATOR
-        // ================================================================
-
-        function generateQuestionsFromTransaction(transaction) {
-            const questions = [];
-            if (transaction.isEasy) {
-                const qAccount = transaction.questionAccount || transaction.account;
-                const qType = transaction.questionType || transaction.primaryType;
-                const qEffect = transaction.questionEffect || transaction.primaryEffect;
-                const rule = getRuleExplanation(qType, qEffect, qAccount);
-                questions.push({
-                    accountName: qAccount,
-                    accountType: qType,
-                    effect: qEffect,
-                    correctAnswer: rule.answer,
-                    explanation: rule.explanation,
-                    ruleText: rule.ruleText,
-                    transaction: transaction,
-                    isEasy: true
-                });
-            } else {
-                const primaryAccount = transaction.account;
-                const primaryType = transaction.primaryType;
-                const primaryEffect = transaction.primaryEffect;
-                const rule1 = getRuleExplanation(primaryType, primaryEffect, primaryAccount);
-                questions.push({
-                    accountName: primaryAccount,
-                    accountType: primaryType,
-                    effect: primaryEffect,
-                    correctAnswer: rule1.answer,
-                    explanation: rule1.explanation,
-                    ruleText: rule1.ruleText,
-                    transaction: transaction,
-                    isEasy: false
-                });
-                if (transaction.otherAccount && transaction.hasAmount) {
-                    const secEffect = transaction.secondaryEffect || 'decrease';
-                    const rule2 = getRuleExplanation(transaction.otherType, secEffect, transaction.otherAccount);
-                    questions.push({
-                        accountName: transaction.otherAccount,
-                        accountType: transaction.otherType,
-                        effect: secEffect,
-                        correctAnswer: rule2.answer,
-                        explanation: rule2.explanation,
-                        ruleText: rule2.ruleText,
-                        transaction: transaction,
-                        isEasy: false
-                    });
-                }
+        function applyTransaction(business, trans) {
+            const b = business.clone();
+            if (!trans || !trans.journal) return b;
+            for (const entry of trans.journal) {
+                const acc = entry.account,
+                    type = entry.type,
+                    amount = entry.amount || 0;
+                if (type === 'asset') { if (entry.side === 'debit') b.addAsset(acc, amount);
+                    else b.subAsset(acc, amount); } else if (type === 'liability') { if (entry.side === 'debit') b
+                        .subLiability(acc, amount);
+                    else b.addLiability(acc, amount); } else if (type === 'capital') { if (entry.side === 'debit') b
+                        .subCapital(amount);
+                    else b.addCapital(amount); } else if (type === 'revenue') { if (entry.side === 'debit') b.addRevenue(-
+                        amount);
+                    else b.addRevenue(amount); } else if (type === 'expense') { if (entry.side === 'debit') b.addExpense(
+                        amount);
+                    else b.addExpense(-amount); } else if (type === 'drawing') { if (entry.side === 'debit') b.subCapital(
+                        amount);
+                    else b.addCapital(amount); }
             }
-            return questions;
+            return b;
         }
+
+        // ================================================================
+        // 13. QUESTION GENERATOR
+        // ================================================================
 
         function generateNextQuestionSet() {
-            const isEasy = state.difficulty === 'easy';
+            const mode = state.difficulty;
 
             if (state.revisionMode) {
                 if (state.revisionQueue.length > 0) {
@@ -2513,43 +3031,29 @@
                     const docId = revData.docId;
                     const qData = revData.question;
                     const transData = revData.transaction;
+                    const journalData = revData.journal || [];
+
                     let transaction = {
-                        display: transData.display || transData.desc,
-                        desc: transData.desc || transData.display,
-                        account: transData.account || qData.accountName,
-                        accountType: transData.accountType || qData.accountType,
-                        effect: transData.effect || qData.effect,
-                        isEasy: transData.isEasy || qData.isEasy || false,
-                        noAmount: transData.noAmount || false,
+                        description: transData.display || transData.description || 'Transaction',
                         amount: transData.amount || 0,
-                        primaryType: transData.accountType || qData.accountType,
-                        primaryEffect: transData.effect || qData.effect,
-                        category: transData.category || qData.accountType,
-                        questionAccount: qData.accountName,
-                        questionType: qData.accountType,
-                        questionEffect: qData.effect,
+                        hasAmount: transData.amount > 0,
+                        journal: journalData,
+                        category: qData.accountType || 'asset',
                     };
-                    if (isEasy) {
-                        transaction.noAmount = true;
-                        transaction.amount = 0;
-                        transaction.isEasy = true;
-                        transaction.display = (transaction.display || '').replace(/\s*\d{1,3}(?:,\d{3})*(?:\s*টাকা)?/g, '')
-                            .trim();
-                        transaction.desc = transaction.display;
-                    }
+
                     const question = {
                         accountName: qData.accountName,
                         accountType: qData.accountType,
-                        effect: qData.effect,
+                        effect: qData.effect || 'increase',
                         correctAnswer: qData.correctAnswer,
                         explanation: qData.explanation,
                         ruleText: qData.ruleText,
-                        transaction: transaction,
-                        isEasy: qData.isEasy || false,
                         _revisionDocId: docId,
                     };
+
                     state.currentQuestion = question;
                     state.currentTransaction = transaction;
+                    state.currentJournal = journalData;
                     state.isRevisionQuestion = true;
                     state.currentRevisionDocId = docId;
                     updateRevisionBadges();
@@ -2559,8 +3063,12 @@
                     state.revisionMode = false;
                     state.isRevisionQuestion = false;
                     state.currentRevisionDocId = null;
-                    $('#revisionToggle').classList.remove('active');
-                    $('#revisionToggle').querySelector('.toggle-dot').style.background = 'var(--text-muted)';
+                    const revToggle = document.getElementById('revisionToggle');
+                    if (revToggle) {
+                        revToggle.classList.remove('active');
+                        const dot = revToggle.querySelector('.toggle-dot');
+                        if (dot) dot.style.background = 'var(--text-muted)';
+                    }
                     showToast('Revision Complete', 'All revision questions answered!', 'fa-check-circle', 'gain');
                     updateRevisionBadges();
                 }
@@ -2569,53 +3077,54 @@
             state.isRevisionQuestion = false;
             state.currentRevisionDocId = null;
 
-            let weakTypes = null;
+            let smartBias = null;
+            let effectiveMode = mode;
             if (state.smartMode) {
-                const analysis = analyzeWeakRules(state.stats);
-                weakTypes = analysis.weakTypes;
+                smartBias = SMART_TRACKER.getBiases();
+                effectiveMode = SMART_TRACKER.getEffectiveMode();
+                state.stats.effectiveDifficulty = effectiveMode;
+                const indicator = document.getElementById('smartLevelIndicator');
+                if (indicator) indicator.textContent = `Adaptive: ${effectiveMode.toUpperCase()}`;
             }
 
-            let trans;
-            if (isEasy) {
-                trans = generateEasyTransaction();
-                if (weakTypes && Object.keys(weakTypes).length > 0) {
-                    const weakType = pickRandom(Object.keys(weakTypes));
-                    for (let attempt = 0; attempt < 5; attempt++) {
-                        const testTrans = generateEasyTransaction();
-                        if (testTrans.category === weakType) { trans = testTrans; break; }
-                    }
-                }
+            const template = pickTemplate(effectiveMode, smartBias);
+            const transaction = generateTransactionFromTemplate(template, effectiveMode);
+            const journal = transaction.journal;
+            const selectedEntry = pickRandom(journal);
+
+            const rule = ACCOUNT_RULES[selectedEntry.type];
+            const isDebit = selectedEntry.side === 'debit';
+            let effect;
+            if (selectedEntry.type === 'asset' || selectedEntry.type === 'expense' || selectedEntry.type === 'drawing') {
+                effect = isDebit ? 'increase' : 'decrease';
             } else {
-                trans = generateTransaction(state.business, state.difficulty, weakTypes);
+                effect = isDebit ? 'decrease' : 'increase';
             }
+            const correctAnswer = rule ? rule[effect] : 'debit';
+            const answerLabel = correctAnswer === 'debit' ? 'Debit' : 'Credit';
+            const bnName = BENGALI_NAMES[selectedEntry.account] || selectedEntry.account;
+            const label = rule ? rule.label : 'Account';
+            const effectLabel = effect === 'increase' ? 'increases' : 'decreases';
+            const explanation = `"${bnName}" is an ${label}. When ${label} ${effectLabel}, it is ${answerLabel}.`;
+            const ruleText = `${label} ${effectLabel} = ${answerLabel}`;
 
-            const questions = generateQuestionsFromTransaction(trans);
-            state.questionList = questions;
-            state.questionIndex = 0;
-            if (questions.length > 0) {
-                state.currentQuestion = questions[0];
-                state.currentTransaction = trans;
-                renderQuestion();
-            } else {
-                generateFreshQuestionSet();
-            }
-        }
+            const question = {
+                accountName: selectedEntry.account,
+                accountType: selectedEntry.type,
+                effect: effect,
+                correctAnswer: correctAnswer,
+                explanation: explanation,
+                ruleText: ruleText,
+            };
 
-        function generateFreshQuestionSet() {
-            const isEasy = state.difficulty === 'easy';
-            let trans = isEasy ? generateEasyTransaction() : generateTransaction(state.business, state.difficulty, null);
-            const questions = generateQuestionsFromTransaction(trans);
-            state.questionList = questions;
-            state.questionIndex = 0;
-            if (questions.length > 0) {
-                state.currentQuestion = questions[0];
-                state.currentTransaction = trans;
-                renderQuestion();
-            }
+            state.currentQuestion = question;
+            state.currentTransaction = transaction;
+            state.currentJournal = journal;
+            renderQuestion();
         }
 
         // ================================================================
-        // 11. ANSWER HANDLING
+        // 14. ANSWER HANDLING – FIXED: pointsChanged used consistently
         // ================================================================
 
         async function handleAnswer(answer) {
@@ -2628,26 +3137,38 @@
             const isCorrect = answer === q.correctAnswer;
             const rewards = getRewards(state.difficulty, isCorrect);
 
-            state.sessionTotal++;
+            const elapsed = (Date.now() - state.questionStartTime) / 1000;
+            if (elapsed <= 3) s.fastAnswers = (s.fastAnswers || 0) + 1;
+
             let pointsChanged = 0,
                 xpChanged = 0;
             const isRevision = state.isRevisionQuestion && state.currentRevisionDocId;
 
+            if (state.hintUsedForQuestion) {
+                state.hintUsedForQuestion = false;
+            }
+
+            const prevBadges = new Set(s.earnedBadges || []);
+
             if (isCorrect) {
-                state.sessionCorrect++;
                 s.correct++;
                 s.streak++;
                 if (s.streak > s.bestStreak) s.bestStreak = s.streak;
                 s.points += rewards.points;
                 s.xp += rewards.xp;
+                s.coins += COINS_PER_CORRECT;
                 pointsChanged = rewards.points;
                 xpChanged = rewards.xp;
                 if (isRevision && state.currentRevisionDocId) {
                     await deleteRevisionQuestion(state.currentRevisionDocId);
                     await updateRevisionBadges();
                 }
+                if (s.quizHistory && s.quizHistory.length > 0) {
+                    const last = s.quizHistory[s.quizHistory.length - 1];
+                    if (last && last.userAnswer !== last.correctAnswer) s.ruleBreakerCount = (s.ruleBreakerCount || 0) + 1;
+                }
+                showCoinToast(COINS_PER_CORRECT);
             } else {
-                state.sessionWrong++;
                 s.wrong++;
                 s.streak = 0;
                 s.points += rewards.points;
@@ -2655,19 +3176,19 @@
                 const key = `${q.accountType}.${q.effect}`;
                 s.weakRules[key] = (s.weakRules[key] || 0) + 1;
                 if (!state.isRevisionQuestion) {
-                    await saveRevisionQuestion(q, q.transaction);
+                    await saveRevisionQuestion(q, state.currentTransaction, state.currentJournal);
                     await updateRevisionBadges();
                 }
             }
 
             s.totalQuestions++;
             if (s.points < 0) s.points = 0;
-            const newLevel = calculateLevel(s.xp);
-            if (newLevel > s.level) {
-                s.level = newLevel;
-                setTimeout(() => showToast('Level Up!', `You are now Level ${s.level}`, 'fa-trophy', 'gain'), 300);
-            } else {
-                s.level = newLevel;
+
+            const newLevel = getLevelFromXP(s.xp);
+            const oldLevel = s.level || 1;
+            s.level = newLevel;
+            if (newLevel > oldLevel) {
+                setTimeout(() => showToast('Level Up!', `You are now Level ${newLevel}`, 'fa-trophy', 'gain'), 300);
             }
 
             s.quizHistory.push({
@@ -2684,25 +3205,56 @@
             const total = s.correct + s.wrong;
             const acc = total > 0 ? Math.round((s.correct / total) * 100) : 0;
             const today = new Date().getDay();
-            if (s.accuracyHistory.length < 7) {
-                while (s.accuracyHistory.length < 7) s.accuracyHistory.push(0);
-            }
+            if (s.accuracyHistory.length < 7) { while (s.accuracyHistory.length < 7) s.accuracyHistory.push(0); }
             s.accuracyHistory[today % 7] = acc;
-            s.badges = checkBadges(s);
 
-            // Save to Firebase
-            await saveUserStats(auth.currentUser.uid, s);
+            if (state.smartMode) {
+                SMART_TRACKER.update(q.accountType, isCorrect, state.difficulty);
+                s.smartCategoryData = SMART_TRACKER.categoryCounts;
+                s.effectiveDifficulty = SMART_TRACKER.getEffectiveMode();
+            }
+
+            const earnedIds = checkBadges(s);
+            s.earnedBadges = earnedIds;
+            const newBadges = earnedIds.filter(id => !prevBadges.has(id));
+            for (const id of newBadges) {
+                const badge = ALL_BADGES.find(b => b.id === id);
+                if (badge) setTimeout(() => showBadgeToast(badge), 400);
+            }
+
+            s.focusCount = (s.focusCount || 0) + 1;
+
+            // Save to Firebase or localStorage
+            if (!state.isGuest && auth.currentUser) {
+                await saveUserStats(auth.currentUser.uid, s);
+            } else {
+                try {
+                    localStorage.setItem('guest_stats_' + state.guestId, JSON.stringify(s));
+                } catch (e) {}
+            }
 
             updateHeaderStats();
             updateQuizProgress();
+
+            // Show points/XP toast – using pointsChanged (correct)
             if (pointsChanged !== 0 || xpChanged !== 0) {
-                showPointsToast(pointsChanged, xpChanged, isCorrect);
+                let title = isCorrect ? 'Correct!' : 'Wrong!';
+                let icon = isCorrect ? 'fa-check-circle' : 'fa-times-circle';
+                let type = isCorrect ? 'gain' : 'loss';
+                let descParts = [];
+                if (pointsChanged > 0) descParts.push(`<span class="highlight-gain">+${pointsChanged} pts</span>`);
+                else if (pointsChanged < 0) descParts.push(`<span class="highlight-loss">${pointsChanged} pts</span>`);
+                if (xpChanged > 0) descParts.push(`<span class="highlight-gain">+${xpChanged} XP</span>`);
+                const desc = descParts.length > 0 ? descParts.join(' · ') : 'No change';
+                showToast(title, desc, icon, type);
             }
+
             if (isRevision && isCorrect) {
                 state.isRevisionQuestion = false;
                 state.currentRevisionDocId = null;
             }
-            showFeedback(isCorrect, q);
+
+            showFeedback(isCorrect, q, state.currentJournal, state.currentTransaction);
             updateDashboard();
             updateBadges();
             updateWeakTopics();
@@ -2710,33 +3262,112 @@
         }
 
         // ================================================================
-        // 12. DASHBOARD UPDATES
+        // 15. HINT SYSTEM – FIXED
+        // ================================================================
+
+        function useHint() {
+            if (state.answered || !state.currentQuestion) {
+                showToast('Hint Not Available', 'Answer the current question first.', 'fa-exclamation-circle', 'loss');
+                return;
+            }
+            if (state.stats.hints <= 0) {
+                showToast('No Hints', 'You have no hints. Buy more in the Hint Shop!', 'fa-exclamation-circle', 'loss');
+                return;
+            }
+            state.stats.hints--;
+            state.hintUsedForQuestion = true;
+            updateHeaderStats();
+            updateDashboard();
+
+            const q = state.currentQuestion;
+            const ruleText = q.ruleText || 'Check the rule.';
+            showToast('Hint Revealed', `Rule: ${ruleText}`, 'fa-lightbulb', 'hint');
+
+            const hintBtn = document.getElementById('hintBtn');
+            if (hintBtn) {
+                if (state.stats.hints > 0) {
+                    hintBtn.innerHTML =
+                        `<i class="fas fa-lightbulb"></i> Use Hint <span class="hint-count">${state.stats.hints}</span>`;
+                } else {
+                    hintBtn.disabled = true;
+                    hintBtn.innerHTML = `<i class="fas fa-lightbulb"></i> No Hints`;
+                }
+            }
+
+            if (!state.isGuest && auth.currentUser) {
+                saveUserStats(auth.currentUser.uid, state.stats);
+            } else {
+                try { localStorage.setItem('guest_stats_' + state.guestId, JSON.stringify(state.stats)); } catch (e) {}
+            }
+        }
+
+        // ================================================================
+        // 16. HINT SHOP
+        // ================================================================
+
+        function buyHints(hints, price) {
+            const s = state.stats;
+            if (s.coins < price) {
+                showToast('Not Enough Coins', `You need ${price} coins. You have ${s.coins}.`, 'fa-coins', 'loss');
+                return;
+            }
+            s.coins -= price;
+            s.hints = (s.hints || 0) + hints;
+            updateHeaderStats();
+            updateDashboard();
+            updateShopUI();
+            showToast('Hints Purchased!', `${hints} hints added to your inventory.`, 'fa-coins', 'hint');
+
+            if (!state.isGuest && auth.currentUser) {
+                saveUserStats(auth.currentUser.uid, s);
+            } else {
+                try { localStorage.setItem('guest_stats_' + state.guestId, JSON.stringify(s)); } catch (e) {}
+            }
+        }
+
+        function updateShopUI() {
+            const s = state.stats;
+            setText('shopCoins', s.coins);
+            setText('shopHints', s.hints || 0);
+            document.querySelectorAll('.pack-buy').forEach(btn => {
+                const price = parseInt(btn.dataset.price);
+                btn.disabled = s.coins < price;
+            });
+        }
+
+        // ================================================================
+        // 17. DASHBOARD
         // ================================================================
 
         function updateDashboard() {
             const s = state.stats;
             const total = s.correct + s.wrong;
             const acc = total > 0 ? Math.round((s.correct / total) * 100) : 0;
-            $('#dTotal').textContent = total;
-            $('#dCorrect').textContent = s.correct;
-            $('#dWrong').textContent = s.wrong;
-            $('#dAccuracy').textContent = acc + '%';
-            $('#dPoints').textContent = s.points;
-            $('#dXp').textContent = s.xp;
-            $('#dLevel').textContent = s.level;
-            $('#dStreak').textContent = s.streak;
-            const nextLevelXP = getNextLevelXP(s.level);
-            const currentLevelXP = getXPThreshold(s.level);
-            const progress = s.xp - currentLevelXP;
-            const needed = nextLevelXP - currentLevelXP;
-            const pct = needed > 0 ? Math.min(100, (progress / needed) * 100) : 100;
-            $('#xpBarFill').style.width = pct + '%';
-            $('#xpProgressText').textContent = `${s.xp} / ${nextLevelXP} XP`;
+            setText('dTotal', total);
+            setText('dCorrect', s.correct);
+            setText('dWrong', s.wrong);
+            setText('dAccuracy', acc + '%');
+            setText('dCoins', s.coins);
+            setText('dPoints', s.points);
+            setText('dXp', s.xp);
+            const level = getLevelFromXP(s.xp);
+            setText('dLevel', level);
+            setText('dStreak', s.streak);
+            setText('dHints', s.hints || 0);
+
+            const progress = getXPProgress(s.xp);
+            const pct = Math.min(100, progress.progress * 100);
+            const fill = document.getElementById('xpBarFill');
+            if (fill) fill.style.width = pct + '%';
+            setText('xpProgressText', `${s.xp} / ${progress.next} XP`);
+
             renderChart(s.accuracyHistory);
+            updateShopUI();
         }
 
         function renderChart(history) {
-            const container = $('#accuracyChart');
+            const container = document.getElementById('accuracyChart');
+            if (!container) return;
             container.innerHTML = '';
             const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             const today = new Date().getDay();
@@ -2751,7 +3382,7 @@
                 bar.className = 'chart-bar';
                 bar.style.height = Math.max(4, pct * 0.85) + '%';
                 bar.style.background = val >= 80 ? 'var(--gradient-2)' : val >= 50 ? 'var(--gradient-3)' :
-                'var(--gradient-1)';
+                    'var(--gradient-1)';
                 const label = document.createElement('div');
                 label.className = 'chart-bar-label';
                 label.textContent = days[i];
@@ -2763,38 +3394,33 @@
 
         function updateBadges() {
             const s = state.stats;
-            const allBadges = checkBadges(s);
-            const grid = $('#badgesGrid');
+            const earnedIds = s.earnedBadges || [];
+            const grid = document.getElementById('badgesGrid');
+            if (!grid) return;
             grid.innerHTML = '';
-            const badgeDefs = [
-                { id: 'beginner', icon: 'fa-seedling', label: 'Beginner' },
-                { id: 'learner', icon: 'fa-book', label: 'Learner' },
-                { id: 'scholar', icon: 'fa-graduation-cap', label: 'Scholar' },
-                { id: 'accurate', icon: 'fa-bullseye', label: 'Accurate' },
-                { id: 'streak5', icon: 'fa-fire', label: 'Streak 5' },
-                { id: 'streak10', icon: 'fa-bolt', label: 'Streak 10' },
-                { id: 'level3', icon: 'fa-star', label: 'Level 3' },
-                { id: 'level5', icon: 'fa-crown', label: 'Level 5' },
-            ];
-            const earned = new Set(allBadges.map(b => b.id));
-            let count = 0;
-            for (const def of badgeDefs) {
-                const has = earned.has(def.id);
-                if (has) count++;
+            let unlocked = 0;
+            for (const badge of ALL_BADGES) {
+                const unlockedBadge = earnedIds.includes(badge.id);
+                if (unlockedBadge) unlocked++;
                 const el = document.createElement('div');
-                el.className = 'badge-item' + (has ? '' : ' locked');
-                el.innerHTML = `<i class="fas ${def.icon}"></i> ${def.label}`;
-                if (!has) el.title = 'Not earned yet';
+                el.className = 'badge-item' + (unlockedBadge ? '' : ' locked');
+                el.innerHTML =
+                    `<div class="b-icon ${unlockedBadge ? 'unlocked' : 'locked'}">${badge.icon}</div><div class="b-info"><div class="b-name">${badge.name}</div></div>`;
                 grid.appendChild(el);
             }
-            $('#badgeCount').textContent = `${count} / ${badgeDefs.length}`;
+            setText('badgeCount', `${unlocked} / 50`);
         }
 
         function updateWeakTopics() {
             const s = state.stats;
-            const container = $('#weakTopics');
-            const analysis = analyzeWeakRules(s);
-            const weakTypes = analysis.weakTypes;
+            const container = document.getElementById('weakTopics');
+            if (!container) return;
+            const weakTypes = {};
+            for (const entry of (s.quizHistory || [])) {
+                if (entry.userAnswer !== entry.correctAnswer) {
+                    weakTypes[entry.type] = (weakTypes[entry.type] || 0) + 1;
+                }
+            }
             const typeLabels = { asset: 'Asset', liability: 'Liability', capital: 'Capital', revenue: 'Revenue',
                 expense: 'Expense', drawing: 'Drawing' };
             const entries = Object.entries(weakTypes).sort((a, b) => b[1] - a[1]);
@@ -2809,7 +3435,7 @@
         }
 
         // ================================================================
-        // 13. REVISION & LEADERBOARD
+        // 18. REVISION
         // ================================================================
 
         async function updateRevisionBadges() {
@@ -2824,20 +3450,25 @@
                 state.revisionMode = false;
                 state.isRevisionQuestion = false;
                 state.currentRevisionDocId = null;
-                $('#revisionToggle').classList.remove('active');
-                $('#revisionToggle').querySelector('.toggle-dot').style.background = 'var(--text-muted)';
+                const revToggle = document.getElementById('revisionToggle');
+                if (revToggle) {
+                    revToggle.classList.remove('active');
+                    const dot = revToggle.querySelector('.toggle-dot');
+                    if (dot) dot.style.background = 'var(--text-muted)';
+                }
                 state.revisionQueue = [];
                 showToast('Revision Mode Off', 'No revision questions left.', 'fa-info-circle', 'gain');
             }
         }
 
         async function loadRevisionList() {
-            const container = $('#revisionList');
+            const container = document.getElementById('revisionList');
+            if (!container) return;
             try {
                 const docs = await fetchRevisionQuestions();
                 if (docs.length === 0) {
                     container.innerHTML =
-                        `<div class="empty-state"><i class="fas fa-check-circle" style="color:var(--accent-2);"></i><h3>No mistakes yet!</h3><p>Keep up the great work! Wrong answers will appear here for revision.</p></div>`;
+                        `<div class="empty-state"><i class="fas fa-check-circle" style="color:var(--accent-2);"></i><h3>No mistakes yet!</h3><p>Keep up the great work!</p></div>`;
                     return;
                 }
                 container.innerHTML = docs.map(doc => {
@@ -2849,7 +3480,7 @@
                 }).join('');
             } catch (e) {
                 container.innerHTML =
-                    `<div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:var(--accent-4);"></i><h3>Error loading revision data</h3><p>Please try again later.</p></div>`;
+                    `<div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:var(--accent-4);"></i><h3>Error loading revision data</h3></div>`;
             }
         }
 
@@ -2860,6 +3491,7 @@
                 for (const doc of docs) {
                     const qData = doc.question || {};
                     const transData = doc.transaction || {};
+                    const journalData = doc.journal || [];
                     if (!qData.accountName || !qData.accountType) {
                         const pattern = doc.pattern || {};
                         qData.accountName = qData.accountName || pattern.account || 'Account';
@@ -2868,12 +3500,12 @@
                         qData.correctAnswer = qData.correctAnswer || 'debit';
                         qData.explanation = qData.explanation || 'Review this transaction.';
                         qData.ruleText = qData.ruleText || 'Review the rule.';
-                        qData.isEasy = qData.isEasy || false;
                     }
                     state.revisionQueue.push({
                         docId: doc.id,
                         question: qData,
                         transaction: transData,
+                        journal: journalData,
                         displayText: doc.displayText || 'Transaction',
                         accountDisplay: doc.accountDisplay || qData.accountName,
                     });
@@ -2883,25 +3515,18 @@
         }
 
         // ================================================================
-        // 14. LEADERBOARD (real-time from Firestore)
+        // 19. LEADERBOARD
         // ================================================================
 
-        function updateLeaderboard() {
-            // This is called by the real-time listener
-            // The actual data is fetched from Firestore via listener
-        }
-
         function setupLeaderboardListener() {
-            if (state.unsubLeaderboard) {
-                state.unsubLeaderboard();
-                state.unsubLeaderboard = null;
-            }
+            if (state.unsubLeaderboard) { state.unsubLeaderboard();
+                state.unsubLeaderboard = null; }
             state.unsubLeaderboard = db.collection(USERS_COLLECTION)
                 .orderBy('xp', 'desc')
                 .limit(50)
                 .onSnapshot((snapshot) => {
-                    const tbody = $('#lbBody');
-                    const empty = $('#lbEmpty');
+                    const tbody = document.getElementById('lbBody');
+                    const empty = document.getElementById('lbEmpty');
                     const activeFilter = document.querySelector('.lb-filter-btn.active');
                     const sortBy = activeFilter ? activeFilter.dataset.lb : 'xp';
 
@@ -2911,86 +3536,99 @@
                         const total = (data.correct || 0) + (data.wrong || 0);
                         const acc = total > 0 ? Math.round(((data.correct || 0) / total) * 100) : 0;
                         const isUser = doc.id === (auth.currentUser ? auth.currentUser.uid : null);
-                        users.push({
-                            id: doc.id,
-                            name: data.displayName || 'User',
-                            xp: data.xp || 0,
-                            points: data.points || 0,
-                            accuracy: acc,
-                            isUser: isUser,
-                            photoURL: data.photoURL || '',
-                            streak: data.streak || 0,
-                            level: data.level || 1,
-                        });
+                        if (!isUser && !doc.id.startsWith('guest_')) {
+                            const badges = (data.earnedBadges || []).length;
+                            users.push({
+                                id: doc.id,
+                                name: data.displayName || 'User',
+                                xp: data.xp || 0,
+                                points: data.points || 0,
+                                accuracy: acc,
+                                isUser: isUser,
+                                photoURL: data.photoURL || '',
+                                badges: badges,
+                            });
+                        }
+                        if (isUser) {
+                            const badges = (data.earnedBadges || []).length;
+                            users.push({
+                                id: doc.id,
+                                name: data.displayName || 'User',
+                                xp: data.xp || 0,
+                                points: data.points || 0,
+                                accuracy: acc,
+                                isUser: true,
+                                photoURL: data.photoURL || '',
+                                badges: badges,
+                            });
+                        }
                     });
 
-                    // Sort based on filter
+                    const seen = new Set();
+                    users = users.filter(u => { const key = u.id; if (seen.has(key)) return false;
+                        seen.add(key); return true; });
+
                     if (sortBy === 'xp') users.sort((a, b) => b.xp - a.xp);
                     else if (sortBy === 'points') users.sort((a, b) => b.points - a.points);
                     else if (sortBy === 'accuracy') users.sort((a, b) => b.accuracy - a.accuracy);
+                    else if (sortBy === 'badges') users.sort((a, b) => (b.badges || 0) - (a.badges || 0));
 
                     if (users.length === 0) {
-                        empty.style.display = 'block';
-                        tbody.innerHTML = '';
+                        if (empty) empty.style.display = 'block';
+                        if (tbody) tbody.innerHTML = '';
                         return;
                     }
-                    empty.style.display = 'none';
+                    if (empty) empty.style.display = 'none';
 
-                    // Move current user to top if not already
                     const userIdx = users.findIndex(u => u.isUser);
                     if (userIdx > 0) {
                         const user = users.splice(userIdx, 1)[0];
-                        // Insert at position based on rank
                         let insertPos = 0;
-                        if (sortBy === 'xp') {
-                            while (insertPos < users.length && users[insertPos].xp > user.xp) insertPos++;
-                        } else if (sortBy === 'points') {
-                            while (insertPos < users.length && users[insertPos].points > user.points) insertPos++;
-                        } else if (sortBy === 'accuracy') {
-                            while (insertPos < users.length && users[insertPos].accuracy > user.accuracy) insertPos++;
-                        }
+                        if (sortBy === 'xp') while (insertPos < users.length && users[insertPos].xp > user.xp) insertPos++;
+                        else if (sortBy === 'points') while (insertPos < users.length && users[insertPos].points > user
+                            .points) insertPos++;
+                        else if (sortBy === 'accuracy') while (insertPos < users.length && users[insertPos].accuracy > user
+                            .accuracy) insertPos++;
+                        else if (sortBy === 'badges') while (insertPos < users.length && (users[insertPos].badges || 0) > (
+                            user.badges || 0)) insertPos++;
                         users.splice(insertPos, 0, user);
                     }
 
-                    tbody.innerHTML = users.map((e, i) => {
-                        const rank = i + 1;
-                        let rc = 'lb-rank';
-                        if (rank === 1) rc += ' gold';
-                        else if (rank === 2) rc += ' silver';
-                        else if (rank === 3) rc += ' bronze';
-                        const isUser = e.isUser ? ' class="lb-user-row"' : '';
-                        const avatar = e.photoURL ?
-                            `<img src="${e.photoURL}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-right:6px;" />` :
-                            '';
-                        return `<tr${isUser}>
+                    if (tbody) {
+                        tbody.innerHTML = users.map((e, i) => {
+                            const rank = i + 1;
+                            let rc = 'lb-rank';
+                            if (rank === 1) rc += ' gold';
+                            else if (rank === 2) rc += ' silver';
+                            else if (rank === 3) rc += ' bronze';
+                            const isUser = e.isUser ? ' class="lb-user-row"' : '';
+                            const avatar = e.photoURL ?
+                                `<img src="${e.photoURL}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-right:6px;" />` :
+                                '';
+                            return `<tr${isUser}>
                             <td><span class="${rc}">#${rank}</span></td>
                             <td>${avatar}${e.name} ${e.isUser ? '<i class="fas fa-star" style="color:var(--accent-3);font-size:12px;margin-left:4px;"></i>' : ''}</td>
                             <td>${e.xp}</td>
                             <td>${e.points}</td>
                             <td>${e.accuracy}%</td>
+                            <td>${e.badges || 0}</td>
                         </tr>`;
-                    }).join('');
-                }, (error) => {
-                    console.error('Leaderboard listener error:', error);
-                });
+                        }).join('');
+                    }
+                }, (error) => { console.error('Leaderboard error:', error); });
         }
 
         // ================================================================
-        // 15. USER DATA LISTENER (real-time)
+        // 20. USER DATA LISTENER
         // ================================================================
 
         function setupUserDataListener(uid) {
-            if (state.unsubUser) {
-                state.unsubUser();
-                state.unsubUser = null;
-            }
+            if (state.unsubUser) { state.unsubUser();
+                state.unsubUser = null; }
             state.unsubUser = db.collection(USERS_COLLECTION).doc(uid)
                 .onSnapshot((doc) => {
                     if (doc.exists) {
                         const data = doc.data();
-                        // Merge with existing stats, but preserve local session data
-                        const oldStats = { ...state.stats };
-                        // Only update from Firebase if the data is newer or we're initializing
                         state.stats = {
                             totalQuestions: data.totalQuestions || 0,
                             correct: data.correct || 0,
@@ -2999,21 +3637,33 @@
                             bestStreak: data.bestStreak || 0,
                             xp: data.xp || 0,
                             points: data.points || 0,
+                            coins: data.coins || 0,
+                            hints: data.hints || 0,
                             level: data.level || 1,
                             accuracyHistory: data.accuracyHistory || [],
                             weakRules: data.weakRules || {},
-                            badges: data.badges || [],
                             quizHistory: data.quizHistory || [],
+                            fastAnswers: data.fastAnswers || 0,
+                            ruleBreakerCount: data.ruleBreakerCount || 0,
+                            focusCount: data.focusCount || 0,
+                            smartModeCount: data.smartModeCount || 0,
+                            earnedBadges: data.earnedBadges || [],
+                            smartCategoryData: data.smartCategoryData || {},
+                            effectiveDifficulty: data.effectiveDifficulty || 'easy',
                         };
-                        // Restore business state from local storage or keep existing
-                        // Business is kept in memory per session
+                        state.stats.level = getLevelFromXP(state.stats.xp);
+                        if (state.smartMode && state.stats.smartCategoryData) {
+                            SMART_TRACKER.categoryCounts = state.stats.smartCategoryData;
+                            SMART_TRACKER.baseMode = state.difficulty;
+                            SMART_TRACKER.smartDifficulty = state.stats.effectiveDifficulty || state.difficulty;
+                        }
                         updateHeaderStats();
                         updateDashboard();
                         updateBadges();
                         updateWeakTopics();
                         updateQuizProgress();
+                        updateShopUI();
                     } else {
-                        // New user: create initial stats
                         const initialStats = {
                             totalQuestions: 0,
                             correct: 0,
@@ -3022,11 +3672,19 @@
                             bestStreak: 0,
                             xp: 0,
                             points: 0,
+                            coins: 0,
+                            hints: 0,
                             level: 1,
                             accuracyHistory: [],
                             weakRules: {},
-                            badges: [],
                             quizHistory: [],
+                            fastAnswers: 0,
+                            ruleBreakerCount: 0,
+                            focusCount: 0,
+                            smartModeCount: 0,
+                            earnedBadges: [],
+                            smartCategoryData: {},
+                            effectiveDifficulty: 'easy',
                         };
                         state.stats = initialStats;
                         saveUserStats(uid, initialStats);
@@ -3035,84 +3693,82 @@
                         updateBadges();
                         updateWeakTopics();
                         updateQuizProgress();
+                        updateShopUI();
                     }
-                }, (error) => {
-                    console.error('User data listener error:', error);
-                });
+                }, (error) => { console.error('User data error:', error); });
         }
 
         // ================================================================
-        // 16. AUTH HANDLING
+        // 21. AUTH HANDLING
         // ================================================================
 
         function showLogin() {
-            document.getElementById('loginOverlay').classList.remove('hidden');
-            document.getElementById('appHeader').style.opacity = '0.3';
-            document.getElementById('navTabs').style.opacity = '0.3';
-            document.querySelectorAll('.section-panel').forEach(el => el.style.opacity = '0.3');
+            const overlay = document.getElementById('loginOverlay');
+            if (overlay) overlay.classList.remove('hidden');
+            const header = document.getElementById('appHeader');
+            const nav = document.getElementById('navTabs');
+            const panels = document.querySelectorAll('.section-panel');
+            if (header) header.style.opacity = '0.3';
+            if (nav) nav.style.opacity = '0.3';
+            panels.forEach(el => el.style.opacity = '0.3');
         }
 
         function hideLogin() {
-            document.getElementById('loginOverlay').classList.add('hidden');
-            document.getElementById('appHeader').style.opacity = '1';
-            document.getElementById('navTabs').style.opacity = '1';
-            document.querySelectorAll('.section-panel').forEach(el => el.style.opacity = '1');
+            const overlay = document.getElementById('loginOverlay');
+            if (overlay) overlay.classList.add('hidden');
+            const header = document.getElementById('appHeader');
+            const nav = document.getElementById('navTabs');
+            const panels = document.querySelectorAll('.section-panel');
+            if (header) header.style.opacity = '1';
+            if (nav) nav.style.opacity = '1';
+            panels.forEach(el => el.style.opacity = '1');
         }
 
         function handleAuthState(user) {
-            const loginBtn = document.getElementById('loginBtn');
-            const loginLoader = document.getElementById('loginLoader');
-
             if (user) {
+                state.isGuest = false;
                 hideLogin();
-                // Setup user data listener
                 setupUserDataListener(user.uid);
-                // Setup revision listener
                 updateRevisionBadges();
-                // Setup leaderboard listener
                 setupLeaderboardListener();
-                // Load revision list
                 loadRevisionList();
-                // Start quiz
                 generateNextQuestionSet();
-                // Update avatar
-                if (user.photoURL) {
-                    $('#userAvatar').src = user.photoURL;
-                }
-                // Show welcome toast
+                const avatar = document.getElementById('userAvatar');
+                if (user.photoURL && avatar) avatar.src = user.photoURL;
                 showToast('Welcome!', `Signed in as ${user.displayName || 'User'}`, 'fa-smile', 'gain');
             } else {
-                showLogin();
-                // Clean up listeners
-                if (state.unsubUser) { state.unsubUser();
-                    state.unsubUser = null; }
-                if (state.unsubLeaderboard) { state.unsubLeaderboard();
-                    state.unsubLeaderboard = null; }
-                // Reset stats
-                state.stats = {
-                    totalQuestions: 0,
-                    correct: 0,
-                    wrong: 0,
-                    streak: 0,
-                    bestStreak: 0,
-                    xp: 0,
-                    points: 0,
-                    level: 1,
-                    accuracyHistory: [],
-                    weakRules: {},
-                    badges: [],
-                    quizHistory: [],
-                };
-                updateHeaderStats();
-                updateDashboard();
-                updateBadges();
-                updateWeakTopics();
-                updateQuizProgress();
+                const guestId = localStorage.getItem('guest_id');
+                if (guestId && state.isGuest) {
+                    hideLogin();
+                    try {
+                        const saved = localStorage.getItem('guest_stats_' + guestId);
+                        if (saved) {
+                            const parsed = JSON.parse(saved);
+                            state.stats = { ...state.stats, ...parsed };
+                            state.stats.level = getLevelFromXP(state.stats.xp);
+                            updateHeaderStats();
+                            updateDashboard();
+                            updateBadges();
+                            updateWeakTopics();
+                            updateQuizProgress();
+                            updateShopUI();
+                        }
+                    } catch (e) {}
+                    setupLeaderboardListener();
+                    loadRevisionList();
+                    generateNextQuestionSet();
+                } else {
+                    showLogin();
+                    if (state.unsubUser) { state.unsubUser();
+                        state.unsubUser = null; }
+                    if (state.unsubLeaderboard) { state.unsubLeaderboard();
+                        state.unsubLeaderboard = null; }
+                }
             }
         }
 
         // ================================================================
-        // 17. NAVIGATION
+        // 22. NAVIGATION
         // ================================================================
 
         function navigateTo(section) {
@@ -3127,66 +3783,102 @@
                 updateBadges();
                 updateWeakTopics();
             }
-            if (section === 'revision') loadRevisionList();
-            if (section === 'leaderboard') {
-                // Leaderboard is updated by listener
+            if (section === 'hintshop') {
+                updateShopUI();
             }
+            if (section === 'revision') loadRevisionList();
         }
 
         // ================================================================
-        // 18. INIT
+        // 23. INIT – FIXED: event listeners properly bound
         // ================================================================
 
         function init() {
-            // --- Auth ---
             auth.onAuthStateChanged(handleAuthState);
 
-            // --- Login button ---
+            // Login
             document.getElementById('loginBtn').addEventListener('click', async function() {
-                const btn = this;
-                const loader = document.getElementById('loginLoader');
+                const btn = this,
+                    loader = document.getElementById('loginLoader');
                 btn.style.display = 'none';
                 loader.style.display = 'flex';
                 try {
                     const provider = new firebase.auth.GoogleAuthProvider();
                     await auth.signInWithPopup(provider);
                 } catch (error) {
-                    console.error('Login error:', error);
                     showToast('Login Failed', error.message || 'Please try again.', 'fa-exclamation-circle', 'loss');
                     btn.style.display = 'flex';
                     loader.style.display = 'none';
                 }
             });
 
-            // --- User dropdown ---
-            $('#userAvatar').addEventListener('click', function(e) {
-                e.stopPropagation();
-                document.getElementById('userDropdown').classList.toggle('show');
-            });
-            document.addEventListener('click', function() {
-                document.getElementById('userDropdown').classList.remove('show');
+            document.getElementById('skipLoginBtn').addEventListener('click', function() {
+                let guestId = localStorage.getItem('guest_id');
+                if (!guestId) {
+                    guestId = 'guest_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+                    localStorage.setItem('guest_id', guestId);
+                }
+                state.isGuest = true;
+                state.guestId = guestId;
+                hideLogin();
+                try {
+                    const saved = localStorage.getItem('guest_stats_' + guestId);
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        state.stats = { ...state.stats, ...parsed };
+                        state.stats.level = getLevelFromXP(state.stats.xp);
+                    }
+                } catch (e) {}
+                updateHeaderStats();
+                updateDashboard();
+                updateBadges();
+                updateWeakTopics();
+                updateQuizProgress();
+                updateShopUI();
+                setupLeaderboardListener();
+                loadRevisionList();
+                generateNextQuestionSet();
+                const avatar = document.getElementById('userAvatar');
+                if (avatar) avatar.src = 'https://ui-avatars.com/api/?name=Guest&background=5b4bd5&color=fff&size=36';
+                showToast('Guest Mode', 'Your progress is saved locally.', 'fa-user', 'gain');
             });
 
-            // --- Logout ---
+            // Avatar dropdown
+            const avatar = document.getElementById('userAvatar');
+            if (avatar) {
+                avatar.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const dropdown = document.getElementById('userDropdown');
+                    if (dropdown) dropdown.classList.toggle('show');
+                });
+            }
+            document.addEventListener('click', function() {
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown) dropdown.classList.remove('show');
+            });
+
             document.getElementById('logoutBtn').addEventListener('click', async function() {
                 try {
                     await auth.signOut();
-                    document.getElementById('userDropdown').classList.remove('show');
+                    const dropdown = document.getElementById('userDropdown');
+                    if (dropdown) dropdown.classList.remove('show');
+                    state.isGuest = false;
+                    localStorage.removeItem('guest_id');
                     showToast('Signed Out', 'You have been signed out.', 'fa-sign-out-alt', 'gain');
-                } catch (e) {
-                    console.error('Logout error:', e);
-                }
+                } catch (e) { console.error('Logout error:', e); }
             });
 
-            // --- Difficulty ---
+            // Difficulty
             $$('.diff-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     $$('.diff-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     state.difficulty = this.dataset.diff;
-                    state.sessionTotal = 0;
-                    state.sessionCorrect = 0;
-                    state.sessionWrong = 0;
+                    SMART_TRACKER.baseMode = state.difficulty;
+                    SMART_TRACKER.smartDifficulty = state.difficulty;
+                    if (state.smartMode) { SMART_TRACKER.reset();
+                        SMART_TRACKER.baseMode = state.difficulty;
+                        SMART_TRACKER.smartDifficulty = state.difficulty; }
                     if (state.revisionMode) loadRevisionQueue();
                     if (state.autoTimer) { clearInterval(state.autoTimer);
                         state.autoTimer = null; }
@@ -3195,7 +3887,7 @@
                 });
             });
 
-            // --- Quiz options ---
+            // Quiz options – FIXED: properly bound
             $$('.quiz-opt').forEach(btn => {
                 btn.addEventListener('click', function() {
                     if (state.answered) return;
@@ -3203,45 +3895,74 @@
                 });
             });
 
-            // --- Navigation ---
+            // Hint button
+            document.getElementById('hintBtn').addEventListener('click', useHint);
+
+            // Next button fallback
+            document.getElementById('nextBtnFallback').addEventListener('click', function() {
+                if (state.autoTimer) {
+                    clearInterval(state.autoTimer);
+                    state.autoTimer = null;
+                }
+                this.classList.remove('show');
+                const autoNext = document.getElementById('autoNextIndicator');
+                if (autoNext) autoNext.classList.remove('show');
+                advanceQuestion();
+            });
+
+            // Navigation
             $$('.nav-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     navigateTo(this.dataset.section);
                 });
             });
 
-            // --- Smart Mode ---
-            $('#smartToggle').addEventListener('click', function() {
+            // Smart Mode
+            document.getElementById('smartToggle').addEventListener('click', function() {
                 state.smartMode = !state.smartMode;
                 this.classList.toggle('active');
                 const dot = this.querySelector('.toggle-dot');
-                dot.style.background = state.smartMode ? 'var(--accent-1)' : 'var(--text-muted)';
-                state.sessionTotal = 0;
-                state.sessionCorrect = 0;
-                state.sessionWrong = 0;
+                if (dot) dot.style.background = state.smartMode ? 'var(--accent-1)' : 'var(--text-muted)';
+                if (state.smartMode) {
+                    SMART_TRACKER.baseMode = state.difficulty;
+                    SMART_TRACKER.smartDifficulty = state.difficulty;
+                    if (state.stats.smartCategoryData) SMART_TRACKER.categoryCounts = state.stats.smartCategoryData;
+                    if (state.stats.effectiveDifficulty) SMART_TRACKER.smartDifficulty = state.stats
+                        .effectiveDifficulty;
+                    state.stats.smartModeCount = (state.stats.smartModeCount || 0) + 1;
+                    showToast('Smart Mode On', 'Adaptive learning activated.', 'fa-brain', 'gain');
+                    const indicator = document.getElementById('smartLevelIndicator');
+                    if (indicator) indicator.style.display = 'inline-block';
+                } else {
+                    SMART_TRACKER.reset();
+                    SMART_TRACKER.baseMode = state.difficulty;
+                    SMART_TRACKER.smartDifficulty = state.difficulty;
+                    const indicator = document.getElementById('smartLevelIndicator');
+                    if (indicator) indicator.style.display = 'none';
+                    showToast('Smart Mode Off', 'Switched to regular mode.', 'fa-brain', 'gain');
+                }
                 if (state.autoTimer) { clearInterval(state.autoTimer);
                     state.autoTimer = null; }
                 generateNextQuestionSet();
             });
 
-            // --- Revision Mode ---
-            $('#revisionToggle').addEventListener('click', async function() {
+            // Revision Mode
+            document.getElementById('revisionToggle').addEventListener('click', async function() {
                 const count = await getRevisionCount();
                 if (count === 0) {
-                    showToast('No Revision', 'No wrong answers to revise. Keep practicing!', 'fa-info-circle',
-                    'gain');
+                    showToast('No Revision', 'No wrong answers to revise.', 'fa-info-circle', 'gain');
                     return;
                 }
                 state.revisionMode = !state.revisionMode;
                 this.classList.toggle('active');
                 const dot = this.querySelector('.toggle-dot');
-                dot.style.background = state.revisionMode ? 'var(--accent-1)' : 'var(--text-muted)';
+                if (dot) dot.style.background = state.revisionMode ? 'var(--accent-1)' : 'var(--text-muted)';
                 if (state.revisionMode) {
                     await loadRevisionQueue();
                     if (state.revisionQueue.length === 0) {
                         state.revisionMode = false;
                         this.classList.remove('active');
-                        dot.style.background = 'var(--text-muted)';
+                        if (dot) dot.style.background = 'var(--text-muted)';
                         showToast('No Revision', 'No revision questions available.', 'fa-info-circle', 'gain');
                         return;
                     }
@@ -3253,38 +3974,35 @@
                     state.currentRevisionDocId = null;
                     showToast('Revision Mode Off', 'Switched to regular mode.', 'fa-info-circle', 'gain');
                 }
-                state.sessionTotal = 0;
-                state.sessionCorrect = 0;
-                state.sessionWrong = 0;
                 if (state.autoTimer) { clearInterval(state.autoTimer);
                     state.autoTimer = null; }
                 generateNextQuestionSet();
             });
 
-            // --- Revision Mode button ---
-            $('#revisionModeBtn').addEventListener('click', async function() {
+            // Revision Mode button
+            document.getElementById('revisionModeBtn').addEventListener('click', async function() {
                 const count = await getRevisionCount();
                 if (count === 0) {
-                    showToast('No Revision', 'No wrong answers to revise. Keep practicing!', 'fa-info-circle',
-                    'gain');
+                    showToast('No Revision', 'No wrong answers to revise.', 'fa-info-circle', 'gain');
                     return;
                 }
                 if (!state.revisionMode) {
-                    $('#revisionToggle').click();
+                    document.getElementById('revisionToggle').click();
                 } else {
                     await loadRevisionQueue();
                     if (state.revisionQueue.length === 0) {
                         state.revisionMode = false;
-                        $('#revisionToggle').classList.remove('active');
-                        $('#revisionToggle').querySelector('.toggle-dot').style.background = 'var(--text-muted)';
+                        const revToggle = document.getElementById('revisionToggle');
+                        if (revToggle) {
+                            revToggle.classList.remove('active');
+                            const dot = revToggle.querySelector('.toggle-dot');
+                            if (dot) dot.style.background = 'var(--text-muted)';
+                        }
                         showToast('No Revision', 'No revision questions available.', 'fa-info-circle', 'gain');
                     } else {
                         showToast('Revision Reloaded', `${state.revisionQueue.length} questions to revise.`,
                             'fa-rotate-left', 'gain');
                     }
-                    state.sessionTotal = 0;
-                    state.sessionCorrect = 0;
-                    state.sessionWrong = 0;
                     if (state.autoTimer) { clearInterval(state.autoTimer);
                         state.autoTimer = null; }
                     generateNextQuestionSet();
@@ -3292,40 +4010,50 @@
                 navigateTo('quiz');
             });
 
-            // --- Refresh Revision ---
-            $('#refreshRevisionBtn').addEventListener('click', function() {
+            // Refresh Revision
+            document.getElementById('refreshRevisionBtn').addEventListener('click', function() {
                 loadRevisionList();
                 updateRevisionBadges();
                 showToast('Refreshed', 'Revision list updated.', 'fa-sync', 'gain');
             });
 
-            // --- Leaderboard filters ---
+            // Hint Shop - Buy buttons
+            document.querySelectorAll('.pack-buy').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const hints = parseInt(this.dataset.hints);
+                    const price = parseInt(this.dataset.price);
+                    buyHints(hints, price);
+                });
+            });
+
+            // Leaderboard filters
             $$('.lb-filter-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     $$('.lb-filter-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    // The listener will re-sort automatically
                 });
             });
 
-            // --- Start with login state ---
-            if (auth.currentUser) {
-                handleAuthState(auth.currentUser);
-            } else {
-                showLogin();
-            }
-
-            // Set initial states for toggles
+            // Initial state
             if (state.smartMode) {
-                $('#smartToggle').classList.add('active');
-                $('#smartToggle').querySelector('.toggle-dot').style.background = 'var(--accent-1)';
+                const smartToggle = document.getElementById('smartToggle');
+                if (smartToggle) {
+                    smartToggle.classList.add('active');
+                    const dot = smartToggle.querySelector('.toggle-dot');
+                    if (dot) dot.style.background = 'var(--accent-1)';
+                }
+                SMART_TRACKER.baseMode = state.difficulty;
+                SMART_TRACKER.smartDifficulty = state.difficulty;
+                const indicator = document.getElementById('smartLevelIndicator');
+                if (indicator) indicator.style.display = 'inline-block';
             }
 
-            console.log('📘 Journal Entry · MCQ Learner (v5 - Auth + Real-time)');
+            console.log('📘 Journal Entry · MCQ Learner (FULLY FIXED)');
+            console.log('🏅 50 badges available!');
         }
 
         // ================================================================
-        // 19. START
+        // 24. START
         // ================================================================
 
         document.addEventListener('DOMContentLoaded', init);
