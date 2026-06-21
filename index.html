@@ -1861,7 +1861,7 @@
         </section>
 
         <!-- ============================================================
-        SECTION: LEADERBOARD
+        SECTION: LEADERBOARD (Guest users are excluded)
         ============================================================ -->
         <section class="section-panel" id="section-leaderboard">
             <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
@@ -1891,7 +1891,8 @@
     </div>
 
     <!-- ============================================================
-    JAVASCRIPT – UPGRADED MEDIUM/HARD WITH MASTER ACCOUNT SYSTEM
+    JAVASCRIPT – IMPROVED: Guest users stay in localStorage only,
+    never appear on leaderboard. Logged-in users persist in Firebase.
     ============================================================ -->
     <script>
         // ================================================================
@@ -1913,11 +1914,17 @@
         const db = firebase.firestore();
 
         // ================================================================
-        // 1. MASTER ACCOUNT CLASSIFICATION SYSTEM
+        // 1. HELPER: check if a UID belongs to a guest
+        // ================================================================
+        function isGuestUid(uid) {
+            return uid && uid.startsWith('guest_');
+        }
+
+        // ================================================================
+        // 2. MASTER ACCOUNT CLASSIFICATION SYSTEM
         // ================================================================
 
         const ACCOUNT_CLASSIFICATIONS = {
-            // 🟢 ASSET ACCOUNTS
             'Cash': { category: 'asset', bengali: 'নগদান', rule: 'increase=debit,decrease=credit' },
             'Bank': { category: 'asset', bengali: 'ব্যাংক', rule: 'increase=debit,decrease=credit' },
             'Accounts Receivable': { category: 'asset', bengali: 'দেনাদার', rule: 'increase=debit,decrease=credit' },
@@ -1932,8 +1939,6 @@
             'Accumulated Depreciation': { category: 'asset', bengali: 'সঞ্চিত অবচয়', rule: 'increase=credit,decrease=debit' },
             'Building': { category: 'asset', bengali: 'ভবন', rule: 'increase=debit,decrease=credit' },
             'Land': { category: 'asset', bengali: 'জমি', rule: 'increase=debit,decrease=credit' },
-
-            // 🔴 LIABILITY ACCOUNTS
             'Creditors': { category: 'liability', bengali: 'পাওনাদার', rule: 'increase=credit,decrease=debit' },
             'Bank Loan': { category: 'liability', bengali: 'ব্যাংক ঋণ', rule: 'increase=credit,decrease=debit' },
             'Salary Payable': { category: 'liability', bengali: 'বকেয়া বেতন', rule: 'increase=credit,decrease=debit' },
@@ -1941,20 +1946,14 @@
             'Interest Payable': { category: 'liability', bengali: 'প্রদেয় সুদ', rule: 'increase=credit,decrease=debit' },
             'Loan': { category: 'liability', bengali: 'ঋণ', rule: 'increase=credit,decrease=debit' },
             'Debentures': { category: 'liability', bengali: 'ঋণপত্র', rule: 'increase=credit,decrease=debit' },
-
-            // 🟡 CAPITAL ACCOUNTS
             'Capital': { category: 'capital', bengali: 'মূলধন', rule: 'increase=credit,decrease=debit' },
             'Drawings': { category: 'drawing', bengali: 'উত্তোলন', rule: 'increase=debit,decrease=credit' },
-
-            // 🟣 REVENUE ACCOUNTS
             'Sales Revenue': { category: 'revenue', bengali: 'বিক্রয়', rule: 'increase=credit,decrease=debit' },
             'Service Revenue': { category: 'revenue', bengali: 'সেবা আয়', rule: 'increase=credit,decrease=debit' },
             'Commission Revenue': { category: 'revenue', bengali: 'কমিশন আয়', rule: 'increase=credit,decrease=debit' },
             'Rent Revenue': { category: 'revenue', bengali: 'ভাড়া আয়', rule: 'increase=credit,decrease=debit' },
             'Interest Revenue': { category: 'revenue', bengali: 'সুদ প্রাপ্তি', rule: 'increase=credit,decrease=debit' },
             'Discount Received': { category: 'revenue', bengali: 'বাট্টা পাওয়া', rule: 'increase=credit,decrease=debit' },
-
-            // 🔵 EXPENSE ACCOUNTS
             'Salary': { category: 'expense', bengali: 'বেতন', rule: 'increase=debit,decrease=credit' },
             'Rent': { category: 'expense', bengali: 'ভাড়া', rule: 'increase=debit,decrease=credit' },
             'Advertisement': { category: 'expense', bengali: 'বিজ্ঞাপন খরচ', rule: 'increase=debit,decrease=credit' },
@@ -1973,58 +1972,22 @@
             'Discount Allowed': { category: 'expense', bengali: 'বাট্টা প্রদান', rule: 'increase=debit,decrease=credit' },
         };
 
-        // Get account info by English name
         function getAccountInfo(accountName) {
             return ACCOUNT_CLASSIFICATIONS[accountName] || null;
         }
 
-        // Get Bengali name for an account
         function getBengaliName(accountName) {
             const info = getAccountInfo(accountName);
             return info ? info.bengali : accountName;
         }
 
-        // Get category for an account
         function getAccountCategory(accountName) {
             const info = getAccountInfo(accountName);
             return info ? info.category : null;
         }
 
-        // Get rule for an account
-        function getAccountRule(accountName) {
-            const info = getAccountInfo(accountName);
-            return info ? info.rule : null;
-        }
-
-        // Determine if account is debit or credit for a given effect
-        function getDebitCreditForAccount(accountName, effect) {
-            const info = getAccountInfo(accountName);
-            if (!info) return 'debit';
-            const rule = info.rule;
-            const parts = rule.split(',');
-            for (const part of parts) {
-                const [key, value] = part.split('=');
-                if (key === effect) return value;
-            }
-            return 'debit';
-        }
-
         // ================================================================
-        // 2. BENGALI NAMES FOR PERSONS
-        // ================================================================
-
-        const BENGALI_PERSON_NAMES = [
-            'রহিম', 'করিম', 'আলম', 'রিয়াদ', 'সুমন', 'হাসান', 'রনি',
-            'তাজিম', 'ফাহিম', 'লিমন', 'জসিম', 'রাফি', 'শাওন', 'নাঈম',
-            'রাসেল', 'সজিব', 'আরিফ', 'তুহিন', 'শুভ', 'নাবিল'
-        ];
-
-        function getRandomName() {
-            return pickRandom(BENGALI_PERSON_NAMES);
-        }
-
-        // ================================================================
-        // 3. ACCOUNTING RULES (for backward compatibility)
+        // 3. ACCOUNTING RULES (backward compat)
         // ================================================================
 
         const ACCOUNT_RULES = {
@@ -2040,17 +2003,15 @@
         for (const [key, val] of Object.entries(ACCOUNT_CLASSIFICATIONS)) {
             BENGALI_NAMES[key] = val.bengali;
         }
-        // Add extra mappings
         BENGALI_NAMES['Sales'] = 'বিক্রয়';
         BENGALI_NAMES['Purchases'] = 'ক্রয়';
         BENGALI_NAMES['Debtor'] = 'দেনাদার';
         BENGALI_NAMES['Creditor'] = 'পাওনাদার';
 
         // ================================================================
-        // 4. TRANSACTION TEMPLATES WITH PROPER JOURNAL ENTRIES
+        // 4. TRANSACTION TEMPLATES (EASY, MEDIUM, HARD)
         // ================================================================
 
-        // EASY MODE: No amounts, simple transactions
         const EASY_TEMPLATES = [{
             id: 'easy_asset_purchase',
             description: 'নগদে {asset} ক্রয় করা হয়েছে',
@@ -2097,10 +2058,6 @@
                 { account: 'Cash', side: 'credit' }
             ]
         }];
-
-        // ================================================================
-        // 5. MEDIUM MODE: Real exam-style with proper journal entries
-        // ================================================================
 
         const MEDIUM_TEMPLATES = [{
             id: 'med_bank_open',
@@ -2296,10 +2253,6 @@
             useName: true
         }];
 
-        // ================================================================
-        // 6. HARD MODE: Advanced/Complex Transactions
-        // ================================================================
-
         const HARD_TEMPLATES = [{
             id: 'hard_salary_payable',
             description: 'বকেয়া বেতন {amount} টাকা সমন্বয় করা হয়েছে',
@@ -2453,7 +2406,7 @@
         }];
 
         // ================================================================
-        // 7. BUSINESS STATE
+        // 5. BUSINESS STATE
         // ================================================================
 
         class Business {
@@ -2531,7 +2484,7 @@
         }
 
         // ================================================================
-        // 8. HELPERS
+        // 6. HELPERS
         // ================================================================
 
         function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -2541,20 +2494,6 @@
             const step = 500;
             const val = min + Math.random() * (max - min);
             return Math.round(val / step) * step;
-        }
-
-        function getRuleExplanation(type, effect, name) {
-            const rule = ACCOUNT_RULES[type];
-            const label = rule ? rule.label : 'Account';
-            const effectLabel = effect === 'increase' ? 'increases' : 'decreases';
-            const answer = rule ? rule[effect] : 'debit';
-            const answerLabel = answer === 'debit' ? 'Debit' : 'Credit';
-            const bnName = BENGALI_NAMES[name] || name;
-            return {
-                answer,
-                explanation: `"${bnName}" is an ${label}. When ${label} ${effectLabel}, it is ${answerLabel}.`,
-                ruleText: `${label} ${effectLabel} = ${answerLabel}`
-            };
         }
 
         function getXPForLevel(level) {
@@ -2586,8 +2525,16 @@
 
         const COINS_PER_CORRECT = 2;
 
+        const BENGALI_PERSON_NAMES = [
+            'রহিম', 'করিম', 'আলম', 'রিয়াদ', 'সুমন', 'হাসান', 'রনি',
+            'তাজিম', 'ফাহিম', 'লিমন', 'জসিম', 'রাফি', 'শাওন', 'নাঈম',
+            'রাসেল', 'সজিব', 'আরিফ', 'তুহিন', 'শুভ', 'নাবিল'
+        ];
+
+        function getRandomName() { return pickRandom(BENGALI_PERSON_NAMES); }
+
         // ================================================================
-        // 9. 50 BADGES
+        // 7. 50 BADGES
         // ================================================================
 
         const ALL_BADGES = [
@@ -2713,7 +2660,7 @@
         }
 
         // ================================================================
-        // 10. TOAST SYSTEM
+        // 8. TOAST SYSTEM
         // ================================================================
 
         function showToast(title, desc, icon, type) {
@@ -2754,16 +2701,40 @@
         }
 
         // ================================================================
-        // 11. FIRESTORE HELPERS
+        // 9. FIRESTORE HELPERS – with guest guards
         // ================================================================
 
         const USERS_COLLECTION = 'users';
         const REVISION_COLLECTION = 'revisionQuestions';
 
+        // ---- GUEST REVISION STORAGE (localStorage) ----
+        function getGuestRevisionKey(guestId) {
+            return `guest_revision_${guestId}`;
+        }
+
+        function loadGuestRevisions(guestId) {
+            try {
+                const raw = localStorage.getItem(getGuestRevisionKey(guestId));
+                return raw ? JSON.parse(raw) : [];
+            } catch { return []; }
+        }
+
+        function saveGuestRevisions(guestId, data) {
+            try {
+                localStorage.setItem(getGuestRevisionKey(guestId), JSON.stringify(data));
+            } catch (e) { console.warn('Failed to save guest revisions:', e); }
+        }
+
+        // ---- saveUserStats: guests are blocked ----
         async function saveUserStats(uid, data) {
+            // NEVER save guest data to Firestore
+            if (isGuestUid(uid)) {
+                console.log('Guest user stats skipped (localStorage only)');
+                return false;
+            }
             try {
                 await db.collection(USERS_COLLECTION).doc(uid).set({
-                    displayName: auth.currentUser ? auth.currentUser.displayName || 'User' : 'Guest',
+                    displayName: auth.currentUser ? auth.currentUser.displayName || 'User' : 'User',
                     photoURL: auth.currentUser ? auth.currentUser.photoURL || '' : '',
                     email: auth.currentUser ? auth.currentUser.email || '' : '',
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -2773,10 +2744,47 @@
             } catch (e) { console.error('Save error:', e); return false; }
         }
 
+        // ---- saveRevisionQuestion: guest → localStorage, logged-in → Firestore ----
         async function saveRevisionQuestion(qData, tData, journal) {
+            const guestId = localStorage.getItem('guest_id');
+            // If guest, save to localStorage
+            if (!auth.currentUser && guestId) {
+                const revisions = loadGuestRevisions(guestId);
+                revisions.push({
+                    id: 'rev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                    timestamp: Date.now(),
+                    question: {
+                        accountName: qData.accountName,
+                        accountType: qData.accountType,
+                        effect: qData.effect,
+                        correctAnswer: qData.correctAnswer,
+                        explanation: qData.explanation,
+                        ruleText: qData.ruleText,
+                    },
+                    transaction: {
+                        display: tData.description,
+                        account: qData.accountName,
+                        accountType: qData.accountType,
+                        effect: qData.effect,
+                        amount: tData.amount || 0,
+                    },
+                    displayText: tData.description,
+                    accountDisplay: qData.accountName,
+                    questionAccount: qData.accountName,
+                    questionType: qData.accountType,
+                    questionEffect: qData.effect,
+                    pattern: { type: qData.accountType, effect: qData.effect, account: qData.accountName,
+                        category: qData.accountType },
+                    journal: journal.map(j => ({ account: j.account, type: j.type, side: j.side, amount: j.amount }))
+                });
+                saveGuestRevisions(guestId, revisions);
+                return true;
+            }
+
+            // Logged-in user: save to Firestore
             try {
-                const uid = auth.currentUser ? auth.currentUser.uid : 'guest_' + (localStorage.getItem('guest_id') ||
-                    'anonymous');
+                const uid = auth.currentUser ? auth.currentUser.uid : 'unknown';
+                if (isGuestUid(uid)) return false;
                 const doc = {
                     userId: uid,
                     timestamp: Date.now(),
@@ -2801,7 +2809,7 @@
                     questionType: qData.accountType,
                     questionEffect: qData.effect,
                     pattern: { type: qData.accountType, effect: qData.effect, account: qData.accountName,
-                    category: qData.accountType },
+                        category: qData.accountType },
                     journal: journal.map(j => ({ account: j.account, type: j.type, side: j.side, amount: j.amount }))
                 };
                 await db.collection(REVISION_COLLECTION).add(doc);
@@ -2809,10 +2817,19 @@
             } catch (e) { console.error('Save revision error:', e); return false; }
         }
 
+        // ---- fetchRevisionQuestions: guest → localStorage, logged-in → Firestore ----
         async function fetchRevisionQuestions() {
+            const guestId = localStorage.getItem('guest_id');
+            // Guest: load from localStorage
+            if (!auth.currentUser && guestId) {
+                const data = loadGuestRevisions(guestId);
+                return data.map(d => ({ ...d, id: d.id || 'rev_' + Date.now() }));
+            }
+
+            // Logged-in: Firestore
             try {
-                const uid = auth.currentUser ? auth.currentUser.uid : 'guest_' + (localStorage.getItem('guest_id') ||
-                    'anonymous');
+                const uid = auth.currentUser ? auth.currentUser.uid : null;
+                if (!uid || isGuestUid(uid)) return [];
                 const s = await db.collection(REVISION_COLLECTION).where('userId', '==', uid).get();
                 const docs = [];
                 s.forEach(d => docs.push({ id: d.id, ...d.data() }));
@@ -2821,21 +2838,40 @@
             } catch (e) { return []; }
         }
 
+        // ---- deleteRevisionQuestion: guest → localStorage, logged-in → Firestore ----
         async function deleteRevisionQuestion(id) {
-            try { await db.collection(REVISION_COLLECTION).doc(id).delete(); return true; } catch (e) { return false; }
+            const guestId = localStorage.getItem('guest_id');
+            // Guest: delete from localStorage
+            if (!auth.currentUser && guestId) {
+                let revisions = loadGuestRevisions(guestId);
+                revisions = revisions.filter(d => d.id !== id);
+                saveGuestRevisions(guestId, revisions);
+                return true;
+            }
+
+            // Logged-in: delete from Firestore
+            try {
+                await db.collection(REVISION_COLLECTION).doc(id).delete();
+                return true;
+            } catch (e) { return false; }
         }
 
+        // ---- getRevisionCount: guest → localStorage, logged-in → Firestore ----
         async function getRevisionCount() {
+            const guestId = localStorage.getItem('guest_id');
+            if (!auth.currentUser && guestId) {
+                return loadGuestRevisions(guestId).length;
+            }
             try {
-                const uid = auth.currentUser ? auth.currentUser.uid : 'guest_' + (localStorage.getItem('guest_id') ||
-                    'anonymous');
+                const uid = auth.currentUser ? auth.currentUser.uid : null;
+                if (!uid || isGuestUid(uid)) return 0;
                 const s = await db.collection(REVISION_COLLECTION).where('userId', '==', uid).get();
                 return s.size;
             } catch (e) { return 0; }
         }
 
         // ================================================================
-        // 12. TRANSACTION GENERATOR (UPGRADED with master account system)
+        // 10. TRANSACTION GENERATOR
         // ================================================================
 
         function generateTransactionFromTemplate(template, mode) {
@@ -2871,20 +2907,16 @@
                 desc = desc.replace(/\s+/g, ' ');
             }
 
-            // Build journal with actual account names and validate
             const journal = template.journal.map(entry => {
                 let acc = entry.account;
                 if (acc === '{asset}' && asset) acc = asset;
                 else if (acc === '{expense}' && expense) acc = expense;
                 else if (acc === '{liability}' && liability) acc = liability;
 
-                // Verify account exists in classification
                 const info = getAccountInfo(acc);
                 if (!info) {
-                    // Fallback: treat as asset
                     return { account: acc, side: entry.side, amount: hasAmount ? amount : 0, type: 'asset' };
                 }
-
                 return {
                     account: acc,
                     side: entry.side,
@@ -2893,7 +2925,6 @@
                 };
             });
 
-            // Determine primary type from first journal entry
             const primaryAccount = journal[0].account;
             const primaryInfo = getAccountInfo(primaryAccount);
             const primaryType = primaryInfo ? primaryInfo.category : 'asset';
@@ -2921,20 +2952,16 @@
             if (!smartBias || Object.keys(smartBias).length === 0) return pickRandom(templates);
 
             const weights = templates.map(t => {
-                // Determine category from template's journal
                 const firstAcc = t.journal[0].account;
-                // Try to get category from the account
                 let cat = 'asset';
                 const info = getAccountInfo(firstAcc);
                 if (info) cat = info.category;
-                // If first acc is a placeholder, try to guess
                 if (firstAcc === '{asset}' || firstAcc === '{expense}' || firstAcc === '{liability}') {
                     if (t.assetPool) cat = 'asset';
                     else if (t.expensePool) cat = 'expense';
                     else if (t.liabilityPool) cat = 'liability';
                 }
-                const bias = smartBias[cat] || 1;
-                return bias;
+                return smartBias[cat] || 1;
             });
             const total = weights.reduce((a, b) => a + b, 0);
             let rand = Math.random() * total;
@@ -2946,7 +2973,7 @@
         }
 
         // ================================================================
-        // 13. SMART TRACKER
+        // 11. SMART TRACKER
         // ================================================================
 
         const SMART_TRACKER = {
@@ -3021,7 +3048,7 @@
         };
 
         // ================================================================
-        // 14. QUIZ STATE
+        // 12. QUIZ STATE
         // ================================================================
 
         let state = {
@@ -3074,7 +3101,7 @@
         };
 
         // ================================================================
-        // 15. UI HELPERS
+        // 13. UI HELPERS
         // ================================================================
 
         const $ = (sel) => document.querySelector(sel);
@@ -3086,7 +3113,7 @@
         }
 
         // ================================================================
-        // 16. RENDER FUNCTIONS
+        // 14. RENDER FUNCTIONS
         // ================================================================
 
         function renderBusinessMini() {
@@ -3130,6 +3157,22 @@
             setText('qBestStreak2', s.bestStreak);
         }
 
+        function updateHintButton() {
+            const hintBtn = document.getElementById('hintBtn');
+            if (!hintBtn) return;
+            const hints = state.stats.hints || 0;
+            if (hints > 0) {
+                hintBtn.disabled = false;
+                hintBtn.innerHTML =
+                    `<i class="fas fa-lightbulb"></i> Use Hint <span class="hint-count">${hints}</span>`;
+            } else {
+                hintBtn.disabled = true;
+                hintBtn.innerHTML = `<i class="fas fa-lightbulb"></i> No Hints`;
+            }
+            const hintCountDisplay = document.getElementById('hintCountDisplay');
+            if (hintCountDisplay) hintCountDisplay.textContent = hints;
+        }
+
         function renderQuestion() {
             const q = state.currentQuestion;
             const transactionDisplay = document.getElementById('transactionDisplay');
@@ -3144,8 +3187,7 @@
                 if (autoNext) autoNext.classList.remove('show');
                 const nextBtn = document.getElementById('nextBtnFallback');
                 if (nextBtn) nextBtn.classList.remove('show');
-                const hintBtn = document.getElementById('hintBtn');
-                if (hintBtn) hintBtn.disabled = true;
+                updateHintButton();
                 return;
             }
 
@@ -3171,17 +3213,7 @@
             state.hintUsedForQuestion = false;
             state.advancePending = false;
 
-            const hintBtn = document.getElementById('hintBtn');
-            if (hintBtn) {
-                if (state.stats.hints > 0) {
-                    hintBtn.disabled = false;
-                    hintBtn.innerHTML =
-                        `<i class="fas fa-lightbulb"></i> Use Hint <span class="hint-count">${state.stats.hints}</span>`;
-                } else {
-                    hintBtn.disabled = true;
-                    hintBtn.innerHTML = `<i class="fas fa-lightbulb"></i> No Hints`;
-                }
-            }
+            updateHintButton();
 
             const indicator = document.getElementById('smartLevelIndicator');
             if (indicator) {
@@ -3264,8 +3296,7 @@
                 }
             });
 
-            const hintBtn = document.getElementById('hintBtn');
-            if (hintBtn) hintBtn.disabled = true;
+            updateHintButton();
 
             if (state.autoTimer) {
                 clearTimeout(state.autoTimer);
@@ -3355,7 +3386,7 @@
         }
 
         // ================================================================
-        // 17. QUESTION GENERATOR
+        // 15. QUESTION GENERATOR
         // ================================================================
 
         function generateNextQuestionSet() {
@@ -3427,17 +3458,12 @@
             const transaction = generateTransactionFromTemplate(template, effectiveMode);
             const journal = transaction.journal;
 
-            // Pick a random entry from the journal for the MCQ
             const selectedEntry = pickRandom(journal);
 
-            // Determine the correct answer using the master account system
             const accountName = selectedEntry.account;
             const info = getAccountInfo(accountName);
             const category = info ? info.category : 'asset';
 
-            // Determine effect: for the side in the journal, we need to know if this is an increase or decrease
-            // For debit side: assets/expenses increase, liabilities/capital/revenue decrease
-            // For credit side: assets/expenses decrease, liabilities/capital/revenue increase
             const isDebit = selectedEntry.side === 'debit';
             let effect;
             if (category === 'asset' || category === 'expense' || category === 'drawing') {
@@ -3448,12 +3474,10 @@
                 effect = isDebit ? 'increase' : 'decrease';
             }
 
-            // Get the correct answer from the rule
             const rule = ACCOUNT_RULES[category];
             const correctAnswer = rule ? rule[effect] : 'debit';
             const answerLabel = correctAnswer === 'debit' ? 'Debit' : 'Credit';
 
-            // Build explanation
             const bnName = getBengaliName(accountName) || accountName;
             const label = rule ? rule.label : 'Account';
             const effectLabel = effect === 'increase' ? 'increases' : 'decreases';
@@ -3476,7 +3500,7 @@
         }
 
         // ================================================================
-        // 18. ANSWER HANDLING
+        // 16. ANSWER HANDLING
         // ================================================================
 
         async function handleAnswer(answer) {
@@ -3576,6 +3600,7 @@
 
             s.focusCount = (s.focusCount || 0) + 1;
 
+            // Save: guest → localStorage, logged-in → Firebase
             if (!state.isGuest && auth.currentUser) {
                 await saveUserStats(auth.currentUser.uid, s);
             } else {
@@ -3608,11 +3633,10 @@
             updateDashboard();
             updateBadges();
             updateWeakTopics();
-            updateLeaderboard();
         }
 
         // ================================================================
-        // 19. HINT SYSTEM
+        // 17. HINT SYSTEM
         // ================================================================
 
         function useHint() {
@@ -3628,21 +3652,11 @@
             state.hintUsedForQuestion = true;
             updateHeaderStats();
             updateDashboard();
+            updateHintButton();
 
             const q = state.currentQuestion;
             const ruleText = q.ruleText || 'Check the rule.';
             showToast('Hint Revealed', `Rule: ${ruleText}`, 'fa-lightbulb', 'hint');
-
-            const hintBtn = document.getElementById('hintBtn');
-            if (hintBtn) {
-                if (state.stats.hints > 0) {
-                    hintBtn.innerHTML =
-                        `<i class="fas fa-lightbulb"></i> Use Hint <span class="hint-count">${state.stats.hints}</span>`;
-                } else {
-                    hintBtn.disabled = true;
-                    hintBtn.innerHTML = `<i class="fas fa-lightbulb"></i> No Hints`;
-                }
-            }
 
             if (!state.isGuest && auth.currentUser) {
                 saveUserStats(auth.currentUser.uid, state.stats);
@@ -3652,7 +3666,7 @@
         }
 
         // ================================================================
-        // 20. HINT SHOP
+        // 18. HINT SHOP
         // ================================================================
 
         function buyHints(hints, price) {
@@ -3666,6 +3680,7 @@
             updateHeaderStats();
             updateDashboard();
             updateShopUI();
+            updateHintButton();
             showToast('Hints Purchased!', `${hints} hints added to your inventory.`, 'fa-coins', 'hint');
 
             if (!state.isGuest && auth.currentUser) {
@@ -3686,7 +3701,7 @@
         }
 
         // ================================================================
-        // 21. DASHBOARD
+        // 19. DASHBOARD
         // ================================================================
 
         function updateDashboard() {
@@ -3785,7 +3800,7 @@
         }
 
         // ================================================================
-        // 22. REVISION
+        // 20. REVISION
         // ================================================================
 
         async function updateRevisionBadges() {
@@ -3865,116 +3880,124 @@
         }
 
         // ================================================================
-        // 23. LEADERBOARD
+        // 21. LEADERBOARD – GUESTS ARE EXCLUDED
         // ================================================================
+
+        let leaderboardData = [];
+        let leaderboardSortKey = 'xp';
+
+        function renderLeaderboard() {
+            const tbody = document.getElementById('lbBody');
+            const empty = document.getElementById('lbEmpty');
+            if (!tbody) return;
+
+            // Filter out guest users (uid starting with 'guest_')
+            let filtered = leaderboardData.filter(u => !isGuestUid(u.id));
+
+            // Sort
+            let sorted = [...filtered];
+            if (leaderboardSortKey === 'xp') sorted.sort((a, b) => b.xp - a.xp);
+            else if (leaderboardSortKey === 'points') sorted.sort((a, b) => b.points - a.points);
+            else if (leaderboardSortKey === 'accuracy') sorted.sort((a, b) => b.accuracy - a.accuracy);
+            else if (leaderboardSortKey === 'badges') sorted.sort((a, b) => (b.badges || 0) - (a.badges || 0));
+
+            // Deduplicate by id
+            const seen = new Set();
+            const unique = [];
+            for (const u of sorted) {
+                if (!seen.has(u.id)) { seen.add(u.id);
+                    unique.push(u); }
+            }
+            sorted = unique;
+
+            // Highlight current user if logged in
+            const currentUid = auth.currentUser ? auth.currentUser.uid : null;
+            const userIdx = sorted.findIndex(u => u.id === currentUid);
+            if (userIdx > 0 && currentUid) {
+                const user = sorted.splice(userIdx, 1)[0];
+                let insertPos = 0;
+                if (leaderboardSortKey === 'xp') {
+                    while (insertPos < sorted.length && sorted[insertPos].xp > user.xp) insertPos++;
+                } else if (leaderboardSortKey === 'points') {
+                    while (insertPos < sorted.length && sorted[insertPos].points > user.points) insertPos++;
+                } else if (leaderboardSortKey === 'accuracy') {
+                    while (insertPos < sorted.length && sorted[insertPos].accuracy > user.accuracy) insertPos++;
+                } else if (leaderboardSortKey === 'badges') {
+                    while (insertPos < sorted.length && (sorted[insertPos].badges || 0) > (user.badges || 0)) insertPos++;
+                }
+                sorted.splice(insertPos, 0, user);
+            }
+
+            if (sorted.length === 0) {
+                if (empty) empty.style.display = 'block';
+                tbody.innerHTML = '';
+                return;
+            }
+            if (empty) empty.style.display = 'none';
+
+            tbody.innerHTML = sorted.map((e, i) => {
+                const rank = i + 1;
+                let rc = 'lb-rank';
+                if (rank === 1) rc += ' gold';
+                else if (rank === 2) rc += ' silver';
+                else if (rank === 3) rc += ' bronze';
+                const isUser = (e.id === currentUid) ? ' class="lb-user-row"' : '';
+                const avatar = e.photoURL ?
+                    `<img src="${e.photoURL}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-right:6px;" />` :
+                    '';
+                return `<tr${isUser}>
+                    <td><span class="${rc}">#${rank}</span></td>
+                    <td>${avatar}${e.name} ${e.id === currentUid ? '<i class="fas fa-star" style="color:var(--accent-3);font-size:12px;margin-left:4px;"></i>' : ''}</td>
+                    <td>${e.xp}</td>
+                    <td>${e.points}</td>
+                    <td>${e.accuracy}%</td>
+                    <td>${e.badges || 0}</td>
+                </tr>`;
+            }).join('');
+        }
 
         function setupLeaderboardListener() {
             if (state.unsubLeaderboard) { state.unsubLeaderboard();
                 state.unsubLeaderboard = null; }
             state.unsubLeaderboard = db.collection(USERS_COLLECTION)
                 .orderBy('xp', 'desc')
-                .limit(50)
+                .limit(100)
                 .onSnapshot((snapshot) => {
-                    const tbody = document.getElementById('lbBody');
-                    const empty = document.getElementById('lbEmpty');
-                    const activeFilter = document.querySelector('.lb-filter-btn.active');
-                    const sortBy = activeFilter ? activeFilter.dataset.lb : 'xp';
-
-                    let users = [];
+                    const users = [];
                     snapshot.forEach(doc => {
                         const data = doc.data();
+                        // Skip guest users entirely
+                        if (isGuestUid(doc.id)) return;
                         const total = (data.correct || 0) + (data.wrong || 0);
                         const acc = total > 0 ? Math.round(((data.correct || 0) / total) * 100) : 0;
                         const isUser = doc.id === (auth.currentUser ? auth.currentUser.uid : null);
-                        if (!isUser && !doc.id.startsWith('guest_')) {
-                            const badges = (data.earnedBadges || []).length;
-                            users.push({
-                                id: doc.id,
-                                name: data.displayName || 'User',
-                                xp: data.xp || 0,
-                                points: data.points || 0,
-                                accuracy: acc,
-                                isUser: isUser,
-                                photoURL: data.photoURL || '',
-                                badges: badges,
-                            });
-                        }
-                        if (isUser) {
-                            const badges = (data.earnedBadges || []).length;
-                            users.push({
-                                id: doc.id,
-                                name: data.displayName || 'User',
-                                xp: data.xp || 0,
-                                points: data.points || 0,
-                                accuracy: acc,
-                                isUser: true,
-                                photoURL: data.photoURL || '',
-                                badges: badges,
-                            });
-                        }
+                        const badges = (data.earnedBadges || []).length;
+                        users.push({
+                            id: doc.id,
+                            name: data.displayName || 'User',
+                            xp: data.xp || 0,
+                            points: data.points || 0,
+                            accuracy: acc,
+                            isUser: isUser,
+                            photoURL: data.photoURL || '',
+                            badges: badges,
+                        });
                     });
-
-                    const seen = new Set();
-                    users = users.filter(u => { const key = u.id; if (seen.has(key)) return false;
-                        seen.add(key); return true; });
-
-                    if (sortBy === 'xp') users.sort((a, b) => b.xp - a.xp);
-                    else if (sortBy === 'points') users.sort((a, b) => b.points - a.points);
-                    else if (sortBy === 'accuracy') users.sort((a, b) => b.accuracy - a.accuracy);
-                    else if (sortBy === 'badges') users.sort((a, b) => (b.badges || 0) - (a.badges || 0));
-
-                    if (users.length === 0) {
-                        if (empty) empty.style.display = 'block';
-                        if (tbody) tbody.innerHTML = '';
-                        return;
-                    }
-                    if (empty) empty.style.display = 'none';
-
-                    const userIdx = users.findIndex(u => u.isUser);
-                    if (userIdx > 0) {
-                        const user = users.splice(userIdx, 1)[0];
-                        let insertPos = 0;
-                        if (sortBy === 'xp') while (insertPos < users.length && users[insertPos].xp > user.xp) insertPos++;
-                        else if (sortBy === 'points') while (insertPos < users.length && users[insertPos].points > user
-                            .points) insertPos++;
-                        else if (sortBy === 'accuracy') while (insertPos < users.length && users[insertPos].accuracy > user
-                            .accuracy) insertPos++;
-                        else if (sortBy === 'badges') while (insertPos < users.length && (users[insertPos].badges || 0) > (
-                            user.badges || 0)) insertPos++;
-                        users.splice(insertPos, 0, user);
-                    }
-
-                    if (tbody) {
-                        tbody.innerHTML = users.map((e, i) => {
-                            const rank = i + 1;
-                            let rc = 'lb-rank';
-                            if (rank === 1) rc += ' gold';
-                            else if (rank === 2) rc += ' silver';
-                            else if (rank === 3) rc += ' bronze';
-                            const isUser = e.isUser ? ' class="lb-user-row"' : '';
-                            const avatar = e.photoURL ?
-                                `<img src="${e.photoURL}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-right:6px;" />` :
-                                '';
-                            return `<tr${isUser}>
-                            <td><span class="${rc}">#${rank}</span></td>
-                            <td>${avatar}${e.name} ${e.isUser ? '<i class="fas fa-star" style="color:var(--accent-3);font-size:12px;margin-left:4px;"></i>' : ''}</td>
-                            <td>${e.xp}</td>
-                            <td>${e.points}</td>
-                            <td>${e.accuracy}%</td>
-                            <td>${e.badges || 0}</td>
-                        </tr>`;
-                        }).join('');
-                    }
+                    leaderboardData = users;
+                    renderLeaderboard();
                 }, (error) => { console.error('Leaderboard error:', error); });
         }
 
         // ================================================================
-        // 24. USER DATA LISTENER
+        // 22. USER DATA LISTENER (only for logged-in users)
         // ================================================================
 
         function setupUserDataListener(uid) {
             if (state.unsubUser) { state.unsubUser();
                 state.unsubUser = null; }
+            // Never listen for guest data from Firestore
+            if (isGuestUid(uid)) return;
+
             state.unsubUser = db.collection(USERS_COLLECTION).doc(uid)
                 .onSnapshot((doc) => {
                     if (doc.exists) {
@@ -4013,6 +4036,7 @@
                         updateWeakTopics();
                         updateQuizProgress();
                         updateShopUI();
+                        updateHintButton();
                     } else {
                         const initialStats = {
                             totalQuestions: 0,
@@ -4044,12 +4068,13 @@
                         updateWeakTopics();
                         updateQuizProgress();
                         updateShopUI();
+                        updateHintButton();
                     }
                 }, (error) => { console.error('User data error:', error); });
         }
 
         // ================================================================
-        // 25. AUTH HANDLING
+        // 23. AUTH HANDLING
         // ================================================================
 
         function showLogin() {
@@ -4078,7 +4103,10 @@
             if (user) {
                 state.isGuest = false;
                 hideLogin();
-                setupUserDataListener(user.uid);
+                // Only setup user data listener for non-guest users
+                if (!isGuestUid(user.uid)) {
+                    setupUserDataListener(user.uid);
+                }
                 updateRevisionBadges();
                 setupLeaderboardListener();
                 loadRevisionList();
@@ -4102,6 +4130,7 @@
                             updateWeakTopics();
                             updateQuizProgress();
                             updateShopUI();
+                            updateHintButton();
                         }
                     } catch (e) {}
                     setupLeaderboardListener();
@@ -4118,7 +4147,7 @@
         }
 
         // ================================================================
-        // 26. NAVIGATION
+        // 24. NAVIGATION
         // ================================================================
 
         function navigateTo(section) {
@@ -4137,10 +4166,13 @@
                 updateShopUI();
             }
             if (section === 'revision') loadRevisionList();
+            if (section === 'leaderboard') {
+                renderLeaderboard();
+            }
         }
 
         // ================================================================
-        // 27. INIT
+        // 25. INIT
         // ================================================================
 
         function init() {
@@ -4184,6 +4216,7 @@
                 updateWeakTopics();
                 updateQuizProgress();
                 updateShopUI();
+                updateHintButton();
                 setupLeaderboardListener();
                 loadRevisionList();
                 generateNextQuestionSet();
@@ -4374,11 +4407,13 @@
                 });
             });
 
-            // Leaderboard filters
+            // Leaderboard filter buttons
             $$('.lb-filter-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     $$('.lb-filter-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
+                    leaderboardSortKey = this.dataset.lb;
+                    renderLeaderboard();
                 });
             });
 
@@ -4396,13 +4431,13 @@
                 if (indicator) indicator.style.display = 'inline-block';
             }
 
-            console.log('📘 Journal Entry · MCQ Learner (UPGRADED with Master Account System)');
-            console.log('🏅 50 badges available!');
-            console.log('📊 Each transaction generates a proper 1 Debit + 1 Credit journal entry!');
+            console.log('📘 Journal Entry · MCQ Learner (IMPROVED)');
+            console.log('✅ Guests: localStorage only, never on leaderboard');
+            console.log('✅ Logged-in users: Firebase persistence, shown on leaderboard');
         }
 
         // ================================================================
-        // 28. START
+        // 26. START
         // ================================================================
 
         document.addEventListener('DOMContentLoaded', init);
