@@ -12,7 +12,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
     </script>
     <style>
-        /* ===== RESET & VARIABLES ===== */
         * {
             margin: 0;
             padding: 0;
@@ -65,6 +64,7 @@
             background: var(--accent-1);
             border-radius: 10px;
         }
+
         .learn-more {
             padding: 10px 24px;
             border-radius: var(--radius-sm);
@@ -1721,7 +1721,6 @@
                     </div>
                 </div>
 
-                <!-- ===== LEARN MORE BUTTON ===== -->
                 <div class="Lern" style="margin-top:18px;">
                     <a href="lern.html" class="learn-more">
                         <i class="fas fa-book-open"></i> Learn Javeda
@@ -1892,7 +1891,7 @@
     </div>
 
     <!-- ============================================================
-    JAVASCRIPT – COMPLETE FIXED SYSTEM WITH UPGRADED MEDIUM/HARD
+    JAVASCRIPT – UPGRADED MEDIUM/HARD WITH MASTER ACCOUNT SYSTEM
     ============================================================ -->
     <script>
         // ================================================================
@@ -1914,7 +1913,118 @@
         const db = firebase.firestore();
 
         // ================================================================
-        // 1. ACCOUNTING RULES
+        // 1. MASTER ACCOUNT CLASSIFICATION SYSTEM
+        // ================================================================
+
+        const ACCOUNT_CLASSIFICATIONS = {
+            // 🟢 ASSET ACCOUNTS
+            'Cash': { category: 'asset', bengali: 'নগদান', rule: 'increase=debit,decrease=credit' },
+            'Bank': { category: 'asset', bengali: 'ব্যাংক', rule: 'increase=debit,decrease=credit' },
+            'Accounts Receivable': { category: 'asset', bengali: 'দেনাদার', rule: 'increase=debit,decrease=credit' },
+            'Inventory': { category: 'asset', bengali: 'মাল', rule: 'increase=debit,decrease=credit' },
+            'Furniture': { category: 'asset', bengali: 'আসবাবপত্র', rule: 'increase=debit,decrease=credit' },
+            'Equipment': { category: 'asset', bengali: 'যন্ত্রপাতি', rule: 'increase=debit,decrease=credit' },
+            'Computer': { category: 'asset', bengali: 'কম্পিউটার', rule: 'increase=debit,decrease=credit' },
+            'Office Supplies': { category: 'asset', bengali: 'অফিস সরঞ্জাম', rule: 'increase=debit,decrease=credit' },
+            'Prepaid Rent': { category: 'asset', bengali: 'অগ্রিম ভাড়া', rule: 'increase=debit,decrease=credit' },
+            'Prepaid Insurance': { category: 'asset', bengali: 'অগ্রিম বিমা খরচ', rule: 'increase=debit,decrease=credit' },
+            'Prepaid Expense': { category: 'asset', bengali: 'অগ্রিম খরচ', rule: 'increase=debit,decrease=credit' },
+            'Accumulated Depreciation': { category: 'asset', bengali: 'সঞ্চিত অবচয়', rule: 'increase=credit,decrease=debit' },
+            'Building': { category: 'asset', bengali: 'ভবন', rule: 'increase=debit,decrease=credit' },
+            'Land': { category: 'asset', bengali: 'জমি', rule: 'increase=debit,decrease=credit' },
+
+            // 🔴 LIABILITY ACCOUNTS
+            'Creditors': { category: 'liability', bengali: 'পাওনাদার', rule: 'increase=credit,decrease=debit' },
+            'Bank Loan': { category: 'liability', bengali: 'ব্যাংক ঋণ', rule: 'increase=credit,decrease=debit' },
+            'Salary Payable': { category: 'liability', bengali: 'বকেয়া বেতন', rule: 'increase=credit,decrease=debit' },
+            'Rent Payable': { category: 'liability', bengali: 'বকেয়া ভাড়া', rule: 'increase=credit,decrease=debit' },
+            'Interest Payable': { category: 'liability', bengali: 'প্রদেয় সুদ', rule: 'increase=credit,decrease=debit' },
+            'Loan': { category: 'liability', bengali: 'ঋণ', rule: 'increase=credit,decrease=debit' },
+            'Debentures': { category: 'liability', bengali: 'ঋণপত্র', rule: 'increase=credit,decrease=debit' },
+
+            // 🟡 CAPITAL ACCOUNTS
+            'Capital': { category: 'capital', bengali: 'মূলধন', rule: 'increase=credit,decrease=debit' },
+            'Drawings': { category: 'drawing', bengali: 'উত্তোলন', rule: 'increase=debit,decrease=credit' },
+
+            // 🟣 REVENUE ACCOUNTS
+            'Sales Revenue': { category: 'revenue', bengali: 'বিক্রয়', rule: 'increase=credit,decrease=debit' },
+            'Service Revenue': { category: 'revenue', bengali: 'সেবা আয়', rule: 'increase=credit,decrease=debit' },
+            'Commission Revenue': { category: 'revenue', bengali: 'কমিশন আয়', rule: 'increase=credit,decrease=debit' },
+            'Rent Revenue': { category: 'revenue', bengali: 'ভাড়া আয়', rule: 'increase=credit,decrease=debit' },
+            'Interest Revenue': { category: 'revenue', bengali: 'সুদ প্রাপ্তি', rule: 'increase=credit,decrease=debit' },
+            'Discount Received': { category: 'revenue', bengali: 'বাট্টা পাওয়া', rule: 'increase=credit,decrease=debit' },
+
+            // 🔵 EXPENSE ACCOUNTS
+            'Salary': { category: 'expense', bengali: 'বেতন', rule: 'increase=debit,decrease=credit' },
+            'Rent': { category: 'expense', bengali: 'ভাড়া', rule: 'increase=debit,decrease=credit' },
+            'Advertisement': { category: 'expense', bengali: 'বিজ্ঞাপন খরচ', rule: 'increase=debit,decrease=credit' },
+            'Insurance': { category: 'expense', bengali: 'বীমা খরচ', rule: 'increase=debit,decrease=credit' },
+            'Transport': { category: 'expense', bengali: 'পরিবহন খরচ', rule: 'increase=debit,decrease=credit' },
+            'Office Expenses': { category: 'expense', bengali: 'অফিস খরচ', rule: 'increase=debit,decrease=credit' },
+            'Electricity Bill': { category: 'expense', bengali: 'বিদ্যুৎ বিল', rule: 'increase=debit,decrease=credit' },
+            'Depreciation Expense': { category: 'expense', bengali: 'অবচয় খরচ', rule: 'increase=debit,decrease=credit' },
+            'Bad Debts': { category: 'expense', bengali: 'কুঋণ', rule: 'increase=debit,decrease=credit' },
+            'Bank Charges': { category: 'expense', bengali: 'ব্যাংক চার্জ', rule: 'increase=debit,decrease=credit' },
+            'Interest Expense': { category: 'expense', bengali: 'সুদ খরচ', rule: 'increase=debit,decrease=credit' },
+            'Income Tax': { category: 'expense', bengali: 'আয়কর', rule: 'increase=debit,decrease=credit' },
+            'Donation': { category: 'expense', bengali: 'দান খরচ', rule: 'increase=debit,decrease=credit' },
+            'Commission Expense': { category: 'expense', bengali: 'কমিশন খরচ', rule: 'increase=debit,decrease=credit' },
+            'Repairs': { category: 'expense', bengali: 'মেরামত খরচ', rule: 'increase=debit,decrease=credit' },
+            'Discount Allowed': { category: 'expense', bengali: 'বাট্টা প্রদান', rule: 'increase=debit,decrease=credit' },
+        };
+
+        // Get account info by English name
+        function getAccountInfo(accountName) {
+            return ACCOUNT_CLASSIFICATIONS[accountName] || null;
+        }
+
+        // Get Bengali name for an account
+        function getBengaliName(accountName) {
+            const info = getAccountInfo(accountName);
+            return info ? info.bengali : accountName;
+        }
+
+        // Get category for an account
+        function getAccountCategory(accountName) {
+            const info = getAccountInfo(accountName);
+            return info ? info.category : null;
+        }
+
+        // Get rule for an account
+        function getAccountRule(accountName) {
+            const info = getAccountInfo(accountName);
+            return info ? info.rule : null;
+        }
+
+        // Determine if account is debit or credit for a given effect
+        function getDebitCreditForAccount(accountName, effect) {
+            const info = getAccountInfo(accountName);
+            if (!info) return 'debit';
+            const rule = info.rule;
+            const parts = rule.split(',');
+            for (const part of parts) {
+                const [key, value] = part.split('=');
+                if (key === effect) return value;
+            }
+            return 'debit';
+        }
+
+        // ================================================================
+        // 2. BENGALI NAMES FOR PERSONS
+        // ================================================================
+
+        const BENGALI_PERSON_NAMES = [
+            'রহিম', 'করিম', 'আলম', 'রিয়াদ', 'সুমন', 'হাসান', 'রনি',
+            'তাজিম', 'ফাহিম', 'লিমন', 'জসিম', 'রাফি', 'শাওন', 'নাঈম',
+            'রাসেল', 'সজিব', 'আরিফ', 'তুহিন', 'শুভ', 'নাবিল'
+        ];
+
+        function getRandomName() {
+            return pickRandom(BENGALI_PERSON_NAMES);
+        }
+
+        // ================================================================
+        // 3. ACCOUNTING RULES (for backward compatibility)
         // ================================================================
 
         const ACCOUNT_RULES = {
@@ -1926,537 +2036,424 @@
             drawing: { increase: 'debit', decrease: 'credit', label: 'Drawing' }
         };
 
-        const BENGALI_NAMES = {
-            'Cash': 'নগদান',
-            'Bank': 'ব্যাংক',
-            'Furniture': 'আসবাবপত্র',
-            'Computer': 'কম্পিউটার',
-            'Mobile': 'মোবাইল',
-            'Book': 'বই',
-            'Notebook': 'খাতা',
-            'Equipment': 'যন্ত্রপাতি',
-            'Building': 'ভবন',
-            'Land': 'জমি',
-            'Inventory': 'পণ্য',
-            'Office Supplies': 'অফিস সরঞ্জাম',
-            'Creditors': 'পাওনাদার',
-            'Bank Loan': 'ব্যাংক ঋণ',
-            'Salary Payable': 'বকেয়া বেতন',
-            'Rent Payable': 'বকেয়া ভাড়া',
-            'Debentures': 'ঋণপত্র',
-            'Capital': 'মূলধন',
-            'Drawings': 'উত্তোলন',
-            'Service Revenue': 'সেবা আয়',
-            'Commission Revenue': 'কমিশন আয়',
-            'Rent Revenue': 'ভাড়া আয়',
-            'Sales Revenue': 'বিক্রয় আয়',
-            'Interest Revenue': 'সুদের আয়',
-            'Salary': 'বেতন',
-            'Electricity Bill': 'বিদ্যুৎ বিল',
-            'Rent': 'ভাড়া',
-            'Transport': 'পরিবহন খরচ',
-            'Advertisement': 'বিজ্ঞাপন ব্যয়',
-            'Insurance': 'বিমা খরচ',
-            'Repairs': 'মেরামত খরচ',
-            'Office Expenses': 'অফিস খরচ',
-            'Prepaid Rent': 'অগ্রিম ভাড়া',
-            'Depreciation Expense': 'অবচয় খরচ',
-            'Accumulated Depreciation': 'সঞ্চিত অবচয়',
-            'Accounts Receivable': 'আগ্রহী পাওনা',
-            'Prepaid Expense': 'অগ্রিম খরচ',
-            'Accrued Revenue': 'অর্জিত আয়',
-            'Interest Payable': 'প্রদেয় সুদ',
-            'Prepaid Insurance': 'অগ্রিম বিমা',
-            'Sales': 'বিক্রয়',
-            'Purchases': 'ক্রয়',
-            'Discount Allowed': 'বাট্টা প্রদান',
-            'Discount Received': 'বাট্টা পাওয়া',
-            'Bad Debts': 'কুঋণ',
-            'Bank Charges': 'ব্যাংক চার্জ',
-            'Commission': 'কমিশন',
-            'Interest': 'সুদ',
-            'Loan': 'ঋণ',
-            'Debtor': 'দেনাদার',
-            'Creditor': 'পাওনাদার',
-            'Return Inward': 'বিক্রয় ফেরত',
-            'Return Outward': 'ক্রয় ফেরত',
-            'Depreciation': 'অবচয়'
-        };
+        const BENGALI_NAMES = {};
+        for (const [key, val] of Object.entries(ACCOUNT_CLASSIFICATIONS)) {
+            BENGALI_NAMES[key] = val.bengali;
+        }
+        // Add extra mappings
+        BENGALI_NAMES['Sales'] = 'বিক্রয়';
+        BENGALI_NAMES['Purchases'] = 'ক্রয়';
+        BENGALI_NAMES['Debtor'] = 'দেনাদার';
+        BENGALI_NAMES['Creditor'] = 'পাওনাদার';
 
         // ================================================================
-        // 2. BENGALI NAMES FOR TRANSACTIONS
+        // 4. TRANSACTION TEMPLATES WITH PROPER JOURNAL ENTRIES
         // ================================================================
 
-        const BENGALI_PERSON_NAMES = [
-            'রহিম', 'করিম', 'আলম', 'রিয়াদ', 'সুমন', 'হাসান', 'রনি',
-            'তাজিম', 'ফাহিম', 'লিমন', 'জসিম', 'রাফি', 'শাওন', 'নাঈম',
-            'রাসেল', 'সজিব', 'আরিফ', 'তুহিন', 'শুভ', 'নাবিল'
-        ];
-
-        // ================================================================
-        // 3. TRANSACTION TEMPLATES - EASY MODE (No amounts, simple)
-        // ================================================================
-
+        // EASY MODE: No amounts, simple transactions
         const EASY_TEMPLATES = [{
             id: 'easy_asset_purchase',
-            category: 'asset',
             description: 'নগদে {asset} ক্রয় করা হয়েছে',
             journal: [
-                { account: '{asset}', type: 'asset', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
+                { account: '{asset}', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
             ],
             assetPool: ['Computer', 'Mobile', 'Book', 'Notebook', 'Furniture', 'Office Supplies']
         }, {
             id: 'easy_expense_pay',
-            category: 'expense',
             description: 'নগদে {expense} পরিশোধ করা হয়েছে',
             journal: [
-                { account: '{expense}', type: 'expense', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
+                { account: '{expense}', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
             ],
             expensePool: ['Electricity Bill', 'Rent', 'Transport', 'Advertisement', 'Office Expenses']
         }, {
             id: 'easy_capital_invest',
-            category: 'capital',
             description: 'মালিক ব্যবসায়ে নগদ বিনিয়োগ করেছেন',
             journal: [
-                { account: 'Cash', type: 'asset', side: 'debit' },
-                { account: 'Capital', type: 'capital', side: 'credit' }
+                { account: 'Cash', side: 'debit' },
+                { account: 'Capital', side: 'credit' }
             ]
         }, {
             id: 'easy_revenue_cash',
-            category: 'revenue',
             description: 'সেবা প্রদান করে নগদ গ্রহণ করা হয়েছে',
             journal: [
-                { account: 'Cash', type: 'asset', side: 'debit' },
-                { account: 'Service Revenue', type: 'revenue', side: 'credit' }
+                { account: 'Cash', side: 'debit' },
+                { account: 'Service Revenue', side: 'credit' }
             ]
         }, {
             id: 'easy_liability_pay',
-            category: 'liability',
             description: '{liability} পরিশোধ করা হয়েছে',
             journal: [
-                { account: '{liability}', type: 'liability', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
+                { account: '{liability}', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
             ],
             liabilityPool: ['Creditors', 'Rent Payable']
         }, {
             id: 'easy_drawing',
-            category: 'drawing',
             description: 'মালিক উত্তোলন করেছেন',
             journal: [
-                { account: 'Drawings', type: 'drawing', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
+                { account: 'Drawings', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
             ]
         }];
 
         // ================================================================
-        // 4. TRANSACTION TEMPLATES - MEDIUM MODE (Exam-style with names)
+        // 5. MEDIUM MODE: Real exam-style with proper journal entries
         // ================================================================
 
         const MEDIUM_TEMPLATES = [{
+            id: 'med_bank_open',
+            description: 'ব্যাংক হিসাব খোলা হলো {amount} টাকা',
+            journal: [
+                { account: 'Bank', side: 'debit' },
+                { account: 'Capital', side: 'credit' }
+            ],
+            amountRange: [10000, 50000]
+        }, {
             id: 'med_purchase_cash',
-            category: 'asset',
             description: 'নগদে {amount} টাকার মাল ক্রয় করা হলো',
             journal: [
-                { account: 'Inventory', type: 'asset', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
+                { account: 'Inventory', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
             ],
             amountRange: [5000, 80000]
         }, {
             id: 'med_purchase_credit',
-            category: 'liability',
             description: '{name} এর নিকট হতে {amount} টাকার মাল ক্রয় করা হলো',
             journal: [
-                { account: 'Inventory', type: 'asset', side: 'debit' },
-                { account: 'Creditors', type: 'liability', side: 'credit' }
+                { account: 'Inventory', side: 'debit' },
+                { account: 'Creditors', side: 'credit' }
             ],
             amountRange: [10000, 100000],
             useName: true
         }, {
             id: 'med_sale_cash',
-            category: 'revenue',
             description: 'নগদে {amount} টাকার মাল বিক্রয় করা হলো',
             journal: [
-                { account: 'Cash', type: 'asset', side: 'debit' },
-                { account: 'Sales Revenue', type: 'revenue', side: 'credit' }
+                { account: 'Cash', side: 'debit' },
+                { account: 'Sales Revenue', side: 'credit' }
             ],
             amountRange: [5000, 75000]
         }, {
             id: 'med_sale_credit',
-            category: 'revenue',
             description: '{name} এর নিকট {amount} টাকার মাল বিক্রয় করা হলো',
             journal: [
-                { account: 'Accounts Receivable', type: 'asset', side: 'debit' },
-                { account: 'Sales Revenue', type: 'revenue', side: 'credit' }
+                { account: 'Accounts Receivable', side: 'debit' },
+                { account: 'Sales Revenue', side: 'credit' }
             ],
             amountRange: [10000, 90000],
             useName: true
         }, {
             id: 'med_bank_deposit',
-            category: 'asset',
             description: 'ব্যাংকে {amount} টাকা জমা দেওয়া হলো',
             journal: [
-                { account: 'Bank', type: 'asset', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
+                { account: 'Bank', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
             ],
             amountRange: [5000, 50000]
         }, {
             id: 'med_bank_withdrawal',
-            category: 'asset',
             description: 'ব্যাংক থেকে {amount} টাকা উত্তোলন করা হলো',
             journal: [
-                { account: 'Cash', type: 'asset', side: 'debit' },
-                { account: 'Bank', type: 'asset', side: 'credit' }
+                { account: 'Cash', side: 'debit' },
+                { account: 'Bank', side: 'credit' }
             ],
             amountRange: [5000, 40000]
         }, {
             id: 'med_salary_pay',
-            category: 'expense',
             description: 'কর্মচারীর বেতন {amount} টাকা প্রদান করা হলো',
             journal: [
-                { account: 'Salary', type: 'expense', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
+                { account: 'Salary', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
             ],
             amountRange: [3000, 30000]
         }, {
             id: 'med_salary_cheque',
-            category: 'expense',
             description: 'চেকের মাধ্যমে কর্মচারীর বেতন {amount} টাকা প্রদান করা হলো',
             journal: [
-                { account: 'Salary', type: 'expense', side: 'debit' },
-                { account: 'Bank', type: 'asset', side: 'credit' }
+                { account: 'Salary', side: 'debit' },
+                { account: 'Bank', side: 'credit' }
             ],
             amountRange: [3000, 30000]
         }, {
             id: 'med_advertisement_cash',
-            category: 'expense',
             description: 'বিজ্ঞাপন খরচ বাবদ {amount} টাকা নগদ প্রদান করা হলো',
             journal: [
-                { account: 'Advertisement', type: 'expense', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
+                { account: 'Advertisement', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
             ],
             amountRange: [2000, 20000]
         }, {
             id: 'med_advertisement_cheque',
-            category: 'expense',
             description: 'বিজ্ঞাপন খরচ বাবদ {amount} টাকা চেক প্রদান করা হলো',
             journal: [
-                { account: 'Advertisement', type: 'expense', side: 'debit' },
-                { account: 'Bank', type: 'asset', side: 'credit' }
+                { account: 'Advertisement', side: 'debit' },
+                { account: 'Bank', side: 'credit' }
             ],
             amountRange: [2000, 20000]
         }, {
             id: 'med_rent_pay',
-            category: 'expense',
             description: 'ভাড়া বাবদ {amount} টাকা প্রদান করা হলো',
             journal: [
-                { account: 'Rent', type: 'expense', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
+                { account: 'Rent', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
             ],
             amountRange: [5000, 30000]
         }, {
             id: 'med_revenue_bank',
-            category: 'revenue',
             description: 'ব্যাংকে {amount} টাকা সেবা আয় প্রাপ্তি',
             journal: [
-                { account: 'Bank', type: 'asset', side: 'debit' },
-                { account: 'Service Revenue', type: 'revenue', side: 'credit' }
+                { account: 'Bank', side: 'debit' },
+                { account: 'Service Revenue', side: 'credit' }
             ],
             amountRange: [10000, 100000]
         }, {
             id: 'med_drawing_cash',
-            category: 'drawing',
             description: 'মালিক {amount} টাকা উত্তোলন করেছেন',
             journal: [
-                { account: 'Drawings', type: 'drawing', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
+                { account: 'Drawings', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
             ],
             amountRange: [5000, 30000]
         }, {
             id: 'med_drawing_bank',
-            category: 'drawing',
             description: 'মালিক ব্যাংক হতে {amount} টাকা উত্তোলন করেছেন',
             journal: [
-                { account: 'Drawings', type: 'drawing', side: 'debit' },
-                { account: 'Bank', type: 'asset', side: 'credit' }
+                { account: 'Drawings', side: 'debit' },
+                { account: 'Bank', side: 'credit' }
             ],
             amountRange: [5000, 30000]
         }, {
             id: 'med_collection_cheque',
-            category: 'asset',
             description: '{name} এর নিকট হতে {amount} টাকার চেক পাওয়া গেল',
             journal: [
-                { account: 'Bank', type: 'asset', side: 'debit' },
-                { account: 'Accounts Receivable', type: 'asset', side: 'credit' }
+                { account: 'Bank', side: 'debit' },
+                { account: 'Accounts Receivable', side: 'credit' }
             ],
             amountRange: [5000, 50000],
             useName: true
         }, {
             id: 'med_payment_cheque',
-            category: 'liability',
             description: '{name} এর নিকট {amount} টাকার চেক প্রদান করা হলো',
             journal: [
-                { account: 'Creditors', type: 'liability', side: 'debit' },
-                { account: 'Bank', type: 'asset', side: 'credit' }
+                { account: 'Creditors', side: 'debit' },
+                { account: 'Bank', side: 'credit' }
             ],
             amountRange: [5000, 40000],
             useName: true
         }, {
             id: 'med_bank_loan',
-            category: 'liability',
             description: 'ব্যাংক ঋণ হিসেবে {amount} টাকা গ্রহণ করা হয়েছে',
             journal: [
-                { account: 'Bank', type: 'asset', side: 'debit' },
-                { account: 'Bank Loan', type: 'liability', side: 'credit' }
+                { account: 'Bank', side: 'debit' },
+                { account: 'Bank Loan', side: 'credit' }
             ],
             amountRange: [50000, 300000]
         }, {
             id: 'med_commission_received',
-            category: 'revenue',
             description: 'কমিশন বাবদ {amount} টাকা পাওয়া গেল',
             journal: [
-                { account: 'Cash', type: 'asset', side: 'debit' },
-                { account: 'Commission Revenue', type: 'revenue', side: 'credit' }
+                { account: 'Cash', side: 'debit' },
+                { account: 'Commission Revenue', side: 'credit' }
             ],
             amountRange: [500, 10000]
         }, {
             id: 'med_discount_allowed',
-            category: 'expense',
             description: '{name} কে {amount} টাকা বাট্টা প্রদান করা হলো',
             journal: [
-                { account: 'Discount Allowed', type: 'expense', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
+                { account: 'Discount Allowed', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
             ],
             amountRange: [200, 5000],
             useName: true
         }, {
             id: 'med_discount_received',
-            category: 'revenue',
             description: '{name} হতে {amount} টাকা বাট্টা পাওয়া গেল',
             journal: [
-                { account: 'Cash', type: 'asset', side: 'debit' },
-                { account: 'Discount Received', type: 'revenue', side: 'credit' }
+                { account: 'Cash', side: 'debit' },
+                { account: 'Discount Received', side: 'credit' }
             ],
             amountRange: [200, 5000],
             useName: true
         }, {
             id: 'med_return_inward',
-            category: 'revenue',
             description: '{name} কর্তৃক {amount} টাকার বিক্রিত পণ্য ফেরত',
             journal: [
-                { account: 'Sales Revenue', type: 'revenue', side: 'debit' },
-                { account: 'Accounts Receivable', type: 'asset', side: 'credit' }
+                { account: 'Sales Revenue', side: 'debit' },
+                { account: 'Accounts Receivable', side: 'credit' }
             ],
             amountRange: [1000, 15000],
             useName: true
         }, {
             id: 'med_return_outward',
-            category: 'asset',
             description: '{name} কে {amount} টাকার ক্রয়কৃত পণ্য ফেরত',
             journal: [
-                { account: 'Creditors', type: 'liability', side: 'debit' },
-                { account: 'Inventory', type: 'asset', side: 'credit' }
+                { account: 'Creditors', side: 'debit' },
+                { account: 'Inventory', side: 'credit' }
             ],
             amountRange: [1000, 15000],
             useName: true
         }];
 
         // ================================================================
-        // 5. TRANSACTION TEMPLATES - HARD MODE (Advanced/Complex)
+        // 6. HARD MODE: Advanced/Complex Transactions
         // ================================================================
 
         const HARD_TEMPLATES = [{
             id: 'hard_salary_payable',
-            category: 'liability',
             description: 'বকেয়া বেতন {amount} টাকা সমন্বয় করা হয়েছে',
             journal: [
-                { account: 'Salary', type: 'expense', side: 'debit' },
-                { account: 'Salary Payable', type: 'liability', side: 'credit' }
+                { account: 'Salary', side: 'debit' },
+                { account: 'Salary Payable', side: 'credit' }
             ],
             amountRange: [10000, 60000]
         }, {
             id: 'hard_prepaid_rent_adj',
-            category: 'asset',
             description: '{amount} টাকা অগ্রিম ভাড়ার সমন্বয় করা হয়েছে',
             journal: [
-                { account: 'Rent', type: 'expense', side: 'debit' },
-                { account: 'Prepaid Rent', type: 'asset', side: 'credit' }
+                { account: 'Rent', side: 'debit' },
+                { account: 'Prepaid Rent', side: 'credit' }
             ],
             amountRange: [5000, 40000]
         }, {
             id: 'hard_depreciation',
-            category: 'expense',
             description: '{asset} এর উপর {amount} টাকা অবচয় ধার্য করা হয়েছে',
             journal: [
-                { account: 'Depreciation Expense', type: 'expense', side: 'debit' },
-                { account: 'Accumulated Depreciation', type: 'asset', side: 'credit' }
+                { account: 'Depreciation Expense', side: 'debit' },
+                { account: 'Accumulated Depreciation', side: 'credit' }
             ],
             assetPool: ['Furniture', 'Equipment', 'Computer', 'Building'],
             amountRange: [2000, 30000]
         }, {
             id: 'hard_collection_receivable',
-            category: 'asset',
             description: '{name} এর নিকট হতে পূর্বে বকেয়া {amount} টাকা পাওনা আদায় করা হয়েছে',
             journal: [
-                { account: 'Cash', type: 'asset', side: 'debit' },
-                { account: 'Accounts Receivable', type: 'asset', side: 'credit' }
+                { account: 'Cash', side: 'debit' },
+                { account: 'Accounts Receivable', side: 'credit' }
             ],
             amountRange: [10000, 80000],
             useName: true
         }, {
             id: 'hard_prepaid_expense_adj',
-            category: 'expense',
             description: '{amount} টাকা পূর্বে প্রদত্ত অগ্রিম খরচ সমন্বয় করা হয়েছে',
             journal: [
-                { account: '{expense}', type: 'expense', side: 'debit' },
-                { account: 'Prepaid Expense', type: 'asset', side: 'credit' }
+                { account: '{expense}', side: 'debit' },
+                { account: 'Prepaid Expense', side: 'credit' }
             ],
             expensePool: ['Insurance', 'Rent', 'Advertisement'],
             amountRange: [5000, 40000]
         }, {
             id: 'hard_accrued_revenue',
-            category: 'revenue',
             description: '{amount} টাকা অর্জিত কিন্তু অপ্রাপ্ত আয় সমন্বয় করা হয়েছে',
             journal: [
-                { account: 'Accounts Receivable', type: 'asset', side: 'debit' },
-                { account: 'Service Revenue', type: 'revenue', side: 'credit' }
+                { account: 'Accounts Receivable', side: 'debit' },
+                { account: 'Service Revenue', side: 'credit' }
             ],
             amountRange: [10000, 70000]
         }, {
             id: 'hard_interest_payable',
-            category: 'liability',
             description: 'ব্যাংক ঋণের {amount} টাকা সুদ বকেয়া সমন্বয় করা হয়েছে',
             journal: [
-                { account: 'Interest Expense', type: 'expense', side: 'debit' },
-                { account: 'Interest Payable', type: 'liability', side: 'credit' }
+                { account: 'Interest Expense', side: 'debit' },
+                { account: 'Interest Payable', side: 'credit' }
             ],
             amountRange: [2000, 15000]
         }, {
             id: 'hard_drawings_goods',
-            category: 'drawing',
             description: 'মালিক {amount} টাকার পণ্য উত্তোলন করেছেন',
             journal: [
-                { account: 'Drawings', type: 'drawing', side: 'debit' },
-                { account: 'Inventory', type: 'asset', side: 'credit' }
+                { account: 'Drawings', side: 'debit' },
+                { account: 'Inventory', side: 'credit' }
             ],
             amountRange: [5000, 25000]
         }, {
             id: 'hard_prepaid_insurance_adj',
-            category: 'asset',
             description: '{amount} টাকা অগ্রিম বিমা খরচ সমন্বয় করা হয়েছে',
             journal: [
-                { account: 'Insurance', type: 'expense', side: 'debit' },
-                { account: 'Prepaid Insurance', type: 'asset', side: 'credit' }
+                { account: 'Insurance', side: 'debit' },
+                { account: 'Prepaid Insurance', side: 'credit' }
             ],
             amountRange: [3000, 25000]
         }, {
             id: 'hard_bad_debts',
-            category: 'expense',
             description: '{name} এর নিকট {amount} টাকা অনাদায়ী দেনা ধার্য করা হলো',
             journal: [
-                { account: 'Bad Debts', type: 'expense', side: 'debit' },
-                { account: 'Accounts Receivable', type: 'asset', side: 'credit' }
+                { account: 'Bad Debts', side: 'debit' },
+                { account: 'Accounts Receivable', side: 'credit' }
             ],
             amountRange: [1000, 10000],
             useName: true
         }, {
             id: 'hard_bank_charges',
-            category: 'expense',
             description: 'ব্যাংক কর্তৃক {amount} টাকা চার্জ ধার্য করা হলো',
             journal: [
-                { account: 'Bank Charges', type: 'expense', side: 'debit' },
-                { account: 'Bank', type: 'asset', side: 'credit' }
+                { account: 'Bank Charges', side: 'debit' },
+                { account: 'Bank', side: 'credit' }
             ],
             amountRange: [100, 1000]
         }, {
             id: 'hard_interest_received',
-            category: 'revenue',
             description: 'ব্যাংক কর্তৃক {amount} টাকা সুদ মঞ্জুর করা হয়েছে',
             journal: [
-                { account: 'Bank', type: 'asset', side: 'debit' },
-                { account: 'Interest Revenue', type: 'revenue', side: 'credit' }
+                { account: 'Bank', side: 'debit' },
+                { account: 'Interest Revenue', side: 'credit' }
             ],
             amountRange: [300, 3000]
         }, {
-            id: 'hard_commission_payable',
-            category: 'liability',
-            description: '{name} কে {amount} টাকা কমিশন প্রদেয় সমন্বয়',
-            journal: [
-                { account: 'Commission Revenue', type: 'expense', side: 'debit' },
-                { account: 'Creditors', type: 'liability', side: 'credit' }
-            ],
-            amountRange: [1000, 15000],
-            useName: true
-        }, {
-            id: 'hard_income_tax',
-            category: 'expense',
-            description: 'আয়কর বাবদ {amount} টাকা প্রদান করা হলো',
-            journal: [
-                { account: 'Income Tax', type: 'expense', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
-            ],
-            amountRange: [500, 10000]
-        }, {
-            id: 'hard_donation',
-            category: 'expense',
-            description: '{amount} টাকা দান করা হয়েছে',
-            journal: [
-                { account: 'Donation', type: 'expense', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
-            ],
-            amountRange: [500, 5000]
-        }, {
-            id: 'hard_insurance_premium',
-            category: 'expense',
-            description: 'জীবন বীমা প্রিমিয়াম বাবদ {amount} টাকা প্রদান',
-            journal: [
-                { account: 'Insurance', type: 'expense', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
-            ],
-            amountRange: [1000, 10000]
-        }, {
             id: 'hard_loan_received',
-            category: 'liability',
             description: '{name} এর কাছ থেকে {amount} টাকা ঋণ গ্রহণ করা হলো',
             journal: [
-                { account: 'Cash', type: 'asset', side: 'debit' },
-                { account: 'Loan', type: 'liability', side: 'credit' }
+                { account: 'Cash', side: 'debit' },
+                { account: 'Loan', side: 'credit' }
             ],
             amountRange: [10000, 100000],
             useName: true
         }, {
             id: 'hard_loan_payment',
-            category: 'liability',
             description: '{name} কে {amount} টাকা ঋণ পরিশোধ করা হলো',
             journal: [
-                { account: 'Loan', type: 'liability', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
+                { account: 'Loan', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
             ],
             amountRange: [5000, 50000],
             useName: true
         }, {
-            id: 'hard_interest_on_capital',
-            category: 'expense',
-            description: 'মূলধনের উপর {amount} টাকা সুদ ধার্য করা হয়েছে',
+            id: 'hard_income_tax',
+            description: 'আয়কর বাবদ {amount} টাকা প্রদান করা হলো',
             journal: [
-                { account: 'Interest Expense', type: 'expense', side: 'debit' },
-                { account: 'Capital', type: 'capital', side: 'credit' }
+                { account: 'Income Tax', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ],
+            amountRange: [500, 10000]
+        }, {
+            id: 'hard_donation',
+            description: '{amount} টাকা দান করা হয়েছে',
+            journal: [
+                { account: 'Donation', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ],
+            amountRange: [500, 5000]
+        }, {
+            id: 'hard_insurance_premium',
+            description: 'জীবন বীমা প্রিমিয়াম বাবদ {amount} টাকা প্রদান',
+            journal: [
+                { account: 'Insurance', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
             ],
             amountRange: [1000, 10000]
         }, {
-            id: 'hard_purchase_commission',
-            category: 'expense',
-            description: 'ক্রয় কমিশন বাবদ {amount} টাকা প্রদান',
+            id: 'hard_interest_on_capital',
+            description: 'মূলধনের উপর {amount} টাকা সুদ ধার্য করা হয়েছে',
             journal: [
-                { account: 'Commission Expense', type: 'expense', side: 'debit' },
-                { account: 'Cash', type: 'asset', side: 'credit' }
+                { account: 'Interest Expense', side: 'debit' },
+                { account: 'Capital', side: 'credit' }
             ],
-            amountRange: [500, 8000]
+            amountRange: [1000, 10000]
         }];
 
         // ================================================================
-        // 6. BUSINESS STATE
+        // 7. BUSINESS STATE
         // ================================================================
 
         class Business {
@@ -2534,7 +2531,7 @@
         }
 
         // ================================================================
-        // 7. HELPERS
+        // 8. HELPERS
         // ================================================================
 
         function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -2544,10 +2541,6 @@
             const step = 500;
             const val = min + Math.random() * (max - min);
             return Math.round(val / step) * step;
-        }
-
-        function getRandomName() {
-            return pickRandom(BENGALI_PERSON_NAMES);
         }
 
         function getRuleExplanation(type, effect, name) {
@@ -2594,7 +2587,7 @@
         const COINS_PER_CORRECT = 2;
 
         // ================================================================
-        // 8. 50 BADGES
+        // 9. 50 BADGES
         // ================================================================
 
         const ALL_BADGES = [
@@ -2720,7 +2713,7 @@
         }
 
         // ================================================================
-        // 9. TOAST SYSTEM
+        // 10. TOAST SYSTEM
         // ================================================================
 
         function showToast(title, desc, icon, type) {
@@ -2761,7 +2754,7 @@
         }
 
         // ================================================================
-        // 10. FIRESTORE HELPERS
+        // 11. FIRESTORE HELPERS
         // ================================================================
 
         const USERS_COLLECTION = 'users';
@@ -2842,7 +2835,7 @@
         }
 
         // ================================================================
-        // 11. TRANSACTION GENERATOR (UPDATED for Medium/Hard)
+        // 12. TRANSACTION GENERATOR (UPGRADED with master account system)
         // ================================================================
 
         function generateTransactionFromTemplate(template, mode) {
@@ -2866,9 +2859,9 @@
             if (template.liabilityPool) liability = pickRandom(template.liabilityPool);
 
             let desc = template.description;
-            if (template.assetPool) desc = desc.replace(/{asset}/g, BENGALI_NAMES[asset] || asset);
-            if (template.expensePool) desc = desc.replace(/{expense}/g, BENGALI_NAMES[expense] || expense);
-            if (template.liabilityPool) desc = desc.replace(/{liability}/g, BENGALI_NAMES[liability] || liability);
+            if (template.assetPool) desc = desc.replace(/{asset}/g, getBengaliName(asset) || asset);
+            if (template.expensePool) desc = desc.replace(/{expense}/g, getBengaliName(expense) || expense);
+            if (template.liabilityPool) desc = desc.replace(/{liability}/g, getBengaliName(liability) || liability);
             if (template.useName) desc = desc.replace(/{name}/g, name);
 
             if (hasAmount && template.amountRange) {
@@ -2878,23 +2871,42 @@
                 desc = desc.replace(/\s+/g, ' ');
             }
 
+            // Build journal with actual account names and validate
             const journal = template.journal.map(entry => {
                 let acc = entry.account;
                 if (acc === '{asset}' && asset) acc = asset;
                 else if (acc === '{expense}' && expense) acc = expense;
                 else if (acc === '{liability}' && liability) acc = liability;
-                return { account: acc, type: entry.type, side: entry.side, amount: hasAmount ? amount : 0 };
+
+                // Verify account exists in classification
+                const info = getAccountInfo(acc);
+                if (!info) {
+                    // Fallback: treat as asset
+                    return { account: acc, side: entry.side, amount: hasAmount ? amount : 0, type: 'asset' };
+                }
+
+                return {
+                    account: acc,
+                    side: entry.side,
+                    amount: hasAmount ? amount : 0,
+                    type: info.category
+                };
             });
+
+            // Determine primary type from first journal entry
+            const primaryAccount = journal[0].account;
+            const primaryInfo = getAccountInfo(primaryAccount);
+            const primaryType = primaryInfo ? primaryInfo.category : 'asset';
 
             return {
                 templateId: template.id,
                 description: desc,
-                category: template.category,
+                category: primaryType,
                 amount: amount,
                 hasAmount: hasAmount,
                 journal: journal,
-                primaryAccount: journal[0].account,
-                primaryType: journal[0].type,
+                primaryAccount: primaryAccount,
+                primaryType: primaryType,
                 primarySide: journal[0].side,
                 personName: name || null,
             };
@@ -2909,8 +2921,20 @@
             if (!smartBias || Object.keys(smartBias).length === 0) return pickRandom(templates);
 
             const weights = templates.map(t => {
-                const cat = t.category;
-                return smartBias[cat] || 1;
+                // Determine category from template's journal
+                const firstAcc = t.journal[0].account;
+                // Try to get category from the account
+                let cat = 'asset';
+                const info = getAccountInfo(firstAcc);
+                if (info) cat = info.category;
+                // If first acc is a placeholder, try to guess
+                if (firstAcc === '{asset}' || firstAcc === '{expense}' || firstAcc === '{liability}') {
+                    if (t.assetPool) cat = 'asset';
+                    else if (t.expensePool) cat = 'expense';
+                    else if (t.liabilityPool) cat = 'liability';
+                }
+                const bias = smartBias[cat] || 1;
+                return bias;
             });
             const total = weights.reduce((a, b) => a + b, 0);
             let rand = Math.random() * total;
@@ -2922,7 +2946,7 @@
         }
 
         // ================================================================
-        // 12. SMART TRACKER
+        // 13. SMART TRACKER
         // ================================================================
 
         const SMART_TRACKER = {
@@ -2997,7 +3021,7 @@
         };
 
         // ================================================================
-        // 13. QUIZ STATE
+        // 14. QUIZ STATE
         // ================================================================
 
         let state = {
@@ -3050,7 +3074,7 @@
         };
 
         // ================================================================
-        // 14. UI HELPERS
+        // 15. UI HELPERS
         // ================================================================
 
         const $ = (sel) => document.querySelector(sel);
@@ -3062,7 +3086,7 @@
         }
 
         // ================================================================
-        // 15. RENDER FUNCTIONS
+        // 16. RENDER FUNCTIONS
         // ================================================================
 
         function renderBusinessMini() {
@@ -3130,7 +3154,7 @@
 
             if (transactionDisplay) transactionDisplay.innerHTML = `"${displayText}"`;
 
-            const bnName = BENGALI_NAMES[q.accountName] || q.accountName;
+            const bnName = getBengaliName(q.accountName) || q.accountName;
             if (accountName) accountName.textContent = bnName + ' হিসাব';
 
             $$('.quiz-opt').forEach(b => { b.disabled = false;
@@ -3197,11 +3221,12 @@
             const ruleBox = document.getElementById('fbRuleBox');
 
             if (entry) {
-                const rule = ACCOUNT_RULES[entry.type];
-                const label = rule ? rule.label : 'Account';
+                const info = getAccountInfo(entry.account);
+                const category = info ? info.category : 'Account';
+                const label = ACCOUNT_RULES[category] ? ACCOUNT_RULES[category].label : category;
                 const side = entry.side === 'debit' ? 'ডেবিট' : 'ক্রেডিট';
                 const sideLabel = entry.side === 'debit' ? 'Debit' : 'Credit';
-                const bnName = BENGALI_NAMES[entry.account] || entry.account;
+                const bnName = getBengaliName(entry.account) || entry.account;
                 const amtStr = trans && trans.amount && trans.hasAmount ? ` ${trans.amount.toLocaleString()} টাকা` : '';
                 const correctAns = q.correctAnswer === 'debit' ? 'Debit' : 'Credit';
 
@@ -3302,26 +3327,35 @@
             if (!trans || !trans.journal) return b;
             for (const entry of trans.journal) {
                 const acc = entry.account,
-                    type = entry.type,
                     amount = entry.amount || 0;
-                if (type === 'asset') { if (entry.side === 'debit') b.addAsset(acc, amount);
-                    else b.subAsset(acc, amount); } else if (type === 'liability') { if (entry.side === 'debit') b
-                        .subLiability(acc, amount);
-                    else b.addLiability(acc, amount); } else if (type === 'capital') { if (entry.side === 'debit') b
-                        .subCapital(amount);
-                    else b.addCapital(amount); } else if (type === 'revenue') { if (entry.side === 'debit') b.addRevenue(-
-                        amount);
-                    else b.addRevenue(amount); } else if (type === 'expense') { if (entry.side === 'debit') b.addExpense(
-                        amount);
-                    else b.addExpense(-amount); } else if (type === 'drawing') { if (entry.side === 'debit') b.subCapital(
-                        amount);
-                    else b.addCapital(amount); }
+                const info = getAccountInfo(acc);
+                const type = info ? info.category : 'asset';
+
+                if (type === 'asset') {
+                    if (entry.side === 'debit') b.addAsset(acc, amount);
+                    else b.subAsset(acc, amount);
+                } else if (type === 'liability') {
+                    if (entry.side === 'debit') b.subLiability(acc, amount);
+                    else b.addLiability(acc, amount);
+                } else if (type === 'capital') {
+                    if (entry.side === 'debit') b.subCapital(amount);
+                    else b.addCapital(amount);
+                } else if (type === 'revenue') {
+                    if (entry.side === 'debit') b.addRevenue(-amount);
+                    else b.addRevenue(amount);
+                } else if (type === 'expense') {
+                    if (entry.side === 'debit') b.addExpense(amount);
+                    else b.addExpense(-amount);
+                } else if (type === 'drawing') {
+                    if (entry.side === 'debit') b.subCapital(amount);
+                    else b.addCapital(amount);
+                }
             }
             return b;
         }
 
         // ================================================================
-        // 16. QUESTION GENERATOR
+        // 17. QUESTION GENERATOR
         // ================================================================
 
         function generateNextQuestionSet() {
@@ -3392,27 +3426,43 @@
             const template = pickTemplate(effectiveMode, smartBias);
             const transaction = generateTransactionFromTemplate(template, effectiveMode);
             const journal = transaction.journal;
+
+            // Pick a random entry from the journal for the MCQ
             const selectedEntry = pickRandom(journal);
 
-            const rule = ACCOUNT_RULES[selectedEntry.type];
+            // Determine the correct answer using the master account system
+            const accountName = selectedEntry.account;
+            const info = getAccountInfo(accountName);
+            const category = info ? info.category : 'asset';
+
+            // Determine effect: for the side in the journal, we need to know if this is an increase or decrease
+            // For debit side: assets/expenses increase, liabilities/capital/revenue decrease
+            // For credit side: assets/expenses decrease, liabilities/capital/revenue increase
             const isDebit = selectedEntry.side === 'debit';
             let effect;
-            if (selectedEntry.type === 'asset' || selectedEntry.type === 'expense' || selectedEntry.type === 'drawing') {
+            if (category === 'asset' || category === 'expense' || category === 'drawing') {
                 effect = isDebit ? 'increase' : 'decrease';
-            } else {
+            } else if (category === 'liability' || category === 'capital' || category === 'revenue') {
                 effect = isDebit ? 'decrease' : 'increase';
+            } else {
+                effect = isDebit ? 'increase' : 'decrease';
             }
+
+            // Get the correct answer from the rule
+            const rule = ACCOUNT_RULES[category];
             const correctAnswer = rule ? rule[effect] : 'debit';
             const answerLabel = correctAnswer === 'debit' ? 'Debit' : 'Credit';
-            const bnName = BENGALI_NAMES[selectedEntry.account] || selectedEntry.account;
+
+            // Build explanation
+            const bnName = getBengaliName(accountName) || accountName;
             const label = rule ? rule.label : 'Account';
             const effectLabel = effect === 'increase' ? 'increases' : 'decreases';
             const explanation = `"${bnName}" is an ${label}. When ${label} ${effectLabel}, it is ${answerLabel}.`;
             const ruleText = `${label} ${effectLabel} = ${answerLabel}`;
 
             const question = {
-                accountName: selectedEntry.account,
-                accountType: selectedEntry.type,
+                accountName: accountName,
+                accountType: category,
                 effect: effect,
                 correctAnswer: correctAnswer,
                 explanation: explanation,
@@ -3426,7 +3476,7 @@
         }
 
         // ================================================================
-        // 17. ANSWER HANDLING
+        // 18. ANSWER HANDLING
         // ================================================================
 
         async function handleAnswer(answer) {
@@ -3562,7 +3612,7 @@
         }
 
         // ================================================================
-        // 18. HINT SYSTEM
+        // 19. HINT SYSTEM
         // ================================================================
 
         function useHint() {
@@ -3602,7 +3652,7 @@
         }
 
         // ================================================================
-        // 19. HINT SHOP
+        // 20. HINT SHOP
         // ================================================================
 
         function buyHints(hints, price) {
@@ -3636,7 +3686,7 @@
         }
 
         // ================================================================
-        // 20. DASHBOARD
+        // 21. DASHBOARD
         // ================================================================
 
         function updateDashboard() {
@@ -3735,7 +3785,7 @@
         }
 
         // ================================================================
-        // 21. REVISION
+        // 22. REVISION
         // ================================================================
 
         async function updateRevisionBadges() {
@@ -3774,7 +3824,7 @@
                 container.innerHTML = docs.map(doc => {
                     const displayText = doc.displayText || 'Transaction';
                     const accountName = doc.accountDisplay || doc.questionAccount || 'Account';
-                    const bnName = BENGALI_NAMES[accountName] || accountName;
+                    const bnName = getBengaliName(accountName) || accountName;
                     const time = new Date(doc.timestamp).toLocaleString();
                     return `<div class="revision-item"><div><strong>"${displayText}"</strong><span class="meta">${bnName} হিসাব · ${time}</span></div><span class="badge-wrong">Wrong</span></div>`;
                 }).join('');
@@ -3815,7 +3865,7 @@
         }
 
         // ================================================================
-        // 22. LEADERBOARD
+        // 23. LEADERBOARD
         // ================================================================
 
         function setupLeaderboardListener() {
@@ -3919,7 +3969,7 @@
         }
 
         // ================================================================
-        // 23. USER DATA LISTENER
+        // 24. USER DATA LISTENER
         // ================================================================
 
         function setupUserDataListener(uid) {
@@ -3999,7 +4049,7 @@
         }
 
         // ================================================================
-        // 24. AUTH HANDLING
+        // 25. AUTH HANDLING
         // ================================================================
 
         function showLogin() {
@@ -4068,7 +4118,7 @@
         }
 
         // ================================================================
-        // 25. NAVIGATION
+        // 26. NAVIGATION
         // ================================================================
 
         function navigateTo(section) {
@@ -4090,7 +4140,7 @@
         }
 
         // ================================================================
-        // 26. INIT
+        // 27. INIT
         // ================================================================
 
         function init() {
@@ -4346,13 +4396,13 @@
                 if (indicator) indicator.style.display = 'inline-block';
             }
 
-            console.log('📘 Journal Entry · MCQ Learner (UPGRADED Medium/Hard)');
+            console.log('📘 Journal Entry · MCQ Learner (UPGRADED with Master Account System)');
             console.log('🏅 50 badges available!');
-            console.log('📊 Medium & Hard modes now use real exam-style transactions with names!');
+            console.log('📊 Each transaction generates a proper 1 Debit + 1 Credit journal entry!');
         }
 
         // ================================================================
-        // 27. START
+        // 28. START
         // ================================================================
 
         document.addEventListener('DOMContentLoaded', init);
