@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Learn Javeda · Accounting Basics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ===== RESET & VARIABLES (same as index.html) ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --bg-body: #eef2f7;
+            --glass-bg: rgba(255, 255, 255, 0.50);
+            --glass-border: rgba(255, 255, 255, 0.70);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            --glass-blur: 20px;
+            --text-primary: #1a1a2e;
+            --text-secondary: #3d3d5c;
+            --text-muted: #7a7a9e;
+            --accent-1: #5b4bd5;
+            --accent-2: #0fb88a;
+            --accent-3: #e6a800;
+            --accent-4: #d94f4f;
+            --gradient-1: linear-gradient(135deg, #5b4bd5, #2a7de1);
+            --gradient-2: linear-gradient(135deg, #0fb88a, #1ac0a0);
+            --gradient-3: linear-gradient(135deg, #e6a800, #f0b800);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --radius-xs: 8px;
+            --transition: 0.25s ease;
+            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --font-bn: 'Noto Sans Bengali', 'Bangla', 'SolaimanLipi', sans-serif;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--font);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px 16px 40px;
+            background-image: radial-gradient(circle at 10% 20%, rgba(91, 75, 213, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(15, 184, 138, 0.06) 0%, transparent 50%);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-body);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-1);
+            border-radius: 10px;
+        }
+
+        .app-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== GLASS CARD ===== */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+            padding: 24px 28px;
+        }
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.10);
+        }
+
+        /* ===== HEADER ===== */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+            padding: 16px 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-1);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.3px;
+        }
+        .logo-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.30);
+            color: var(--text-secondary);
+            font-family: var(--font);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.55);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+        .back-link i {
+            font-size: 14px;
+            color: var(--accent-1);
+        }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-wrap {
+            margin-bottom: 28px;
+            padding: 16px 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .progress-wrap .label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .progress-wrap .label i {
+            color: var(--accent-3);
+        }
+        .progress-track {
+            flex: 1;
+            min-width: 120px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.40);
+            border-radius: 30px;
+            overflow: hidden;
+        }
+        .progress-track .fill {
+            height: 100%;
+            border-radius: 30px;
+            background: var(--gradient-1);
+            width: 0%;
+            transition: width 0.6s ease;
+        }
+        .progress-wrap .pct {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 44px;
+            text-align: right;
+        }
+
+        /* ===== TOC ===== */
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+        .toc-item {
+            padding: 12px 16px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .toc-item:hover {
+            background: rgba(255, 255, 255, 0.55);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--glass-shadow);
+        }
+        .toc-item .num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .toc-item .num.gold {
+            background: var(--gradient-3);
+            color: #1a1a2e;
+        }
+        .toc-item .num.green {
+            background: var(--gradient-2);
+            color: #fff;
+        }
+        .toc-item .num.red {
+            background: var(--accent-4);
+            color: #fff;
+        }
+        .toc-item .num.teal {
+            background: #0fb8b0;
+            color: #fff;
+        }
+        .toc-item .num.purple {
+            background: var(--gradient-1);
+            color: #fff;
+        }
+
+        /* ===== CHAPTER CARD ===== */
+        .chapter {
+            margin-bottom: 24px;
+            scroll-margin-top: 20px;
+        }
+        .chapter .ch-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            padding: 16px 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            user-select: none;
+        }
+        .chapter .ch-header:hover {
+            background: rgba(255, 255, 255, 0.55);
+            border-color: rgba(255, 255, 255, 0.85);
+        }
+        .chapter .ch-header .ch-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            color: #fff;
+        }
+        .chapter .ch-header .ch-icon.purple {
+            background: var(--gradient-1);
+        }
+        .chapter .ch-header .ch-icon.green {
+            background: var(--gradient-2);
+        }
+        .chapter .ch-header .ch-icon.gold {
+            background: var(--gradient-3);
+            color: #1a1a2e;
+        }
+        .chapter .ch-header .ch-icon.red {
+            background: var(--accent-4);
+        }
+        .chapter .ch-header .ch-icon.teal {
+            background: #0fb8b0;
+        }
+        .chapter .ch-header .ch-icon.blue {
+            background: #2a7de1;
+        }
+        .chapter .ch-header .ch-title {
+            flex: 1;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .chapter .ch-header .ch-toggle {
+            font-size: 18px;
+            color: var(--text-muted);
+            transition: transform 0.3s ease;
+        }
+        .chapter .ch-header .ch-toggle.open {
+            transform: rotate(180deg);
+        }
+        .chapter .ch-body {
+            padding: 20px 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-top: none;
+            border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+            display: none;
+            animation: fadeUp 0.3s ease;
+        }
+        .chapter .ch-body.open {
+            display: block;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== TYPOGRAPHY INSIDE CHAPTERS ===== */
+        .ch-body h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 16px 0 8px;
+        }
+        .ch-body h3:first-child {
+            margin-top: 0;
+        }
+        .ch-body h4 {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin: 14px 0 6px;
+        }
+        .ch-body p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+        .ch-body p strong {
+            color: var(--text-primary);
+        }
+        .ch-body ul,
+        .ch-body ol {
+            padding-left: 24px;
+            margin-bottom: 12px;
+        }
+        .ch-body li {
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .ch-body li strong {
+            color: var(--text-primary);
+        }
+
+        /* ===== RULE CARDS ===== */
+        .rule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 12px 0 16px;
+        }
+        .rule-card {
+            padding: 16px 18px;
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
+            text-align: center;
+            transition: var(--transition);
+        }
+        .rule-card:hover {
+            background: rgba(255, 255, 255, 0.55);
+            transform: translateY(-2px);
+        }
+        .rule-card .r-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .rule-card .r-rule {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 6px 0 2px;
+        }
+        .rule-card .r-rule.debit {
+            color: var(--accent-2);
+        }
+        .rule-card .r-rule.credit {
+            color: var(--accent-4);
+        }
+        .rule-card .r-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* ===== ADERC SHORTCUT ===== */
+        .aderc-box {
+            background: rgba(255, 215, 0, 0.12);
+            border: 2px solid var(--accent-3);
+            border-radius: var(--radius-sm);
+            padding: 20px 24px;
+            margin: 16px 0;
+            text-align: center;
+        }
+        .aderc-box .big {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            color: var(--text-primary);
+        }
+        .aderc-box .big span.a {
+            color: var(--accent-1);
+        }
+        .aderc-box .big span.d {
+            color: var(--accent-2);
+        }
+        .aderc-box .big span.e {
+            color: var(--accent-4);
+        }
+        .aderc-box .big span.r {
+            color: var(--accent-3);
+        }
+        .aderc-box .big span.c {
+            color: var(--accent-1);
+        }
+        .aderc-box .sub {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        /* ===== EXAMPLE BOX ===== */
+        .example-box {
+            background: rgba(91, 75, 213, 0.06);
+            border-left: 4px solid var(--accent-1);
+            border-radius: var(--radius-xs);
+            padding: 16px 20px;
+            margin: 12px 0;
+        }
+        .example-box .ex-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+        .example-box .ex-detail {
+            margin-top: 6px;
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+        .example-box .ex-detail .debit-text {
+            color: var(--accent-2);
+            font-weight: 600;
+        }
+        .example-box .ex-detail .credit-text {
+            color: var(--accent-4);
+            font-weight: 600;
+        }
+        .example-box .ex-answer {
+            margin-top: 8px;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.40);
+            border-radius: var(--radius-xs);
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .example-box .ex-answer .debit-text {
+            color: var(--accent-2);
+        }
+        .example-box .ex-answer .credit-text {
+            color: var(--accent-4);
+        }
+
+        /* ===== TRICK CARDS ===== */
+        .trick-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            margin: 12px 0 16px;
+        }
+        .trick-card {
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.30);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
+            transition: var(--transition);
+        }
+        .trick-card:hover {
+            background: rgba(255, 255, 255, 0.50);
+            transform: translateY(-2px);
+        }
+        .trick-card .t-phrase {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 15px;
+        }
+        .trick-card .t-meaning {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .trick-card .t-result {
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        .trick-card .t-result.debit {
+            color: var(--accent-2);
+        }
+        .trick-card .t-result.credit {
+            color: var(--accent-4);
+        }
+
+        /* ===== STEPS ===== */
+        .steps {
+            counter-reset: step;
+            padding-left: 0;
+            list-style: none;
+            margin: 12px 0 16px;
+        }
+        .steps li {
+            counter-increment: step;
+            padding: 12px 16px 12px 56px;
+            position: relative;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: var(--radius-xs);
+            margin-bottom: 8px;
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+            transition: var(--transition);
+        }
+        .steps li:hover {
+            background: rgba(255, 255, 255, 0.45);
+        }
+        .steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        .steps li strong {
+            color: var(--text-primary);
+        }
+
+        /* ===== FINAL GOAL ===== */
+        .goal-box {
+            background: rgba(15, 184, 138, 0.08);
+            border: 2px solid var(--accent-2);
+            border-radius: var(--radius-sm);
+            padding: 20px 24px;
+            margin: 16px 0;
+            text-align: center;
+        }
+        .goal-box .goal-icon {
+            font-size: 36px;
+            color: var(--accent-2);
+            margin-bottom: 8px;
+        }
+        .goal-box h3 {
+            margin-top: 0 !important;
+        }
+        .goal-box ul {
+            display: inline-block;
+            text-align: left;
+            padding-left: 24px;
+            margin: 8px 0 0;
+        }
+        .goal-box ul li {
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        /* ===== FEATURE GRID (How to Work) ===== */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+            margin: 12px 0 16px;
+        }
+        .feature-card {
+            background: rgba(255, 255, 255, 0.30);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 18px 20px;
+            transition: var(--transition);
+        }
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.50);
+            transform: translateY(-2px);
+            box-shadow: var(--glass-shadow);
+        }
+        .feature-card .f-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+            display: block;
+            color: var(--accent-1);
+        }
+        .feature-card .f-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+        .feature-card .f-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            line-height: 1.6;
+        }
+        .feature-card .f-tag {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .feature-card .f-tag.gold {
+            background: rgba(230, 168, 0, 0.15);
+            color: #b88900;
+        }
+        .feature-card .f-tag.green {
+            background: rgba(15, 184, 138, 0.15);
+            color: var(--accent-2);
+        }
+        .feature-card .f-tag.purple {
+            background: rgba(91, 75, 213, 0.12);
+            color: var(--accent-1);
+        }
+        .feature-card .f-tag.red {
+            background: rgba(217, 79, 79, 0.12);
+            color: var(--accent-4);
+        }
+
+        /* ===== BADGE TABLE ===== */
+        .badge-table-wrap {
+            overflow-x: auto;
+            margin: 12px 0 16px;
+        }
+        .badge-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.20);
+            border-radius: var(--radius-xs);
+            overflow: hidden;
+        }
+        .badge-table th {
+            background: rgba(91, 75, 213, 0.10);
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .badge-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            color: var(--text-secondary);
+        }
+        .badge-table tr:hover td {
+            background: rgba(255, 255, 255, 0.20);
+        }
+        .badge-table .b-icon {
+            font-size: 20px;
+            margin-right: 6px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px 10px 30px;
+            }
+            .app-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                padding: 16px;
+            }
+            .logo-area {
+                justify-content: center;
+            }
+            .back-link {
+                justify-content: center;
+            }
+            .glass-card {
+                padding: 18px 14px;
+            }
+            .chapter .ch-header {
+                padding: 14px 16px;
+            }
+            .chapter .ch-header .ch-title {
+                font-size: 16px;
+            }
+            .chapter .ch-body {
+                padding: 16px 14px;
+            }
+            .ch-body h3 {
+                font-size: 18px;
+            }
+            .ch-body h4 {
+                font-size: 16px;
+            }
+            .ch-body p,
+            .ch-body li {
+                font-size: 14px;
+            }
+            .rule-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .trick-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .toc-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+            .aderc-box .big {
+                font-size: 22px;
+                letter-spacing: 2px;
+            }
+            .steps li {
+                padding: 10px 12px 10px 48px;
+                font-size: 14px;
+            }
+            .steps li::before {
+                width: 26px;
+                height: 26px;
+                font-size: 12px;
+                left: 10px;
+            }
+            .progress-wrap {
+                padding: 12px 16px;
+            }
+            .progress-wrap .label {
+                font-size: 13px;
+            }
+            .badge-table {
+                font-size: 12px;
+            }
+            .badge-table th,
+            .badge-table td {
+                padding: 6px 10px;
+            }
+        }
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 14px 10px;
+            }
+            .chapter .ch-header .ch-title {
+                font-size: 14px;
+            }
+            .chapter .ch-body {
+                padding: 12px 10px;
+            }
+            .rule-grid {
+                grid-template-columns: 1fr;
+            }
+            .trick-grid {
+                grid-template-columns: 1fr;
+            }
+            .toc-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .aderc-box .big {
+                font-size: 18px;
+                letter-spacing: 1px;
+            }
+            .aderc-box {
+                padding: 14px 16px;
+            }
+            .example-box {
+                padding: 12px 14px;
+            }
+            .goal-box {
+                padding: 14px 16px;
+            }
+            .ch-body h3 {
+                font-size: 16px;
+            }
+            .feature-card {
+                padding: 14px 16px;
+            }
+        }
+
+        /* ===== UTILITY ===== */
+        .text-center {
+            text-align: center;
+        }
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mt-16 {
+            margin-top: 16px;
+        }
+        .mb-8 {
+            margin-bottom: 8px;
+        }
+        .mb-16 {
+            margin-bottom: 16px;
+        }
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .tag {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .tag.debit {
+            background: rgba(15, 184, 138, 0.15);
+            color: var(--accent-2);
+        }
+        .tag.credit {
+            background: rgba(217, 79, 79, 0.15);
+            color: var(--accent-4);
+        }
+        .tag.purple {
+            background: rgba(91, 75, 213, 0.12);
+            color: var(--accent-1);
+        }
+        .tag.gold {
+            background: rgba(230, 168, 0, 0.15);
+            color: #b88900;
+        }
+        .tag.green {
+            background: rgba(15, 184, 138, 0.15);
+            color: var(--accent-2);
+        }
+        .tag.red {
+            background: rgba(217, 79, 79, 0.12);
+            color: var(--accent-4);
+        }
+        .icon-circle {
+            display: inline-block;
+            font-size: 14px;
+            margin-right: 4px;
+        }
+        .icon-circle.green {
+            color: var(--accent-2);
+        }
+        .icon-circle.red {
+            color: var(--accent-4);
+        }
+        .icon-circle.gold {
+            color: var(--accent-3);
+        }
+        .icon-circle.purple {
+            color: var(--accent-1);
+        }
+        .icon-circle.blue {
+            color: #2a7de1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ===== HEADER ===== -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon"><i class="fas fa-book-open"></i></div>
+                <div>
+                    <div class="logo-text">Learn Javeda</div>
+                    <div class="logo-sub">Accounting Basics</div>
+                </div>
+            </div>
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Quiz
+            </a>
+        </header>
+
+        <!-- ===== PROGRESS ===== -->
+        <div class="progress-wrap" id="progressWrap">
+            <span class="label"><i class="fas fa-graduation-cap"></i> Progress</span>
+            <div class="progress-track">
+                <div class="fill" id="progressFill" style="width:0%;"></div>
+            </div>
+            <span class="pct" id="progressPct">0%</span>
+        </div>
+
+        <!-- ===== TABLE OF CONTENTS ===== -->
+        <div class="toc-grid" id="tocGrid">
+            <a href="#ch-goal" class="toc-item"><span class="num gold"><i class="fas fa-bullseye"></i></span> Goal</a>
+            <a href="#ch-1" class="toc-item"><span class="num">1</span> জাভেদা কী?</a>
+            <a href="#ch-2" class="toc-item"><span class="num green">2</span> শ্রেণিবিভাগ</a>
+            <a href="#ch-3" class="toc-item"><span class="num gold">3</span> স্বর্ণসূত্র</a>
+            <a href="#ch-4" class="toc-item"><span class="num">4</span> ৪ ধাপ</a>
+            <a href="#ch-examples" class="toc-item"><span class="num red"><i class="fas fa-book"></i></span> উদাহরণ</a>
+            <a href="#ch-tricks" class="toc-item"><span class="num teal"><i class="fas fa-bolt"></i></span> Tricks</a>
+            <a href="#ch-practice" class="toc-item"><span class="num green">6</span> Practice</a>
+            <a href="#ch-final" class="toc-item"><span class="num gold"><i class="fas fa-flag-checkered"></i></span> Final Goal</a>
+            <a href="#ch-howto" class="toc-item"><span class="num purple"><i class="fas fa-question-circle"></i></span> How to Work</a>
+        </div>
+
+        <!-- ============================================================
+        CHAPTER: GOAL
+        ============================================================ -->
+        <div class="chapter" id="ch-goal">
+            <div class="ch-header" onclick="toggleChapter(this)">
+                <div class="ch-icon gold"><i class="fas fa-bullseye"></i></div>
+                <span class="ch-title"><i class="fas fa-bullseye" style="color:var(--accent-3);margin-right:6px;"></i> Learning Goal</span>
+                <span class="ch-toggle"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="ch-body open">
+                <p>শিক্ষার্থী যেন:</p>
+                <ul>
+                    <li><strong>জাভেদা</strong> কী তা বুঝতে পারে</li>
+                    <li><strong>হিসাবের শ্রেণিবিভাগ</strong> শিখতে পারে</li>
+                    <li><strong>ডেবিট ও ক্রেডিটের</strong> নিয়ম শিখতে পারে</li>
+                    <li>যেকোনো <strong>লেনদেন বিশ্লেষণ</strong> করতে পারে</li>
+                    <li>নিজে <strong>জাভেদা নির্ধারণ</strong> করতে পারে</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        CHAPTER 1: জাভেদা কী?
+        ============================================================ -->
+        <div class="chapter" id="ch-1">
+            <div class="ch-header" onclick="toggleChapter(this)">
+                <div class="ch-icon purple"><i class="fas fa-pen-fancy"></i></div>
+                <span class="ch-title">Chapter 1: জাভেদা কী?</span>
+                <span class="ch-toggle"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="ch-body">
+                <p><strong>জাভেদা</strong> হলো ব্যবসায়ের প্রতিটি লেনদেন <strong>প্রথমবার লিপিবদ্ধ</strong> করার প্রক্রিয়া।</p>
+                <p>প্রতিটি লেনদেনে <strong>কমপক্ষে দুটি</strong> হিসাব জড়িত থাকে:</p>
+                <ul>
+                    <li>একটি <strong class="debit-text">ডেবিট</strong></li>
+                    <li>একটি <strong class="credit-text">ক্রেডিট</strong></li>
+                </ul>
+
+                <div class="example-box">
+                    <div class="ex-title"><i class="fas fa-thumbtack" style="color:var(--accent-1);margin-right:6px;"></i> উদাহরণ:</div>
+                    <div class="ex-detail">
+                        <strong>নগদে কম্পিউটার ক্রয় করা হয়েছে।</strong>
+                    </div>
+                    <div class="ex-answer">
+                        <span class="debit-text"><i class="fas fa-arrow-right"></i> ডেবিট:</span> কম্পিউটার হিসাব &nbsp;|&nbsp;
+                        <span class="credit-text"><i class="fas fa-arrow-left"></i> ক্রেডিট:</span> নগদান হিসাব
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        CHAPTER 2: হিসাবের শ্রেণিবিভাগ
+        ============================================================ -->
+        <div class="chapter" id="ch-2">
+            <div class="ch-header" onclick="toggleChapter(this)">
+                <div class="ch-icon green"><i class="fas fa-layer-group"></i></div>
+                <span class="ch-title">Chapter 2: হিসাবের শ্রেণিবিভাগ</span>
+                <span class="ch-toggle"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="ch-body">
+                <p>সব হিসাবকে <strong>৫টি প্রধান শ্রেণিতে</strong> ভাগ করা যায়।</p>
+
+                <h4><i class="fas fa-circle icon-circle green"></i> Asset (সম্পদ)</h4>
+                <p>উদাহরণ: নগদান, ব্যাংক, দেনাদার, কম্পিউটার, আসবাবপত্র</p>
+
+                <h4><i class="fas fa-circle icon-circle red"></i> Liability (দায়)</h4>
+                <p>উদাহরণ: পাওনাদার, প্রদেয় হিসাব, ব্যাংক ঋণ</p>
+
+                <h4><i class="fas fa-circle icon-circle gold"></i> Capital (মূলধন)</h4>
+                <p>উদাহরণ: মূলধন হিসাব</p>
+
+                <h4><i class="fas fa-circle icon-circle purple"></i> Revenue (আয়)</h4>
+                <p>উদাহরণ: বিক্রয়, কমিশন প্রাপ্তি, সুদ প্রাপ্তি, সেবা আয়</p>
+
+                <h4><i class="fas fa-circle icon-circle blue"></i> Expense (ব্যয়)</h4>
+                <p>উদাহরণ: বেতন, ভাড়া, বিজ্ঞাপন, বীমা, খাজনা</p>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        CHAPTER 3: স্বর্ণসূত্র
+        ============================================================ -->
+        <div class="chapter" id="ch-3">
+            <div class="ch-header" onclick="toggleChapter(this)">
+                <div class="ch-icon gold"><i class="fas fa-crown"></i></div>
+                <span class="ch-title">Chapter 3: হিসাবের স্বর্ণসূত্র</span>
+                <span class="ch-toggle"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="ch-body">
+                <div class="rule-grid">
+                    <div class="rule-card">
+                        <div class="r-label"><i class="fas fa-circle icon-circle green"></i> Asset (সম্পদ)</div>
+                        <div class="r-rule debit">বৃদ্ধি → Debit</div>
+                        <div class="r-rule credit">হ্রাস → Credit</div>
+                    </div>
+                    <div class="rule-card">
+                        <div class="r-label"><i class="fas fa-circle icon-circle red"></i> Liability (দায়)</div>
+                        <div class="r-rule credit">বৃদ্ধি → Credit</div>
+                        <div class="r-rule debit">হ্রাস → Debit</div>
+                    </div>
+                    <div class="rule-card">
+                        <div class="r-label"><i class="fas fa-circle icon-circle gold"></i> Capital (মূলধন)</div>
+                        <div class="r-rule credit">বৃদ্ধি → Credit</div>
+                        <div class="r-rule debit">হ্রাস → Debit</div>
+                    </div>
+                    <div class="rule-card">
+                        <div class="r-label"><i class="fas fa-circle icon-circle purple"></i> Revenue (আয়)</div>
+                        <div class="r-rule credit">বৃদ্ধি → Credit</div>
+                        <div class="r-rule debit">হ্রাস → Debit</div>
+                    </div>
+                    <div class="rule-card">
+                        <div class="r-label"><i class="fas fa-circle icon-circle blue"></i> Expense (ব্যয়)</div>
+                        <div class="r-rule debit">বৃদ্ধি → Debit</div>
+                        <div class="r-rule credit">হ্রাস → Credit</div>
+                    </div>
+                </div>
+
+                <!-- ADERC Shortcut -->
+                <div class="aderc-box">
+                    <div class="big">
+                        <span class="a">A</span><span class="d">D</span><span class="e">E</span><span class="r">R</span><span class="c">C</span>
+                    </div>
+                    <div class="sub">
+                        <strong>A</strong>sset · <strong>D</strong>ebit Increase · <strong>E</strong>xpense<br />
+                        <strong>R</strong>evenue · <strong>C</strong>redit Increase
+                    </div>
+                    <div style="margin-top:10px;font-size:14px;color:var(--text-secondary);">
+                        <span class="tag debit">Asset &amp; Expense ↑ → Debit</span>
+                        <span class="tag credit">Liability, Capital &amp; Revenue ↑ → Credit</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        CHAPTER 4: ৪ ধাপ
+        ============================================================ -->
+        <div class="chapter" id="ch-4">
+            <div class="ch-header" onclick="toggleChapter(this)">
+                <div class="ch-icon purple"><i class="fas fa-list-ol"></i></div>
+                <span class="ch-title">Chapter 4: জাভেদা নির্ধারণের ৪ ধাপ</span>
+                <span class="ch-toggle"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="ch-body">
+                <ol class="steps">
+                    <li><strong>লেনদেন পড়ো</strong> — ভালো করে বুঝো কী ঘটেছে।</li>
+                    <li><strong>কোন কোন হিসাব জড়িত</strong> তা খুঁজে বের করো।</li>
+                    <li>প্রতিটি হিসাব <strong>কোন শ্রেণির</strong> তা নির্ধারণ করো।</li>
+                    <li>হিসাব <strong>বৃদ্ধি নাকি হ্রাস</strong> পেয়েছে তা দেখো।<br />
+                        তারপর <strong>স্বর্ণসূত্র</strong> প্রয়োগ করো।</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        CHAPTER: EXAMPLES
+        ============================================================ -->
+        <div class="chapter" id="ch-examples">
+            <div class="ch-header" onclick="toggleChapter(this)">
+                <div class="ch-icon red"><i class="fas fa-pencil-alt"></i></div>
+                <span class="ch-title"><i class="fas fa-book" style="color:var(--accent-3);margin-right:6px;"></i> উদাহরণ — Practice Examples</span>
+                <span class="ch-toggle"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="ch-body">
+
+                <!-- Example 1 -->
+                <div class="example-box">
+                    <div class="ex-title"><i class="fas fa-star" style="color:var(--accent-3);margin-right:6px;"></i> Example 1</div>
+                    <div class="ex-detail">
+                        <strong>নগদে কম্পিউটার ক্রয় করা হয়েছে।</strong><br />
+                        <span style="color:var(--text-muted);font-size:14px;">
+                            জড়িত হিসাব: কম্পিউটার · নগদান
+                        </span><br />
+                        <span style="color:var(--text-muted);font-size:14px;">
+                            কম্পিউটার = Asset বৃদ্ধি · নগদান = Asset হ্রাস
+                        </span>
+                    </div>
+                    <div class="ex-answer">
+                        <span class="debit-text">কম্পিউটার → Debit</span> &nbsp;|&nbsp;
+                        <span class="credit-text">নগদান → Credit</span>
+                    </div>
+                </div>
+
+                <!-- Example 2 -->
+                <div class="example-box">
+                    <div class="ex-title"><i class="fas fa-star" style="color:var(--accent-3);margin-right:6px;"></i> Example 2</div>
+                    <div class="ex-detail">
+                        <strong>কর্মচারীর বেতন প্রদান করা হয়েছে।</strong><br />
+                        <span style="color:var(--text-muted);font-size:14px;">
+                            জড়িত হিসাব: বেতন · নগদান
+                        </span><br />
+                        <span style="color:var(--text-muted);font-size:14px;">
+                            বেতন = Expense বৃদ্ধি · নগদান = Asset হ্রাস
+                        </span>
+                    </div>
+                    <div class="ex-answer">
+                        <span class="debit-text">বেতন → Debit</span> &nbsp;|&nbsp;
+                        <span class="credit-text">নগদান → Credit</span>
+                    </div>
+                </div>
+
+                <!-- Example 3 -->
+                <div class="example-box">
+                    <div class="ex-title"><i class="fas fa-star" style="color:var(--accent-3);margin-right:6px;"></i> Example 3</div>
+                    <div class="ex-detail">
+                        <strong>ধারে মাল বিক্রয় করা হয়েছে।</strong><br />
+                        <span style="color:var(--text-muted);font-size:14px;">
+                            জড়িত হিসাব: দেনাদার · বিক্রয়
+                        </span><br />
+                        <span style="color:var(--text-muted);font-size:14px;">
+                            দেনাদার = Asset বৃদ্ধি · বিক্রয় = Revenue বৃদ্ধি
+                        </span>
+                    </div>
+                    <div class="ex-answer">
+                        <span class="debit-text">দেনাদার → Debit</span> &nbsp;|&nbsp;
+                        <span class="credit-text">বিক্রয় → Credit</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ============================================================
+        CHAPTER 5: TRICKS
+        ============================================================ -->
+        <div class="chapter" id="ch-tricks">
+            <div class="ch-header" onclick="toggleChapter(this)">
+                <div class="ch-icon teal"><i class="fas fa-lightbulb"></i></div>
+                <span class="ch-title"><i class="fas fa-bolt" style="color:var(--accent-3);margin-right:6px;"></i> Chapter 5: Common Tricks</span>
+                <span class="ch-toggle"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="ch-body">
+                <div class="trick-grid">
+                    <div class="trick-card">
+                        <div class="t-phrase"><i class="fas fa-hand-holding-usd" style="color:var(--accent-1);margin-right:6px;"></i> "প্রদান করা হয়েছে"</div>
+                        <div class="t-meaning">Cash / Bank কমে</div>
+                        <div class="t-result credit">Cash / Bank → Credit</div>
+                    </div>
+                    <div class="trick-card">
+                        <div class="t-phrase"><i class="fas fa-hand-holding-heart" style="color:var(--accent-2);margin-right:6px;"></i> "পাওয়া গেছে"</div>
+                        <div class="t-meaning">Cash / Bank বাড়ে</div>
+                        <div class="t-result debit">Cash / Bank → Debit</div>
+                    </div>
+                    <div class="trick-card">
+                        <div class="t-phrase"><i class="fas fa-shopping-cart" style="color:var(--accent-3);margin-right:6px;"></i> "ক্রয় করা হয়েছে"</div>
+                        <div class="t-meaning">Asset / Purchase বাড়ে</div>
+                        <div class="t-result debit">Asset / Purchase → Debit</div>
+                    </div>
+                    <div class="trick-card">
+                        <div class="t-phrase"><i class="fas fa-tag" style="color:var(--accent-4);margin-right:6px;"></i> "বিক্রয় করা হয়েছে"</div>
+                        <div class="t-meaning">Revenue বাড়ে</div>
+                        <div class="t-result credit">Sales → Credit</div>
+                    </div>
+                    <div class="trick-card">
+                        <div class="t-phrase"><i class="fas fa-gavel" style="color:var(--accent-1);margin-right:6px;"></i> "ধার্য করা হয়েছে"</div>
+                        <div class="t-meaning">প্রসঙ্গ বুঝতে হবে</div>
+                        <div class="t-result" style="color:var(--text-secondary);font-weight:400;">
+                            অবচয় · কুঋণ · ব্যাংক চার্জ → Expense Debit
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        CHAPTER 6: PRACTICE
+        ============================================================ -->
+        <div class="chapter" id="ch-practice">
+            <div class="ch-header" onclick="toggleChapter(this)">
+                <div class="ch-icon green"><i class="fas fa-question-circle"></i></div>
+                <span class="ch-title">Chapter 6: Practice Mode</span>
+                <span class="ch-toggle"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="ch-body">
+                <p>প্রতিটি অধ্যায়ের শেষে <strong>MCQ</strong> থাকবে।</p>
+                <p>
+                    <span class="tag green" style="margin-right:4px;"><i class="fas fa-seedling"></i> সহজ</span>
+                    <span class="tag gold" style="margin-right:4px;"><i class="fas fa-chart-simple"></i> মাঝারি</span>
+                    <span class="tag red"><i class="fas fa-bolt"></i> কঠিন</span>
+                </p>
+                <p style="margin-top:8px;">
+                    এই ধাপে User বাস্তব লেনদেন বিশ্লেষণ করে <strong>Debit</strong> অথবা <strong>Credit</strong> নির্ধারণ করবে।
+                </p>
+                <div style="margin-top:12px;text-align:center;">
+                    <a href="index.html" class="back-link" style="display:inline-flex;border:2px solid var(--accent-1);background:rgba(91,75,213,0.06);">
+                        <i class="fas fa-play"></i> Go to Quiz
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        CHAPTER: FINAL GOAL
+        ============================================================ -->
+        <div class="chapter" id="ch-final">
+            <div class="ch-header" onclick="toggleChapter(this)">
+                <div class="ch-icon gold"><i class="fas fa-flag-checkered"></i></div>
+                <span class="ch-title"><i class="fas fa-flag-checkered" style="color:var(--accent-3);margin-right:6px;"></i> Final Goal</span>
+                <span class="ch-toggle"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="ch-body">
+                <div class="goal-box">
+                    <div class="goal-icon"><i class="fas fa-star"></i></div>
+                    <h3 style="margin-top:0 !important;">শিক্ষার্থী যখন:</h3>
+                    <ul>
+                        <li>হিসাবের <strong>শ্রেণি চিনতে</strong> পারবে</li>
+                        <li><strong>বৃদ্ধি / হ্রাস</strong> বুঝতে পারবে</li>
+                        <li><strong>স্বর্ণসূত্র</strong> প্রয়োগ করতে পারবে</li>
+                    </ul>
+                    <p style="margin-top:12px;font-weight:600;color:var(--text-primary);">
+                        তখন সে প্রায় যেকোনো সাধারণ জাভেদা সঠিকভাবে সমাধান করতে পারবে। <i class="fas fa-rocket" style="color:var(--accent-3);"></i>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        NEW CHAPTER: HOW TO WORK – Full Feature Guide
+        ============================================================ -->
+        <div class="chapter" id="ch-howto">
+            <div class="ch-header" onclick="toggleChapter(this)">
+                <div class="ch-icon blue"><i class="fas fa-question-circle"></i></div>
+                <span class="ch-title"><i class="fas fa-question-circle" style="color:var(--accent-1);margin-right:6px;"></i> How to Work — Full Feature Guide</span>
+                <span class="ch-toggle"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="ch-body">
+
+                <p style="font-size:16px;font-weight:500;color:var(--text-primary);">
+                    <i class="fas fa-rocket" style="color:var(--accent-3);"></i>
+                    Welcome to the <strong>Journal Entry · MCQ Learner</strong> website! 
+                    This guide explains every feature and how to use them effectively.
+                </p>
+
+                <!-- ===== FEATURE GRID ===== -->
+                <h3><i class="fas fa-list-check" style="color:var(--accent-1);margin-right:8px;"></i> Feature Overview</h3>
+                <div class="feature-grid">
+
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-pen"></i></span>
+                        <div class="f-title">Quiz Mode</div>
+                        <div class="f-desc">
+                            প্রতিটি লেনদেন দেখানো হয়। আপনাকে বলতে হবে কোন হিসাব <strong>Debit</strong> আর কোনটি <strong>Credit</strong>।
+                            <span class="f-tag green">Core</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-chart-bar"></i></span>
+                        <div class="f-title">Difficulty Levels</div>
+                        <div class="f-desc">
+                            <span class="tag green"><i class="fas fa-seedling"></i> Easy</span> — সরল লেনদেন (কোনো টাকার পরিমাণ নেই)<br>
+                            <span class="tag gold"><i class="fas fa-chart-simple"></i> Medium</span> — টাকার পরিমাণ সহ বাস্তব লেনদেন<br>
+                            <span class="tag red"><i class="fas fa-bolt"></i> Hard</span> — জটিল সমন্বয় ও উন্নত লেনদেন
+                            <span class="f-tag gold">Adaptive</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-brain"></i></span>
+                        <div class="f-title">Smart Mode</div>
+                        <div class="f-desc">
+                            আপনার পারফরম্যান্স অনুযায়ী difficulty নিজেই পরিবর্তন করে।<br>
+                            <strong>5টি সঠিক</strong> → difficulty বাড়ে &nbsp;|&nbsp; <strong>3টি ভুল</strong> → difficulty কমে।
+                            <span class="f-tag purple">AI-Driven</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-sync"></i></span>
+                        <div class="f-title">Revision Mode</div>
+                        <div class="f-desc">
+                            আপনার <strong>ভুল উত্তরগুলো</strong> সংরক্ষণ করা হয়। Revision Mode চালু করলে শুধু সেগুলোই আবার অনুশীলন করতে পারবেন।
+                            <span class="f-tag red">Weakness Fix</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-lightbulb"></i></span>
+                        <div class="f-title">Hint System</div>
+                        <div class="f-desc">
+                            প্রশ্নের উত্তর দেওয়ার আগে <strong>Hint</strong> ব্যবহার করে নিয়ম দেখতে পারেন।<br>
+                            প্রতিটি Hint খরচ হয় <strong>1টি</strong> (Shop থেকে কিনতে হবে)।
+                            <span class="f-tag gold">Helper</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-store"></i></span>
+                        <div class="f-title">Hint Shop</div>
+                        <div class="f-desc">
+                            <strong>Coins</strong> দিয়ে Hints কিনতে পারেন।<br>
+                            Single (6 coins), Starter (48 coins), Pro (94 coins), Master (230 coins) — বিভিন্ন প্যাক উপলব্ধ।
+                            <span class="f-tag purple">Store</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-medal"></i></span>
+                        <div class="f-title">Badges (50টি)</div>
+                        <div class="f-desc">
+                            বিভিন্ন মাইলস্টোনে <strong>Badge</strong> আনলক হয়। যেমন: প্রথম সঠিক উত্তর, ১০০টি প্রশ্ন, ৫টি স্ট্রীক, ৯৫%+ Accuracy ইত্যাদি।
+                            <span class="f-tag gold">Achievements</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-trophy"></i></span>
+                        <div class="f-title">Leaderboard</div>
+                        <div class="f-desc">
+                            <strong>XP, Points, Accuracy, Badges</strong> — এই ৪টি মেট্রিকে শীর্ষ ব্যবহারকারীদের দেখা যায়।<br>
+                            <span class="tag purple"><i class="fas fa-filter"></i> Filter</span> দিয়ে যেকোনো একটি অনুযায়ী সাজানো যায়।
+                            <span class="f-tag red">Competition</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-user"></i></span>
+                        <div class="f-title">Guest vs. Login</div>
+                        <div class="f-desc">
+                            <strong>Guest:</strong> সব ডেটা localStorage-এ সংরক্ষিত হয় (Leaderboard-এ দেখা যায় না)।<br>
+                            <strong>Google Login:</strong> ডেটা Firebase-এ সংরক্ষিত হয় এবং Leaderboard-এ অংশ নেওয়া যায়।
+                            <span class="f-tag purple">Cloud Sync</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-chart-line"></i></span>
+                        <div class="f-title">Dashboard</div>
+                        <div class="f-desc">
+                            মোট প্রশ্ন, সঠিক/ভুল, Accuracy, Coins, XP, Level, Streak, Hints — সব পরিসংখ্যান এক জায়গায়।<br>
+                            <strong>Accuracy Chart</strong> (গত ৭ দিন) এবং <strong>Weak Topics</strong> দেখানো হয়।
+                            <span class="f-tag green">Analytics</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-book"></i></span>
+                        <div class="f-title">Learn Javeda (এই পৃষ্ঠা)</div>
+                        <div class="f-desc">
+                            জাভেদা, হিসাবের শ্রেণিবিভাগ, স্বর্ণসূত্র, উদাহরণ ও ট্রিকস — ধাপে ধাপে শেখার ব্যবস্থা।
+                            <span class="f-tag gold">Tutorial</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ===== BADGE EARNING GUIDE (emojis used here) ===== -->
+                <h3 style="margin-top:24px;"><i class="fas fa-medal" style="color:var(--accent-3);margin-right:8px;"></i> How to Earn Badges</h3>
+                <p>মোট <strong>৫০টি</strong> Badge রয়েছে। নিচে কয়েকটি গুরুত্বপূর্ণ Badge-এর শর্ত দেওয়া হলো:</p>
+
+                <div class="badge-table-wrap">
+                    <table class="badge-table">
+                        <thead>
+                            <tr>
+                                <th>Icon</th>
+                                <th>Badge Name</th>
+                                <th>কীভাবে পাবেন</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><span class="b-icon">🔰</span></td><td>First Step</td><td>১টি সঠিক উত্তর দিন</td></tr>
+                            <tr><td><span class="b-icon">👣</span></td><td>Beginner</td><td>১টি সঠিক উত্তর দিন (একই)</td></tr>
+                            <tr><td><span class="b-icon">💳</span></td><td>Debit Starter</td><td>কোনো Debit প্রশ্ন সঠিক করুন</td></tr>
+                            <tr><td><span class="b-icon">💳</span></td><td>Credit Starter</td><td>কোনো Credit প্রশ্ন সঠিক করুন</td></tr>
+                            <tr><td><span class="b-icon">🔥</span></td><td>Warmed Up</td><td>৫টি সঠিক উত্তর দিন</td></tr>
+                            <tr><td><span class="b-icon">✨</span></td><td>No Mistake Start</td><td>৩টি সঠিক ও ০টি ভুল (শুরুতে)</td></tr>
+                            <tr><td><span class="b-icon">📓</span></td><td>Journal Rookie</td><td>১০টি সঠিক উত্তর দিন</td></tr>
+                            <tr><td><span class="b-icon">🗺️</span></td><td>Accounting Explorer</td><td>২৫টি সঠিক উত্তর দিন</td></tr>
+                            <tr><td><span class="b-icon">📊</span></td><td>Ledger Learner</td><td>৫০টি সঠিক উত্তর দিন</td></tr>
+                            <tr><td><span class="b-icon">⚖️</span></td><td>Trial Balance Maker</td><td>১০০টি সঠিক উত্তর দিন</td></tr>
+                            <tr><td><span class="b-icon">🧠</span></td><td>Sharp Mind</td><td>≥৮০% Accuracy ও কমপক্ষে ১০টি প্রশ্ন</td></tr>
+                            <tr><td><span class="b-icon">🎯</span></td><td>Precision Player</td><td>≥৯০% Accuracy ও কমপক্ষে ২০টি প্রশ্ন</td></tr>
+                            <tr><td><span class="b-icon">🏃</span></td><td>Perfect Run</td><td>১০টি Streak (একটানা সঠিক)</td></tr>
+                            <tr><td><span class="b-icon">🔥</span></td><td>Streak 5x / 10x / 25x / 50x</td><td>যথাক্রমে ৫, ১০, ২৫, ৫০ Streak</td></tr>
+                            <tr><td><span class="b-icon">👑</span></td><td>Streak King</td><td>১০০ Streak</td></tr>
+                            <tr><td><span class="b-icon">🏦</span></td><td>Asset Expert</td><td>১০টি Asset-সংক্রান্ত প্রশ্ন সঠিক</td></tr>
+                            <tr><td><span class="b-icon">📉</span></td><td>Liability Genius</td><td>১০টি Liability-সংক্রান্ত প্রশ্ন সঠিক</td></tr>
+                            <tr><td><span class="b-icon">💰</span></td><td>Capital Controller</td><td>১০টি Capital-সংক্রান্ত প্রশ্ন সঠিক</td></tr>
+                            <tr><td><span class="b-icon">📈</span></td><td>Revenue Master</td><td>১০টি Revenue-সংক্রান্ত প্রশ্ন সঠিক</td></tr>
+                            <tr><td><span class="b-icon">💸</span></td><td>Expense Specialist</td><td>১০টি Expense-সংক্রান্ত প্রশ্ন সঠিক</td></tr>
+                            <tr><td><span class="b-icon">🏅</span></td><td>100 Questions</td><td>মোট ১০০টি প্রশ্ন সম্পূর্ণ</td></tr>
+                            <tr><td><span class="b-icon">🥈</span></td><td>500 Questions</td><td>মোট ৫০০টি প্রশ্ন সম্পূর্ণ</td></tr>
+                            <tr><td><span class="b-icon">🥇</span></td><td>1000 Questions</td><td>মোট ১০০০টি প্রশ্ন সম্পূর্ণ</td></tr>
+                            <tr><td><span class="b-icon">🏆</span></td><td>Accounting Pro</td><td>Level ১০ পৌঁছান</td></tr>
+                            <tr><td><span class="b-icon">👑</span></td><td>Ultimate Accountant</td><td>৫০০০টি সঠিক উত্তর</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size:14px;color:var(--text-muted);">
+                    <i class="fas fa-info-circle"></i> বাকি Badge-গুলোর শর্ত Dashboard-এর Badges সেকশনে দেখতে পাবেন।
+                </p>
+
+                <!-- ===== POINTS & REWARDS ===== -->
+                <h3><i class="fas fa-star" style="color:var(--accent-3);margin-right:8px;"></i> Points, XP, Coins — কীভাবে পাবেন?</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-check-circle" style="color:var(--accent-2);"></i></span>
+                        <div class="f-title">সঠিক উত্তর</div>
+                        <div class="f-desc">
+                            <strong>Easy:</strong> +5 Points, +2 XP, +2 Coins<br>
+                            <strong>Medium:</strong> +10 Points, +5 XP, +2 Coins<br>
+                            <strong>Hard:</strong> +15 Points, +8 XP, +2 Coins
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-times-circle" style="color:var(--accent-4);"></i></span>
+                        <div class="f-title">ভুল উত্তর</div>
+                        <div class="f-desc">
+                            Easy : -2 Points<br>
+                            Medium : -5 Points<br>
+                            Hard : -10 Points<br>
+                            <span style="font-size:13px;color:var(--text-muted);">(XP বা Coins কমে না)</span>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-fire" style="color:var(--accent-4);"></i></span>
+                        <div class="f-title">Streak Bonus</div>
+                        <div class="f-desc">
+                            একটানা সঠিক উত্তর দিলে <strong>Streak</strong> বাড়ে।<br>
+                            Streak ভাঙলে আবার ০ থেকে শুরু হয়।<br>
+                            <strong>Best Streak</strong> রেকর্ড থাকে।
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-bullseye" style="color:var(--accent-3);"></i></span>
+                        <div class="f-title">Level Up</div>
+                        <div class="f-desc">
+                            প্রতিটি Level-এর জন্য নির্দিষ্ট XP প্রয়োজন।<br>
+                            Level বাড়লে নতুন Badge আনলক হতে পারে।
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== QUICK TIPS ===== -->
+                <h3><i class="fas fa-lightbulb" style="color:var(--accent-3);margin-right:8px;"></i> Quick Tips</h3>
+                <ul>
+                    <li><strong>Smart Mode</strong> চালু রাখুন — এটি আপনার দুর্বল দিক চিহ্নিত করে বেশি প্রশ্ন দেয়।</li>
+                    <li><strong>Revision Mode</strong> ব্যবহার করুন — ভুল করা প্রশ্নগুলো বারবার অনুশীলন করুন।</li>
+                    <li><strong>Hint</strong> শুধু কঠিন প্রশ্নে ব্যবহার করুন — Shop থেকে কিনতে হয়।</li>
+                    <li><strong>Leaderboard</strong>-এ উঠতে Accuracy ও Consistency গুরুত্বপূর্ণ।</li>
+                    <li><strong>Dashboard</strong>-এ Weak Topics দেখে বুঝুন কোন ধরনের হিসাবে ভুল বেশি হয়।</li>
+                    <li><strong>Guest</strong> হিসেবে খেললে ডেটা লোকালে সেভ হয় — লগইন করলে Server এ সেভ হয় এবং Leaderboard-এ অংশ নিতে পারেন।</li>
+                </ul>
+
+                <!-- ===== FINAL NOTE ===== -->
+                <div style="margin-top:20px;padding:16px 20px;background:rgba(91,75,213,0.06);border-radius:var(--radius-sm);border:1px solid var(--glass-border);">
+                    <p style="margin:0;font-size:15px;color:var(--text-secondary);">
+                        <i class="fas fa-heart" style="color:var(--accent-4);"></i>
+                        <strong>Enjoy learning!</strong> প্রতিটি প্রশ্ন আপনাকে আরও দক্ষ করে তুলবে। 
+                        আরও প্রশ্ন করলে আরও Badge, আরও XP, আরও মজা! <i class="fas fa-rocket" style="color:var(--accent-3);"></i>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <div style="text-align:center;margin-top:36px;padding:16px 0;color:var(--text-muted);font-size:13px;border-top:1px solid var(--glass-border);">
+            <i class="fas fa-book-open" style="color:var(--accent-1);margin-right:6px;"></i>
+            Journal Entry · MCQ Learner
+        </div>
+
+    </div>
+
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // 1. TOGGLE CHAPTER
+        // ================================================================
+        function toggleChapter(header) {
+            const body = header.nextElementSibling;
+            const toggle = header.querySelector('.ch-toggle i');
+            if (body.classList.contains('open')) {
+                body.classList.remove('open');
+                toggle.classList.remove('open');
+            } else {
+                body.classList.add('open');
+                toggle.classList.add('open');
+            }
+            updateProgress();
+        }
+
+        // ================================================================
+        // 2. EXPAND ALL / COLLAPSE ALL
+        // ================================================================
+        function expandAll() {
+            document.querySelectorAll('.chapter .ch-body').forEach(el => el.classList.add('open'));
+            document.querySelectorAll('.chapter .ch-toggle i').forEach(el => el.classList.add('open'));
+            updateProgress();
+        }
+
+        function collapseAll() {
+            document.querySelectorAll('.chapter .ch-body').forEach(el => el.classList.remove('open'));
+            document.querySelectorAll('.chapter .ch-toggle i').forEach(el => el.classList.remove('open'));
+            updateProgress();
+        }
+
+        // ================================================================
+        // 3. PROGRESS
+        // ================================================================
+        function updateProgress() {
+            const bodies = document.querySelectorAll('.chapter .ch-body');
+            const open = document.querySelectorAll('.chapter .ch-body.open');
+            const pct = bodies.length > 0 ? Math.round((open.length / bodies.length) * 100) : 0;
+            const fill = document.getElementById('progressFill');
+            const pctEl = document.getElementById('progressPct');
+            if (fill) fill.style.width = pct + '%';
+            if (pctEl) pctEl.textContent = pct + '%';
+        }
+
+        // ================================================================
+        // 4. INIT – expand first chapter + How-to by default
+        // ================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Expand Goal, Chapter 1, and How-to by default
+            const defaultChapters = ['ch-goal', 'ch-1', 'ch-howto'];
+            defaultChapters.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const body = el.querySelector('.ch-body');
+                    const toggle = el.querySelector('.ch-toggle i');
+                    if (body && !body.classList.contains('open')) {
+                        body.classList.add('open');
+                        if (toggle) toggle.classList.add('open');
+                    }
+                }
+            });
+            updateProgress();
+
+            // Keyboard shortcut: E = expand all, C = collapse all
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'e' || e.key === 'E') {
+                    expandAll();
+                } else if (e.key === 'c' || e.key === 'C') {
+                    collapseAll();
+                }
+            });
+
+            // TOC click – smooth scroll and expand
+            document.querySelectorAll('.toc-item').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId && targetId.startsWith('#')) {
+                        const targetEl = document.querySelector(targetId);
+                        if (targetEl) {
+                            const body = targetEl.querySelector('.ch-body');
+                            const toggle = targetEl.querySelector('.ch-toggle i');
+                            if (body && !body.classList.contains('open')) {
+                                body.classList.add('open');
+                                if (toggle) toggle.classList.add('open');
+                                updateProgress();
+                            }
+                            setTimeout(() => {
+                                targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }, 100);
+                        }
+                    }
+                });
+            });
+
+            console.log('📘 Learn Javeda · Interactive Learning System');
+            console.log('💡 Press E to expand all, C to collapse all');
+            console.log('❓ "How to Work" chapter added with full feature guide (badges use emojis)');
+        });
+    </script>
+
+</body>
+</html>
