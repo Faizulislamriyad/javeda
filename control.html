@@ -1206,7 +1206,7 @@
         }
 
         // ================================================================
-        // 5. FIREBASE - LOAD USERS (REAL-TIME)
+        // 5. FIREBASE - LOAD USERS (REAL-TIME) — FIXED: lastActive only, not updatedAt
         // ================================================================
 
         function loadUsers() {
@@ -1250,7 +1250,8 @@
                             level: data.level || 1,
                             hints: data.hints || 0,
                             earnedBadges: data.earnedBadges || [],
-                            lastActive: data.updatedAt || data.lastActive || null,
+                            // FIX: Use only lastActive, do NOT fallback to updatedAt
+                            lastActive: data.lastActive || null,
                             totalQuestions: data.totalQuestions || 0,
                             accuracyHistory: data.accuracyHistory || [],
                             weakRules: data.weakRules || {},
@@ -1285,7 +1286,7 @@
         }
 
         // ================================================================
-        // 6. RESET FUNCTIONS
+        // 6. RESET FUNCTIONS — set lastActive to null
         // ================================================================
 
         async function handleResetAll() {
@@ -1334,7 +1335,7 @@
                             weakRules: {},
                             quizHistory: [],
                             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                            lastActive: null, // explicitly set to null
                         }, { merge: true });
                         successCount++;
                     } catch (e) {
@@ -1393,7 +1394,7 @@
                     weakRules: {},
                     quizHistory: [],
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastActive: null, // explicitly set to null
                 }, { merge: true });
 
                 showToast('Reset Complete', `${name}'s stats have been reset to zero.`, 'fa-check-circle', 'success');
@@ -1456,7 +1457,7 @@
                 let msg = e.message;
                 if (msg.includes('permission')) {
                     msg =
-                    'Permission denied. Please ensure your Firebase security rules allow delete operations (try setting "allow read, write: if true;" for testing).';
+                        'Permission denied. Please ensure your Firebase security rules allow delete operations (try setting "allow read, write: if true;" for testing).';
                 }
                 showToast('Error', 'Failed to delete user: ' + msg, 'fa-times-circle', 'error');
             }
@@ -1502,6 +1503,7 @@
         function init() {
             console.log('🔐 Journal Entry Control Panel (no login required)');
             console.log('📡 Real-time sync with Firebase');
+            console.log('✅ Fixed: Reset now correctly sets lastActive to null (shows Offline)');
             console.log('⚠️ If delete fails, check Firebase security rules.');
 
             // Load users immediately
