@@ -981,6 +981,7 @@
             if (diff < 60) return 'Just now';
             if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
             if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+            if (diff < 172800) return 'Yesterday';
             return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }
 
@@ -1206,7 +1207,7 @@
         }
 
         // ================================================================
-        // 5. FIREBASE - LOAD USERS (REAL-TIME) — FIXED: lastActive only, not updatedAt
+        // 5. FIREBASE - LOAD USERS (REAL-TIME) — FIXED: uses most recent timestamp
         // ================================================================
 
         function loadUsers() {
@@ -1235,6 +1236,25 @@
                     snapshot.forEach(doc => {
                         const data = doc.data();
                         if (data.email && data.email.startsWith('guest_')) return;
+
+                        // ---- FIX: Use the most recent of lastActive and updatedAt ----
+                        let activityTimestamp = null;
+                        const hasLastActive = data.lastActive !== null && data.lastActive !== undefined;
+                        const hasUpdatedAt = data.updatedAt !== null && data.updatedAt !== undefined;
+
+                        if (hasLastActive && hasUpdatedAt) {
+                            // Use the more recent one
+                            const lastActiveTime = data.lastActive.toDate ? data.lastActive.toDate().getTime() :
+                                new Date(data.lastActive).getTime();
+                            const updatedAtTime = data.updatedAt.toDate ? data.updatedAt.toDate().getTime() :
+                                new Date(data.updatedAt).getTime();
+                            activityTimestamp = lastActiveTime > updatedAtTime ? data.lastActive : data.updatedAt;
+                        } else if (hasLastActive) {
+                            activityTimestamp = data.lastActive;
+                        } else if (hasUpdatedAt) {
+                            activityTimestamp = data.updatedAt;
+                        }
+
                         users.push({
                             id: doc.id,
                             email: data.email || '',
@@ -1250,8 +1270,7 @@
                             level: data.level || 1,
                             hints: data.hints || 0,
                             earnedBadges: data.earnedBadges || [],
-                            // FIX: Use only lastActive, do NOT fallback to updatedAt
-                            lastActive: data.lastActive || null,
+                            lastActive: activityTimestamp, // store the most recent
                             totalQuestions: data.totalQuestions || 0,
                             accuracyHistory: data.accuracyHistory || [],
                             weakRules: data.weakRules || {},
@@ -1286,7 +1305,7 @@
         }
 
         // ================================================================
-        // 6. RESET FUNCTIONS — set lastActive to null
+        // 6. RESET FUNCTIONS — set lastActive to null explicitly
         // ================================================================
 
         async function handleResetAll() {
@@ -1503,7 +1522,9 @@
         function init() {
             console.log('🔐 Journal Entry Control Panel (no login required)');
             console.log('📡 Real-time sync with Firebase');
-            console.log('✅ Fixed: Reset now correctly sets lastActive to null (shows Offline)');
+            console.log('✅ FIXED: Uses most recent of lastActive and updatedAt for activity status');
+            console.log('✅ Reset sets lastActive=null so users appear Offline');
+            console.log('✅ Active users now show "Active now" with green dot');
             console.log('⚠️ If delete fails, check Firebase security rules.');
 
             // Load users immediately

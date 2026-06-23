@@ -1643,6 +1643,25 @@
         .diff-mode-label i {
             font-size: 12px;
         }
+
+        /* load state */
+        .stats-loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .stats-loaded {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* leaderboard consistency fix: user row highlight */
+        .lb-user-row td {
+            background: rgba(91, 75, 213, 0.08) !important;
+            border-left: 3px solid var(--accent-1);
+        }
+        .lb-user-row:hover td {
+            background: rgba(91, 75, 213, 0.14) !important;
+        }
     </style>
 </head>
 <body>
@@ -1926,11 +1945,14 @@
         </section>
 
         <!-- ============================================================
-        SECTION: LEADERBOARD
+        SECTION: LEADERBOARD — FIXED: uses dashboard data for current user
         ============================================================ -->
         <section class="section-panel" id="section-leaderboard">
             <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
                 <i class="fas fa-ranking-star" style="color:var(--accent-1);"></i> Leaderboard
+                <span style="font-size:13px;font-weight:400;color:var(--text-muted);margin-left:auto;">
+                    <i class="fas fa-sync-alt fa-fw"></i> Auto-sync
+                </span>
             </h2>
             <div class="glass-card">
                 <div class="lb-filter-group" id="lbFilterGroup">
@@ -2060,7 +2082,6 @@
             'Rent Revenue': { category: 'revenue', bengali: 'ভাড়া আয়', rule: 'increase=credit,decrease=debit' },
             'Interest Revenue': { category: 'revenue', bengali: 'সুদ প্রাপ্তি', rule: 'increase=credit,decrease=debit' },
             'Discount Received': { category: 'revenue', bengali: 'বাট্টা পাওয়া', rule: 'increase=credit,decrease=debit' },
-            // NEW: Accrued Revenue for accrued revenue adjustments
             'Accrued Revenue': { category: 'revenue', bengali: 'অর্জিত আয়', rule: 'increase=credit,decrease=debit' },
             'Salary': { category: 'expense', bengali: 'বেতন', rule: 'increase=debit,decrease=credit' },
             'Rent': { category: 'expense', bengali: 'ভাড়া', rule: 'increase=debit,decrease=credit' },
@@ -2128,14 +2149,13 @@
                     'নগদে {asset} কেনা হয়েছে',
                     '{asset} ক্রয় করা হয়েছে নগদে',
                 ],
-                assetPool: ['Computer', 'Mobile', 'Book', 'Notebook', 'Furniture', 'Pen', 'Table', 'Chair','Charger',
+                assetPool: ['Computer', 'Mobile', 'Book', 'Notebook', 'Furniture', 'Pen', 'Table', 'Chair', 'Charger',
                     'Egg', 'Hat'
                 ],
                 journal: [
                     { account: '{asset}', side: 'debit' },
                     { account: 'Cash', side: 'credit' }
                 ],
-                // Primary account: the asset being purchased (not Cash)
                 primaryAccountIndex: 0,
                 hasAmount: false,
                 amountRange: null
@@ -2151,14 +2171,14 @@
                     '{expense} প্রদান করা হয়েছে নগদে',
                     'নগদে {expense} বাবদ প্রদান'
                 ],
-                expensePool: ['Electricity Bill', 'Water Bill','Rent', 'Transport', 'Advertisement', 'Office Expenses', 'Salary',
+                expensePool: ['Electricity Bill', 'Water Bill', 'Rent', 'Transport', 'Advertisement', 'Office Expenses',
+                    'Salary',
                     'Insurance', 'Repairs', 'Maintenance', 'Telephone Bill', 'Water Bill', 'Gas Bill'
                 ],
                 journal: [
                     { account: '{expense}', side: 'debit' },
                     { account: 'Cash', side: 'credit' }
                 ],
-                // Primary account: the expense account (not Cash)
                 primaryAccountIndex: 0,
                 hasAmount: false,
                 amountRange: null
@@ -2177,7 +2197,6 @@
                     { account: 'Cash', side: 'debit' },
                     { account: 'Capital', side: 'credit' }
                 ],
-                // Primary account: Capital (the investment account)
                 primaryAccountIndex: 1,
                 hasAmount: false,
                 amountRange: null
@@ -2194,12 +2213,13 @@
                     'নগদে {item} বিক্রি হলো',
                     '{item} বিক্রি করে নগদ পাওয়া গেছে'
                 ],
-                itemPool: ['পণ্য', 'মাল', 'সেবা', 'পণ্যদ্রব্য', 'Book', 'Notebook', 'Pen', 'Egg','Computer', 'Table', 'Chair'],
+                itemPool: ['পণ্য', 'মাল', 'সেবা', 'পণ্যদ্রব্য', 'Book', 'Notebook', 'Pen', 'Egg', 'Computer', 'Table',
+                    'Chair'
+                ],
                 journal: [
                     { account: 'Cash', side: 'debit' },
                     { account: 'Sales Revenue', side: 'credit' }
                 ],
-                // Primary account: Sales Revenue (the revenue account)
                 primaryAccountIndex: 1,
                 hasAmount: false,
                 amountRange: null
@@ -2219,7 +2239,6 @@
                     { account: '{liability}', side: 'debit' },
                     { account: 'Cash', side: 'credit' }
                 ],
-                // Primary account: the liability being paid
                 primaryAccountIndex: 0,
                 hasAmount: false,
                 amountRange: null
@@ -2240,7 +2259,6 @@
                     { account: 'Drawings', side: 'debit' },
                     { account: 'Cash', side: 'credit' }
                 ],
-                // Primary account: Drawings
                 primaryAccountIndex: 0,
                 hasAmount: false,
                 amountRange: null
@@ -2256,7 +2274,8 @@
                     'নগদে {amount} টাকার {asset} কেনা হয়েছে',
                     '{amount} টাকার {asset} ক্রয় করা হয়েছে নগদে'
                 ],
-                assetPool: ['Computer', 'Mobile', 'Furniture', 'Equipment', 'Office Supplies', 'Laptop', 'Table', 'Chair',
+                assetPool: ['Computer', 'Mobile', 'Furniture', 'Equipment', 'Office Supplies', 'Laptop', 'Table',
+                    'Chair',
                     'Cabinet', 'Printer', 'Scanner', 'AC', 'Television'
                 ],
                 journal: [
@@ -2276,7 +2295,8 @@
                     '{expense} বাবদ {amount} টাকা নগদে প্রদান করা হয়েছে',
                     'নগদে {amount} টাকা {expense} পরিশোধ'
                 ],
-                expensePool: ['Government Fee','Tv Bill','Rent', 'Transport', 'Advertisement', 'Office Expenses', 'Salary',
+                expensePool: ['Government Fee', 'Tv Bill', 'Rent', 'Transport', 'Advertisement', 'Office Expenses',
+                    'Salary',
                     'Insurance', 'Repairs', 'Maintenance', 'Telephone Bill', 'Water Bill', 'Gas Bill', 'Internet Bill'
                 ],
                 journal: [
@@ -2385,7 +2405,9 @@
                     '{name} থেকে {amount} টাকায় {item} কেনা হয়েছে',
                     '{name} এর কাছ থেকে {item} ক্রয় {amount} টাকা'
                 ],
-                itemPool: ['মাল', 'পণ্য', 'পণ্যদ্রব্য', 'Bike', 'sofa', 'Car' ,'Charger', 'Equipment', 'Office Supplies', 'Book', 'Mobile'],
+                itemPool: ['মাল', 'পণ্য', 'পণ্যদ্রব্য', 'Bike', 'sofa', 'Car', 'Charger', 'Equipment', 'Office Supplies',
+                    'Book', 'Mobile'
+                ],
                 journal: [
                     { account: 'Inventory', side: 'debit' },
                     { account: 'Creditors', side: 'credit' }
@@ -2446,7 +2468,9 @@
                     '{asset} এর উপর অবচয় খরচ হিসেবে {amount} টাকা ধরা হয়েছে',
                     '{asset} এর উপর {amount} টাকা অবচয় হিসাব করা হয়'
                 ],
-                assetPool: ['Table', 'Ac','Generator', 'Desk','truck', 'Equipment', 'Computer', 'Building', 'Vehicle'],
+                assetPool: ['Table', 'Ac', 'Generator', 'Desk', 'truck', 'Equipment', 'Computer', 'Building',
+                    'Vehicle'
+                ],
                 journal: [
                     { account: 'Depreciation Expense', side: 'debit' },
                     { account: 'Accumulated Depreciation', side: 'credit' }
@@ -2494,7 +2518,6 @@
                 amountRange: [5000, 40000]
             },
 
-            // FIXED: Using "Accrued Revenue" instead of "Service Revenue" for better matching
             accrued_revenue: {
                 category: 'revenue',
                 difficulty: 'hard',
@@ -2506,9 +2529,9 @@
                 ],
                 journal: [
                     { account: 'Accounts Receivable', side: 'debit' },
-                    { account: 'Accrued Revenue', side: 'credit' } // FIXED: now uses Accrued Revenue
+                    { account: 'Accrued Revenue', side: 'credit' }
                 ],
-                primaryAccountIndex: 1, // Accrued Revenue is the primary account
+                primaryAccountIndex: 1,
                 hasAmount: true,
                 amountRange: [10000, 70000]
             },
@@ -2603,7 +2626,8 @@
                 if (mode === 'easy') {
                     available.push({ key, def, hasAmount: false, amountRange: null });
                 } else {
-                    available.push({ key, def, hasAmount: def.hasAmount || false, amountRange: def.amountRange || null });
+                    available.push({ key, def, hasAmount: def.hasAmount || false, amountRange: def.amountRange ||
+                            null });
                 }
             }
             return available;
@@ -2748,7 +2772,6 @@
                 };
             });
 
-            // Use the primary account index to determine which account to show
             const primaryIdx = def.primaryAccountIndex !== undefined ? def.primaryAccountIndex : 0;
             const primaryEntry = journal[primaryIdx] || journal[0];
             const primaryAccount = primaryEntry.account;
@@ -3382,6 +3405,9 @@
             questionStartTime: 0,
             hintUsedForQuestion: false,
             advancePending: false,
+            statsLoaded: false,
+            statsLoadAttempted: false,
+            pendingSave: null,
         };
 
         // ================================================================
@@ -3480,7 +3506,6 @@
 
             if (transactionDisplay) transactionDisplay.innerHTML = `"${displayText}"`;
 
-            // Use the primary account name from the transaction
             const accountForQuestion = trans.primaryAccount || q.accountName;
             const bnName = getBengaliName(accountForQuestion) || accountForQuestion;
             if (accountName) accountName.textContent = bnName + ' হিসাব';
@@ -3545,7 +3570,6 @@
                 resultEl.className = 'fb-result ' + (isCorrect ? 'correct-text' : 'wrong-text');
             }
 
-            // Use the primary account for explanation
             const accountForQuestion = trans.primaryAccount || q.accountName;
             const entry = journal.find(j => j.account === accountForQuestion);
 
@@ -3765,14 +3789,11 @@
             const transaction = generateTransactionFromTemplate(templateInfo, effectiveMode);
 
             const journal = transaction.journal;
-            // Use the primary account from the transaction (already determined in generation)
             const primaryAccount = transaction.primaryAccount;
             const primarySide = transaction.primarySide;
 
-            // Find the entry for the primary account
             const primaryEntry = journal.find(j => j.account === primaryAccount);
             if (!primaryEntry) {
-                // Fallback: use the first entry
                 const fallback = journal[0];
                 if (fallback) {
                     transaction.primaryAccount = fallback.account;
@@ -3861,7 +3882,8 @@
                 }
                 if (s.quizHistory && s.quizHistory.length > 0) {
                     const last = s.quizHistory[s.quizHistory.length - 1];
-                    if (last && last.userAnswer !== last.correctAnswer) s.ruleBreakerCount = (s.ruleBreakerCount || 0) + 1;
+                    if (last && last.userAnswer !== last.correctAnswer) s.ruleBreakerCount = (s.ruleBreakerCount || 0) +
+                    1;
                 }
                 showCoinToast(COINS_PER_CORRECT);
             } else {
@@ -3920,12 +3942,20 @@
 
             s.focusCount = (s.focusCount || 0) + 1;
 
-            if (!state.isGuest && auth.currentUser) {
-                await saveUserStats(auth.currentUser.uid, s);
-            } else {
+            if (state.isGuest) {
                 try {
                     localStorage.setItem('guest_stats_' + state.guestId, JSON.stringify(s));
                 } catch (e) {}
+            } else if (auth.currentUser && state.statsLoaded) {
+                await saveUserStats(auth.currentUser.uid, s);
+            } else if (auth.currentUser && !state.statsLoaded) {
+                state.pendingSave = { uid: auth.currentUser.uid, stats: { ...s } };
+                setTimeout(async () => {
+                    if (state.statsLoaded && state.pendingSave) {
+                        await saveUserStats(state.pendingSave.uid, state.pendingSave.stats);
+                        state.pendingSave = null;
+                    }
+                }, 1500);
             }
 
             updateHeaderStats();
@@ -3952,6 +3982,9 @@
             updateDashboard();
             updateBadges();
             updateWeakTopics();
+
+            // Refresh leaderboard when stats change
+            renderLeaderboard();
         }
 
         // ================================================================
@@ -3977,8 +4010,16 @@
             const ruleText = q.ruleText || 'Check the rule.';
             showToast('Hint Revealed', `Rule: ${ruleText}`, 'fa-lightbulb', 'hint');
 
-            if (!state.isGuest && auth.currentUser) {
+            if (!state.isGuest && auth.currentUser && state.statsLoaded) {
                 saveUserStats(auth.currentUser.uid, state.stats);
+            } else if (!state.isGuest && auth.currentUser && !state.statsLoaded) {
+                state.pendingSave = { uid: auth.currentUser.uid, stats: { ...state.stats } };
+                setTimeout(async () => {
+                    if (state.statsLoaded && state.pendingSave) {
+                        await saveUserStats(state.pendingSave.uid, state.pendingSave.stats);
+                        state.pendingSave = null;
+                    }
+                }, 1500);
             } else {
                 try { localStorage.setItem('guest_stats_' + state.guestId, JSON.stringify(state.stats)); } catch (e) {}
             }
@@ -4002,8 +4043,16 @@
             updateHintButton();
             showToast('Hints Purchased!', `${hints} hints added to your inventory.`, 'fa-coins', 'hint');
 
-            if (!state.isGuest && auth.currentUser) {
+            if (!state.isGuest && auth.currentUser && state.statsLoaded) {
                 saveUserStats(auth.currentUser.uid, s);
+            } else if (!state.isGuest && auth.currentUser && !state.statsLoaded) {
+                state.pendingSave = { uid: auth.currentUser.uid, stats: { ...s } };
+                setTimeout(async () => {
+                    if (state.statsLoaded && state.pendingSave) {
+                        await saveUserStats(state.pendingSave.uid, state.pendingSave.stats);
+                        state.pendingSave = null;
+                    }
+                }, 1500);
             } else {
                 try { localStorage.setItem('guest_stats_' + state.guestId, JSON.stringify(s)); } catch (e) {}
             }
@@ -4199,7 +4248,7 @@
         }
 
         // ================================================================
-        // 21. LEADERBOARD
+        // 21. LEADERBOARD — FIXED: uses dashboard data for current user
         // ================================================================
 
         let leaderboardData = [];
@@ -4210,13 +4259,22 @@
             const empty = document.getElementById('lbEmpty');
             if (!tbody) return;
 
+            // Get current user email
+            const currentEmail = auth.currentUser ? auth.currentUser.email : null;
+
+            // Filter out guest accounts
             let filtered = leaderboardData.filter(u => !isGuestUid(u.id) && u.email);
+
+            // Prepare sorted data
             let sorted = [...filtered];
+
+            // Apply sorting based on selected key
             if (leaderboardSortKey === 'xp') sorted.sort((a, b) => b.xp - a.xp);
             else if (leaderboardSortKey === 'points') sorted.sort((a, b) => b.points - a.points);
             else if (leaderboardSortKey === 'accuracy') sorted.sort((a, b) => b.accuracy - a.accuracy);
             else if (leaderboardSortKey === 'badges') sorted.sort((a, b) => (b.badges || 0) - (a.badges || 0));
 
+            // Remove duplicates by email
             const seen = new Set();
             const unique = [];
             for (const u of sorted) {
@@ -4225,21 +4283,58 @@
             }
             sorted = unique;
 
-            const currentEmail = auth.currentUser ? auth.currentUser.email : null;
-            const userIdx = sorted.findIndex(u => u.email === currentEmail);
-            if (userIdx > 0 && currentEmail) {
-                const user = sorted.splice(userIdx, 1)[0];
-                let insertPos = 0;
-                if (leaderboardSortKey === 'xp') {
-                    while (insertPos < sorted.length && sorted[insertPos].xp > user.xp) insertPos++;
-                } else if (leaderboardSortKey === 'points') {
-                    while (insertPos < sorted.length && sorted[insertPos].points > user.points) insertPos++;
-                } else if (leaderboardSortKey === 'accuracy') {
-                    while (insertPos < sorted.length && sorted[insertPos].accuracy > user.accuracy) insertPos++;
-                } else if (leaderboardSortKey === 'badges') {
-                    while (insertPos < sorted.length && (sorted[insertPos].badges || 0) > (user.badges || 0)) insertPos++;
+            // ---- FIX: Override current user's data with dashboard stats ----
+            if (currentEmail) {
+                const userIdx = sorted.findIndex(u => u.email === currentEmail);
+                if (userIdx !== -1) {
+                    const total = state.stats.correct + state.stats.wrong;
+                    const acc = total > 0 ? Math.round((state.stats.correct / total) * 100) : 0;
+                    // Update the user object in the array with dashboard data
+                    sorted[userIdx] = {
+                        ...sorted[userIdx],
+                        xp: state.stats.xp || 0,
+                        points: state.stats.points || 0,
+                        accuracy: acc,
+                        badges: (state.stats.earnedBadges || []).length,
+                        // Preserve original email, name, photo
+                        email: sorted[userIdx].email,
+                        name: sorted[userIdx].name,
+                        photoURL: sorted[userIdx].photoURL,
+                        isUser: true,
+                    };
+                } else {
+                    // User not in leaderboard list — add them at the bottom
+                    // Only if they have some data
+                    const total = state.stats.correct + state.stats.wrong;
+                    const acc = total > 0 ? Math.round((state.stats.correct / total) * 100) : 0;
+                    const userObj = {
+                        email: currentEmail,
+                        name: auth.currentUser ? auth.currentUser.displayName || 'User' : 'User',
+                        photoURL: auth.currentUser ? auth.currentUser.photoURL || '' : '',
+                        xp: state.stats.xp || 0,
+                        points: state.stats.points || 0,
+                        accuracy: acc,
+                        badges: (state.stats.earnedBadges || []).length,
+                        isUser: true,
+                    };
+                    // Only add if they have some activity
+                    if (state.stats.totalQuestions > 0 || state.stats.xp > 0) {
+                        sorted.push(userObj);
+                        // Re-sort after adding
+                        if (leaderboardSortKey === 'xp') sorted.sort((a, b) => b.xp - a.xp);
+                        else if (leaderboardSortKey === 'points') sorted.sort((a, b) => b.points - a.points);
+                        else if (leaderboardSortKey === 'accuracy') sorted.sort((a, b) => b.accuracy - a.accuracy);
+                        else if (leaderboardSortKey === 'badges') sorted.sort((a, b) => (b.badges || 0) - (a.badges ||
+                            0));
+                    }
                 }
-                sorted.splice(insertPos, 0, user);
+            }
+
+            // Find current user's position after sorting
+            let userRank = -1;
+            if (currentEmail) {
+                const idx = sorted.findIndex(u => u.email === currentEmail);
+                if (idx !== -1) userRank = idx + 1;
             }
 
             if (sorted.length === 0) {
@@ -4255,13 +4350,22 @@
                 if (rank === 1) rc += ' gold';
                 else if (rank === 2) rc += ' silver';
                 else if (rank === 3) rc += ' bronze';
-                const isUser = (e.email === currentEmail) ? ' class="lb-user-row"' : '';
+
+                const isUser = (e.email === currentEmail);
+                const rowClass = isUser ? ' class="lb-user-row"' : '';
+
                 const avatar = e.photoURL ?
                     `<img src="${e.photoURL}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-right:6px;" />` :
                     '';
-                return `<tr${isUser}>
+
+                // Use dashboard data for current user (already overridden)
+                const displayName = isUser ? (auth.currentUser ? auth.currentUser.displayName || 'User' : 'User') : e
+                .name;
+                const displayEmail = e.email || '';
+
+                return `<tr${rowClass}>
                     <td><span class="${rc}">#${rank}</span></td>
-                    <td>${avatar}${e.name} ${e.email === currentEmail ? '<i class="fas fa-star" style="color:var(--accent-3);font-size:12px;margin-left:4px;"></i>' : ''}</td>
+                    <td>${avatar}${displayName} ${isUser ? '<i class="fas fa-star" style="color:var(--accent-3);font-size:12px;margin-left:4px;"></i>' : ''}</td>
                     <td>${e.xp}</td>
                     <td>${e.points}</td>
                     <td>${e.accuracy}%</td>
@@ -4273,9 +4377,11 @@
         function setupLeaderboardListener() {
             if (state.unsubLeaderboard) { state.unsubLeaderboard();
                 state.unsubLeaderboard = null; }
+
+            // Increased limit to 200 to include more users
             state.unsubLeaderboard = db.collection(USERS_COLLECTION)
                 .orderBy('xp', 'desc')
-                .limit(100)
+                .limit(200)
                 .onSnapshot((snapshot) => {
                     const users = [];
                     snapshot.forEach(doc => {
@@ -4284,7 +4390,6 @@
                         if (isGuestUid(email)) return;
                         const total = (data.correct || 0) + (data.wrong || 0);
                         const acc = total > 0 ? Math.round(((data.correct || 0) / total) * 100) : 0;
-                        const isUser = email === (auth.currentUser ? auth.currentUser.email : null);
                         const badges = (data.earnedBadges || []).length;
                         users.push({
                             id: doc.id,
@@ -4293,9 +4398,9 @@
                             xp: data.xp || 0,
                             points: data.points || 0,
                             accuracy: acc,
-                            isUser: isUser,
                             photoURL: data.photoURL || '',
                             badges: badges,
+                            isUser: false,
                         });
                     });
                     leaderboardData = users;
@@ -4304,7 +4409,7 @@
         }
 
         // ================================================================
-        // 22. USER DATA LISTENER
+        // 22. USER DATA LISTENER — FIXED: prevents zero-overwrite
         // ================================================================
 
         function setupUserDataListener(uid) {
@@ -4318,6 +4423,9 @@
 
             state.unsubUser = db.collection(USERS_COLLECTION).doc(docId)
                 .onSnapshot((doc) => {
+                    state.statsLoaded = true;
+                    state.statsLoadAttempted = true;
+
                     if (doc.exists) {
                         const data = doc.data();
                         state.stats = {
@@ -4343,52 +4451,43 @@
                             effectiveDifficulty: data.effectiveDifficulty || 'easy',
                         };
                         state.stats.level = getLevelFromXP(state.stats.xp);
+
                         if (state.smartMode && state.stats.smartCategoryData) {
                             SMART_TRACKER.categoryCounts = state.stats.smartCategoryData;
                             SMART_TRACKER.baseMode = state.difficulty;
                             SMART_TRACKER.smartDifficulty = state.stats.effectiveDifficulty || state.difficulty;
                         }
-                        updateHeaderStats();
-                        updateDashboard();
-                        updateBadges();
-                        updateWeakTopics();
-                        updateQuizProgress();
-                        updateShopUI();
-                        updateHintButton();
+
+                        if (state.pendingSave) {
+                            const ps = state.pendingSave;
+                            Object.assign(state.stats, ps.stats);
+                            state.stats.level = getLevelFromXP(state.stats.xp);
+                            saveUserStats(ps.uid, state.stats);
+                            state.pendingSave = null;
+                        }
+
                     } else {
-                        const initialStats = {
-                            totalQuestions: 0,
-                            correct: 0,
-                            wrong: 0,
-                            streak: 0,
-                            bestStreak: 0,
-                            xp: 0,
-                            points: 0,
-                            coins: 0,
-                            hints: 0,
-                            level: 1,
-                            accuracyHistory: [],
-                            weakRules: {},
-                            quizHistory: [],
-                            fastAnswers: 0,
-                            ruleBreakerCount: 0,
-                            focusCount: 0,
-                            smartModeCount: 0,
-                            earnedBadges: [],
-                            smartCategoryData: {},
-                            effectiveDifficulty: 'easy',
-                        };
-                        state.stats = initialStats;
-                        saveUserStats(uid, initialStats);
-                        updateHeaderStats();
-                        updateDashboard();
-                        updateBadges();
-                        updateWeakTopics();
-                        updateQuizProgress();
-                        updateShopUI();
-                        updateHintButton();
+                        if (state.stats.totalQuestions === 0 && state.stats.correct === 0 && state.stats.wrong === 0) {
+                            // keep defaults
+                        }
                     }
-                }, (error) => { console.error('User data error:', error); });
+
+                    updateHeaderStats();
+                    updateDashboard();
+                    updateBadges();
+                    updateWeakTopics();
+                    updateQuizProgress();
+                    updateShopUI();
+                    updateHintButton();
+
+                    // Refresh leaderboard to show updated user data
+                    renderLeaderboard();
+
+                }, (error) => {
+                    console.error('User data error:', error);
+                    state.statsLoaded = true;
+                    state.statsLoadAttempted = true;
+                });
         }
 
         // ================================================================
@@ -4422,6 +4521,19 @@
                 state.isGuest = false;
                 hideLogin();
                 if (!isGuestUid(user.uid)) {
+                    const guestId = localStorage.getItem('guest_id');
+                    if (guestId) {
+                        try {
+                            const saved = localStorage.getItem('guest_stats_' + guestId);
+                            if (saved) {
+                                const parsed = JSON.parse(saved);
+                                if (!state.statsLoaded) {
+                                    state.stats = { ...state.stats, ...parsed };
+                                    state.stats.level = getLevelFromXP(state.stats.xp);
+                                }
+                            }
+                        } catch (e) {}
+                    }
                     setupUserDataListener(user.uid);
                 }
                 updateRevisionBadges();
@@ -4430,7 +4542,11 @@
                 generateNextQuestionSet();
                 const avatar = document.getElementById('userAvatar');
                 if (user.photoURL && avatar) avatar.src = user.photoURL;
-                showToast('Welcome!', `Signed in as ${user.displayName || 'User'}`, 'fa-smile', 'gain');
+                setTimeout(() => {
+                    if (state.statsLoaded) {
+                        showToast('Welcome!', `Signed in as ${user.displayName || 'User'}`, 'fa-smile', 'gain');
+                    }
+                }, 600);
             } else {
                 const guestId = localStorage.getItem('guest_id');
                 if (guestId && state.isGuest) {
@@ -4441,6 +4557,7 @@
                             const parsed = JSON.parse(saved);
                             state.stats = { ...state.stats, ...parsed };
                             state.stats.level = getLevelFromXP(state.stats.xp);
+                            state.statsLoaded = true;
                             updateHeaderStats();
                             updateDashboard();
                             updateBadges();
@@ -4448,6 +4565,7 @@
                             updateQuizProgress();
                             updateShopUI();
                             updateHintButton();
+                            renderLeaderboard();
                         }
                     } catch (e) {}
                     setupLeaderboardListener();
@@ -4518,6 +4636,7 @@
                 }
                 state.isGuest = true;
                 state.guestId = guestId;
+                state.statsLoaded = true;
                 hideLogin();
                 try {
                     const saved = localStorage.getItem('guest_stats_' + guestId);
@@ -4636,7 +4755,8 @@
                     if (state.stats.effectiveDifficulty) SMART_TRACKER.smartDifficulty = state.stats
                         .effectiveDifficulty;
                     state.stats.smartModeCount = (state.stats.smartModeCount || 0) + 1;
-                    showToast('Smart Mode On', 'Adaptive learning activated. Difficulty auto-adjusts based on performance.',
+                    showToast('Smart Mode On',
+                        'Adaptive learning activated. Difficulty auto-adjusts based on performance.',
                         'fa-brain', 'gain');
                     const indicator = document.getElementById('smartLevelIndicator');
                     if (indicator) indicator.style.display = 'inline-block';
@@ -4773,8 +4893,8 @@
 
             updateDiffModeLabel(state.difficulty);
 
-            console.log('📘 Version : 2.5.0');
-            console.log('✅ Devloped By - Faizul Islam Riyad ');   
+            console.log('📘 Version : 2.7.0 (Leaderboard-Dashboard Sync)');
+            console.log('✅ Developed By - Faizul Islam Riyad');
         }
 
         // ================================================================
