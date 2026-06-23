@@ -727,115 +727,6 @@
             padding: 10px 28px;
         }
 
-        /* ===== LOGIN OVERLAY (for admin) ===== */
-        .login-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            z-index: 10001;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.5s ease;
-        }
-        .login-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        .login-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius);
-            padding: 48px 40px;
-            max-width: 420px;
-            width: 100%;
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.20);
-            text-align: center;
-            transform: scale(0.95);
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .login-overlay:not(.hidden) .login-card {
-            transform: scale(1);
-        }
-        .login-card .login-icon {
-            font-size: 52px;
-            color: var(--accent-1);
-            margin-bottom: 16px;
-        }
-        .login-card h2 {
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: var(--text-primary);
-        }
-        .login-card p {
-            color: var(--text-secondary);
-            font-size: 15px;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-        .login-card .login-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            width: 100%;
-            padding: 14px 24px;
-            border-radius: var(--radius-sm);
-            border: none;
-            background: #fff;
-            color: #1a1a2e;
-            font-family: var(--font);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        }
-        .login-card .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
-        }
-        .login-card .login-btn i {
-            font-size: 22px;
-            color: #4285f4;
-        }
-        .login-card .login-btn .btn-text {
-            flex: 1;
-            text-align: center;
-        }
-        .login-card .login-loader {
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 14px 24px;
-            width: 100%;
-            border-radius: var(--radius-sm);
-            background: rgba(255, 255, 255, 0.30);
-            color: var(--text-secondary);
-            font-size: 15px;
-        }
-        .login-card .login-loader .spinner {
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(0, 0, 0, 0.10);
-            border-top-color: var(--accent-1);
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             body {
@@ -892,10 +783,6 @@
                 font-size: 10px;
                 padding: 3px 10px;
             }
-            .login-card {
-                padding: 32px 24px;
-                margin: 0 16px;
-            }
         }
 
         @media (max-width: 480px) {
@@ -919,9 +806,6 @@
             .logo-text {
                 font-size: 18px;
             }
-            .login-card {
-                padding: 24px 18px;
-            }
         }
 
         .footer-bar {
@@ -936,14 +820,6 @@
         }
         .footer-bar span {
             margin: 0 8px;
-        }
-
-        /* Hide controls when not authenticated */
-        .admin-content {
-            display: block;
-        }
-        .admin-content.hidden {
-            display: none;
         }
     </style>
 </head>
@@ -967,28 +843,8 @@
             </div>
         </div>
 
-        <!-- ===== LOGIN OVERLAY ===== -->
-        <div class="login-overlay" id="loginOverlay">
-            <div class="login-card">
-                <div class="login-icon"><i class="fas fa-shield-alt"></i></div>
-                <h2>Admin Access</h2>
-                <p>Sign in with your Google account to manage users and data.</p>
-                <button class="login-btn" id="loginBtn">
-                    <i class="fab fa-google"></i>
-                    <span class="btn-text">Sign in with Google</span>
-                </button>
-                <div class="login-loader" id="loginLoader">
-                    <div class="spinner"></div>
-                    <span>Signing in...</span>
-                </div>
-                <p style="font-size:12px;color:var(--text-muted);margin-top:12px;">
-                    <i class="fas fa-info-circle"></i> Only authenticated admins can modify data.
-                </p>
-            </div>
-        </div>
-
-        <!-- ===== ADMIN CONTENT (hidden until authenticated) ===== -->
-        <div class="admin-content hidden" id="adminContent">
+        <!-- ===== ADMIN CONTENT (always visible) ===== -->
+        <div class="admin-content" id="adminContent">
 
             <!-- ===== HEADER ===== -->
             <header class="admin-header">
@@ -996,7 +852,7 @@
                     <div class="logo-icon"><i class="fas fa-crown"></i></div>
                     <div>
                         <div class="logo-text">Journal Entry</div>
-                        <div class="logo-sub">Admin Control Panel</div>
+                        <div class="logo-sub">Control Panel</div>
                     </div>
                 </div>
                 <div class="header-stats">
@@ -1005,7 +861,6 @@
                     <span class="stat-pill"><i class="fas fa-bolt" style="color:var(--accent-1);"></i> Total XP <span class="num accent" id="totalXp">0</span></span>
                     <span class="stat-pill"><i class="fas fa-coins" style="color:#d4a017;"></i> Coins <span class="num gold" id="totalCoins">0</span></span>
                     <button class="btn btn-refresh" id="refreshBtn"><i class="fas fa-sync"></i> Refresh</button>
-                    <button class="btn btn-sm btn-sm-danger" id="logoutAdminBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
                 </div>
             </header>
 
@@ -1061,7 +916,7 @@
             <!-- ===== FOOTER ===== -->
             <div class="footer-bar">
                 <i class="fas fa-shield-alt" style="color:var(--accent-1);"></i>
-                Admin Control · Real-time sync with Firebase
+                Control Panel · Real-time sync with Firebase
                 <span>·</span>
                 <span id="lastUpdated">Last updated: —</span>
                 <span>·</span>
@@ -1216,87 +1071,7 @@
         });
 
         // ================================================================
-        // 4. AUTH HANDLING
-        // ================================================================
-
-        let adminUser = null;
-
-        function showLogin() {
-            document.getElementById('loginOverlay').classList.remove('hidden');
-            document.getElementById('adminContent').classList.add('hidden');
-        }
-
-        function hideLogin() {
-            document.getElementById('loginOverlay').classList.add('hidden');
-            document.getElementById('adminContent').classList.remove('hidden');
-        }
-
-        function handleAuthState(user) {
-            if (user) {
-                adminUser = user;
-                hideLogin();
-                showToast('Welcome Admin', `Signed in as ${user.displayName || user.email}`, 'fa-user-check', 'success');
-                // Load users after auth
-                loadUsers();
-            } else {
-                adminUser = null;
-                showLogin();
-                // Unsubscribe from user listener if any
-                if (unsubUsers) {
-                    unsubUsers();
-                    unsubUsers = null;
-                }
-                // Show empty table
-                const tbody = document.getElementById('userTableBody');
-                if (tbody) {
-                    tbody.innerHTML = `
-                        <tr>
-                            <td colspan="12">
-                                <div class="empty-state">
-                                    <i class="fas fa-lock" style="color:var(--accent-3);"></i>
-                                    <h3>Please sign in to access admin panel</h3>
-                                    <p>Use the login button above to continue.</p>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                }
-                // Reset stats
-                setText('totalUsers', 0);
-                setText('activeUsers', 0);
-                setText('totalXp', 0);
-                setText('totalCoins', 0);
-            }
-        }
-
-        // Login button
-        document.getElementById('loginBtn').addEventListener('click', async function() {
-            const btn = this,
-                loader = document.getElementById('loginLoader');
-            btn.style.display = 'none';
-            loader.style.display = 'flex';
-            try {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                await auth.signInWithPopup(provider);
-            } catch (error) {
-                showToast('Login Failed', error.message || 'Please try again.', 'fa-exclamation-circle', 'error');
-                btn.style.display = 'flex';
-                loader.style.display = 'none';
-            }
-        });
-
-        // Logout button
-        document.getElementById('logoutAdminBtn').addEventListener('click', async function() {
-            try {
-                await auth.signOut();
-                showToast('Logged Out', 'You have been signed out.', 'fa-sign-out-alt', 'info');
-            } catch (e) {
-                showToast('Error', 'Failed to sign out.', 'fa-times-circle', 'error');
-            }
-        });
-
-        // ================================================================
-        // 5. MAIN DATA & RENDER
+        // 4. MAIN DATA & RENDER (no auth required)
         // ================================================================
 
         let allUsers = [];
@@ -1431,7 +1206,7 @@
         }
 
         // ================================================================
-        // 6. FIREBASE - LOAD USERS (REAL-TIME)
+        // 5. FIREBASE - LOAD USERS (REAL-TIME)
         // ================================================================
 
         function loadUsers() {
@@ -1510,14 +1285,10 @@
         }
 
         // ================================================================
-        // 7. RESET FUNCTIONS
+        // 6. RESET FUNCTIONS
         // ================================================================
 
         async function handleResetAll() {
-            if (!adminUser) {
-                showToast('Not Authenticated', 'Please sign in as admin.', 'fa-exclamation-circle', 'error');
-                return;
-            }
             if (allUsers.length === 0) {
                 showToast('No Users', 'There are no users to reset.', 'fa-info-circle', 'info');
                 return;
@@ -1584,10 +1355,6 @@
         }
 
         async function handleResetUser(email, name) {
-            if (!adminUser) {
-                showToast('Not Authenticated', 'Please sign in as admin.', 'fa-exclamation-circle', 'error');
-                return;
-            }
             if (!email) {
                 showToast('Error', 'No email address found for this user.', 'fa-times-circle', 'error');
                 return;
@@ -1636,14 +1403,10 @@
         }
 
         // ================================================================
-        // 8. DELETE USER — with auto-logout
+        // 7. DELETE USER — with auto-logout
         // ================================================================
 
         async function handleDeleteUser(email, name) {
-            if (!adminUser) {
-                showToast('Not Authenticated', 'Please sign in as admin.', 'fa-exclamation-circle', 'error');
-                return;
-            }
             if (!email) {
                 showToast('Error', 'No email address found for this user.', 'fa-times-circle', 'error');
                 return;
@@ -1690,18 +1453,17 @@
 
             } catch (e) {
                 console.error('Delete error:', e);
-                // Show specific error message
                 let msg = e.message;
                 if (msg.includes('permission')) {
                     msg =
-                    'Permission denied. Please ensure your Firebase security rules allow delete operations for authenticated users.';
+                    'Permission denied. Please ensure your Firebase security rules allow delete operations (try setting "allow read, write: if true;" for testing).';
                 }
                 showToast('Error', 'Failed to delete user: ' + msg, 'fa-times-circle', 'error');
             }
         }
 
         // ================================================================
-        // 9. SEARCH
+        // 8. SEARCH
         // ================================================================
 
         document.getElementById('searchInput').addEventListener('input', function() {
@@ -1710,7 +1472,7 @@
         });
 
         // ================================================================
-        // 10. REFRESH
+        // 9. REFRESH
         // ================================================================
 
         document.getElementById('refreshBtn').addEventListener('click', function() {
@@ -1728,26 +1490,27 @@
         });
 
         // ================================================================
-        // 11. RESET ALL BUTTON
+        // 10. RESET ALL BUTTON
         // ================================================================
 
         document.getElementById('resetAllBtn').addEventListener('click', handleResetAll);
 
         // ================================================================
-        // 12. INIT
+        // 11. INIT
         // ================================================================
 
         function init() {
-            console.log('🔐 Journal Entry Admin Control Panel');
-            console.log('📡 Real-time sync with Firebase (requires auth)');
+            console.log('🔐 Journal Entry Control Panel (no login required)');
+            console.log('📡 Real-time sync with Firebase');
+            console.log('⚠️ If delete fails, check Firebase security rules.');
 
-            // Listen to auth state
-            auth.onAuthStateChanged(handleAuthState);
+            // Load users immediately
+            loadUsers();
 
             // Auto-update "last updated" every 15 seconds
             setInterval(() => {
                 const el = document.getElementById('lastUpdated');
-                if (el && adminUser) el.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+                if (el) el.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
             }, 15000);
         }
 
