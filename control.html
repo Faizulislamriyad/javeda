@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Journal Entry · Admin Control</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
+    </script>
+    <style>
+        /* ===== LIGHT THEME — matches Journal Entry UI ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-body: #eef2f7;
+            --glass-bg: rgba(255, 255, 255, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.75);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            --glass-blur: 20px;
+            --text-primary: #1a1a2e;
+            --text-secondary: #3d3d5c;
+            --text-muted: #7a7a9e;
+            --accent-1: #5b4bd5;
+            --accent-2: #0fb88a;
+            --accent-3: #e6a800;
+            --accent-4: #d94f4f;
+            --gradient-1: linear-gradient(135deg, #5b4bd5, #2a7de1);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --radius-xs: 8px;
+            --transition: 0.25s ease;
+            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            --toast-bg: rgba(30, 30, 50, 0.92);
+            --toast-text: #f0f4ff;
+            --border-color: rgba(255, 255, 255, 0.70);
+            --input-bg: rgba(255, 255, 255, 0.50);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px 16px 40px;
+            background-image: radial-gradient(circle at 10% 20%, rgba(91, 75, 213, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(15, 184, 138, 0.06) 0%, transparent 50%);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-body);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-1);
+            border-radius: 10px;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition);
+        }
+
+        .admin-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+            padding: 16px 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-1);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.3px;
+        }
+
+        .logo-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .stat-pill {
+            background: rgba(255, 255, 255, 0.50);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 6px 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(6px);
+        }
+
+        .stat-pill .num {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        .stat-pill .num.green {
+            color: var(--accent-2);
+        }
+        .stat-pill .num.gold {
+            color: var(--accent-3);
+        }
+        .stat-pill .num.accent {
+            color: var(--accent-1);
+        }
+        .stat-pill i {
+            font-size: 14px;
+            width: 18px;
+            text-align: center;
+        }
+
+        .controls-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 16px 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .controls-bar .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .controls-bar .right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 8px 18px;
+            transition: var(--transition);
+            backdrop-filter: blur(6px);
+        }
+        .search-box:focus-within {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 3px rgba(91, 75, 213, 0.10);
+        }
+        .search-box input {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-family: var(--font);
+            font-size: 14px;
+            padding: 4px 0;
+            outline: none;
+            min-width: 180px;
+        }
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+        .search-box i {
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        .filter-count {
+            font-size: 13px;
+            color: var(--text-muted);
+            padding: 0 4px;
+        }
+
+        .btn {
+            padding: 8px 22px;
+            border-radius: 30px;
+            border: none;
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(6px);
+        }
+
+        .btn-danger {
+            background: var(--accent-4);
+            color: #fff;
+            border: 1px solid rgba(217, 79, 79, 0.3);
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(217, 79, 79, 0.25);
+        }
+        .btn-danger:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-warning {
+            background: var(--accent-3);
+            color: #1a1a2e;
+            border: 1px solid rgba(230, 168, 0, 0.3);
+        }
+        .btn-warning:hover {
+            background: #d4a000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(230, 168, 0, 0.25);
+        }
+
+        .btn-primary {
+            background: var(--gradient-1);
+            color: #fff;
+            border: 1px solid rgba(91, 75, 213, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(91, 75, 213, 0.25);
+        }
+
+        .btn-sm {
+            padding: 4px 14px;
+            font-size: 11px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+        }
+        .btn-sm i {
+            font-size: 12px;
+        }
+
+        .btn-sm-danger {
+            background: rgba(217, 79, 79, 0.12);
+            color: var(--accent-4);
+            border-color: rgba(217, 79, 79, 0.20);
+        }
+        .btn-sm-danger:hover {
+            background: var(--accent-4);
+            color: #fff;
+            border-color: var(--accent-4);
+        }
+
+        .btn-sm-warning {
+            background: rgba(230, 168, 0, 0.12);
+            color: var(--accent-3);
+            border-color: rgba(230, 168, 0, 0.20);
+        }
+        .btn-sm-warning:hover {
+            background: var(--accent-3);
+            color: #1a1a2e;
+            border-color: var(--accent-3);
+        }
+
+        .btn-refresh {
+            background: rgba(255, 255, 255, 0.30);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+        }
+        .btn-refresh:hover {
+            background: rgba(255, 255, 255, 0.55);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        .table-wrap {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+            overflow: hidden;
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+            padding: 0 4px 4px 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 900px;
+        }
+
+        thead {
+            background: rgba(255, 255, 255, 0.25);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 16px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.40);
+            backdrop-filter: blur(12px);
+            z-index: 2;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            vertical-align: middle;
+            color: var(--text-secondary);
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        tr.user-row td {
+            background: rgba(91, 75, 213, 0.04);
+        }
+        tr.user-row:hover td {
+            background: rgba(91, 75, 213, 0.08);
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--glass-border);
+            flex-shrink: 0;
+        }
+
+        .user-name {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        .user-email {
+            font-size: 11px;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 1px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            border: 1px solid var(--glass-border);
+        }
+        .status-badge .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .status-badge.active {
+            background: rgba(15, 184, 138, 0.12);
+            color: var(--accent-2);
+            border-color: rgba(15, 184, 138, 0.20);
+        }
+        .status-badge.active .dot {
+            background: var(--accent-2);
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+        .status-badge.idle {
+            background: rgba(230, 168, 0, 0.10);
+            color: var(--accent-3);
+            border-color: rgba(230, 168, 0, 0.15);
+        }
+        .status-badge.idle .dot {
+            background: var(--accent-3);
+        }
+        .status-badge.offline {
+            background: rgba(255, 255, 255, 0.20);
+            color: var(--text-muted);
+            border-color: var(--glass-border);
+        }
+        .status-badge.offline .dot {
+            background: var(--text-muted);
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.4;
+                transform: scale(0.7);
+            }
+        }
+
+        .last-seen {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .val-highlight {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        .val-green {
+            color: var(--accent-2);
+            font-weight: 600;
+        }
+        .val-gold {
+            color: var(--accent-3);
+            font-weight: 600;
+        }
+        .val-accent {
+            color: var(--accent-1);
+            font-weight: 600;
+        }
+        .val-danger {
+            color: var(--accent-4);
+            font-weight: 600;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .badge-count {
+            display: inline-block;
+            background: var(--gradient-1);
+            color: #fff;
+            font-size: 10px;
+            padding: 0 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            line-height: 20px;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+            color: var(--text-muted);
+        }
+        .empty-state h3 {
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            font-size: 18px;
+        }
+        .empty-state p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .loading-text {
+            color: var(--text-muted);
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 14px;
+        }
+        .loading-text i {
+            margin-right: 8px;
+        }
+
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+            max-width: 380px;
+            width: 100%;
+        }
+
+        .toast {
+            background: var(--toast-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: var(--radius-sm);
+            padding: 14px 20px;
+            color: var(--toast-text);
+            font-family: var(--font);
+            font-size: 14px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            transform: translateX(120%);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast.hide {
+            transform: translateX(120%);
+            opacity: 0;
+        }
+
+        .toast .toast-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            width: 28px;
+            text-align: center;
+        }
+        .toast .toast-icon.success {
+            color: var(--accent-2);
+        }
+        .toast .toast-icon.error {
+            color: var(--accent-4);
+        }
+        .toast .toast-icon.warning {
+            color: var(--accent-3);
+        }
+        .toast .toast-icon.info {
+            color: var(--accent-1);
+        }
+
+        .toast .toast-content {
+            flex: 1;
+        }
+        .toast .toast-content .toast-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .toast .toast-content .toast-desc {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        .toast .toast-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+            transition: var(--transition);
+            pointer-events: auto;
+        }
+        .toast .toast-close:hover {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.30);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 36px 40px;
+            max-width: 460px;
+            width: 100%;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.15);
+            transform: scale(0.95);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.show .modal {
+            transform: scale(1);
+        }
+
+        .modal .modal-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .modal .modal-icon.danger {
+            color: var(--accent-4);
+        }
+        .modal .modal-icon.warning {
+            color: var(--accent-3);
+        }
+
+        .modal h2 {
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .modal p {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .modal .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .modal .modal-actions .btn {
+            min-width: 110px;
+            justify-content: center;
+            padding: 10px 28px;
+        }
+
+        /* ===== LOGIN OVERLAY (for admin) ===== */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .login-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .login-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 48px 40px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.20);
+            text-align: center;
+            transform: scale(0.95);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .login-overlay:not(.hidden) .login-card {
+            transform: scale(1);
+        }
+        .login-card .login-icon {
+            font-size: 52px;
+            color: var(--accent-1);
+            margin-bottom: 16px;
+        }
+        .login-card h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+        .login-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .login-card .login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 14px 24px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: #fff;
+            color: #1a1a2e;
+            font-family: var(--font);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        .login-card .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+        }
+        .login-card .login-btn i {
+            font-size: 22px;
+            color: #4285f4;
+        }
+        .login-card .login-btn .btn-text {
+            flex: 1;
+            text-align: center;
+        }
+        .login-card .login-loader {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 24px;
+            width: 100%;
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.30);
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+        .login-card .login-loader .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 0, 0, 0.10);
+            border-top-color: var(--accent-1);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px 10px 30px;
+            }
+            .admin-header {
+                padding: 16px 18px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .logo-area {
+                justify-content: center;
+            }
+            .header-stats {
+                justify-content: center;
+                gap: 8px;
+            }
+            .stat-pill {
+                font-size: 11px;
+                padding: 4px 12px;
+            }
+            .controls-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                padding: 14px 16px;
+            }
+            .controls-bar .left,
+            .controls-bar .right {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .search-box input {
+                min-width: 120px;
+                font-size: 13px;
+            }
+            .filter-count {
+                font-size: 12px;
+            }
+            .modal {
+                padding: 24px 20px;
+                margin: 0 16px;
+            }
+            table {
+                font-size: 12px;
+                min-width: 700px;
+            }
+            th,
+            td {
+                padding: 8px 10px;
+            }
+            .action-btns .btn-sm {
+                font-size: 10px;
+                padding: 3px 10px;
+            }
+            .login-card {
+                padding: 32px 24px;
+                margin: 0 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stat-pill {
+                font-size: 10px;
+                padding: 3px 10px;
+            }
+            .stat-pill .num {
+                font-size: 13px;
+            }
+            .btn {
+                font-size: 12px;
+                padding: 6px 16px;
+            }
+            .modal {
+                padding: 20px 16px;
+            }
+            .modal h2 {
+                font-size: 18px;
+            }
+            .logo-text {
+                font-size: 18px;
+            }
+            .login-card {
+                padding: 24px 18px;
+            }
+        }
+
+        .footer-bar {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 13px;
+            color: var(--text-muted);
+            padding: 12px 0;
+        }
+        .footer-bar i {
+            margin: 0 6px;
+        }
+        .footer-bar span {
+            margin: 0 8px;
+        }
+
+        /* Hide controls when not authenticated */
+        .admin-content {
+            display: block;
+        }
+        .admin-content.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container" id="app">
+
+        <!-- ===== TOAST CONTAINER ===== -->
+        <div class="toast-container" id="toastContainer"></div>
+
+        <!-- ===== MODAL ===== -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal">
+                <div class="modal-icon danger" id="modalIcon"><i class="fas fa-exclamation-triangle"></i></div>
+                <h2 id="modalTitle">Are you sure?</h2>
+                <p id="modalDesc">This action cannot be undone.</p>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" id="modalCancelBtn">Cancel</button>
+                    <button class="btn btn-danger" id="modalConfirmBtn">Confirm</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== LOGIN OVERLAY ===== -->
+        <div class="login-overlay" id="loginOverlay">
+            <div class="login-card">
+                <div class="login-icon"><i class="fas fa-shield-alt"></i></div>
+                <h2>Admin Access</h2>
+                <p>Sign in with your Google account to manage users and data.</p>
+                <button class="login-btn" id="loginBtn">
+                    <i class="fab fa-google"></i>
+                    <span class="btn-text">Sign in with Google</span>
+                </button>
+                <div class="login-loader" id="loginLoader">
+                    <div class="spinner"></div>
+                    <span>Signing in...</span>
+                </div>
+                <p style="font-size:12px;color:var(--text-muted);margin-top:12px;">
+                    <i class="fas fa-info-circle"></i> Only authenticated admins can modify data.
+                </p>
+            </div>
+        </div>
+
+        <!-- ===== ADMIN CONTENT (hidden until authenticated) ===== -->
+        <div class="admin-content hidden" id="adminContent">
+
+            <!-- ===== HEADER ===== -->
+            <header class="admin-header">
+                <div class="logo-area">
+                    <div class="logo-icon"><i class="fas fa-crown"></i></div>
+                    <div>
+                        <div class="logo-text">Journal Entry</div>
+                        <div class="logo-sub">Admin Control Panel</div>
+                    </div>
+                </div>
+                <div class="header-stats">
+                    <span class="stat-pill"><i class="fas fa-users"></i> Users <span class="num" id="totalUsers">0</span></span>
+                    <span class="stat-pill"><i class="fas fa-circle" style="color:var(--accent-2);"></i> Active <span class="num green" id="activeUsers">0</span></span>
+                    <span class="stat-pill"><i class="fas fa-bolt" style="color:var(--accent-1);"></i> Total XP <span class="num accent" id="totalXp">0</span></span>
+                    <span class="stat-pill"><i class="fas fa-coins" style="color:#d4a017;"></i> Coins <span class="num gold" id="totalCoins">0</span></span>
+                    <button class="btn btn-refresh" id="refreshBtn"><i class="fas fa-sync"></i> Refresh</button>
+                    <button class="btn btn-sm btn-sm-danger" id="logoutAdminBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </header>
+
+            <!-- ===== CONTROLS ===== -->
+            <div class="controls-bar">
+                <div class="left">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search by name or email..." />
+                    </div>
+                    <span class="filter-count" id="filterCount">Showing all users</span>
+                </div>
+                <div class="right">
+                    <button class="btn btn-warning" id="resetAllBtn">
+                        <i class="fas fa-undo-alt"></i> Reset All
+                    </button>
+                </div>
+            </div>
+
+            <!-- ===== TABLE ===== -->
+            <div class="table-wrap">
+                <div class="table-scroll" id="tableScroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:36px;">#</th>
+                                <th style="min-width:190px;">User</th>
+                                <th style="width:60px;">XP</th>
+                                <th style="width:60px;">Pts</th>
+                                <th style="width:60px;">Coins</th>
+                                <th style="width:80px;">C / W</th>
+                                <th style="width:70px;">Acc</th>
+                                <th style="width:50px;">Lvl</th>
+                                <th style="width:60px;">Streak</th>
+                                <th style="width:70px;">Badges</th>
+                                <th style="width:100px;">Status</th>
+                                <th style="width:140px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody">
+                            <tr>
+                                <td colspan="12">
+                                    <div class="loading-text">
+                                        <i class="fas fa-spinner fa-spin"></i> Loading users...
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ===== FOOTER ===== -->
+            <div class="footer-bar">
+                <i class="fas fa-shield-alt" style="color:var(--accent-1);"></i>
+                Admin Control · Real-time sync with Firebase
+                <span>·</span>
+                <span id="lastUpdated">Last updated: —</span>
+                <span>·</span>
+                <span style="font-size:12px;opacity:0.6;">
+                    <i class="fas fa-trash-alt" style="color:var(--accent-4);"></i> Delete removes user permanently
+                </span>
+            </div>
+
+        </div><!-- end admin-content -->
+
+    </div>
+
+    <script>
+        // ================================================================
+        // 0. FIREBASE INIT
+        // ================================================================
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCvEyo8iJg-sGb5MVINjTR_q3ANMPeTd0o",
+            authDomain: "javeda-21ddd.firebaseapp.com",
+            projectId: "javeda-21ddd",
+            storageBucket: "javeda-21ddd.firebasestorage.app",
+            messagingSenderId: "72745884521",
+            appId: "1:72745884521:web:cd6c4818b97cc4ec8dbbf8",
+            measurementId: "G-J4Y1WJBL6K"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // ================================================================
+        // 1. HELPERS
+        // ================================================================
+
+        const $ = (sel) => document.querySelector(sel);
+        const $$ = (sel) => document.querySelectorAll(sel);
+
+        function setText(id, val) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = val;
+        }
+
+        function getLevelFromXP(xp) {
+            if (xp < 100) return 1;
+            let level = 1;
+            let needed = 100;
+            let total = 0;
+            while (xp >= total + needed) {
+                total += needed;
+                level++;
+                needed = 100 + (level - 1) * 10;
+            }
+            return level;
+        }
+
+        function formatTime(ts) {
+            if (!ts) return 'Never';
+            const d = ts.toDate ? ts.toDate() : new Date(ts);
+            const now = new Date();
+            const diff = (now - d) / 1000;
+            if (diff < 60) return 'Just now';
+            if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+            if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+            return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function isActive(ts) {
+            if (!ts) return false;
+            const d = ts.toDate ? ts.toDate() : new Date(ts);
+            const now = new Date();
+            const diff = (now - d) / 1000;
+            return diff < 300; // 5 minutes
+        }
+
+        function getAccuracy(correct, wrong) {
+            const total = correct + wrong;
+            return total > 0 ? Math.round((correct / total) * 100) : 0;
+        }
+
+        function getDocIdFromEmail(email) {
+            if (!email) return null;
+            return email.replace(/[.#$\/\[\]]/g, '_');
+        }
+
+        // ================================================================
+        // 2. TOAST SYSTEM
+        // ================================================================
+
+        function showToast(title, desc, icon, type) {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            const iconClass = type === 'success' ? 'success' : type === 'error' ? 'error' : type === 'warning' ? 'warning' :
+                'info';
+            toast.innerHTML =
+                `<div class="toast-icon ${iconClass}"><i class="fas ${icon}"></i></div><div class="toast-content"><div class="toast-title">${title}</div><div class="toast-desc">${desc}</div></div><button class="toast-close"><i class="fas fa-times"></i></button>`;
+            container.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.add('show'));
+            toast.querySelector('.toast-close').addEventListener('click', () => dismissToast(toast));
+            setTimeout(() => dismissToast(toast), 4000);
+        }
+
+        function dismissToast(toast) {
+            if (toast._dismissed) return;
+            toast._dismissed = true;
+            toast.classList.remove('show');
+            toast.classList.add('hide');
+            setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 400);
+        }
+
+        // ================================================================
+        // 3. MODAL SYSTEM
+        // ================================================================
+
+        let modalResolve = null;
+
+        function showModal(title, desc, icon = 'fa-exclamation-triangle', confirmText = 'Confirm', danger = true) {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('modalOverlay');
+                document.getElementById('modalTitle').textContent = title;
+                document.getElementById('modalDesc').textContent = desc;
+                const iconEl = document.getElementById('modalIcon');
+                iconEl.className = 'modal-icon ' + (danger ? 'danger' : 'warning');
+                iconEl.innerHTML = `<i class="fas ${icon}"></i>`;
+                document.getElementById('modalConfirmBtn').textContent = confirmText;
+                document.getElementById('modalConfirmBtn').className = 'btn ' + (danger ? 'btn-danger' : 'btn-warning');
+                modalResolve = resolve;
+                overlay.classList.add('show');
+            });
+        }
+
+        document.getElementById('modalCancelBtn').addEventListener('click', () => {
+            document.getElementById('modalOverlay').classList.remove('show');
+            if (modalResolve) { modalResolve(false);
+                modalResolve = null; }
+        });
+
+        document.getElementById('modalConfirmBtn').addEventListener('click', () => {
+            document.getElementById('modalOverlay').classList.remove('show');
+            if (modalResolve) { modalResolve(true);
+                modalResolve = null; }
+        });
+
+        document.getElementById('modalOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                document.getElementById('modalOverlay').classList.remove('show');
+                if (modalResolve) { modalResolve(false);
+                    modalResolve = null; }
+            }
+        });
+
+        // ================================================================
+        // 4. AUTH HANDLING
+        // ================================================================
+
+        let adminUser = null;
+
+        function showLogin() {
+            document.getElementById('loginOverlay').classList.remove('hidden');
+            document.getElementById('adminContent').classList.add('hidden');
+        }
+
+        function hideLogin() {
+            document.getElementById('loginOverlay').classList.add('hidden');
+            document.getElementById('adminContent').classList.remove('hidden');
+        }
+
+        function handleAuthState(user) {
+            if (user) {
+                adminUser = user;
+                hideLogin();
+                showToast('Welcome Admin', `Signed in as ${user.displayName || user.email}`, 'fa-user-check', 'success');
+                // Load users after auth
+                loadUsers();
+            } else {
+                adminUser = null;
+                showLogin();
+                // Unsubscribe from user listener if any
+                if (unsubUsers) {
+                    unsubUsers();
+                    unsubUsers = null;
+                }
+                // Show empty table
+                const tbody = document.getElementById('userTableBody');
+                if (tbody) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="12">
+                                <div class="empty-state">
+                                    <i class="fas fa-lock" style="color:var(--accent-3);"></i>
+                                    <h3>Please sign in to access admin panel</h3>
+                                    <p>Use the login button above to continue.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }
+                // Reset stats
+                setText('totalUsers', 0);
+                setText('activeUsers', 0);
+                setText('totalXp', 0);
+                setText('totalCoins', 0);
+            }
+        }
+
+        // Login button
+        document.getElementById('loginBtn').addEventListener('click', async function() {
+            const btn = this,
+                loader = document.getElementById('loginLoader');
+            btn.style.display = 'none';
+            loader.style.display = 'flex';
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                await auth.signInWithPopup(provider);
+            } catch (error) {
+                showToast('Login Failed', error.message || 'Please try again.', 'fa-exclamation-circle', 'error');
+                btn.style.display = 'flex';
+                loader.style.display = 'none';
+            }
+        });
+
+        // Logout button
+        document.getElementById('logoutAdminBtn').addEventListener('click', async function() {
+            try {
+                await auth.signOut();
+                showToast('Logged Out', 'You have been signed out.', 'fa-sign-out-alt', 'info');
+            } catch (e) {
+                showToast('Error', 'Failed to sign out.', 'fa-times-circle', 'error');
+            }
+        });
+
+        // ================================================================
+        // 5. MAIN DATA & RENDER
+        // ================================================================
+
+        let allUsers = [];
+        let filteredUsers = [];
+        let searchQuery = '';
+        let unsubUsers = null;
+        let isLoading = true;
+
+        function renderUsers() {
+            const tbody = document.getElementById('userTableBody');
+            if (!tbody) return;
+
+            const query = searchQuery.toLowerCase().trim();
+            filteredUsers = allUsers.filter(u => {
+                const name = (u.displayName || 'User').toLowerCase();
+                const email = (u.email || '').toLowerCase();
+                return name.includes(query) || email.includes(query);
+            });
+
+            const countEl = document.getElementById('filterCount');
+            if (countEl) {
+                if (query) {
+                    countEl.textContent = `Showing ${filteredUsers.length} of ${allUsers.length}`;
+                } else {
+                    countEl.textContent = `Showing all ${allUsers.length} users`;
+                }
+            }
+
+            if (filteredUsers.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="12">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <h3>${allUsers.length === 0 ? 'No users found' : 'No matching users'}</h3>
+                                <p>${allUsers.length === 0 ? 'Users will appear here once they start using the app.' : 'Try a different search term.'}</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                updateStats();
+                return;
+            }
+
+            let html = '';
+            filteredUsers.forEach((user, index) => {
+                const correct = user.correct || 0;
+                const wrong = user.wrong || 0;
+                const total = correct + wrong;
+                const acc = getAccuracy(correct, wrong);
+                const level = user.level || getLevelFromXP(user.xp || 0);
+                const badges = (user.earnedBadges || []).length;
+                const active = isActive(user.lastActive);
+                const statusClass = active ? 'active' : (user.lastActive ? 'idle' : 'offline');
+                const statusLabel = active ? 'Active' : (user.lastActive ? 'Idle' : 'Offline');
+                const lastSeen = user.lastActive ? formatTime(user.lastActive) : 'Never';
+
+                html += `
+                    <tr class="${active ? 'user-row' : ''}" data-email="${user.email || ''}">
+                        <td style="color:var(--text-muted);font-weight:500;">${index + 1}</td>
+                        <td>
+                            <div class="user-cell">
+                                <img class="user-avatar" src="${user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || 'User') + '&background=5b4bd5&color=fff&size=34'}" alt="avatar" />
+                                <div>
+                                    <div class="user-name">${user.displayName || 'User'}</div>
+                                    <span class="user-email">${user.email || 'No email'}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="val-highlight">${user.xp || 0}</td>
+                        <td class="val-gold">${user.points || 0}</td>
+                        <td class="val-gold">${user.coins || 0}</td>
+                        <td><span class="val-green">${correct}</span> / <span class="val-danger">${wrong}</span></td>
+                        <td class="${acc >= 80 ? 'val-green' : acc >= 50 ? 'val-gold' : 'val-danger'}">${acc}%</td>
+                        <td class="val-accent">${level}</td>
+                        <td class="${(user.streak || 0) >= 10 ? 'val-green' : ''}">${user.streak || 0}</td>
+                        <td><span class="badge-count">${badges}</span></td>
+                        <td>
+                            <span class="status-badge ${statusClass}">
+                                <span class="dot"></span> ${statusLabel}
+                                <span class="last-seen">${lastSeen}</span>
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn btn-sm btn-sm-warning reset-user-btn" data-email="${user.email || ''}" data-name="${user.displayName || 'User'}">
+                                    <i class="fas fa-undo-alt"></i> Reset
+                                </button>
+                                <button class="btn btn-sm btn-sm-danger delete-user-btn" data-email="${user.email || ''}" data-name="${user.displayName || 'User'}">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+            updateStats();
+
+            // Attach events
+            document.querySelectorAll('.reset-user-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const email = this.dataset.email;
+                    const name = this.dataset.name;
+                    if (email) handleResetUser(email, name);
+                });
+            });
+
+            document.querySelectorAll('.delete-user-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const email = this.dataset.email;
+                    const name = this.dataset.name;
+                    if (email) handleDeleteUser(email, name);
+                });
+            });
+        }
+
+        function updateStats() {
+            const total = allUsers.length;
+            const active = allUsers.filter(u => isActive(u.lastActive)).length;
+            const totalXp = allUsers.reduce((sum, u) => sum + (u.xp || 0), 0);
+            const totalCoins = allUsers.reduce((sum, u) => sum + (u.coins || 0), 0);
+
+            setText('totalUsers', total);
+            setText('activeUsers', active);
+            setText('totalXp', totalXp.toLocaleString());
+            setText('totalCoins', totalCoins.toLocaleString());
+
+            const el = document.getElementById('lastUpdated');
+            if (el) el.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+        }
+
+        // ================================================================
+        // 6. FIREBASE - LOAD USERS (REAL-TIME)
+        // ================================================================
+
+        function loadUsers() {
+            if (unsubUsers) {
+                unsubUsers();
+                unsubUsers = null;
+            }
+
+            const tbody = document.getElementById('userTableBody');
+            if (tbody) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="12">
+                            <div class="loading-text">
+                                <i class="fas fa-spinner fa-spin"></i> Loading users...
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+
+            unsubUsers = db.collection('users')
+                .orderBy('updatedAt', 'desc')
+                .onSnapshot((snapshot) => {
+                    const users = [];
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        if (data.email && data.email.startsWith('guest_')) return;
+                        users.push({
+                            id: doc.id,
+                            email: data.email || '',
+                            displayName: data.displayName || 'User',
+                            photoURL: data.photoURL || '',
+                            xp: data.xp || 0,
+                            points: data.points || 0,
+                            coins: data.coins || 0,
+                            correct: data.correct || 0,
+                            wrong: data.wrong || 0,
+                            streak: data.streak || 0,
+                            bestStreak: data.bestStreak || 0,
+                            level: data.level || 1,
+                            hints: data.hints || 0,
+                            earnedBadges: data.earnedBadges || [],
+                            lastActive: data.updatedAt || data.lastActive || null,
+                            totalQuestions: data.totalQuestions || 0,
+                            accuracyHistory: data.accuracyHistory || [],
+                            weakRules: data.weakRules || {},
+                            quizHistory: data.quizHistory || [],
+                            updatedAt: data.updatedAt || null,
+                        });
+                    });
+                    allUsers = users;
+                    isLoading = false;
+                    renderUsers();
+                }, (error) => {
+                    console.error('Error loading users:', error);
+                    isLoading = false;
+                    const tbody = document.getElementById('userTableBody');
+                    if (tbody) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="12">
+                                    <div class="empty-state">
+                                        <i class="fas fa-exclamation-triangle" style="color:var(--accent-4);"></i>
+                                        <h3>Connection Error</h3>
+                                        <p>${error.message || 'Unable to connect to Firebase. Please check your network.'}</p>
+                                        <button class="btn btn-primary" style="margin-top:12px;" onclick="loadUsers()">
+                                            <i class="fas fa-sync"></i> Retry
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    }
+                });
+        }
+
+        // ================================================================
+        // 7. RESET FUNCTIONS
+        // ================================================================
+
+        async function handleResetAll() {
+            if (!adminUser) {
+                showToast('Not Authenticated', 'Please sign in as admin.', 'fa-exclamation-circle', 'error');
+                return;
+            }
+            if (allUsers.length === 0) {
+                showToast('No Users', 'There are no users to reset.', 'fa-info-circle', 'info');
+                return;
+            }
+
+            const confirmed = await showModal(
+                '⚠️ Reset All Users?',
+                `This will reset ALL stats (XP, points, coins, correct/wrong, streak, badges, etc.) for ${allUsers.length} users. This action cannot be undone!`,
+                'fa-exclamation-triangle',
+                'Reset All',
+                true
+            );
+
+            if (!confirmed) return;
+
+            showToast('Resetting...', 'Please wait while all users are reset.', 'fa-spinner fa-spin', 'warning');
+
+            try {
+                let successCount = 0;
+                let failCount = 0;
+
+                for (const user of allUsers) {
+                    if (!user.email || user.email.startsWith('guest_')) continue;
+                    try {
+                        const docId = getDocIdFromEmail(user.email);
+                        if (!docId) continue;
+                        await db.collection('users').doc(docId).set({
+                            email: user.email,
+                            displayName: user.displayName || 'User',
+                            photoURL: user.photoURL || '',
+                            xp: 0,
+                            points: 0,
+                            coins: 0,
+                            correct: 0,
+                            wrong: 0,
+                            streak: 0,
+                            bestStreak: 0,
+                            level: 1,
+                            hints: 0,
+                            earnedBadges: [],
+                            totalQuestions: 0,
+                            accuracyHistory: [],
+                            weakRules: {},
+                            quizHistory: [],
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                        }, { merge: true });
+                        successCount++;
+                    } catch (e) {
+                        console.error('Failed to reset user:', user.email, e);
+                        failCount++;
+                    }
+                }
+
+                showToast(
+                    'Reset Complete',
+                    `Successfully reset ${successCount} users. ${failCount > 0 ? failCount + ' failed.' : ''}`,
+                    'fa-check-circle',
+                    successCount > 0 ? 'success' : 'error'
+                );
+            } catch (e) {
+                showToast('Error', 'Failed to reset users: ' + e.message, 'fa-times-circle', 'error');
+            }
+        }
+
+        async function handleResetUser(email, name) {
+            if (!adminUser) {
+                showToast('Not Authenticated', 'Please sign in as admin.', 'fa-exclamation-circle', 'error');
+                return;
+            }
+            if (!email) {
+                showToast('Error', 'No email address found for this user.', 'fa-times-circle', 'error');
+                return;
+            }
+
+            const confirmed = await showModal(
+                `Reset ${name || 'User'}?`,
+                `This will reset ALL stats for "${name}" (XP, points, coins, correct/wrong, streak, badges, etc.). This action cannot be undone!`,
+                'fa-user-slash',
+                'Reset User',
+                true
+            );
+
+            if (!confirmed) return;
+
+            showToast('Resetting...', `Resetting stats for ${name}...`, 'fa-spinner fa-spin', 'warning');
+
+            try {
+                const docId = getDocIdFromEmail(email);
+                if (!docId) throw new Error('Invalid email');
+                await db.collection('users').doc(docId).set({
+                    email: email,
+                    displayName: name || 'User',
+                    xp: 0,
+                    points: 0,
+                    coins: 0,
+                    correct: 0,
+                    wrong: 0,
+                    streak: 0,
+                    bestStreak: 0,
+                    level: 1,
+                    hints: 0,
+                    earnedBadges: [],
+                    totalQuestions: 0,
+                    accuracyHistory: [],
+                    weakRules: {},
+                    quizHistory: [],
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                }, { merge: true });
+
+                showToast('Reset Complete', `${name}'s stats have been reset to zero.`, 'fa-check-circle', 'success');
+            } catch (e) {
+                showToast('Error', 'Failed to reset user: ' + e.message, 'fa-times-circle', 'error');
+            }
+        }
+
+        // ================================================================
+        // 8. DELETE USER — with auto-logout
+        // ================================================================
+
+        async function handleDeleteUser(email, name) {
+            if (!adminUser) {
+                showToast('Not Authenticated', 'Please sign in as admin.', 'fa-exclamation-circle', 'error');
+                return;
+            }
+            if (!email) {
+                showToast('Error', 'No email address found for this user.', 'fa-times-circle', 'error');
+                return;
+            }
+
+            const confirmed = await showModal(
+                `🗑️ Delete ${name || 'User'}?`,
+                `This will permanently delete "${name}" from the system. All their stats, progress, and data will be lost forever. The user will be automatically logged out if they are currently signed in.`,
+                'fa-trash-alt',
+                'Delete Permanently',
+                true
+            );
+
+            if (!confirmed) return;
+
+            showToast('Deleting...', `Removing ${name} from the system...`, 'fa-spinner fa-spin', 'warning');
+
+            try {
+                const docId = getDocIdFromEmail(email);
+                if (!docId) throw new Error('Invalid email');
+
+                // 1. Delete the user document
+                await db.collection('users').doc(docId).delete();
+
+                // 2. Delete revision questions
+                const revSnapshot = await db.collection('revisionQuestions')
+                    .where('userId', '==', docId)
+                    .get();
+                const batch = db.batch();
+                revSnapshot.forEach(doc => batch.delete(doc.ref));
+                if (revSnapshot.size > 0) {
+                    await batch.commit();
+                }
+
+                // 3. Force logout if currently signed in
+                const currentUser = auth.currentUser;
+                if (currentUser && currentUser.email === email) {
+                    await auth.signOut();
+                    showToast('User Logged Out', `${name} was signed in and has been logged out.`, 'fa-sign-out-alt',
+                        'success');
+                } else {
+                    showToast('User Deleted', `${name} has been permanently removed.`, 'fa-check-circle', 'success');
+                }
+
+            } catch (e) {
+                console.error('Delete error:', e);
+                // Show specific error message
+                let msg = e.message;
+                if (msg.includes('permission')) {
+                    msg =
+                    'Permission denied. Please ensure your Firebase security rules allow delete operations for authenticated users.';
+                }
+                showToast('Error', 'Failed to delete user: ' + msg, 'fa-times-circle', 'error');
+            }
+        }
+
+        // ================================================================
+        // 9. SEARCH
+        // ================================================================
+
+        document.getElementById('searchInput').addEventListener('input', function() {
+            searchQuery = this.value;
+            renderUsers();
+        });
+
+        // ================================================================
+        // 10. REFRESH
+        // ================================================================
+
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+            this.disabled = true;
+            if (unsubUsers) {
+                unsubUsers();
+                unsubUsers = null;
+            }
+            loadUsers();
+            setTimeout(() => {
+                this.innerHTML = '<i class="fas fa-sync"></i> Refresh';
+                this.disabled = false;
+            }, 1200);
+        });
+
+        // ================================================================
+        // 11. RESET ALL BUTTON
+        // ================================================================
+
+        document.getElementById('resetAllBtn').addEventListener('click', handleResetAll);
+
+        // ================================================================
+        // 12. INIT
+        // ================================================================
+
+        function init() {
+            console.log('🔐 Journal Entry Admin Control Panel');
+            console.log('📡 Real-time sync with Firebase (requires auth)');
+
+            // Listen to auth state
+            auth.onAuthStateChanged(handleAuthState);
+
+            // Auto-update "last updated" every 15 seconds
+            setInterval(() => {
+                const el = document.getElementById('lastUpdated');
+                if (el && adminUser) el.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+            }, 15000);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Expose functions globally
+        window.loadUsers = loadUsers;
+        window.handleResetAll = handleResetAll;
+        window.handleResetUser = handleResetUser;
+        window.handleDeleteUser = handleDeleteUser;
+    </script>
+
+</body>
+</html>
