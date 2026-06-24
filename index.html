@@ -12,7 +12,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
     </script>
     <style>
-        /* ===== FULL STYLES (same as before, kept intact) ===== */
+        /* ===== FULL STYLES ===== */
         * {
             margin: 0;
             padding: 0;
@@ -1662,6 +1662,95 @@
         .lb-user-row:hover td {
             background: rgba(91, 75, 213, 0.14) !important;
         }
+
+        /* ===== MAINTENANCE OVERLAY ===== */
+        .maintenance-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.4s ease;
+        }
+        .maintenance-overlay.active {
+            display: flex;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .maintenance-box {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 60px 48px;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+            transform: scale(0.95);
+            animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        @keyframes scaleIn {
+            to {
+                transform: scale(1);
+            }
+        }
+        .maintenance-box .m-icon {
+            font-size: 72px;
+            margin-bottom: 16px;
+            color: var(--accent-3);
+        }
+        .maintenance-box h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .maintenance-box p {
+            font-size: 17px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        .maintenance-box .timer {
+            font-size: 14px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .maintenance-box .timer .time {
+            font-weight: 700;
+            color: var(--accent-1);
+            font-size: 18px;
+            font-variant-numeric: tabular-nums;
+        }
+        .maintenance-box .footer-note {
+            margin-top: 20px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.20);
+            border-radius: var(--radius-xs);
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .maintenance-box .footer-note i {
+            margin-right: 6px;
+        }
     </style>
 </head>
 <body>
@@ -1669,6 +1758,21 @@
     <div class="app-container" id="app">
 
         <div class="toast-container" id="toastContainer"></div>
+
+        <!-- ===== MAINTENANCE OVERLAY ===== -->
+        <div class="maintenance-overlay" id="maintenanceOverlay">
+            <div class="maintenance-box">
+                <div class="m-icon">🔧</div>
+                <h2>Maintenance Break</h2>
+                <p>We're currently performing some improvements. Please check back shortly.</p>
+                <div class="timer">
+                    <i class="fas fa-clock"></i> Resumes in <span class="time" id="maintenanceCountdown">--:--</span>
+                </div>
+                <div class="footer-note">
+                    <i class="fas fa-info-circle"></i> Thank you for your patience
+                </div>
+            </div>
+        </div>
 
         <!-- ===== LOGIN OVERLAY ===== -->
         <div class="login-overlay" id="loginOverlay">
@@ -1945,7 +2049,7 @@
         </section>
 
         <!-- ============================================================
-        SECTION: LEADERBOARD — FIXED: uses dashboard data for current user
+        SECTION: LEADERBOARD
         ============================================================ -->
         <section class="section-panel" id="section-leaderboard">
             <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
@@ -1976,6 +2080,7 @@
         </section>
 
     </div>
+
     <script>
         // ================================================================
         // 0. FIREBASE INIT
@@ -1994,6 +2099,83 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+
+        // ================================================================
+        // MAINTENANCE PAUSE DETECTION
+        // ================================================================
+
+        (function() {
+            const overlay = document.getElementById('maintenanceOverlay');
+            const countdownEl = document.getElementById('maintenanceCountdown');
+            let countdownInterval = null;
+
+            function showMaintenance(until) {
+                if (overlay) {
+                    overlay.classList.add('active');
+                    overlay.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                    startCountdown(until);
+                }
+            }
+
+            function hideMaintenance() {
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    overlay.style.display = 'none';
+                    document.body.style.overflow = '';
+                    if (countdownInterval) {
+                        clearInterval(countdownInterval);
+                        countdownInterval = null;
+                    }
+                }
+            }
+
+            function startCountdown(until) {
+                if (countdownInterval) clearInterval(countdownInterval);
+                countdownInterval = setInterval(() => {
+                    const remaining = Math.max(0, until - Date.now());
+                    if (remaining <= 0) {
+                        clearInterval(countdownInterval);
+                        countdownInterval = null;
+                        hideMaintenance();
+                        return;
+                    }
+                    const mins = Math.floor(remaining / 60000);
+                    const secs = Math.floor((remaining % 60000) / 1000);
+                    if (countdownEl) {
+                        countdownEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                    }
+                }, 1000);
+            }
+
+            // Listen for pause status from Firestore
+            try {
+                db.collection('config').doc('pause').onSnapshot((doc) => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        if (data.paused && data.pausedUntil && data.pausedUntil > Date.now()) {
+                            showMaintenance(data.pausedUntil);
+                        } else {
+                            hideMaintenance();
+                            // Auto-clear if expired
+                            if (data.paused && data.pausedUntil && data.pausedUntil <= Date.now()) {
+                                db.collection('config').doc('pause').set({
+                                    paused: false,
+                                    pausedUntil: null,
+                                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                                }, { merge: true });
+                            }
+                        }
+                    } else {
+                        hideMaintenance();
+                    }
+                }, (error) => {
+                    console.error('Maintenance listener error:', error);
+                });
+            } catch (e) {
+                console.warn('Maintenance feature requires Firebase initialization.');
+            }
+        })();
 
         // ================================================================
         // 1. HELPERS
@@ -3983,7 +4165,6 @@
             updateBadges();
             updateWeakTopics();
 
-            // Refresh leaderboard when stats change
             renderLeaderboard();
         }
 
@@ -4248,7 +4429,7 @@
         }
 
         // ================================================================
-        // 21. LEADERBOARD — FIXED: uses dashboard data for current user
+        // 21. LEADERBOARD
         // ================================================================
 
         let leaderboardData = [];
@@ -4259,22 +4440,15 @@
             const empty = document.getElementById('lbEmpty');
             if (!tbody) return;
 
-            // Get current user email
             const currentEmail = auth.currentUser ? auth.currentUser.email : null;
 
-            // Filter out guest accounts
             let filtered = leaderboardData.filter(u => !isGuestUid(u.id) && u.email);
-
-            // Prepare sorted data
             let sorted = [...filtered];
-
-            // Apply sorting based on selected key
             if (leaderboardSortKey === 'xp') sorted.sort((a, b) => b.xp - a.xp);
             else if (leaderboardSortKey === 'points') sorted.sort((a, b) => b.points - a.points);
             else if (leaderboardSortKey === 'accuracy') sorted.sort((a, b) => b.accuracy - a.accuracy);
             else if (leaderboardSortKey === 'badges') sorted.sort((a, b) => (b.badges || 0) - (a.badges || 0));
 
-            // Remove duplicates by email
             const seen = new Set();
             const unique = [];
             for (const u of sorted) {
@@ -4283,28 +4457,23 @@
             }
             sorted = unique;
 
-            // ---- FIX: Override current user's data with dashboard stats ----
             if (currentEmail) {
                 const userIdx = sorted.findIndex(u => u.email === currentEmail);
                 if (userIdx !== -1) {
                     const total = state.stats.correct + state.stats.wrong;
                     const acc = total > 0 ? Math.round((state.stats.correct / total) * 100) : 0;
-                    // Update the user object in the array with dashboard data
                     sorted[userIdx] = {
                         ...sorted[userIdx],
                         xp: state.stats.xp || 0,
                         points: state.stats.points || 0,
                         accuracy: acc,
                         badges: (state.stats.earnedBadges || []).length,
-                        // Preserve original email, name, photo
                         email: sorted[userIdx].email,
                         name: sorted[userIdx].name,
                         photoURL: sorted[userIdx].photoURL,
                         isUser: true,
                     };
                 } else {
-                    // User not in leaderboard list — add them at the bottom
-                    // Only if they have some data
                     const total = state.stats.correct + state.stats.wrong;
                     const acc = total > 0 ? Math.round((state.stats.correct / total) * 100) : 0;
                     const userObj = {
@@ -4317,10 +4486,8 @@
                         badges: (state.stats.earnedBadges || []).length,
                         isUser: true,
                     };
-                    // Only add if they have some activity
                     if (state.stats.totalQuestions > 0 || state.stats.xp > 0) {
                         sorted.push(userObj);
-                        // Re-sort after adding
                         if (leaderboardSortKey === 'xp') sorted.sort((a, b) => b.xp - a.xp);
                         else if (leaderboardSortKey === 'points') sorted.sort((a, b) => b.points - a.points);
                         else if (leaderboardSortKey === 'accuracy') sorted.sort((a, b) => b.accuracy - a.accuracy);
@@ -4328,13 +4495,6 @@
                             0));
                     }
                 }
-            }
-
-            // Find current user's position after sorting
-            let userRank = -1;
-            if (currentEmail) {
-                const idx = sorted.findIndex(u => u.email === currentEmail);
-                if (idx !== -1) userRank = idx + 1;
             }
 
             if (sorted.length === 0) {
@@ -4358,10 +4518,8 @@
                     `<img src="${e.photoURL}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-right:6px;" />` :
                     '';
 
-                // Use dashboard data for current user (already overridden)
                 const displayName = isUser ? (auth.currentUser ? auth.currentUser.displayName || 'User' : 'User') : e
                 .name;
-                const displayEmail = e.email || '';
 
                 return `<tr${rowClass}>
                     <td><span class="${rc}">#${rank}</span></td>
@@ -4378,7 +4536,6 @@
             if (state.unsubLeaderboard) { state.unsubLeaderboard();
                 state.unsubLeaderboard = null; }
 
-            // Increased limit to 200 to include more users
             state.unsubLeaderboard = db.collection(USERS_COLLECTION)
                 .orderBy('xp', 'desc')
                 .limit(200)
@@ -4409,7 +4566,7 @@
         }
 
         // ================================================================
-        // 22. USER DATA LISTENER — FIXED: prevents zero-overwrite
+        // 22. USER DATA LISTENER
         // ================================================================
 
         function setupUserDataListener(uid) {
@@ -4479,8 +4636,6 @@
                     updateQuizProgress();
                     updateShopUI();
                     updateHintButton();
-
-                    // Refresh leaderboard to show updated user data
                     renderLeaderboard();
 
                 }, (error) => {
@@ -4893,7 +5048,7 @@
 
             updateDiffModeLabel(state.difficulty);
 
-            console.log('📘 Version : 2.7.0 (Leaderboard-Dashboard Sync)');
+            console.log('📘 Version : 2.8.0 (Maintenance Pause Added)');
             console.log('✅ Developed By - Faizul Islam Riyad');
         }
 

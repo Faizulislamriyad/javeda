@@ -339,6 +339,26 @@
             transform: translateY(-2px);
         }
 
+        .btn-pause {
+            background: rgba(217, 79, 79, 0.12);
+            color: var(--accent-4);
+            border: 1px solid rgba(217, 79, 79, 0.20);
+        }
+        .btn-pause:hover {
+            background: var(--accent-4);
+            color: #fff;
+            border-color: var(--accent-4);
+            transform: translateY(-2px);
+        }
+        .btn-pause.active {
+            background: var(--accent-2);
+            color: #fff;
+            border-color: var(--accent-2);
+        }
+        .btn-pause.active:hover {
+            background: #0a9a75;
+        }
+
         .table-wrap {
             background: var(--glass-bg);
             backdrop-filter: blur(var(--glass-blur));
@@ -727,6 +747,202 @@
             padding: 10px 28px;
         }
 
+        /* ===== LOGIN OVERLAY ===== */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .login-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .login-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 48px 40px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.20);
+            text-align: center;
+            transform: scale(0.95);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .login-overlay:not(.hidden) .login-card {
+            transform: scale(1);
+        }
+        .login-card .login-icon {
+            font-size: 52px;
+            color: var(--accent-1);
+            margin-bottom: 16px;
+        }
+        .login-card h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+        .login-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .login-card .login-input-group {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        .login-card .login-input-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.40);
+            font-family: var(--font);
+            font-size: 16px;
+            color: var(--text-primary);
+            outline: none;
+            transition: var(--transition);
+            backdrop-filter: blur(6px);
+        }
+        .login-card .login-input-group input:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 3px rgba(91, 75, 213, 0.10);
+        }
+        .login-card .login-input-group input::placeholder {
+            color: var(--text-muted);
+        }
+        .login-card .login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 14px 24px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: var(--gradient-1);
+            color: #fff;
+            font-family: var(--font);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 16px rgba(91, 75, 213, 0.20);
+        }
+        .login-card .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(91, 75, 213, 0.30);
+        }
+        .login-card .login-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .login-card .login-error {
+            color: var(--accent-4);
+            font-size: 14px;
+            margin-top: 8px;
+            min-height: 24px;
+        }
+        .login-card .login-attempts {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+        .login-card .login-locked {
+            color: var(--accent-4);
+            font-size: 15px;
+            font-weight: 600;
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(217, 79, 79, 0.10);
+            border-radius: var(--radius-xs);
+            border: 1px solid rgba(217, 79, 79, 0.15);
+        }
+        .login-card .login-locked .countdown {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        /* ===== PAUSE MODAL ===== */
+        .pause-modal .modal-icon {
+            color: var(--accent-3);
+        }
+        .pause-modal .pause-timer-inputs {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin: 16px 0 20px;
+            flex-wrap: wrap;
+        }
+        .pause-modal .pause-timer-inputs .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .pause-modal .pause-timer-inputs .input-group label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .pause-modal .pause-timer-inputs .input-group input {
+            width: 80px;
+            padding: 10px 12px;
+            border-radius: var(--radius-xs);
+            border: 2px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.40);
+            font-family: var(--font);
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+            color: var(--text-primary);
+            outline: none;
+            transition: var(--transition);
+        }
+        .pause-modal .pause-timer-inputs .input-group input:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 3px rgba(91, 75, 213, 0.10);
+        }
+        .pause-modal .pause-timer-inputs .input-group input::-webkit-inner-spin-button,
+        .pause-modal .pause-timer-inputs .input-group input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .pause-modal .pause-timer-inputs .input-group input[type=number] {
+            -moz-appearance: textfield;
+        }
+        .pause-modal .pause-status {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 12px;
+            padding: 10px;
+            background: rgba(15, 184, 138, 0.08);
+            border-radius: var(--radius-xs);
+            border: 1px solid rgba(15, 184, 138, 0.15);
+        }
+        .pause-modal .pause-status .time-remaining {
+            font-weight: 700;
+            color: var(--accent-2);
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             body {
@@ -783,6 +999,15 @@
                 font-size: 10px;
                 padding: 3px 10px;
             }
+            .login-card {
+                padding: 32px 24px;
+                margin: 0 16px;
+            }
+            .pause-modal .pause-timer-inputs .input-group input {
+                width: 60px;
+                font-size: 16px;
+                padding: 8px 10px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -806,6 +1031,17 @@
             .logo-text {
                 font-size: 18px;
             }
+            .login-card {
+                padding: 24px 18px;
+            }
+            .pause-modal .pause-timer-inputs {
+                gap: 8px;
+            }
+            .pause-modal .pause-timer-inputs .input-group input {
+                width: 50px;
+                font-size: 14px;
+                padding: 6px 8px;
+            }
         }
 
         .footer-bar {
@@ -820,6 +1056,34 @@
         }
         .footer-bar span {
             margin: 0 8px;
+        }
+
+        .admin-content {
+            display: block;
+        }
+        .admin-content.hidden {
+            display: none;
+        }
+
+        .pause-indicator {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 20px;
+            background: var(--accent-4);
+            color: #fff;
+            margin-left: 6px;
+            animation: pulse-badge 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse-badge {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
         }
     </style>
 </head>
@@ -843,8 +1107,60 @@
             </div>
         </div>
 
-        <!-- ===== ADMIN CONTENT (always visible) ===== -->
-        <div class="admin-content" id="adminContent">
+        <!-- ===== PAUSE MODAL ===== -->
+        <div class="modal-overlay" id="pauseModalOverlay">
+            <div class="modal pause-modal">
+                <div class="modal-icon warning"><i class="fas fa-pause-circle"></i></div>
+                <h2>Pause Website</h2>
+                <p id="pauseDesc">Set the duration for the maintenance break. Users will see a maintenance message.</p>
+                <div id="pauseStatusDisplay" class="pause-status" style="display:none;">
+                    <i class="fas fa-clock"></i> Currently paused for <span class="time-remaining" id="pauseTimeRemaining">--</span>
+                </div>
+                <div class="pause-timer-inputs" id="pauseTimerInputs">
+                    <div class="input-group">
+                        <label><i class="fas fa-clock"></i> Minutes</label>
+                        <input type="number" id="pauseMinutes" value="5" min="0" max="120" />
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-clock"></i> Seconds</label>
+                        <input type="number" id="pauseSeconds" value="0" min="0" max="59" />
+                    </div>
+                </div>
+                <div id="pauseUnpauseBtnWrap" style="display:none;text-align:center;margin-bottom:16px;">
+                    <button class="btn btn-danger" id="unpauseBtn" style="width:100%;justify-content:center;">
+                        <i class="fas fa-play-circle"></i> Resume Website Now
+                    </button>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" id="pauseCancelBtn">Cancel</button>
+                    <button class="btn btn-danger" id="pauseConfirmBtn">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== LOGIN OVERLAY ===== -->
+        <div class="login-overlay" id="loginOverlay">
+            <div class="login-card">
+                <div class="login-icon"><i class="fas fa-shield-alt"></i></div>
+                <h2>Admin Access</h2>
+                <p>Enter the admin password to access the control panel.</p>
+                <div class="login-input-group">
+                    <input type="password" id="loginPassword" placeholder="Enter password..." autocomplete="off" />
+                </div>
+                <button class="login-btn" id="loginBtn"><i class="fas fa-lock-open"></i> Login</button>
+                <div class="login-error" id="loginError"></div>
+                <div class="login-attempts" id="loginAttempts"></div>
+                <div class="login-locked" id="loginLocked" style="display:none;">
+                    <i class="fas fa-hourglass-half"></i> Too many failed attempts.<br />
+                    Please wait <span class="countdown" id="lockCountdown">--:--</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ADMIN CONTENT ===== -->
+        <div class="admin-content hidden" id="adminContent">
 
             <!-- ===== HEADER ===== -->
             <header class="admin-header">
@@ -860,7 +1176,9 @@
                     <span class="stat-pill"><i class="fas fa-circle" style="color:var(--accent-2);"></i> Active <span class="num green" id="activeUsers">0</span></span>
                     <span class="stat-pill"><i class="fas fa-bolt" style="color:var(--accent-1);"></i> Total XP <span class="num accent" id="totalXp">0</span></span>
                     <span class="stat-pill"><i class="fas fa-coins" style="color:#d4a017;"></i> Coins <span class="num gold" id="totalCoins">0</span></span>
+                    <button class="btn btn-pause" id="pauseBtn"><i class="fas fa-pause-circle"></i> Pause</button>
                     <button class="btn btn-refresh" id="refreshBtn"><i class="fas fa-sync"></i> Refresh</button>
+                    <button class="btn btn-sm btn-sm-danger" id="logoutAdminBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
                 </div>
             </header>
 
@@ -922,6 +1240,9 @@
                 <span>·</span>
                 <span style="font-size:12px;opacity:0.6;">
                     <i class="fas fa-trash-alt" style="color:var(--accent-4);"></i> Delete removes user permanently
+                </span>
+                <span id="pauseStatusFooter" style="display:none;margin-left:12px;color:var(--accent-4);font-weight:600;">
+                    <i class="fas fa-pause-circle"></i> PAUSED
                 </span>
             </div>
 
@@ -990,7 +1311,7 @@
             const d = ts.toDate ? ts.toDate() : new Date(ts);
             const now = new Date();
             const diff = (now - d) / 1000;
-            return diff < 300; // 5 minutes
+            return diff < 300;
         }
 
         function getAccuracy(correct, wrong) {
@@ -1072,7 +1393,341 @@
         });
 
         // ================================================================
-        // 4. MAIN DATA & RENDER (no auth required)
+        // 4. LOGIN SYSTEM
+        // ================================================================
+
+        const ADMIN_PASSWORD = 'javeda5th';
+        const MAX_ATTEMPTS = 3;
+        const LOCK_DURATION_MS = 3600000; // 1 hour
+
+        let loginAttempts = parseInt(localStorage.getItem('adminLoginAttempts')) || 0;
+        let loginLockedUntil = parseInt(localStorage.getItem('adminLoginLockedUntil')) || 0;
+        let lockCountdownInterval = null;
+        let isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+
+        function checkLoginLock() {
+            if (loginLockedUntil > Date.now()) {
+                return true;
+            }
+            // If lock expired, reset attempts
+            if (loginLockedUntil > 0 && loginLockedUntil <= Date.now()) {
+                loginAttempts = 0;
+                localStorage.setItem('adminLoginAttempts', '0');
+                localStorage.removeItem('adminLoginLockedUntil');
+                loginLockedUntil = 0;
+                document.getElementById('loginLocked').style.display = 'none';
+                document.getElementById('loginBtn').disabled = false;
+            }
+            return false;
+        }
+
+        function updateLoginUI() {
+            const errorEl = document.getElementById('loginError');
+            const attemptsEl = document.getElementById('loginAttempts');
+            const lockedEl = document.getElementById('loginLocked');
+            const loginBtn = document.getElementById('loginBtn');
+
+            if (checkLoginLock()) {
+                lockedEl.style.display = 'block';
+                loginBtn.disabled = true;
+                document.getElementById('loginPassword').disabled = true;
+                startLockCountdown();
+                return;
+            }
+
+            lockedEl.style.display = 'none';
+            loginBtn.disabled = false;
+            document.getElementById('loginPassword').disabled = false;
+
+            const remaining = MAX_ATTEMPTS - loginAttempts;
+            if (remaining > 0) {
+                attemptsEl.textContent = `${remaining} attempt${remaining > 1 ? 's' : ''} remaining`;
+                attemptsEl.style.color = 'var(--text-muted)';
+            } else {
+                attemptsEl.textContent = 'No attempts remaining';
+                attemptsEl.style.color = 'var(--accent-4)';
+            }
+        }
+
+        function startLockCountdown() {
+            if (lockCountdownInterval) clearInterval(lockCountdownInterval);
+            const countdownEl = document.getElementById('lockCountdown');
+
+            function updateCountdown() {
+                const remaining = Math.max(0, loginLockedUntil - Date.now());
+                if (remaining <= 0) {
+                    clearInterval(lockCountdownInterval);
+                    lockCountdownInterval = null;
+                    loginAttempts = 0;
+                    localStorage.setItem('adminLoginAttempts', '0');
+                    localStorage.removeItem('adminLoginLockedUntil');
+                    loginLockedUntil = 0;
+                    document.getElementById('loginLocked').style.display = 'none';
+                    document.getElementById('loginBtn').disabled = false;
+                    document.getElementById('loginPassword').disabled = false;
+                    document.getElementById('loginError').textContent = '';
+                    updateLoginUI();
+                    return;
+                }
+                const mins = Math.floor(remaining / 60000);
+                const secs = Math.floor((remaining % 60000) / 1000);
+                countdownEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            }
+            updateCountdown();
+            lockCountdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        function handleLogin() {
+            if (checkLoginLock()) {
+                showToast('Locked', 'Too many failed attempts. Please wait.', 'fa-hourglass-half', 'error');
+                return;
+            }
+
+            const password = document.getElementById('loginPassword').value.trim();
+            const errorEl = document.getElementById('loginError');
+
+            if (!password) {
+                errorEl.textContent = 'Please enter the password.';
+                return;
+            }
+
+            if (password === ADMIN_PASSWORD) {
+                // Success
+                loginAttempts = 0;
+                localStorage.setItem('adminLoginAttempts', '0');
+                localStorage.setItem('adminLoggedIn', 'true');
+                isLoggedIn = true;
+                errorEl.textContent = '';
+                document.getElementById('loginPassword').value = '';
+                hideLogin();
+                showToast('Welcome Admin', 'You have been successfully logged in.', 'fa-check-circle', 'success');
+                // Load users after login
+                loadUsers();
+                // Check pause status
+                checkPauseStatus();
+            } else {
+                loginAttempts++;
+                localStorage.setItem('adminLoginAttempts', String(loginAttempts));
+                errorEl.textContent = 'Incorrect password.';
+
+                if (loginAttempts >= MAX_ATTEMPTS) {
+                    loginLockedUntil = Date.now() + LOCK_DURATION_MS;
+                    localStorage.setItem('adminLoginLockedUntil', String(loginLockedUntil));
+                    errorEl.textContent = 'Too many failed attempts. Account locked for 1 hour.';
+                    showToast('Account Locked', 'Too many failed attempts. Locked for 1 hour.', 'fa-lock', 'error');
+                    updateLoginUI();
+                } else {
+                    updateLoginUI();
+                    showToast('Wrong Password', `${MAX_ATTEMPTS - loginAttempts} attempts remaining.`, 'fa-exclamation-circle',
+                        'warning');
+                }
+            }
+        }
+
+        function showLogin() {
+            document.getElementById('loginOverlay').classList.remove('hidden');
+            document.getElementById('adminContent').classList.add('hidden');
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginError').textContent = '';
+            updateLoginUI();
+        }
+
+        function hideLogin() {
+            document.getElementById('loginOverlay').classList.add('hidden');
+            document.getElementById('adminContent').classList.remove('hidden');
+            if (lockCountdownInterval) {
+                clearInterval(lockCountdownInterval);
+                lockCountdownInterval = null;
+            }
+        }
+
+        function logoutAdmin() {
+            localStorage.removeItem('adminLoggedIn');
+            isLoggedIn = false;
+            if (unsubUsers) {
+                unsubUsers();
+                unsubUsers = null;
+            }
+            if (unsubPause) {
+                unsubPause();
+                unsubPause = null;
+            }
+            showLogin();
+            showToast('Logged Out', 'You have been signed out.', 'fa-sign-out-alt', 'info');
+        }
+
+        // ================================================================
+        // 5. PAUSE SYSTEM
+        // ================================================================
+
+        let unsubPause = null;
+        let isPaused = false;
+        let pausedUntil = 0;
+        let pauseCheckInterval = null;
+
+        function checkPauseStatus() {
+            if (unsubPause) {
+                unsubPause();
+                unsubPause = null;
+            }
+
+            unsubPause = db.collection('config').doc('pause')
+                .onSnapshot((doc) => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        isPaused = data.paused || false;
+                        pausedUntil = data.pausedUntil || 0;
+
+                        // Update UI
+                        updatePauseUI();
+
+                        // Update pause button
+                        const pauseBtn = document.getElementById('pauseBtn');
+                        if (isPaused) {
+                            pauseBtn.classList.add('active');
+                            pauseBtn.innerHTML = '<i class="fas fa-play-circle"></i> Resume';
+                            document.getElementById('pauseStatusFooter').style.display = 'inline';
+                        } else {
+                            pauseBtn.classList.remove('active');
+                            pauseBtn.innerHTML = '<i class="fas fa-pause-circle"></i> Pause';
+                            document.getElementById('pauseStatusFooter').style.display = 'none';
+                        }
+
+                        // Auto-unpause if expired
+                        if (isPaused && pausedUntil > 0 && pausedUntil <= Date.now()) {
+                            // Auto clear pause
+                            db.collection('config').doc('pause').set({
+                                paused: false,
+                                pausedUntil: null,
+                                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                            }, { merge: true });
+                            showToast('Pause Expired', 'The maintenance break has ended automatically.',
+                                'fa-check-circle', 'success');
+                        }
+                    } else {
+                        isPaused = false;
+                        pausedUntil = 0;
+                        updatePauseUI();
+                        document.getElementById('pauseBtn').classList.remove('active');
+                        document.getElementById('pauseBtn').innerHTML = '<i class="fas fa-pause-circle"></i> Pause';
+                        document.getElementById('pauseStatusFooter').style.display = 'none';
+                    }
+                }, (error) => {
+                    console.error('Pause listener error:', error);
+                });
+        }
+
+        function updatePauseUI() {
+            const statusDisplay = document.getElementById('pauseStatusDisplay');
+            const timeRemaining = document.getElementById('pauseTimeRemaining');
+            const timerInputs = document.getElementById('pauseTimerInputs');
+            const unpauseWrap = document.getElementById('pauseUnpauseBtnWrap');
+
+            if (isPaused && pausedUntil > Date.now()) {
+                const remaining = pausedUntil - Date.now();
+                const mins = Math.floor(remaining / 60000);
+                const secs = Math.floor((remaining % 60000) / 1000);
+                statusDisplay.style.display = 'block';
+                timeRemaining.textContent = `${mins}m ${secs}s`;
+                timerInputs.style.display = 'none';
+                unpauseWrap.style.display = 'block';
+                // Update confirm button text
+                document.getElementById('pauseConfirmBtn').innerHTML = '<i class="fas fa-pause"></i> Update';
+                // Update description
+                document.getElementById('pauseDesc').textContent =
+                    'The website is currently paused. You can update the duration or resume now.';
+            } else {
+                statusDisplay.style.display = 'none';
+                timerInputs.style.display = 'flex';
+                unpauseWrap.style.display = 'none';
+                document.getElementById('pauseConfirmBtn').innerHTML = '<i class="fas fa-pause"></i> Pause';
+                document.getElementById('pauseDesc').textContent =
+                    'Set the duration for the maintenance break. Users will see a maintenance message.';
+            }
+        }
+
+        async function setPause(durationMs) {
+            try {
+                const pausedUntilTime = Date.now() + durationMs;
+                await db.collection('config').doc('pause').set({
+                    paused: true,
+                    pausedUntil: pausedUntilTime,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+                showToast('Paused', `Website is now in maintenance mode for ${Math.floor(durationMs/60000)} minutes.`,
+                    'fa-pause-circle', 'warning');
+                // Update UI
+                isPaused = true;
+                pausedUntil = pausedUntilTime;
+                updatePauseUI();
+                document.getElementById('pauseBtn').classList.add('active');
+                document.getElementById('pauseBtn').innerHTML = '<i class="fas fa-play-circle"></i> Resume';
+                document.getElementById('pauseStatusFooter').style.display = 'inline';
+            } catch (e) {
+                console.error('Pause error:', e);
+                showToast('Error', 'Failed to pause website: ' + e.message, 'fa-times-circle', 'error');
+            }
+        }
+
+        async function unpauseWebsite() {
+            try {
+                await db.collection('config').doc('pause').set({
+                    paused: false,
+                    pausedUntil: null,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+                showToast('Resumed', 'Website is now active again.', 'fa-play-circle', 'success');
+                isPaused = false;
+                pausedUntil = 0;
+                updatePauseUI();
+                document.getElementById('pauseBtn').classList.remove('active');
+                document.getElementById('pauseBtn').innerHTML = '<i class="fas fa-pause-circle"></i> Pause';
+                document.getElementById('pauseStatusFooter').style.display = 'none';
+                // Close modal
+                document.getElementById('pauseModalOverlay').classList.remove('show');
+            } catch (e) {
+                console.error('Unpause error:', e);
+                showToast('Error', 'Failed to resume website: ' + e.message, 'fa-times-circle', 'error');
+            }
+        }
+
+        function showPauseModal() {
+            const overlay = document.getElementById('pauseModalOverlay');
+            updatePauseUI();
+            overlay.classList.add('show');
+        }
+
+        function handlePauseConfirm() {
+            if (isPaused && pausedUntil > Date.now()) {
+                // Update existing pause
+                const mins = parseInt(document.getElementById('pauseMinutes').value) || 0;
+                const secs = parseInt(document.getElementById('pauseSeconds').value) || 0;
+                const totalMs = (mins * 60000) + (secs * 1000);
+                if (totalMs <= 0) {
+                    showToast('Invalid Duration', 'Please set a duration greater than 0.', 'fa-exclamation-circle',
+                        'warning');
+                    return;
+                }
+                setPause(totalMs);
+                document.getElementById('pauseModalOverlay').classList.remove('show');
+                return;
+            }
+
+            const mins = parseInt(document.getElementById('pauseMinutes').value) || 0;
+            const secs = parseInt(document.getElementById('pauseSeconds').value) || 0;
+            const totalMs = (mins * 60000) + (secs * 1000);
+
+            if (totalMs <= 0) {
+                showToast('Invalid Duration', 'Please set a duration greater than 0.', 'fa-exclamation-circle', 'warning');
+                return;
+            }
+
+            setPause(totalMs);
+            document.getElementById('pauseModalOverlay').classList.remove('show');
+        }
+
+        // ================================================================
+        // 6. MAIN DATA & RENDER
         // ================================================================
 
         let allUsers = [];
@@ -1173,7 +1828,6 @@
             tbody.innerHTML = html;
             updateStats();
 
-            // Attach events
             document.querySelectorAll('.reset-user-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const email = this.dataset.email;
@@ -1207,7 +1861,7 @@
         }
 
         // ================================================================
-        // 5. FIREBASE - LOAD USERS (REAL-TIME) — FIXED: uses most recent timestamp
+        // 7. FIREBASE - LOAD USERS
         // ================================================================
 
         function loadUsers() {
@@ -1237,18 +1891,19 @@
                         const data = doc.data();
                         if (data.email && data.email.startsWith('guest_')) return;
 
-                        // ---- FIX: Use the most recent of lastActive and updatedAt ----
                         let activityTimestamp = null;
                         const hasLastActive = data.lastActive !== null && data.lastActive !== undefined;
                         const hasUpdatedAt = data.updatedAt !== null && data.updatedAt !== undefined;
 
                         if (hasLastActive && hasUpdatedAt) {
-                            // Use the more recent one
-                            const lastActiveTime = data.lastActive.toDate ? data.lastActive.toDate().getTime() :
+                            const lastActiveTime = data.lastActive.toDate ? data.lastActive.toDate()
+                                .getTime() :
                                 new Date(data.lastActive).getTime();
-                            const updatedAtTime = data.updatedAt.toDate ? data.updatedAt.toDate().getTime() :
+                            const updatedAtTime = data.updatedAt.toDate ? data.updatedAt.toDate()
+                                .getTime() :
                                 new Date(data.updatedAt).getTime();
-                            activityTimestamp = lastActiveTime > updatedAtTime ? data.lastActive : data.updatedAt;
+                            activityTimestamp = lastActiveTime > updatedAtTime ? data.lastActive : data
+                            .updatedAt;
                         } else if (hasLastActive) {
                             activityTimestamp = data.lastActive;
                         } else if (hasUpdatedAt) {
@@ -1270,7 +1925,7 @@
                             level: data.level || 1,
                             hints: data.hints || 0,
                             earnedBadges: data.earnedBadges || [],
-                            lastActive: activityTimestamp, // store the most recent
+                            lastActive: activityTimestamp,
                             totalQuestions: data.totalQuestions || 0,
                             accuracyHistory: data.accuracyHistory || [],
                             weakRules: data.weakRules || {},
@@ -1305,7 +1960,7 @@
         }
 
         // ================================================================
-        // 6. RESET FUNCTIONS — set lastActive to null explicitly
+        // 8. RESET FUNCTIONS
         // ================================================================
 
         async function handleResetAll() {
@@ -1354,7 +2009,7 @@
                             weakRules: {},
                             quizHistory: [],
                             updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                            lastActive: null, // explicitly set to null
+                            lastActive: null,
                         }, { merge: true });
                         successCount++;
                     } catch (e) {
@@ -1413,7 +2068,7 @@
                     weakRules: {},
                     quizHistory: [],
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    lastActive: null, // explicitly set to null
+                    lastActive: null,
                 }, { merge: true });
 
                 showToast('Reset Complete', `${name}'s stats have been reset to zero.`, 'fa-check-circle', 'success');
@@ -1423,7 +2078,7 @@
         }
 
         // ================================================================
-        // 7. DELETE USER — with auto-logout
+        // 9. DELETE USER
         // ================================================================
 
         async function handleDeleteUser(email, name) {
@@ -1448,10 +2103,8 @@
                 const docId = getDocIdFromEmail(email);
                 if (!docId) throw new Error('Invalid email');
 
-                // 1. Delete the user document
                 await db.collection('users').doc(docId).delete();
 
-                // 2. Delete revision questions
                 const revSnapshot = await db.collection('revisionQuestions')
                     .where('userId', '==', docId)
                     .get();
@@ -1461,7 +2114,6 @@
                     await batch.commit();
                 }
 
-                // 3. Force logout if currently signed in
                 const currentUser = auth.currentUser;
                 if (currentUser && currentUser.email === email) {
                     await auth.signOut();
@@ -1476,25 +2128,56 @@
                 let msg = e.message;
                 if (msg.includes('permission')) {
                     msg =
-                        'Permission denied. Please ensure your Firebase security rules allow delete operations (try setting "allow read, write: if true;" for testing).';
+                        'Permission denied. Please ensure your Firebase security rules allow delete operations.';
                 }
                 showToast('Error', 'Failed to delete user: ' + msg, 'fa-times-circle', 'error');
             }
         }
 
         // ================================================================
-        // 8. SEARCH
+        // 10. EVENT LISTENERS
         // ================================================================
 
+        // Login
+        document.getElementById('loginBtn').addEventListener('click', handleLogin);
+        document.getElementById('loginPassword').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') handleLogin();
+        });
+
+        // Logout
+        document.getElementById('logoutAdminBtn').addEventListener('click', logoutAdmin);
+
+        // Pause
+        document.getElementById('pauseBtn').addEventListener('click', function() {
+            if (isPaused && pausedUntil > Date.now()) {
+                // If already paused, show modal to resume or update
+                showPauseModal();
+            } else {
+                showPauseModal();
+            }
+        });
+
+        document.getElementById('pauseCancelBtn').addEventListener('click', () => {
+            document.getElementById('pauseModalOverlay').classList.remove('show');
+        });
+
+        document.getElementById('pauseModalOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                document.getElementById('pauseModalOverlay').classList.remove('show');
+            }
+        });
+
+        document.getElementById('pauseConfirmBtn').addEventListener('click', handlePauseConfirm);
+
+        document.getElementById('unpauseBtn').addEventListener('click', unpauseWebsite);
+
+        // Search
         document.getElementById('searchInput').addEventListener('input', function() {
             searchQuery = this.value;
             renderUsers();
         });
 
-        // ================================================================
-        // 9. REFRESH
-        // ================================================================
-
+        // Refresh
         document.getElementById('refreshBtn').addEventListener('click', function() {
             this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
             this.disabled = true;
@@ -1509,10 +2192,7 @@
             }, 1200);
         });
 
-        // ================================================================
-        // 10. RESET ALL BUTTON
-        // ================================================================
-
+        // Reset All
         document.getElementById('resetAllBtn').addEventListener('click', handleResetAll);
 
         // ================================================================
@@ -1520,21 +2200,49 @@
         // ================================================================
 
         function init() {
-            console.log('🔐 Journal Entry Control Panel (no login required)');
+            console.log('🔐 Journal Entry Admin Control Panel');
             console.log('📡 Real-time sync with Firebase');
-            console.log('✅ FIXED: Uses most recent of lastActive and updatedAt for activity status');
-            console.log('✅ Reset sets lastActive=null so users appear Offline');
-            console.log('✅ Active users now show "Active now" with green dot');
-            console.log('⚠️ If delete fails, check Firebase security rules.');
+            console.log('🔑 Password: javeda5th (3 attempts, 1 hour lockout)');
+            console.log('⏸️ Pause feature: Set maintenance break duration');
 
-            // Load users immediately
-            loadUsers();
+            // Check if already logged in
+            if (isLoggedIn) {
+                // Verify session is still valid (not expired)
+                hideLogin();
+                loadUsers();
+                checkPauseStatus();
+            } else {
+                showLogin();
+            }
 
             // Auto-update "last updated" every 15 seconds
             setInterval(() => {
                 const el = document.getElementById('lastUpdated');
-                if (el) el.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+                if (el && isLoggedIn) el.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
             }, 15000);
+
+            // Update pause UI periodically
+            setInterval(() => {
+                if (isLoggedIn) {
+                    updatePauseUI();
+                    // Update pause button state
+                    const pauseBtn = document.getElementById('pauseBtn');
+                    if (isPaused && pausedUntil > Date.now()) {
+                        if (!pauseBtn.classList.contains('active')) {
+                            pauseBtn.classList.add('active');
+                            pauseBtn.innerHTML = '<i class="fas fa-play-circle"></i> Resume';
+                            document.getElementById('pauseStatusFooter').style.display = 'inline';
+                        }
+                    } else if (isPaused && pausedUntil > 0 && pausedUntil <= Date.now()) {
+                        // Auto clear if expired
+                        db.collection('config').doc('pause').set({
+                            paused: false,
+                            pausedUntil: null,
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        }, { merge: true });
+                    }
+                }
+            }, 5000);
         }
 
         document.addEventListener('DOMContentLoaded', init);
