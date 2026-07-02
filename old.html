@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Journal Entry · MCQ Learner</title>
-    <link rel="icon" type="image/png" href="jurnel entry.jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
     </script>
@@ -13,7 +12,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
     </script>
     <style>
-        /* ===== FULL STYLES ===== */
         * {
             margin: 0;
             padding: 0;
@@ -270,8 +268,6 @@
         .quiz-difficulty {
             display: flex;
             gap: 8px;
-            flex-wrap: wrap;
-            align-items: center;
         }
         .diff-btn {
             padding: 6px 18px;
@@ -308,11 +304,6 @@
         .diff-btn.hard.active {
             background: var(--accent-4);
             border-color: var(--accent-4);
-        }
-        .diff-btn.disabled-mode {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
         }
 
         .business-mini {
@@ -1591,167 +1582,6 @@
         .hint-toast .toast-icon {
             color: #d4a017 !important;
         }
-        .diff-toggle-disabled {
-            opacity: 0.5;
-            pointer-events: none;
-            cursor: not-allowed;
-        }
-        .mode-change-notify {
-            animation: pulse-glow 0.6s ease;
-        }
-        @keyframes pulse-glow {
-            0%,
-            100% {
-                box-shadow: 0 0 0 0 rgba(91, 75, 213, 0);
-            }
-            50% {
-                box-shadow: 0 0 30px 8px rgba(91, 75, 213, 0.25);
-            }
-        }
-
-        .smart-diff-indicator {
-            display: inline-block;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 2px 12px;
-            border-radius: 20px;
-            margin-left: 8px;
-            background: var(--accent-1);
-            color: #fff;
-        }
-        .smart-diff-indicator.easy {
-            background: var(--accent-2);
-        }
-        .smart-diff-indicator.medium {
-            background: var(--accent-3);
-            color: #1a1a2e;
-        }
-        .smart-diff-indicator.hard {
-            background: var(--accent-4);
-        }
-        .diff-mode-label {
-            font-size: 12px;
-            font-weight: 600;
-            padding: 2px 14px;
-            border-radius: 20px;
-            background: rgba(91, 75, 213, 0.10);
-            color: var(--text-secondary);
-            border: 1px solid var(--glass-border);
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .diff-mode-label i {
-            font-size: 12px;
-        }
-
-        /* load state */
-        .stats-loading {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-        .stats-loaded {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* leaderboard consistency fix: user row highlight */
-        .lb-user-row td {
-            background: rgba(91, 75, 213, 0.08) !important;
-            border-left: 3px solid var(--accent-1);
-        }
-        .lb-user-row:hover td {
-            background: rgba(91, 75, 213, 0.14) !important;
-        }
-
-        /* ===== MAINTENANCE OVERLAY ===== */
-        .maintenance-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            z-index: 99999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.4s ease;
-        }
-        .maintenance-overlay.active {
-            display: flex;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        .maintenance-box {
-            background: var(--glass-bg);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius);
-            padding: 60px 48px;
-            max-width: 520px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
-            transform: scale(0.95);
-            animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-        @keyframes scaleIn {
-            to {
-                transform: scale(1);
-            }
-        }
-        .maintenance-box .m-icon {
-            font-size: 72px;
-            margin-bottom: 16px;
-            color: var(--accent-3);
-        }
-        .maintenance-box h2 {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-        .maintenance-box p {
-            font-size: 17px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 12px;
-        }
-        .maintenance-box .timer {
-            font-size: 14px;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .maintenance-box .timer .time {
-            font-weight: 700;
-            color: var(--accent-1);
-            font-size: 18px;
-            font-variant-numeric: tabular-nums;
-        }
-        .maintenance-box .footer-note {
-            margin-top: 20px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.20);
-            border-radius: var(--radius-xs);
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-        .maintenance-box .footer-note i {
-            margin-right: 6px;
-        }
     </style>
 </head>
 <body>
@@ -1759,21 +1589,6 @@
     <div class="app-container" id="app">
 
         <div class="toast-container" id="toastContainer"></div>
-
-        <!-- ===== MAINTENANCE OVERLAY ===== -->
-        <div class="maintenance-overlay" id="maintenanceOverlay">
-            <div class="maintenance-box">
-                <div class="m-icon">🔧</div>
-                <h2>Maintenance Break</h2>
-                <p>We're currently performing some improvements. Please check back shortly.</p>
-                <div class="timer">
-                    <i class="fas fa-clock"></i> Resumes in <span class="time" id="maintenanceCountdown">--:--</span>
-                </div>
-                <div class="footer-note">
-                    <i class="fas fa-info-circle"></i> Thank you for your patience
-                </div>
-            </div>
-        </div>
 
         <!-- ===== LOGIN OVERLAY ===== -->
         <div class="login-overlay" id="loginOverlay">
@@ -1839,10 +1654,6 @@
                         <button class="diff-btn easy active" data-diff="easy"><i class="fas fa-seedling"></i> Easy</button>
                         <button class="diff-btn medium" data-diff="medium"><i class="fas fa-chart-simple"></i> Medium</button>
                         <button class="diff-btn hard" data-diff="hard"><i class="fas fa-bolt"></i> Hard</button>
-                        <span id="smartDiffBadge" style="display:none;margin-left:8px;font-size:12px;font-weight:600;padding:4px 14px;border-radius:20px;background:var(--accent-1);color:#fff;">Adaptive</span>
-                        <span class="diff-mode-label" id="diffModeLabel" style="margin-left:8px;">
-                            <i class="fas fa-info-circle"></i> <span id="diffModeText">সরল লেনদেন</span>
-                        </span>
                     </div>
                 </div>
 
@@ -2050,14 +1861,11 @@
         </section>
 
         <!-- ============================================================
-        SECTION: LEADERBOARD
+        SECTION: LEADERBOARD (Guest users are excluded)
         ============================================================ -->
         <section class="section-panel" id="section-leaderboard">
             <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
                 <i class="fas fa-ranking-star" style="color:var(--accent-1);"></i> Leaderboard
-                <span style="font-size:13px;font-weight:400;color:var(--text-muted);margin-left:auto;">
-                    <i class="fas fa-sync-alt fa-fw"></i> Auto-sync
-                </span>
             </h2>
             <div class="glass-card">
                 <div class="lb-filter-group" id="lbFilterGroup">
@@ -2082,6 +1890,10 @@
 
     </div>
 
+    <!-- ============================================================
+    JAVASCRIPT – IMPROVED: Guest users stay in localStorage only,
+    never appear on leaderboard. Logged-in users persist in Firebase.
+    ============================================================ -->
     <script>
         // ================================================================
         // 0. FIREBASE INIT
@@ -2102,89 +1914,578 @@
         const db = firebase.firestore();
 
         // ================================================================
-        // MAINTENANCE PAUSE DETECTION
+        // 1. HELPER: check if a UID belongs to a guest
         // ================================================================
-
-        (function() {
-            const overlay = document.getElementById('maintenanceOverlay');
-            const countdownEl = document.getElementById('maintenanceCountdown');
-            let countdownInterval = null;
-
-            function showMaintenance(until) {
-                if (overlay) {
-                    overlay.classList.add('active');
-                    overlay.style.display = 'flex';
-                    document.body.style.overflow = 'hidden';
-                    startCountdown(until);
-                }
-            }
-
-            function hideMaintenance() {
-                if (overlay) {
-                    overlay.classList.remove('active');
-                    overlay.style.display = 'none';
-                    document.body.style.overflow = '';
-                    if (countdownInterval) {
-                        clearInterval(countdownInterval);
-                        countdownInterval = null;
-                    }
-                }
-            }
-
-            function startCountdown(until) {
-                if (countdownInterval) clearInterval(countdownInterval);
-                countdownInterval = setInterval(() => {
-                    const remaining = Math.max(0, until - Date.now());
-                    if (remaining <= 0) {
-                        clearInterval(countdownInterval);
-                        countdownInterval = null;
-                        hideMaintenance();
-                        return;
-                    }
-                    const mins = Math.floor(remaining / 60000);
-                    const secs = Math.floor((remaining % 60000) / 1000);
-                    if (countdownEl) {
-                        countdownEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-                    }
-                }, 1000);
-            }
-
-            // Listen for pause status from Firestore
-            try {
-                db.collection('config').doc('pause').onSnapshot((doc) => {
-                    if (doc.exists) {
-                        const data = doc.data();
-                        if (data.paused && data.pausedUntil && data.pausedUntil > Date.now()) {
-                            showMaintenance(data.pausedUntil);
-                        } else {
-                            hideMaintenance();
-                            // Auto-clear if expired
-                            if (data.paused && data.pausedUntil && data.pausedUntil <= Date.now()) {
-                                db.collection('config').doc('pause').set({
-                                    paused: false,
-                                    pausedUntil: null,
-                                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                                }, { merge: true });
-                            }
-                        }
-                    } else {
-                        hideMaintenance();
-                    }
-                }, (error) => {
-                    console.error('Maintenance listener error:', error);
-                });
-            } catch (e) {
-                console.warn('Maintenance feature requires Firebase initialization.');
-            }
-        })();
-
-        // ================================================================
-        // 1. HELPERS
-        // ================================================================
-
         function isGuestUid(uid) {
             return uid && uid.startsWith('guest_');
         }
+
+        // ================================================================
+        // 2. MASTER ACCOUNT CLASSIFICATION SYSTEM
+        // ================================================================
+
+        const ACCOUNT_CLASSIFICATIONS = {
+            'Cash': { category: 'asset', bengali: 'নগদান', rule: 'increase=debit,decrease=credit' },
+            'Bank': { category: 'asset', bengali: 'ব্যাংক', rule: 'increase=debit,decrease=credit' },
+            'Accounts Receivable': { category: 'asset', bengali: 'দেনাদার', rule: 'increase=debit,decrease=credit' },
+            'Inventory': { category: 'asset', bengali: 'মাল', rule: 'increase=debit,decrease=credit' },
+            'Furniture': { category: 'asset', bengali: 'আসবাবপত্র', rule: 'increase=debit,decrease=credit' },
+            'Equipment': { category: 'asset', bengali: 'যন্ত্রপাতি', rule: 'increase=debit,decrease=credit' },
+            'Computer': { category: 'asset', bengali: 'কম্পিউটার', rule: 'increase=debit,decrease=credit' },
+            'Office Supplies': { category: 'asset', bengali: 'অফিস সরঞ্জাম', rule: 'increase=debit,decrease=credit' },
+            'Prepaid Rent': { category: 'asset', bengali: 'অগ্রিম ভাড়া', rule: 'increase=debit,decrease=credit' },
+            'Prepaid Insurance': { category: 'asset', bengali: 'অগ্রিম বিমা খরচ', rule: 'increase=debit,decrease=credit' },
+            'Prepaid Expense': { category: 'asset', bengali: 'অগ্রিম খরচ', rule: 'increase=debit,decrease=credit' },
+            'Accumulated Depreciation': { category: 'asset', bengali: 'সঞ্চিত অবচয়', rule: 'increase=credit,decrease=debit' },
+            'Building': { category: 'asset', bengali: 'ভবন', rule: 'increase=debit,decrease=credit' },
+            'Land': { category: 'asset', bengali: 'জমি', rule: 'increase=debit,decrease=credit' },
+            'Creditors': { category: 'liability', bengali: 'পাওনাদার', rule: 'increase=credit,decrease=debit' },
+            'Bank Loan': { category: 'liability', bengali: 'ব্যাংক ঋণ', rule: 'increase=credit,decrease=debit' },
+            'Salary Payable': { category: 'liability', bengali: 'বকেয়া বেতন', rule: 'increase=credit,decrease=debit' },
+            'Rent Payable': { category: 'liability', bengali: 'বকেয়া ভাড়া', rule: 'increase=credit,decrease=debit' },
+            'Interest Payable': { category: 'liability', bengali: 'প্রদেয় সুদ', rule: 'increase=credit,decrease=debit' },
+            'Loan': { category: 'liability', bengali: 'ঋণ', rule: 'increase=credit,decrease=debit' },
+            'Debentures': { category: 'liability', bengali: 'ঋণপত্র', rule: 'increase=credit,decrease=debit' },
+            'Capital': { category: 'capital', bengali: 'মূলধন', rule: 'increase=credit,decrease=debit' },
+            'Drawings': { category: 'drawing', bengali: 'উত্তোলন', rule: 'increase=debit,decrease=credit' },
+            'Sales Revenue': { category: 'revenue', bengali: 'বিক্রয়', rule: 'increase=credit,decrease=debit' },
+            'Service Revenue': { category: 'revenue', bengali: 'সেবা আয়', rule: 'increase=credit,decrease=debit' },
+            'Commission Revenue': { category: 'revenue', bengali: 'কমিশন আয়', rule: 'increase=credit,decrease=debit' },
+            'Rent Revenue': { category: 'revenue', bengali: 'ভাড়া আয়', rule: 'increase=credit,decrease=debit' },
+            'Interest Revenue': { category: 'revenue', bengali: 'সুদ প্রাপ্তি', rule: 'increase=credit,decrease=debit' },
+            'Discount Received': { category: 'revenue', bengali: 'বাট্টা পাওয়া', rule: 'increase=credit,decrease=debit' },
+            'Salary': { category: 'expense', bengali: 'বেতন', rule: 'increase=debit,decrease=credit' },
+            'Rent': { category: 'expense', bengali: 'ভাড়া', rule: 'increase=debit,decrease=credit' },
+            'Advertisement': { category: 'expense', bengali: 'বিজ্ঞাপন খরচ', rule: 'increase=debit,decrease=credit' },
+            'Insurance': { category: 'expense', bengali: 'বীমা খরচ', rule: 'increase=debit,decrease=credit' },
+            'Transport': { category: 'expense', bengali: 'পরিবহন খরচ', rule: 'increase=debit,decrease=credit' },
+            'Office Expenses': { category: 'expense', bengali: 'অফিস খরচ', rule: 'increase=debit,decrease=credit' },
+            'Electricity Bill': { category: 'expense', bengali: 'বিদ্যুৎ বিল', rule: 'increase=debit,decrease=credit' },
+            'Depreciation Expense': { category: 'expense', bengali: 'অবচয় খরচ', rule: 'increase=debit,decrease=credit' },
+            'Bad Debts': { category: 'expense', bengali: 'কুঋণ', rule: 'increase=debit,decrease=credit' },
+            'Bank Charges': { category: 'expense', bengali: 'ব্যাংক চার্জ', rule: 'increase=debit,decrease=credit' },
+            'Interest Expense': { category: 'expense', bengali: 'সুদ খরচ', rule: 'increase=debit,decrease=credit' },
+            'Income Tax': { category: 'expense', bengali: 'আয়কর', rule: 'increase=debit,decrease=credit' },
+            'Donation': { category: 'expense', bengali: 'দান খরচ', rule: 'increase=debit,decrease=credit' },
+            'Commission Expense': { category: 'expense', bengali: 'কমিশন খরচ', rule: 'increase=debit,decrease=credit' },
+            'Repairs': { category: 'expense', bengali: 'মেরামত খরচ', rule: 'increase=debit,decrease=credit' },
+            'Discount Allowed': { category: 'expense', bengali: 'বাট্টা প্রদান', rule: 'increase=debit,decrease=credit' },
+        };
+
+        function getAccountInfo(accountName) {
+            return ACCOUNT_CLASSIFICATIONS[accountName] || null;
+        }
+
+        function getBengaliName(accountName) {
+            const info = getAccountInfo(accountName);
+            return info ? info.bengali : accountName;
+        }
+
+        function getAccountCategory(accountName) {
+            const info = getAccountInfo(accountName);
+            return info ? info.category : null;
+        }
+
+        // ================================================================
+        // 3. ACCOUNTING RULES (backward compat)
+        // ================================================================
+
+        const ACCOUNT_RULES = {
+            asset: { increase: 'debit', decrease: 'credit', label: 'Asset' },
+            liability: { increase: 'credit', decrease: 'debit', label: 'Liability' },
+            capital: { increase: 'credit', decrease: 'debit', label: 'Capital' },
+            revenue: { increase: 'credit', decrease: 'debit', label: 'Revenue' },
+            expense: { increase: 'debit', decrease: 'credit', label: 'Expense' },
+            drawing: { increase: 'debit', decrease: 'credit', label: 'Drawing' }
+        };
+
+        const BENGALI_NAMES = {};
+        for (const [key, val] of Object.entries(ACCOUNT_CLASSIFICATIONS)) {
+            BENGALI_NAMES[key] = val.bengali;
+        }
+        BENGALI_NAMES['Sales'] = 'বিক্রয়';
+        BENGALI_NAMES['Purchases'] = 'ক্রয়';
+        BENGALI_NAMES['Debtor'] = 'দেনাদার';
+        BENGALI_NAMES['Creditor'] = 'পাওনাদার';
+
+        // ================================================================
+        // 4. TRANSACTION TEMPLATES (EASY, MEDIUM, HARD)
+        // ================================================================
+
+        const EASY_TEMPLATES = [{
+            id: 'easy_asset_purchase',
+            description: 'নগদে {asset} ক্রয় করা হয়েছে',
+            journal: [
+                { account: '{asset}', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ],
+            assetPool: ['Computer', 'Mobile', 'Book', 'Notebook', 'Furniture', 'Office Supplies']
+        }, {
+            id: 'easy_expense_pay',
+            description: 'নগদে {expense} পরিশোধ করা হয়েছে',
+            journal: [
+                { account: '{expense}', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ],
+            expensePool: ['Electricity Bill', 'Rent', 'Transport', 'Advertisement', 'Office Expenses']
+        }, {
+            id: 'easy_capital_invest',
+            description: 'মালিক ব্যবসায়ে নগদ বিনিয়োগ করেছেন',
+            journal: [
+                { account: 'Cash', side: 'debit' },
+                { account: 'Capital', side: 'credit' }
+            ]
+        }, {
+            id: 'easy_revenue_cash',
+            description: 'সেবা প্রদান করে নগদ গ্রহণ করা হয়েছে',
+            journal: [
+                { account: 'Cash', side: 'debit' },
+                { account: 'Service Revenue', side: 'credit' }
+            ]
+        }, {
+            id: 'easy_liability_pay',
+            description: '{liability} পরিশোধ করা হয়েছে',
+            journal: [
+                { account: '{liability}', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ],
+            liabilityPool: ['Creditors', 'Rent Payable']
+        }, {
+            id: 'easy_drawing',
+            description: 'মালিক উত্তোলন করেছেন',
+            journal: [
+                { account: 'Drawings', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ]
+        }];
+
+        const MEDIUM_TEMPLATES = [{
+            id: 'med_bank_open',
+            description: 'ব্যাংক হিসাব খোলা হলো {amount} টাকা',
+            journal: [
+                { account: 'Bank', side: 'debit' },
+                { account: 'Capital', side: 'credit' }
+            ],
+            amountRange: [10000, 50000]
+        }, {
+            id: 'med_purchase_cash',
+            description: 'নগদে {amount} টাকার মাল ক্রয় করা হলো',
+            journal: [
+                { account: 'Inventory', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ],
+            amountRange: [5000, 80000]
+        }, {
+            id: 'med_purchase_credit',
+            description: '{name} এর নিকট হতে {amount} টাকার মাল ক্রয় করা হলো',
+            journal: [
+                { account: 'Inventory', side: 'debit' },
+                { account: 'Creditors', side: 'credit' }
+            ],
+            amountRange: [10000, 100000],
+            useName: true
+        }, {
+            id: 'med_sale_cash',
+            description: 'নগদে {amount} টাকার মাল বিক্রয় করা হলো',
+            journal: [
+                { account: 'Cash', side: 'debit' },
+                { account: 'Sales Revenue', side: 'credit' }
+            ],
+            amountRange: [5000, 75000]
+        }, {
+            id: 'med_sale_credit',
+            description: '{name} এর নিকট {amount} টাকার মাল বিক্রয় করা হলো',
+            journal: [
+                { account: 'Accounts Receivable', side: 'debit' },
+                { account: 'Sales Revenue', side: 'credit' }
+            ],
+            amountRange: [10000, 90000],
+            useName: true
+        }, {
+            id: 'med_bank_deposit',
+            description: 'ব্যাংকে {amount} টাকা জমা দেওয়া হলো',
+            journal: [
+                { account: 'Bank', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ],
+            amountRange: [5000, 50000]
+        }, {
+            id: 'med_bank_withdrawal',
+            description: 'ব্যাংক থেকে {amount} টাকা উত্তোলন করা হলো',
+            journal: [
+                { account: 'Cash', side: 'debit' },
+                { account: 'Bank', side: 'credit' }
+            ],
+            amountRange: [5000, 40000]
+        }, {
+            id: 'med_salary_pay',
+            description: 'কর্মচারীর বেতন {amount} টাকা প্রদান করা হলো',
+            journal: [
+                { account: 'Salary', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ],
+            amountRange: [3000, 30000]
+        }, {
+            id: 'med_salary_cheque',
+            description: 'চেকের মাধ্যমে কর্মচারীর বেতন {amount} টাকা প্রদান করা হলো',
+            journal: [
+                { account: 'Salary', side: 'debit' },
+                { account: 'Bank', side: 'credit' }
+            ],
+            amountRange: [3000, 30000]
+        }, {
+            id: 'med_advertisement_cash',
+            description: 'বিজ্ঞাপন খরচ বাবদ {amount} টাকা নগদ প্রদান করা হলো',
+            journal: [
+                { account: 'Advertisement', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ],
+            amountRange: [2000, 20000]
+        }, {
+            id: 'med_advertisement_cheque',
+            description: 'বিজ্ঞাপন খরচ বাবদ {amount} টাকা চেক প্রদান করা হলো',
+            journal: [
+                { account: 'Advertisement', side: 'debit' },
+                { account: 'Bank', side: 'credit' }
+            ],
+            amountRange: [2000, 20000]
+        }, {
+            id: 'med_rent_pay',
+            description: 'ভাড়া বাবদ {amount} টাকা প্রদান করা হলো',
+            journal: [
+                { account: 'Rent', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ],
+            amountRange: [5000, 30000]
+        }, {
+            id: 'med_revenue_bank',
+            description: 'ব্যাংকে {amount} টাকা সেবা আয় প্রাপ্তি',
+            journal: [
+                { account: 'Bank', side: 'debit' },
+                { account: 'Service Revenue', side: 'credit' }
+            ],
+            amountRange: [10000, 100000]
+        }, {
+            id: 'med_drawing_cash',
+            description: 'মালিক {amount} টাকা উত্তোলন করেছেন',
+            journal: [
+                { account: 'Drawings', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ],
+            amountRange: [5000, 30000]
+        }, {
+            id: 'med_drawing_bank',
+            description: 'মালিক ব্যাংক হতে {amount} টাকা উত্তোলন করেছেন',
+            journal: [
+                { account: 'Drawings', side: 'debit' },
+                { account: 'Bank', side: 'credit' }
+            ],
+            amountRange: [5000, 30000]
+        }, {
+            id: 'med_collection_cheque',
+            description: '{name} এর নিকট হতে {amount} টাকার চেক পাওয়া গেল',
+            journal: [
+                { account: 'Bank', side: 'debit' },
+                { account: 'Accounts Receivable', side: 'credit' }
+            ],
+            amountRange: [5000, 50000],
+            useName: true
+        }, {
+            id: 'med_payment_cheque',
+            description: '{name} এর নিকট {amount} টাকার চেক প্রদান করা হলো',
+            journal: [
+                { account: 'Creditors', side: 'debit' },
+                { account: 'Bank', side: 'credit' }
+            ],
+            amountRange: [5000, 40000],
+            useName: true
+        }, {
+            id: 'med_bank_loan',
+            description: 'ব্যাংক ঋণ হিসেবে {amount} টাকা গ্রহণ করা হয়েছে',
+            journal: [
+                { account: 'Bank', side: 'debit' },
+                { account: 'Bank Loan', side: 'credit' }
+            ],
+            amountRange: [50000, 300000]
+        }, {
+            id: 'med_commission_received',
+            description: 'কমিশন বাবদ {amount} টাকা পাওয়া গেল',
+            journal: [
+                { account: 'Cash', side: 'debit' },
+                { account: 'Commission Revenue', side: 'credit' }
+            ],
+            amountRange: [500, 10000]
+        }, {
+            id: 'med_discount_allowed',
+            description: '{name} কে {amount} টাকা বাট্টা প্রদান করা হলো',
+            journal: [
+                { account: 'Discount Allowed', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ],
+            amountRange: [200, 5000],
+            useName: true
+        }, {
+            id: 'med_discount_received',
+            description: '{name} হতে {amount} টাকা বাট্টা পাওয়া গেল',
+            journal: [
+                { account: 'Cash', side: 'debit' },
+                { account: 'Discount Received', side: 'credit' }
+            ],
+            amountRange: [200, 5000],
+            useName: true
+        }, {
+            id: 'med_return_inward',
+            description: '{name} কর্তৃক {amount} টাকার বিক্রিত পণ্য ফেরত',
+            journal: [
+                { account: 'Sales Revenue', side: 'debit' },
+                { account: 'Accounts Receivable', side: 'credit' }
+            ],
+            amountRange: [1000, 15000],
+            useName: true
+        }, {
+            id: 'med_return_outward',
+            description: '{name} কে {amount} টাকার ক্রয়কৃত পণ্য ফেরত',
+            journal: [
+                { account: 'Creditors', side: 'debit' },
+                { account: 'Inventory', side: 'credit' }
+            ],
+            amountRange: [1000, 15000],
+            useName: true
+        }];
+
+        const HARD_TEMPLATES = [{
+            id: 'hard_salary_payable',
+            description: 'বকেয়া বেতন {amount} টাকা সমন্বয় করা হয়েছে',
+            journal: [
+                { account: 'Salary', side: 'debit' },
+                { account: 'Salary Payable', side: 'credit' }
+            ],
+            amountRange: [10000, 60000]
+        }, {
+            id: 'hard_prepaid_rent_adj',
+            description: '{amount} টাকা অগ্রিম ভাড়ার সমন্বয় করা হয়েছে',
+            journal: [
+                { account: 'Rent', side: 'debit' },
+                { account: 'Prepaid Rent', side: 'credit' }
+            ],
+            amountRange: [5000, 40000]
+        }, {
+            id: 'hard_depreciation',
+            description: '{asset} এর উপর {amount} টাকা অবচয় ধার্য করা হয়েছে',
+            journal: [
+                { account: 'Depreciation Expense', side: 'debit' },
+                { account: 'Accumulated Depreciation', side: 'credit' }
+            ],
+            assetPool: ['Furniture', 'Equipment', 'Computer', 'Building'],
+            amountRange: [2000, 30000]
+        }, {
+            id: 'hard_collection_receivable',
+            description: '{name} এর নিকট হতে পূর্বে বকেয়া {amount} টাকা পাওনা আদায় করা হয়েছে',
+            journal: [
+                { account: 'Cash', side: 'debit' },
+                { account: 'Accounts Receivable', side: 'credit' }
+            ],
+            amountRange: [10000, 80000],
+            useName: true
+        }, {
+            id: 'hard_prepaid_expense_adj',
+            description: '{amount} টাকা পূর্বে প্রদত্ত অগ্রিম খরচ সমন্বয় করা হয়েছে',
+            journal: [
+                { account: '{expense}', side: 'debit' },
+                { account: 'Prepaid Expense', side: 'credit' }
+            ],
+            expensePool: ['Insurance', 'Rent', 'Advertisement'],
+            amountRange: [5000, 40000]
+        }, {
+            id: 'hard_accrued_revenue',
+            description: '{amount} টাকা অর্জিত কিন্তু অপ্রাপ্ত আয় সমন্বয় করা হয়েছে',
+            journal: [
+                { account: 'Accounts Receivable', side: 'debit' },
+                { account: 'Service Revenue', side: 'credit' }
+            ],
+            amountRange: [10000, 70000]
+        }, {
+            id: 'hard_interest_payable',
+            description: 'ব্যাংক ঋণের {amount} টাকা সুদ বকেয়া সমন্বয় করা হয়েছে',
+            journal: [
+                { account: 'Interest Expense', side: 'debit' },
+                { account: 'Interest Payable', side: 'credit' }
+            ],
+            amountRange: [2000, 15000]
+        }, {
+            id: 'hard_drawings_goods',
+            description: 'মালিক {amount} টাকার পণ্য উত্তোলন করেছেন',
+            journal: [
+                { account: 'Drawings', side: 'debit' },
+                { account: 'Inventory', side: 'credit' }
+            ],
+            amountRange: [5000, 25000]
+        }, {
+            id: 'hard_prepaid_insurance_adj',
+            description: '{amount} টাকা অগ্রিম বিমা খরচ সমন্বয় করা হয়েছে',
+            journal: [
+                { account: 'Insurance', side: 'debit' },
+                { account: 'Prepaid Insurance', side: 'credit' }
+            ],
+            amountRange: [3000, 25000]
+        }, {
+            id: 'hard_bad_debts',
+            description: '{name} এর নিকট {amount} টাকা অনাদায়ী দেনা ধার্য করা হলো',
+            journal: [
+                { account: 'Bad Debts', side: 'debit' },
+                { account: 'Accounts Receivable', side: 'credit' }
+            ],
+            amountRange: [1000, 10000],
+            useName: true
+        }, {
+            id: 'hard_bank_charges',
+            description: 'ব্যাংক কর্তৃক {amount} টাকা চার্জ ধার্য করা হলো',
+            journal: [
+                { account: 'Bank Charges', side: 'debit' },
+                { account: 'Bank', side: 'credit' }
+            ],
+            amountRange: [100, 1000]
+        }, {
+            id: 'hard_interest_received',
+            description: 'ব্যাংক কর্তৃক {amount} টাকা সুদ মঞ্জুর করা হয়েছে',
+            journal: [
+                { account: 'Bank', side: 'debit' },
+                { account: 'Interest Revenue', side: 'credit' }
+            ],
+            amountRange: [300, 3000]
+        }, {
+            id: 'hard_loan_received',
+            description: '{name} এর কাছ থেকে {amount} টাকা ঋণ গ্রহণ করা হলো',
+            journal: [
+                { account: 'Cash', side: 'debit' },
+                { account: 'Loan', side: 'credit' }
+            ],
+            amountRange: [10000, 100000],
+            useName: true
+        }, {
+            id: 'hard_loan_payment',
+            description: '{name} কে {amount} টাকা ঋণ পরিশোধ করা হলো',
+            journal: [
+                { account: 'Loan', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ],
+            amountRange: [5000, 50000],
+            useName: true
+        }, {
+            id: 'hard_income_tax',
+            description: 'আয়কর বাবদ {amount} টাকা প্রদান করা হলো',
+            journal: [
+                { account: 'Income Tax', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ],
+            amountRange: [500, 10000]
+        }, {
+            id: 'hard_donation',
+            description: '{amount} টাকা দান করা হয়েছে',
+            journal: [
+                { account: 'Donation', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ],
+            amountRange: [500, 5000]
+        }, {
+            id: 'hard_insurance_premium',
+            description: 'জীবন বীমা প্রিমিয়াম বাবদ {amount} টাকা প্রদান',
+            journal: [
+                { account: 'Insurance', side: 'debit' },
+                { account: 'Cash', side: 'credit' }
+            ],
+            amountRange: [1000, 10000]
+        }, {
+            id: 'hard_interest_on_capital',
+            description: 'মূলধনের উপর {amount} টাকা সুদ ধার্য করা হয়েছে',
+            journal: [
+                { account: 'Interest Expense', side: 'debit' },
+                { account: 'Capital', side: 'credit' }
+            ],
+            amountRange: [1000, 10000]
+        }];
+
+        // ================================================================
+        // 5. BUSINESS STATE
+        // ================================================================
+
+        class Business {
+            constructor() {
+                this.cash = 500000;
+                this.bank = 200000;
+                this.assets = {
+                    'Furniture': 30000,
+                    'Computer': 50000,
+                    'Equipment': 40000,
+                    'Building': 0,
+                    'Land': 0,
+                    'Inventory': 60000,
+                    'Office Supplies': 10000,
+                    'Prepaid Rent': 0,
+                    'Prepaid Insurance': 0,
+                    'Accounts Receivable': 0,
+                    'Accumulated Depreciation': 0
+                };
+                this.liabilities = {
+                    'Creditors': 20000,
+                    'Bank Loan': 0,
+                    'Salary Payable': 0,
+                    'Rent Payable': 0,
+                    'Interest Payable': 0,
+                    'Loan': 0
+                };
+                this.capital = 650000;
+                this.revenue = 0;
+                this.expenses = 0;
+                this.name = 'ABC Trading';
+            }
+            get totalAssets() {
+                let sum = this.cash + this.bank;
+                for (const k in this.assets) sum += this.assets[k];
+                return sum;
+            }
+            get totalLiabilities() {
+                let sum = 0;
+                for (const k in this.liabilities) sum += this.liabilities[k];
+                return sum;
+            }
+            get equity() { return this.capital + this.revenue - this.expenses; }
+            addAsset(n, a) { if (!this.assets[n]) this.assets[n] = 0;
+                this.assets[n] += a; }
+            subAsset(n, a) { if (this.assets[n]) { this.assets[n] -= a; if (this.assets[n] < 0) this.assets[n] = 0; } }
+            addLiability(n, a) { if (!this.liabilities[n]) this.liabilities[n] = 0;
+                this.liabilities[n] += a; }
+            subLiability(n, a) { if (this.liabilities[n]) { this.liabilities[n] -= a; if (this.liabilities[n] < 0) this
+                        .liabilities[n] = 0; } }
+            addCash(a) { this.cash += a; }
+            subCash(a) { this.cash -= a; }
+            addBank(a) { this.bank += a; }
+            subBank(a) { this.bank -= a; }
+            addCapital(a) { this.capital += a; }
+            subCapital(a) { this.capital -= a; }
+            addRevenue(a) { this.revenue += a; }
+            addExpense(a) { this.expenses += a; }
+            clone() {
+                const b = new Business();
+                Object.assign(b, this);
+                b.assets = { ...this.assets };
+                b.liabilities = { ...this.liabilities };
+                return b;
+            }
+            getDisplay() {
+                return {
+                    cash: this.cash,
+                    bank: this.bank,
+                    assets: this.totalAssets,
+                    liabilities: this.totalLiabilities,
+                    capital: this.equity
+                };
+            }
+        }
+
+        // ================================================================
+        // 6. HELPERS
+        // ================================================================
 
         function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
@@ -2223,6 +2524,7 @@
         }
 
         const COINS_PER_CORRECT = 2;
+
         const BENGALI_PERSON_NAMES = [
             'রহিম', 'করিম', 'আলম', 'রিয়াদ', 'সুমন', 'হাসান', 'রনি',
             'তাজিম', 'ফাহিম', 'লিমন', 'জসিম', 'রাফি', 'শাওন', 'নাঈম',
@@ -2232,896 +2534,7 @@
         function getRandomName() { return pickRandom(BENGALI_PERSON_NAMES); }
 
         // ================================================================
-        // 2. MASTER ACCOUNT CLASSIFICATION SYSTEM
-        // ================================================================
-
-        const ACCOUNT_CLASSIFICATIONS = {
-            'Cash': { category: 'asset', bengali: 'নগদান', rule: 'increase=debit,decrease=credit' },
-            'Bank': { category: 'asset', bengali: 'ব্যাংক', rule: 'increase=debit,decrease=credit' },
-            'Accounts Receivable': { category: 'asset', bengali: 'দেনাদার', rule: 'increase=debit,decrease=credit' },
-            'Inventory': { category: 'asset', bengali: 'মাল', rule: 'increase=debit,decrease=credit' },
-            'Furniture': { category: 'asset', bengali: 'আসবাবপত্র', rule: 'increase=debit,decrease=credit' },
-            'Equipment': { category: 'asset', bengali: 'যন্ত্রপাতি', rule: 'increase=debit,decrease=credit' },
-            'Computer': { category: 'asset', bengali: 'কম্পিউটার', rule: 'increase=debit,decrease=credit' },
-            'Office Supplies': { category: 'asset', bengali: 'অফিস সরঞ্জাম', rule: 'increase=debit,decrease=credit' },
-            'Prepaid Rent': { category: 'asset', bengali: 'অগ্রিম ভাড়া', rule: 'increase=debit,decrease=credit' },
-            'Prepaid Insurance': { category: 'asset', bengali: 'অগ্রিম বিমা খরচ', rule: 'increase=debit,decrease=credit' },
-            'Prepaid Expense': { category: 'asset', bengali: 'অগ্রিম খরচ', rule: 'increase=debit,decrease=credit' },
-            'Accumulated Depreciation': { category: 'asset', bengali: 'সঞ্চিত অবচয়', rule: 'increase=credit,decrease=debit' },
-            'Building': { category: 'asset', bengali: 'ভবন', rule: 'increase=debit,decrease=credit' },
-            'Land': { category: 'asset', bengali: 'জমি', rule: 'increase=debit,decrease=credit' },
-            'Creditors': { category: 'liability', bengali: 'পাওনাদার', rule: 'increase=credit,decrease=debit' },
-            'Bank Loan': { category: 'liability', bengali: 'ব্যাংক ঋণ', rule: 'increase=credit,decrease=debit' },
-            'Salary Payable': { category: 'liability', bengali: 'বকেয়া বেতন', rule: 'increase=credit,decrease=debit' },
-            'Rent Payable': { category: 'liability', bengali: 'বকেয়া ভাড়া', rule: 'increase=credit,decrease=debit' },
-            'Interest Payable': { category: 'liability', bengali: 'প্রদেয় সুদ', rule: 'increase=credit,decrease=debit' },
-            'Loan': { category: 'liability', bengali: 'ঋণ', rule: 'increase=credit,decrease=debit' },
-            'Debentures': { category: 'liability', bengali: 'ঋণপত্র', rule: 'increase=credit,decrease=debit' },
-            'Capital': { category: 'capital', bengali: 'মূলধন', rule: 'increase=credit,decrease=debit' },
-            'Drawings': { category: 'drawing', bengali: 'উত্তোলন', rule: 'increase=debit,decrease=credit' },
-            'Sales Revenue': { category: 'revenue', bengali: 'বিক্রয়', rule: 'increase=credit,decrease=debit' },
-            'Service Revenue': { category: 'revenue', bengali: 'সেবা আয়', rule: 'increase=credit,decrease=debit' },
-            'Commission Revenue': { category: 'revenue', bengali: 'কমিশন আয়', rule: 'increase=credit,decrease=debit' },
-            'Rent Revenue': { category: 'revenue', bengali: 'ভাড়া আয়', rule: 'increase=credit,decrease=debit' },
-            'Interest Revenue': { category: 'revenue', bengali: 'সুদ প্রাপ্তি', rule: 'increase=credit,decrease=debit' },
-            'Discount Received': { category: 'revenue', bengali: 'বাট্টা পাওয়া', rule: 'increase=credit,decrease=debit' },
-            'Accrued Revenue': { category: 'revenue', bengali: 'অর্জিত আয়', rule: 'increase=credit,decrease=debit' },
-            'Salary': { category: 'expense', bengali: 'বেতন', rule: 'increase=debit,decrease=credit' },
-            'Rent': { category: 'expense', bengali: 'ভাড়া', rule: 'increase=debit,decrease=credit' },
-            'Advertisement': { category: 'expense', bengali: 'বিজ্ঞাপন খরচ', rule: 'increase=debit,decrease=credit' },
-            'Insurance': { category: 'expense', bengali: 'বীমা খরচ', rule: 'increase=debit,decrease=credit' },
-            'Transport': { category: 'expense', bengali: 'পরিবহন খরচ', rule: 'increase=debit,decrease=credit' },
-            'Office Expenses': { category: 'expense', bengali: 'অফিস খরচ', rule: 'increase=debit,decrease=credit' },
-            'Electricity Bill': { category: 'expense', bengali: 'বিদ্যুৎ বিল', rule: 'increase=debit,decrease=credit' },
-            'Depreciation Expense': { category: 'expense', bengali: 'অবচয় খরচ', rule: 'increase=debit,decrease=credit' },
-            'Bad Debts': { category: 'expense', bengali: 'কুঋণ', rule: 'increase=debit,decrease=credit' },
-            'Bank Charges': { category: 'expense', bengali: 'ব্যাংক চার্জ', rule: 'increase=debit,decrease=credit' },
-            'Interest Expense': { category: 'expense', bengali: 'সুদ খরচ', rule: 'increase=debit,decrease=credit' },
-            'Income Tax': { category: 'expense', bengali: 'আয়কর', rule: 'increase=debit,decrease=credit' },
-            'Donation': { category: 'expense', bengali: 'দান খরচ', rule: 'increase=debit,decrease=credit' },
-            'Commission Expense': { category: 'expense', bengali: 'কমিশন খরচ', rule: 'increase=debit,decrease=credit' },
-            'Repairs': { category: 'expense', bengali: 'মেরামত খরচ', rule: 'increase=debit,decrease=credit' },
-            'Discount Allowed': { category: 'expense', bengali: 'বাট্টা প্রদান', rule: 'increase=debit,decrease=credit' },
-        };
-
-        function getAccountInfo(accountName) {
-            return ACCOUNT_CLASSIFICATIONS[accountName] || null;
-        }
-
-        function getBengaliName(accountName) {
-            const info = getAccountInfo(accountName);
-            return info ? info.bengali : accountName;
-        }
-
-        function getAccountCategory(accountName) {
-            const info = getAccountInfo(accountName);
-            return info ? info.category : null;
-        }
-
-        const ACCOUNT_RULES = {
-            asset: { increase: 'debit', decrease: 'credit', label: 'Asset' },
-            liability: { increase: 'credit', decrease: 'debit', label: 'Liability' },
-            capital: { increase: 'credit', decrease: 'debit', label: 'Capital' },
-            revenue: { increase: 'credit', decrease: 'debit', label: 'Revenue' },
-            expense: { increase: 'debit', decrease: 'credit', label: 'Expense' },
-            drawing: { increase: 'debit', decrease: 'credit', label: 'Drawing' }
-        };
-
-        const BENGALI_NAMES = {};
-        for (const [key, val] of Object.entries(ACCOUNT_CLASSIFICATIONS)) {
-            BENGALI_NAMES[key] = val.bengali;
-        }
-        BENGALI_NAMES['Sales'] = 'বিক্রয়';
-        BENGALI_NAMES['Purchases'] = 'ক্রয়';
-        BENGALI_NAMES['Debtor'] = 'দেনাদার';
-        BENGALI_NAMES['Creditor'] = 'পাওনাদার';
-
-        // ================================================================
-        // 3. TEMPLATE DEFINITIONS WITH PRIMARY ACCOUNT SPECIFIED
-        // ================================================================
-
-        const TEMPLATE_DEFINITIONS = {
-
-            // ===== EASY TEMPLATES (no amounts, simple) =====
-            asset_purchase: {
-                category: 'asset',
-                difficulty: 'easy',
-                patterns: [
-                    'নগদে {asset} ক্রয় করা হয়েছে',
-                    '{asset} নগদে ক্রয় করা হয়েছে',
-                    'নগদে {asset} কেনা হয়েছে',
-                    '{asset} ক্রয় করা হয়েছে নগদে',
-                ],
-                assetPool: ['Computer', 'Mobile', 'Book', 'Notebook', 'Furniture', 'Pen', 'Table', 'Chair', 'Charger',
-                    'Egg', 'Hat'
-                ],
-                journal: [
-                    { account: '{asset}', side: 'debit' },
-                    { account: 'Cash', side: 'credit' }
-                ],
-                primaryAccountIndex: 0,
-                hasAmount: false,
-                amountRange: null
-            },
-
-            expense_pay: {
-                category: 'expense',
-                difficulty: 'easy',
-                patterns: [
-                    'নগদে {expense} পরিশোধ করা হয়েছে',
-                    '{expense} নগদে পরিশোধ করা হয়েছে',
-                    'নগদে {expense} প্রদান করা হয়েছে',
-                    '{expense} প্রদান করা হয়েছে নগদে',
-                    'নগদে {expense} বাবদ প্রদান'
-                ],
-                expensePool: ['Electricity Bill', 'Water Bill', 'Rent', 'Transport', 'Advertisement', 'Office Expenses',
-                    'Salary',
-                    'Insurance', 'Repairs', 'Maintenance', 'Telephone Bill', 'Water Bill', 'Gas Bill'
-                ],
-                journal: [
-                    { account: '{expense}', side: 'debit' },
-                    { account: 'Cash', side: 'credit' }
-                ],
-                primaryAccountIndex: 0,
-                hasAmount: false,
-                amountRange: null
-            },
-
-            capital_invest: {
-                category: 'capital',
-                difficulty: 'easy',
-                patterns: [
-                    'মালিক নগদ বিনিয়োগ করেছেন',
-                    'মালিক ব্যবসায়ে নগদ বিনিয়োগ করেছেন',
-                    'নগদ মূলধন হিসাবে বিনিয়োগ',
-                    'মালিক পুঁজি হিসেবে নগদ যোগান দিয়েছেন'
-                ],
-                journal: [
-                    { account: 'Cash', side: 'debit' },
-                    { account: 'Capital', side: 'credit' }
-                ],
-                primaryAccountIndex: 1,
-                hasAmount: false,
-                amountRange: null
-            },
-
-            revenue_sale: {
-                category: 'revenue',
-                difficulty: 'easy',
-                patterns: [
-                    'নগদে {item} বিক্রয় করা হয়েছে',
-                    '{item} নগদে বিক্রয় করা হয়েছে',
-                    'নগদে {item} বিক্রি করা হয়েছে',
-                    '{item} বিক্রয় করা হয়েছে নগদে',
-                    'নগদে {item} বিক্রি হলো',
-                    '{item} বিক্রি করে নগদ পাওয়া গেছে'
-                ],
-                itemPool: ['পণ্য', 'মাল', 'সেবা', 'পণ্যদ্রব্য', 'Book', 'Notebook', 'Pen', 'Egg', 'Computer', 'Table',
-                    'Chair'
-                ],
-                journal: [
-                    { account: 'Cash', side: 'debit' },
-                    { account: 'Sales Revenue', side: 'credit' }
-                ],
-                primaryAccountIndex: 1,
-                hasAmount: false,
-                amountRange: null
-            },
-
-            liability_pay: {
-                category: 'liability',
-                difficulty: 'easy',
-                patterns: [
-                    '{liability} পরিশোধ করা হয়েছে',
-                    '{liability} নগদে পরিশোধ করা হয়েছে',
-                    'নগদে {liability} পরিশোধ',
-                    '{liability} বাবদ নগদ প্রদান'
-                ],
-                liabilityPool: ['Creditors', 'Rent Payable', 'Salary Payable'],
-                journal: [
-                    { account: '{liability}', side: 'debit' },
-                    { account: 'Cash', side: 'credit' }
-                ],
-                primaryAccountIndex: 0,
-                hasAmount: false,
-                amountRange: null
-            },
-
-            drawings: {
-                category: 'drawing',
-                difficulty: 'easy',
-                patterns: [
-                    'মালিক নগদ উত্তোলন করেছেন',
-                    'মালিক ব্যক্তিগত প্রয়োজনে নগদ উত্তোলন',
-                    'ব্যক্তিগত খরচের জন্য নগদ উত্তোলন',
-                    'মালিক নগদ টাকা তুলে নিয়েছেন',
-                    'মালিক কর্তৃক নগদ উত্তোলন করা হয়েছে',
-                    'মালিক ব্যক্তিগত ভোগের জন্য নগদ নিয়েছেন'
-                ],
-                journal: [
-                    { account: 'Drawings', side: 'debit' },
-                    { account: 'Cash', side: 'credit' }
-                ],
-                primaryAccountIndex: 0,
-                hasAmount: false,
-                amountRange: null
-            },
-
-            // ===== MEDIUM TEMPLATES (with amounts, real transactions) =====
-            medium_asset_purchase: {
-                category: 'asset',
-                difficulty: 'medium',
-                patterns: [
-                    'নগদে {amount} টাকায় {asset} ক্রয় করা হয়েছে',
-                    '{amount} টাকায় {asset} নগদে ক্রয় করা হয়েছে',
-                    'নগদে {amount} টাকার {asset} কেনা হয়েছে',
-                    '{amount} টাকার {asset} ক্রয় করা হয়েছে নগদে'
-                ],
-                assetPool: ['Computer', 'Mobile', 'Furniture', 'Equipment', 'Office Supplies', 'Laptop', 'Table',
-                    'Chair',
-                    'Cabinet', 'Printer', 'Scanner', 'AC', 'Television'
-                ],
-                journal: [
-                    { account: '{asset}', side: 'debit' },
-                    { account: 'Cash', side: 'credit' }
-                ],
-                primaryAccountIndex: 0,
-                hasAmount: true,
-                amountRange: [3000, 80000]
-            },
-
-            medium_expense_pay: {
-                category: 'expense',
-                difficulty: 'medium',
-                patterns: [
-                    'নগদে {expense} বাবদ {amount} টাকা পরিশোধ করা হয়েছে',
-                    '{expense} বাবদ {amount} টাকা নগদে প্রদান করা হয়েছে',
-                    'নগদে {amount} টাকা {expense} পরিশোধ'
-                ],
-                expensePool: ['Government Fee', 'Tv Bill', 'Rent', 'Transport', 'Advertisement', 'Office Expenses',
-                    'Salary',
-                    'Insurance', 'Repairs', 'Maintenance', 'Telephone Bill', 'Water Bill', 'Gas Bill', 'Internet Bill'
-                ],
-                journal: [
-                    { account: '{expense}', side: 'debit' },
-                    { account: 'Cash', side: 'credit' }
-                ],
-                primaryAccountIndex: 0,
-                hasAmount: true,
-                amountRange: [1000, 50000]
-            },
-
-            medium_revenue_sale: {
-                category: 'revenue',
-                difficulty: 'medium',
-                patterns: [
-                    'নগদে {amount} টাকায় {item} বিক্রয় করা হয়েছে',
-                    '{amount} টাকায় {item} নগদে বিক্রয় করা হয়েছে',
-                    'নগদে {amount} টাকার {item} বিক্রি করা হয়েছে',
-                    '{amount} টাকার {item} বিক্রয় করা হয়েছে নগদে'
-                ],
-                itemPool: ['পণ্য', 'মাল', 'সেবা', 'পণ্যদ্রব্য', 'Cycle', 'Mobile', 'Furniture', 'Computer', 'Book',
-                    'Notebook', 'Table', 'Chair', 'Tv', 'AC', 'Fan'
-                ],
-                journal: [
-                    { account: 'Cash', side: 'debit' },
-                    { account: 'Sales Revenue', side: 'credit' }
-                ],
-                primaryAccountIndex: 1,
-                hasAmount: true,
-                amountRange: [3000, 90000]
-            },
-
-            medium_bank_deposit: {
-                category: 'asset',
-                difficulty: 'medium',
-                patterns: [
-                    'ব্যাংকে {amount} টাকা জমা দেওয়া হয়েছে',
-                    '{amount} টাকা ব্যাংকে জমা করা হয়েছে',
-                    'ব্যাংকে নগদ জমা দেওয়া হয়েছে {amount} টাকা',
-                    'সোনালি ব্যাংকে {amount} টাকা জমা দেওয়া হয়েছে',
-                    '{amount} টাকা সোনালি ব্যাংকে জমা করা হয়েছে',
-                    'অগ্রনি ব্যাংকে {amount} টাকা জমা রাখা হয়েছে',
-                    '{amount} টাকা অগ্রনি ব্যাংকে জমা করা হয়েছে',
-                    'ইসলামি ব্যাংকে {amount} টাকা জমা দেওয়া হয়েছে',
-                    '{amount} টাকা ইসলামি ব্যাংকে জমা দেয়া হয়েছে'
-                ],
-                journal: [
-                    { account: 'Bank', side: 'debit' },
-                    { account: 'Cash', side: 'credit' }
-                ],
-                primaryAccountIndex: 0,
-                hasAmount: true,
-                amountRange: [5000, 50000]
-            },
-
-            medium_bank_withdrawal: {
-                category: 'asset',
-                difficulty: 'medium',
-                patterns: [
-                    'ব্যাংক থেকে {amount} টাকা উত্তোলন করা হয়েছে',
-                    'সোনালি ব্যাংক থেকে {amount} টাকা উত্তোলন করা হয়েছে',
-                    'অগ্রনি ব্যাংক থেকে {amount} টাকা উত্তোলন করা হয়েছে',
-                    'ব্র্যাক ব্যাংক থেকে {amount} টাকা উত্তোলন করা হয়েছে',
-                    '{amount} টাকা ব্যাংক থেকে উত্তোলন',
-                    'ব্যাংক থেকে নগদ উত্তোলন {amount} টাকা',
-                    'ব্র্যাক ব্যাংক থেকে {amount} টাকা উত্তোলন করা হয়েছে'
-                ],
-                journal: [
-                    { account: 'Cash', side: 'debit' },
-                    { account: 'Bank', side: 'credit' }
-                ],
-                primaryAccountIndex: 1,
-                hasAmount: true,
-                amountRange: [3000, 40000]
-            },
-
-            medium_credit_sale: {
-                category: 'revenue',
-                difficulty: 'medium',
-                patterns: [
-                    '{name} এর নিকট {amount} টাকার {item} বিক্রয় করা হয়েছে',
-                    '{amount} টাকার {item} {name} এর নিকট বিক্রয় করা হয়েছে',
-                    '{item} {amount} টাকার {name} এর নিকট বিক্রয় করা হয়েছে',
-                    'একটি {item} {name} এর নিকট {amount} টাকায় বিক্রয় করা হইছে',
-                    '{name} কে {amount} টাকার {item} বিক্রি করা হয়েছে',
-                    '{name} এর কাছে {amount} টাকায় {item} বিক্রি',
-                    '{name} কে {item} বিক্রয় {amount} টাকা',
-                    'একটি {item} {name} কে বিক্রয় করা হয়েছে {amount} টাকা'
-                ],
-                itemPool: ['পণ্য', 'Mobile', 'Computer', 'Book', 'Furniture', 'AC', 'Glass', 'TV', 'Table', 'Chair'],
-                journal: [
-                    { account: 'Accounts Receivable', side: 'debit' },
-                    { account: 'Sales Revenue', side: 'credit' }
-                ],
-                primaryAccountIndex: 1,
-                hasAmount: true,
-                amountRange: [10000, 90000],
-                useName: true
-            },
-
-            medium_credit_purchase: {
-                category: 'liability',
-                difficulty: 'medium',
-                patterns: [
-                    '{name} এর নিকট হতে {amount} টাকার {item} ক্রয় করা হয়েছে',
-                    '{name} থেকে {amount} টাকায় {item} কেনা হয়েছে',
-                    '{name} এর কাছ থেকে {item} ক্রয় {amount} টাকা'
-                ],
-                itemPool: ['মাল', 'পণ্য', 'পণ্যদ্রব্য', 'Bike', 'sofa', 'Car', 'Charger', 'Equipment', 'Office Supplies',
-                    'Book', 'Mobile'
-                ],
-                journal: [
-                    { account: 'Inventory', side: 'debit' },
-                    { account: 'Creditors', side: 'credit' }
-                ],
-                primaryAccountIndex: 1,
-                hasAmount: true,
-                amountRange: [10000, 100000],
-                useName: true
-            },
-
-            medium_drawing: {
-                category: 'drawing',
-                difficulty: 'medium',
-                patterns: [
-                    'মালিক {amount} টাকা উত্তোলন করেছেন',
-                    'মালিক ব্যক্তিগত প্রয়োজনে {amount} টাকা উত্তোলন',
-                    'ব্যক্তিগত খরচের জন্য {amount} টাকা উত্তোলন',
-                    'মালিক {amount} টাকা তুলে নিয়েছেন',
-                    '{amount} টাকা উত্তোলন'
-                ],
-                journal: [
-                    { account: 'Drawings', side: 'debit' },
-                    { account: 'Cash', side: 'credit' }
-                ],
-                primaryAccountIndex: 0,
-                hasAmount: true,
-                amountRange: [3000, 30000]
-            },
-
-            medium_capital_invest: {
-                category: 'capital',
-                difficulty: 'medium',
-                patterns: [
-                    'মালিক {amount} টাকা নগদ বিনিয়োগ করেছেন',
-                    'মালিক ব্যবসায়ে {amount} টাকা নগদ বিনিয়োগ করেছেন',
-                    '{amount} টাকা নগদ মূলধন হিসাবে বিনিয়োগ',
-                    '{amount} টাকা নগদ বিনিয়োগ'
-
-                ],
-                journal: [
-                    { account: 'Cash', side: 'debit' },
-                    { account: 'Capital', side: 'credit' }
-                ],
-                primaryAccountIndex: 1,
-                hasAmount: true,
-                amountRange: [10000, 100000]
-            },
-
-            // ===== HARD TEMPLATES (complex/adjustment transactions) =====
-            depreciation: {
-                category: 'expense',
-                difficulty: 'hard',
-                patterns: [
-                    '{asset} এর উপর {amount} টাকা অবচয় ধার্য করা হয়েছে',
-                    '{asset} এর অবচয় {amount} টাকা ধার্য',
-                    '{amount} টাকা অবচয় ধার্য করা হলো {asset} এর উপর',
-                    '{asset} এর অবচয় বাবদ {amount} টাকা নির্ধারণ করা হলো',
-                    '{asset} এর উপর অবচয় খরচ হিসেবে {amount} টাকা ধরা হয়েছে',
-                    '{asset} এর উপর {amount} টাকা অবচয় হিসাব করা হয়'
-                ],
-                assetPool: ['Table', 'Ac', 'Generator', 'Desk', 'truck', 'Equipment', 'Computer', 'Building',
-                    'Vehicle'
-                ],
-                journal: [
-                    { account: 'Depreciation Expense', side: 'debit' },
-                    { account: 'Accumulated Depreciation', side: 'credit' }
-                ],
-                primaryAccountIndex: 0,
-                hasAmount: true,
-                amountRange: [2000, 30000]
-            },
-
-            bad_debts: {
-                category: 'expense',
-                difficulty: 'hard',
-                patterns: [
-                    '{name} এর নিকট {amount} টাকা অনাদায়ী দেনা ধার্য করা হয়েছে',
-                    '{name} এর কাছ থেকে {amount} টাকা পাওয়া যাবে না বলে ধার্য',
-                    '{name} এর অনাদায়ী পাওনা {amount} টাকা',
-                    '{name} এর দেনা {amount} টাকা অনাদায়ী হিসেবে বাদ দেওয়া হলো',
-                    '{amount} টাকা দেনা {name} এর অনাদায়ী হিসেবে বাদ দেওয়া হলো'
-                ],
-                journal: [
-                    { account: 'Bad Debts', side: 'debit' },
-                    { account: 'Accounts Receivable', side: 'credit' }
-                ],
-                primaryAccountIndex: 0,
-                hasAmount: true,
-                amountRange: [1000, 10000],
-                useName: true
-            },
-
-            prepaid_rent: {
-                category: 'asset',
-                difficulty: 'hard',
-                patterns: [
-                    'অগ্রিম ভাড়া বাবদ {amount} টাকা সমন্বয় করা হয়েছে',
-                    '{amount} টাকা অগ্রিম ভাড়ার সমন্বয় করা হয়েছে',
-                    'অগ্রিম ভাড়া সমন্বয় {amount} টাকা',
-                    '{amount} টাকা অগ্রিম ভাড়া হিসাবে স্থানান্তর'
-                ],
-                journal: [
-                    { account: 'Rent', side: 'debit' },
-                    { account: 'Prepaid Rent', side: 'credit' }
-                ],
-                primaryAccountIndex: 0,
-                hasAmount: true,
-                amountRange: [5000, 40000]
-            },
-
-            accrued_revenue: {
-                category: 'revenue',
-                difficulty: 'hard',
-                patterns: [
-                    'অর্জিত আয় বাবদ {amount} টাকা সমন্বয় করা হলো',
-                    '{amount} টাকা অর্জিত কিন্তু অপ্রাপ্ত আয় সমন্বয় করা হয়েছে',
-                    'অর্জিত আয় সমন্বয় {amount} টাকা',
-                    '{amount} টাকা আয় অর্জিত হয়েছে কিন্তু পাওয়া যায়নি'
-                ],
-                journal: [
-                    { account: 'Accounts Receivable', side: 'debit' },
-                    { account: 'Accrued Revenue', side: 'credit' }
-                ],
-                primaryAccountIndex: 1,
-                hasAmount: true,
-                amountRange: [10000, 70000]
-            },
-
-            loan_received: {
-                category: 'liability',
-                difficulty: 'hard',
-                patterns: [
-                    '{name} এর কাছ থেকে {amount} টাকা ঋণ গ্রহণ করা হয়েছে',
-                    '{name} থেকে {amount} টাকা ঋণ নেওয়া হয়েছে',
-                    '{name} এর নিকট হতে ঋণ প্রাপ্তি {amount} টাকা',
-                    '{amount} টাকা ঋণ নেওয়া হয়েছে',
-                    '{amount} টাকা ঋণ গ্রহন',
-                    'ঋণ গ্রহন {amount} টাকা'
-                ],
-                journal: [
-                    { account: 'Cash', side: 'debit' },
-                    { account: 'Loan', side: 'credit' }
-                ],
-                primaryAccountIndex: 1,
-                hasAmount: true,
-                amountRange: [10000, 100000],
-                useName: true
-            },
-
-            salary_payable_adj: {
-                category: 'liability',
-                difficulty: 'hard',
-                patterns: [
-                    'বকেয়া বেতন {amount} টাকা সমন্বয় করা হয়েছে',
-                    '{amount} টাকা বকেয়া বেতন হিসাবে ধার্য',
-                    '{amount} টাকা বকেয়া বেতন সমন্বয়',
-                    'বকেয়া বেতন বাবদ {amount} টাকা সমন্বয়'
-                ],
-                journal: [
-                    { account: 'Salary', side: 'debit' },
-                    { account: 'Salary Payable', side: 'credit' }
-                ],
-                primaryAccountIndex: 1,
-                hasAmount: true,
-                amountRange: [8000, 50000]
-            },
-
-            interest_expense_adj: {
-                category: 'expense',
-                difficulty: 'hard',
-                patterns: [
-                    'ব্যাংক ঋণের {amount} টাকা সুদ বকেয়া সমন্বয় করা হয়েছে',
-                    '{amount} টাকা সুদ খরচ বকেয়া ধার্য',
-                    'সুদ খরচ বাবদ {amount} টাকা সমন্বয়',
-                    'ব্যাংক ঋণের সুদের {amount} টাকা সমন্বয় করা হয়েছে'
-                ],
-                journal: [
-                    { account: 'Interest Expense', side: 'debit' },
-                    { account: 'Interest Payable', side: 'credit' }
-                ],
-                primaryAccountIndex: 0,
-                hasAmount: true,
-                amountRange: [2000, 15000]
-            },
-
-            drawings_goods_adj: {
-                category: 'drawing',
-                difficulty: 'hard',
-                patterns: [
-                    'মালিক {amount} টাকার পণ্য উত্তোলন করেছেন',
-                    'মালিক {amount} টাকার মাল উত্তোলন করেছেন',
-                    '{amount} টাকা মূল্যের পণ্য মালিক উত্তোলন',
-                    '{amount} টাকা মূল্যের পণ্য উত্তোলন',
-                    'পণ্য উত্তোলন {amount} টাকার'
-                ],
-                journal: [
-                    { account: 'Drawings', side: 'debit' },
-                    { account: 'Inventory', side: 'credit' }
-                ],
-                primaryAccountIndex: 0,
-                hasAmount: true,
-                amountRange: [5000, 25000]
-            }
-        };
-
-        // ================================================================
-        // 4. STRICT DIFFICULTY FILTERING
-        // ================================================================
-
-        function getAvailableTemplates(mode, smartBias) {
-            const allTemplates = Object.entries(TEMPLATE_DEFINITIONS);
-            let available = [];
-
-            for (const [key, def] of allTemplates) {
-                if (def.difficulty !== mode) continue;
-                if (mode === 'easy') {
-                    available.push({ key, def, hasAmount: false, amountRange: null });
-                } else {
-                    available.push({ key, def, hasAmount: def.hasAmount || false, amountRange: def.amountRange ||
-                            null });
-                }
-            }
-            return available;
-        }
-
-        // ================================================================
-        // 5. TOPIC DIVERSITY TRACKER
-        // ================================================================
-
-        let recentCategories = [];
-        const MAX_RECENT_CATEGORIES = 15;
-
-        function getCategoryWeight(category, smartBias) {
-            const baseWeight = (smartBias && smartBias[category]) ? smartBias[category] : 1;
-            const recentCount = recentCategories.filter(c => c === category).length;
-            let penalty = 1;
-            if (recentCount >= 3) penalty = 0.2;
-            else if (recentCount >= 2) penalty = 0.4;
-            else if (recentCount >= 1) penalty = 0.7;
-            if (recentCategories.length > 0 && recentCategories[recentCategories.length - 1] === category) {
-                penalty *= 0.3;
-            }
-            return Math.max(0.1, baseWeight * penalty);
-        }
-
-        function pickTemplateWithDiversity(mode, smartBias) {
-            const available = getAvailableTemplates(mode, smartBias);
-
-            if (available.length === 0) {
-                const fallback = Object.entries(TEMPLATE_DEFINITIONS).find(([k, d]) => d.difficulty === mode);
-                if (fallback) {
-                    const [key, def] = fallback;
-                    return {
-                        key: key,
-                        def: def,
-                        hasAmount: mode !== 'easy' ? (def.hasAmount || false) : false,
-                        amountRange: mode !== 'easy' ? (def.amountRange || null) : null
-                    };
-                }
-                const assetDef = TEMPLATE_DEFINITIONS.asset_purchase;
-                return {
-                    key: 'asset_purchase',
-                    def: assetDef,
-                    hasAmount: false,
-                    amountRange: null
-                };
-            }
-
-            const weighted = available.map(item => {
-                const category = item.def.category;
-                const weight = getCategoryWeight(category, smartBias);
-                return { ...item, weight };
-            });
-
-            weighted.sort((a, b) => b.weight - a.weight);
-            const topCandidates = weighted.slice(0, Math.min(5, weighted.length));
-            const selected = pickRandom(topCandidates);
-
-            const category = selected.def.category;
-            recentCategories.push(category);
-            if (recentCategories.length > MAX_RECENT_CATEGORIES) {
-                recentCategories.shift();
-            }
-
-            return {
-                key: selected.key,
-                def: selected.def,
-                hasAmount: selected.hasAmount,
-                amountRange: selected.amountRange
-            };
-        }
-
-        // ================================================================
-        // 6. TRANSACTION GENERATOR WITH PRIMARY ACCOUNT SELECTION
-        // ================================================================
-
-        function generateTransactionFromTemplate(templateInfo, mode) {
-            const def = templateInfo.def;
-            const hasAmount = templateInfo.hasAmount && mode !== 'easy';
-            const amountRange = templateInfo.amountRange;
-
-            let amount = 0;
-            if (hasAmount && amountRange) {
-                amount = getAmount(amountRange);
-            }
-
-            const pattern = pickRandom(def.patterns);
-
-            let asset = '',
-                expense = '',
-                liability = '',
-                item = '';
-            let name = '';
-
-            const useName = def.useName || false;
-            if (useName) {
-                name = getRandomName();
-            }
-
-            if (def.assetPool) {
-                asset = pickRandom(def.assetPool);
-            }
-            if (def.expensePool) {
-                expense = pickRandom(def.expensePool);
-            }
-            if (def.liabilityPool) {
-                liability = pickRandom(def.liabilityPool);
-            }
-            if (def.itemPool) {
-                item = pickRandom(def.itemPool);
-            }
-
-            let desc = pattern;
-            if (asset) desc = desc.replace(/{asset}/g, getBengaliName(asset) || asset);
-            if (expense) desc = desc.replace(/{expense}/g, getBengaliName(expense) || expense);
-            if (liability) desc = desc.replace(/{liability}/g, getBengaliName(liability) || liability);
-            if (item) desc = desc.replace(/{item}/g, getBengaliName(item) || item);
-            if (name) desc = desc.replace(/{name}/g, name);
-            if (hasAmount && amount) {
-                desc = desc.replace(/{amount}/g, amount.toLocaleString());
-            } else {
-                desc = desc.replace(/\s*{amount}\s*/g, ' ');
-                desc = desc.replace(/\s+/g, ' ');
-            }
-
-            const journal = def.journal.map(entry => {
-                let acc = entry.account;
-                if (acc === '{asset}' && asset) acc = asset;
-                else if (acc === '{expense}' && expense) acc = expense;
-                else if (acc === '{liability}' && liability) acc = liability;
-                else if (acc === '{item}' && item) acc = item;
-
-                const info = getAccountInfo(acc);
-                if (!info) {
-                    return { account: acc, side: entry.side, amount: hasAmount ? amount : 0, type: 'asset' };
-                }
-                return {
-                    account: acc,
-                    side: entry.side,
-                    amount: hasAmount ? amount : 0,
-                    type: info.category
-                };
-            });
-
-            const primaryIdx = def.primaryAccountIndex !== undefined ? def.primaryAccountIndex : 0;
-            const primaryEntry = journal[primaryIdx] || journal[0];
-            const primaryAccount = primaryEntry.account;
-            const primaryInfo = getAccountInfo(primaryAccount);
-            const primaryType = primaryInfo ? primaryInfo.category : def.category;
-
-            desc = desc.replace(/\s+/g, ' ').trim();
-
-            return {
-                templateId: templateInfo.key,
-                description: desc,
-                category: def.category,
-                amount: amount,
-                hasAmount: hasAmount,
-                journal: journal,
-                primaryAccount: primaryAccount,
-                primaryType: primaryType,
-                primarySide: primaryEntry.side,
-                personName: name || null,
-                patternUsed: pattern,
-                assetUsed: asset || null,
-                expenseUsed: expense || null,
-                liabilityUsed: liability || null,
-                itemUsed: item || null,
-            };
-        }
-
-        // ================================================================
-        // 7. SMART TRACKER WITH FIXED AUTO-DIFFICULTY
-        // ================================================================
-
-        const SMART_TRACKER = {
-            categoryCounts: {},
-            consecutiveCorrect: 0,
-            consecutiveWrong: 0,
-            baseMode: 'easy',
-            smartDifficulty: 'easy',
-            isSmartMode: false,
-            lastModeChange: 0,
-
-            update(category, isCorrect, mode) {
-                if (!this.categoryCounts[category]) this.categoryCounts[category] = { total: 0, correct: 0 };
-                this.categoryCounts[category].total++;
-                if (isCorrect) this.categoryCounts[category].correct++;
-
-                if (isCorrect) {
-                    this.consecutiveCorrect++;
-                    this.consecutiveWrong = 0;
-                } else {
-                    this.consecutiveWrong++;
-                    this.consecutiveCorrect = 0;
-                }
-                this.baseMode = mode;
-                if (this.isSmartMode) {
-                    this._adjustDifficulty();
-                }
-            },
-
-            _adjustDifficulty() {
-                const modes = ['easy', 'medium', 'hard'];
-                const currentIdx = modes.indexOf(this.smartDifficulty);
-                if (currentIdx === -1) return;
-
-                let newMode = this.smartDifficulty;
-                let changed = false;
-
-                if (this.consecutiveCorrect >= 5) {
-                    const nextIdx = Math.min(currentIdx + 1, modes.length - 1);
-                    if (nextIdx !== currentIdx) {
-                        newMode = modes[nextIdx];
-                        this.consecutiveCorrect = 0;
-                        changed = true;
-                    }
-                }
-
-                if (this.consecutiveWrong >= 3) {
-                    const prevIdx = Math.max(currentIdx - 1, 0);
-                    if (prevIdx !== currentIdx) {
-                        newMode = modes[prevIdx];
-                        this.consecutiveWrong = 0;
-                        changed = true;
-                    }
-                }
-
-                if (changed && newMode !== this.smartDifficulty) {
-                    this.smartDifficulty = newMode;
-                    state.difficulty = newMode;
-                    updateDifficultyButtons(newMode);
-                    showModeChangeToast(newMode);
-                    renderBusinessMini();
-                    updateSmartBadge(newMode);
-                    updateDiffModeLabel(newMode);
-                }
-
-                if (!this.smartDifficulty) this.smartDifficulty = this.baseMode;
-            },
-
-            getBiases() {
-                const biases = {};
-                const cats = ['asset', 'liability', 'capital', 'revenue', 'expense', 'drawing'];
-                for (const cat of cats) {
-                    if (this.categoryCounts[cat] && this.categoryCounts[cat].total > 0) {
-                        const acc = this.categoryCounts[cat].correct / this.categoryCounts[cat].total;
-                        biases[cat] = Math.max(0.5, 1 - acc + 0.3);
-                    } else biases[cat] = 1;
-                }
-                const sum = Object.values(biases).reduce((a, b) => a + b, 0);
-                for (const cat in biases) biases[cat] = biases[cat] / sum * 100;
-                return biases;
-            },
-
-            getEffectiveMode() {
-                if (!this.isSmartMode) return this.baseMode;
-                return this.smartDifficulty;
-            },
-
-            reset() {
-                this.categoryCounts = {};
-                this.consecutiveCorrect = 0;
-                this.consecutiveWrong = 0;
-                this.smartDifficulty = this.baseMode;
-            }
-        };
-
-        function updateDifficultyButtons(mode) {
-            const btns = document.querySelectorAll('.diff-btn');
-            btns.forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.diff === mode) {
-                    btn.classList.add('active');
-                }
-            });
-        }
-
-        function updateSmartBadge(mode) {
-            const badge = document.getElementById('smartDiffBadge');
-            if (!badge) return;
-            const modeNames = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
-            badge.textContent = modeNames[mode] || 'Adaptive';
-            badge.className = 'smart-diff-indicator ' + mode;
-            badge.style.display = 'inline-block';
-        }
-
-        function updateDiffModeLabel(mode) {
-            const label = document.getElementById('diffModeText');
-            if (!label) return;
-            const modeInfo = {
-                easy: 'সরল লেনদেন',
-                medium: 'বাস্তব লেনদেন',
-                hard: 'উন্নত লেনদেন'
-            };
-            label.textContent = modeInfo[mode] || 'সরল লেনদেন';
-        }
-
-        function showModeChangeToast(newMode) {
-            const modeNames = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
-            const modeDesc = {
-                easy: 'সরল লেনদেন',
-                medium: 'বাস্তব লেনদেন',
-                hard: 'উন্নত লেনদেন'
-            };
-            showToast(`🔄 Smart Mode: ${modeNames[newMode]}`, `Level switched to ${modeNames[newMode]} — ${modeDesc[newMode]}`,
-                'fa-arrow-right', 'gain');
-        }
-
-        // ================================================================
-        // 8. 50 BADGES
+        // 7. 50 BADGES
         // ================================================================
 
         const ALL_BADGES = [
@@ -3247,85 +2660,7 @@
         }
 
         // ================================================================
-        // 9. BUSINESS STATE
-        // ================================================================
-
-        class Business {
-            constructor() {
-                this.cash = 500000;
-                this.bank = 200000;
-                this.assets = {
-                    'Furniture': 30000,
-                    'Computer': 50000,
-                    'Equipment': 40000,
-                    'Building': 0,
-                    'Land': 0,
-                    'Inventory': 60000,
-                    'Office Supplies': 10000,
-                    'Prepaid Rent': 0,
-                    'Prepaid Insurance': 0,
-                    'Accounts Receivable': 0,
-                    'Accumulated Depreciation': 0
-                };
-                this.liabilities = {
-                    'Creditors': 20000,
-                    'Bank Loan': 0,
-                    'Salary Payable': 0,
-                    'Rent Payable': 0,
-                    'Interest Payable': 0,
-                    'Loan': 0
-                };
-                this.capital = 650000;
-                this.revenue = 0;
-                this.expenses = 0;
-                this.name = 'ABC Trading';
-            }
-            get totalAssets() {
-                let sum = this.cash + this.bank;
-                for (const k in this.assets) sum += this.assets[k];
-                return sum;
-            }
-            get totalLiabilities() {
-                let sum = 0;
-                for (const k in this.liabilities) sum += this.liabilities[k];
-                return sum;
-            }
-            get equity() { return this.capital + this.revenue - this.expenses; }
-            addAsset(n, a) { if (!this.assets[n]) this.assets[n] = 0;
-                this.assets[n] += a; }
-            subAsset(n, a) { if (this.assets[n]) { this.assets[n] -= a; if (this.assets[n] < 0) this.assets[n] = 0; } }
-            addLiability(n, a) { if (!this.liabilities[n]) this.liabilities[n] = 0;
-                this.liabilities[n] += a; }
-            subLiability(n, a) { if (this.liabilities[n]) { this.liabilities[n] -= a; if (this.liabilities[n] < 0) this
-                        .liabilities[n] = 0; } }
-            addCash(a) { this.cash += a; }
-            subCash(a) { this.cash -= a; }
-            addBank(a) { this.bank += a; }
-            subBank(a) { this.bank -= a; }
-            addCapital(a) { this.capital += a; }
-            subCapital(a) { this.capital -= a; }
-            addRevenue(a) { this.revenue += a; }
-            addExpense(a) { this.expenses += a; }
-            clone() {
-                const b = new Business();
-                Object.assign(b, this);
-                b.assets = { ...this.assets };
-                b.liabilities = { ...this.liabilities };
-                return b;
-            }
-            getDisplay() {
-                return {
-                    cash: this.cash,
-                    bank: this.bank,
-                    assets: this.totalAssets,
-                    liabilities: this.totalLiabilities,
-                    capital: this.equity
-                };
-            }
-        }
-
-        // ================================================================
-        // 10. TOAST SYSTEM
+        // 8. TOAST SYSTEM
         // ================================================================
 
         function showToast(title, desc, icon, type) {
@@ -3366,20 +2701,13 @@
         }
 
         // ================================================================
-        // 11. FIRESTORE HELPERS
+        // 9. FIRESTORE HELPERS – with guest guards
         // ================================================================
 
         const USERS_COLLECTION = 'users';
         const REVISION_COLLECTION = 'revisionQuestions';
 
-        function getUserIdentifier() {
-            if (auth.currentUser && auth.currentUser.email) {
-                return auth.currentUser.email;
-            }
-            const guestId = localStorage.getItem('guest_id');
-            return guestId || 'anonymous';
-        }
-
+        // ---- GUEST REVISION STORAGE (localStorage) ----
         function getGuestRevisionKey(guestId) {
             return `guest_revision_${guestId}`;
         }
@@ -3397,22 +2725,18 @@
             } catch (e) { console.warn('Failed to save guest revisions:', e); }
         }
 
+        // ---- saveUserStats: guests are blocked ----
         async function saveUserStats(uid, data) {
-            if (isGuestUid(uid) || !auth.currentUser) {
-                const guestId = localStorage.getItem('guest_id') || 'guest';
-                try {
-                    localStorage.setItem('guest_stats_' + guestId, JSON.stringify(data));
-                } catch (e) {}
+            // NEVER save guest data to Firestore
+            if (isGuestUid(uid)) {
+                console.log('Guest user stats skipped (localStorage only)');
                 return false;
             }
-            const email = auth.currentUser.email;
-            if (!email) return false;
             try {
-                const docId = email.replace(/[.#$\/\[\]]/g, '_');
-                await db.collection(USERS_COLLECTION).doc(docId).set({
-                    email: email,
-                    displayName: auth.currentUser.displayName || 'User',
-                    photoURL: auth.currentUser.photoURL || '',
+                await db.collection(USERS_COLLECTION).doc(uid).set({
+                    displayName: auth.currentUser ? auth.currentUser.displayName || 'User' : 'User',
+                    photoURL: auth.currentUser ? auth.currentUser.photoURL || '' : '',
+                    email: auth.currentUser ? auth.currentUser.email || '' : '',
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     ...data
                 }, { merge: true });
@@ -3420,8 +2744,10 @@
             } catch (e) { console.error('Save error:', e); return false; }
         }
 
+        // ---- saveRevisionQuestion: guest → localStorage, logged-in → Firestore ----
         async function saveRevisionQuestion(qData, tData, journal) {
             const guestId = localStorage.getItem('guest_id');
+            // If guest, save to localStorage
             if (!auth.currentUser && guestId) {
                 const revisions = loadGuestRevisions(guestId);
                 revisions.push({
@@ -3454,13 +2780,13 @@
                 saveGuestRevisions(guestId, revisions);
                 return true;
             }
+
+            // Logged-in user: save to Firestore
             try {
-                const email = auth.currentUser ? auth.currentUser.email : null;
-                if (!email) return false;
-                const docId = email.replace(/[.#$\/\[\]]/g, '_');
+                const uid = auth.currentUser ? auth.currentUser.uid : 'unknown';
+                if (isGuestUid(uid)) return false;
                 const doc = {
-                    userId: docId,
-                    email: email,
+                    userId: uid,
                     timestamp: Date.now(),
                     question: {
                         accountName: qData.accountName,
@@ -3491,17 +2817,20 @@
             } catch (e) { console.error('Save revision error:', e); return false; }
         }
 
+        // ---- fetchRevisionQuestions: guest → localStorage, logged-in → Firestore ----
         async function fetchRevisionQuestions() {
             const guestId = localStorage.getItem('guest_id');
+            // Guest: load from localStorage
             if (!auth.currentUser && guestId) {
                 const data = loadGuestRevisions(guestId);
                 return data.map(d => ({ ...d, id: d.id || 'rev_' + Date.now() }));
             }
+
+            // Logged-in: Firestore
             try {
-                const email = auth.currentUser ? auth.currentUser.email : null;
-                if (!email) return [];
-                const docId = email.replace(/[.#$\/\[\]]/g, '_');
-                const s = await db.collection(REVISION_COLLECTION).where('userId', '==', docId).get();
+                const uid = auth.currentUser ? auth.currentUser.uid : null;
+                if (!uid || isGuestUid(uid)) return [];
+                const s = await db.collection(REVISION_COLLECTION).where('userId', '==', uid).get();
                 const docs = [];
                 s.forEach(d => docs.push({ id: d.id, ...d.data() }));
                 docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
@@ -3509,33 +2838,214 @@
             } catch (e) { return []; }
         }
 
+        // ---- deleteRevisionQuestion: guest → localStorage, logged-in → Firestore ----
         async function deleteRevisionQuestion(id) {
             const guestId = localStorage.getItem('guest_id');
+            // Guest: delete from localStorage
             if (!auth.currentUser && guestId) {
                 let revisions = loadGuestRevisions(guestId);
                 revisions = revisions.filter(d => d.id !== id);
                 saveGuestRevisions(guestId, revisions);
                 return true;
             }
+
+            // Logged-in: delete from Firestore
             try {
                 await db.collection(REVISION_COLLECTION).doc(id).delete();
                 return true;
             } catch (e) { return false; }
         }
 
+        // ---- getRevisionCount: guest → localStorage, logged-in → Firestore ----
         async function getRevisionCount() {
             const guestId = localStorage.getItem('guest_id');
             if (!auth.currentUser && guestId) {
                 return loadGuestRevisions(guestId).length;
             }
             try {
-                const email = auth.currentUser ? auth.currentUser.email : null;
-                if (!email) return 0;
-                const docId = email.replace(/[.#$\/\[\]]/g, '_');
-                const s = await db.collection(REVISION_COLLECTION).where('userId', '==', docId).get();
+                const uid = auth.currentUser ? auth.currentUser.uid : null;
+                if (!uid || isGuestUid(uid)) return 0;
+                const s = await db.collection(REVISION_COLLECTION).where('userId', '==', uid).get();
                 return s.size;
             } catch (e) { return 0; }
         }
+
+        // ================================================================
+        // 10. TRANSACTION GENERATOR
+        // ================================================================
+
+        function generateTransactionFromTemplate(template, mode) {
+            const hasAmount = mode !== 'easy';
+            let amount = 0;
+            if (hasAmount && template.amountRange) {
+                amount = getAmount(template.amountRange);
+            }
+
+            let asset = '',
+                expense = '',
+                liability = '';
+            let name = '';
+
+            if (template.useName) {
+                name = getRandomName();
+            }
+
+            if (template.assetPool) asset = pickRandom(template.assetPool);
+            if (template.expensePool) expense = pickRandom(template.expensePool);
+            if (template.liabilityPool) liability = pickRandom(template.liabilityPool);
+
+            let desc = template.description;
+            if (template.assetPool) desc = desc.replace(/{asset}/g, getBengaliName(asset) || asset);
+            if (template.expensePool) desc = desc.replace(/{expense}/g, getBengaliName(expense) || expense);
+            if (template.liabilityPool) desc = desc.replace(/{liability}/g, getBengaliName(liability) || liability);
+            if (template.useName) desc = desc.replace(/{name}/g, name);
+
+            if (hasAmount && template.amountRange) {
+                desc = desc.replace(/{amount}/g, amount.toLocaleString());
+            } else {
+                desc = desc.replace(/\s*{amount}\s*/g, ' ');
+                desc = desc.replace(/\s+/g, ' ');
+            }
+
+            const journal = template.journal.map(entry => {
+                let acc = entry.account;
+                if (acc === '{asset}' && asset) acc = asset;
+                else if (acc === '{expense}' && expense) acc = expense;
+                else if (acc === '{liability}' && liability) acc = liability;
+
+                const info = getAccountInfo(acc);
+                if (!info) {
+                    return { account: acc, side: entry.side, amount: hasAmount ? amount : 0, type: 'asset' };
+                }
+                return {
+                    account: acc,
+                    side: entry.side,
+                    amount: hasAmount ? amount : 0,
+                    type: info.category
+                };
+            });
+
+            const primaryAccount = journal[0].account;
+            const primaryInfo = getAccountInfo(primaryAccount);
+            const primaryType = primaryInfo ? primaryInfo.category : 'asset';
+
+            return {
+                templateId: template.id,
+                description: desc,
+                category: primaryType,
+                amount: amount,
+                hasAmount: hasAmount,
+                journal: journal,
+                primaryAccount: primaryAccount,
+                primaryType: primaryType,
+                primarySide: journal[0].side,
+                personName: name || null,
+            };
+        }
+
+        function pickTemplate(mode, smartBias) {
+            let templates = [];
+            if (mode === 'easy') templates = EASY_TEMPLATES;
+            else if (mode === 'medium') templates = MEDIUM_TEMPLATES;
+            else templates = HARD_TEMPLATES;
+
+            if (!smartBias || Object.keys(smartBias).length === 0) return pickRandom(templates);
+
+            const weights = templates.map(t => {
+                const firstAcc = t.journal[0].account;
+                let cat = 'asset';
+                const info = getAccountInfo(firstAcc);
+                if (info) cat = info.category;
+                if (firstAcc === '{asset}' || firstAcc === '{expense}' || firstAcc === '{liability}') {
+                    if (t.assetPool) cat = 'asset';
+                    else if (t.expensePool) cat = 'expense';
+                    else if (t.liabilityPool) cat = 'liability';
+                }
+                return smartBias[cat] || 1;
+            });
+            const total = weights.reduce((a, b) => a + b, 0);
+            let rand = Math.random() * total;
+            for (let i = 0; i < templates.length; i++) {
+                rand -= weights[i];
+                if (rand <= 0) return templates[i];
+            }
+            return templates[templates.length - 1];
+        }
+
+        // ================================================================
+        // 11. SMART TRACKER
+        // ================================================================
+
+        const SMART_TRACKER = {
+            categoryCounts: {},
+            consecutiveCorrect: 0,
+            consecutiveWrong: 0,
+            baseMode: 'easy',
+            smartDifficulty: 'easy',
+
+            update(category, isCorrect, mode) {
+                if (!this.categoryCounts[category]) this.categoryCounts[category] = { total: 0, correct: 0 };
+                this.categoryCounts[category].total++;
+                if (isCorrect) this.categoryCounts[category].correct++;
+
+                if (isCorrect) { this.consecutiveCorrect++;
+                    this.consecutiveWrong = 0; } else { this.consecutiveWrong++;
+                    this.consecutiveCorrect = 0; }
+                this.baseMode = mode;
+                this._adjustDifficulty();
+            },
+
+            _adjustDifficulty() {
+                const modes = ['easy', 'medium', 'hard'];
+                const idx = modes.indexOf(this.baseMode);
+                if (idx === -1) return;
+                if (this.consecutiveCorrect >= 5 && this.smartDifficulty !== 'hard') {
+                    const nextIdx = Math.min(idx + 1, modes.length - 1);
+                    this.smartDifficulty = modes[nextIdx];
+                    this.consecutiveCorrect = 0;
+                    showToast('⚡ Smart Mode', `Difficulty increased to ${this.smartDifficulty.toUpperCase()}`, 'fa-arrow-up',
+                        'gain');
+                    return;
+                }
+                if (this.consecutiveWrong >= 3 && this.smartDifficulty !== 'easy') {
+                    const prevIdx = Math.max(idx - 1, 0);
+                    this.smartDifficulty = modes[prevIdx];
+                    this.consecutiveWrong = 0;
+                    showToast('🔄 Smart Mode', `Difficulty decreased to ${this.smartDifficulty.toUpperCase()}`, 'fa-arrow-down',
+                        'gain');
+                    return;
+                }
+                if (!this.smartDifficulty) this.smartDifficulty = this.baseMode;
+            },
+
+            getBiases() {
+                const biases = {};
+                const cats = ['asset', 'liability', 'capital', 'revenue', 'expense', 'drawing'];
+                for (const cat of cats) {
+                    if (this.categoryCounts[cat] && this.categoryCounts[cat].total > 0) {
+                        const acc = this.categoryCounts[cat].correct / this.categoryCounts[cat].total;
+                        biases[cat] = Math.max(0.5, 1 - acc + 0.3);
+                    } else biases[cat] = 1;
+                }
+                const sum = Object.values(biases).reduce((a, b) => a + b, 0);
+                for (const cat in biases) biases[cat] = biases[cat] / sum * 100;
+                return biases;
+            },
+
+            getEffectiveMode() {
+                const modes = ['easy', 'medium', 'hard'];
+                const baseIdx = modes.indexOf(this.baseMode);
+                const smartIdx = modes.indexOf(this.smartDifficulty);
+                return modes[Math.min(baseIdx, Math.max(0, smartIdx))];
+            },
+
+            reset() {
+                this.categoryCounts = {};
+                this.consecutiveCorrect = 0;
+                this.consecutiveWrong = 0;
+                this.smartDifficulty = this.baseMode;
+            }
+        };
 
         // ================================================================
         // 12. QUIZ STATE
@@ -3588,9 +3098,6 @@
             questionStartTime: 0,
             hintUsedForQuestion: false,
             advancePending: false,
-            statsLoaded: false,
-            statsLoadAttempted: false,
-            pendingSave: null,
         };
 
         // ================================================================
@@ -3689,8 +3196,7 @@
 
             if (transactionDisplay) transactionDisplay.innerHTML = `"${displayText}"`;
 
-            const accountForQuestion = trans.primaryAccount || q.accountName;
-            const bnName = getBengaliName(accountForQuestion) || accountForQuestion;
+            const bnName = getBengaliName(q.accountName) || q.accountName;
             if (accountName) accountName.textContent = bnName + ' হিসাব';
 
             $$('.quiz-opt').forEach(b => { b.disabled = false;
@@ -3715,23 +3221,10 @@
                     indicator.style.display = 'inline-block';
                     const eff = SMART_TRACKER.getEffectiveMode();
                     indicator.textContent = `Adaptive: ${eff.toUpperCase()}`;
-                    updateSmartBadge(eff);
                 } else {
                     indicator.style.display = 'none';
-                    document.getElementById('smartDiffBadge').style.display = 'none';
                 }
             }
-
-            updateDiffModeLabel(state.difficulty);
-
-            const diffBtns = document.querySelectorAll('.diff-btn');
-            diffBtns.forEach(btn => {
-                if (state.smartMode) {
-                    btn.classList.add('diff-toggle-disabled');
-                } else {
-                    btn.classList.remove('diff-toggle-disabled');
-                }
-            });
 
             updateQuizProgress();
             renderBusinessMini();
@@ -3753,9 +3246,7 @@
                 resultEl.className = 'fb-result ' + (isCorrect ? 'correct-text' : 'wrong-text');
             }
 
-            const accountForQuestion = trans.primaryAccount || q.accountName;
-            const entry = journal.find(j => j.account === accountForQuestion);
-
+            const entry = journal.find(j => j.account === q.accountName);
             let explanation = '',
                 ruleText = '';
             const detailEl = document.getElementById('fbDetail');
@@ -3915,7 +3406,6 @@
                         hasAmount: transData.amount > 0,
                         journal: journalData,
                         category: qData.accountType || 'asset',
-                        primaryAccount: qData.accountName || (journalData[0] ? journalData[0].account : '')
                     };
 
                     const question = {
@@ -3956,49 +3446,35 @@
 
             let smartBias = null;
             let effectiveMode = mode;
-
             if (state.smartMode) {
                 smartBias = SMART_TRACKER.getBiases();
                 effectiveMode = SMART_TRACKER.getEffectiveMode();
                 state.stats.effectiveDifficulty = effectiveMode;
                 const indicator = document.getElementById('smartLevelIndicator');
                 if (indicator) indicator.textContent = `Adaptive: ${effectiveMode.toUpperCase()}`;
-                updateDifficultyButtons(effectiveMode);
-                updateSmartBadge(effectiveMode);
-                state.difficulty = effectiveMode;
             }
 
-            const templateInfo = pickTemplateWithDiversity(effectiveMode, smartBias);
-            const transaction = generateTransactionFromTemplate(templateInfo, effectiveMode);
-
+            const template = pickTemplate(effectiveMode, smartBias);
+            const transaction = generateTransactionFromTemplate(template, effectiveMode);
             const journal = transaction.journal;
-            const primaryAccount = transaction.primaryAccount;
-            const primarySide = transaction.primarySide;
 
-            const primaryEntry = journal.find(j => j.account === primaryAccount);
-            if (!primaryEntry) {
-                const fallback = journal[0];
-                if (fallback) {
-                    transaction.primaryAccount = fallback.account;
-                    transaction.primarySide = fallback.side;
-                }
-            }
+            const selectedEntry = pickRandom(journal);
 
-            const accountName = transaction.primaryAccount;
+            const accountName = selectedEntry.account;
             const info = getAccountInfo(accountName);
-            const categoryType = info ? info.category : 'asset';
+            const category = info ? info.category : 'asset';
 
-            const isDebit = transaction.primarySide === 'debit';
+            const isDebit = selectedEntry.side === 'debit';
             let effect;
-            if (categoryType === 'asset' || categoryType === 'expense' || categoryType === 'drawing') {
+            if (category === 'asset' || category === 'expense' || category === 'drawing') {
                 effect = isDebit ? 'increase' : 'decrease';
-            } else if (categoryType === 'liability' || categoryType === 'capital' || categoryType === 'revenue') {
+            } else if (category === 'liability' || category === 'capital' || category === 'revenue') {
                 effect = isDebit ? 'decrease' : 'increase';
             } else {
                 effect = isDebit ? 'increase' : 'decrease';
             }
 
-            const rule = ACCOUNT_RULES[categoryType];
+            const rule = ACCOUNT_RULES[category];
             const correctAnswer = rule ? rule[effect] : 'debit';
             const answerLabel = correctAnswer === 'debit' ? 'Debit' : 'Credit';
 
@@ -4010,7 +3486,7 @@
 
             const question = {
                 accountName: accountName,
-                accountType: categoryType,
+                accountType: category,
                 effect: effect,
                 correctAnswer: correctAnswer,
                 explanation: explanation,
@@ -4065,8 +3541,7 @@
                 }
                 if (s.quizHistory && s.quizHistory.length > 0) {
                     const last = s.quizHistory[s.quizHistory.length - 1];
-                    if (last && last.userAnswer !== last.correctAnswer) s.ruleBreakerCount = (s.ruleBreakerCount || 0) +
-                    1;
+                    if (last && last.userAnswer !== last.correctAnswer) s.ruleBreakerCount = (s.ruleBreakerCount || 0) + 1;
                 }
                 showCoinToast(COINS_PER_CORRECT);
             } else {
@@ -4125,20 +3600,13 @@
 
             s.focusCount = (s.focusCount || 0) + 1;
 
-            if (state.isGuest) {
+            // Save: guest → localStorage, logged-in → Firebase
+            if (!state.isGuest && auth.currentUser) {
+                await saveUserStats(auth.currentUser.uid, s);
+            } else {
                 try {
                     localStorage.setItem('guest_stats_' + state.guestId, JSON.stringify(s));
                 } catch (e) {}
-            } else if (auth.currentUser && state.statsLoaded) {
-                await saveUserStats(auth.currentUser.uid, s);
-            } else if (auth.currentUser && !state.statsLoaded) {
-                state.pendingSave = { uid: auth.currentUser.uid, stats: { ...s } };
-                setTimeout(async () => {
-                    if (state.statsLoaded && state.pendingSave) {
-                        await saveUserStats(state.pendingSave.uid, state.pendingSave.stats);
-                        state.pendingSave = null;
-                    }
-                }, 1500);
             }
 
             updateHeaderStats();
@@ -4165,8 +3633,6 @@
             updateDashboard();
             updateBadges();
             updateWeakTopics();
-
-            renderLeaderboard();
         }
 
         // ================================================================
@@ -4192,16 +3658,8 @@
             const ruleText = q.ruleText || 'Check the rule.';
             showToast('Hint Revealed', `Rule: ${ruleText}`, 'fa-lightbulb', 'hint');
 
-            if (!state.isGuest && auth.currentUser && state.statsLoaded) {
+            if (!state.isGuest && auth.currentUser) {
                 saveUserStats(auth.currentUser.uid, state.stats);
-            } else if (!state.isGuest && auth.currentUser && !state.statsLoaded) {
-                state.pendingSave = { uid: auth.currentUser.uid, stats: { ...state.stats } };
-                setTimeout(async () => {
-                    if (state.statsLoaded && state.pendingSave) {
-                        await saveUserStats(state.pendingSave.uid, state.pendingSave.stats);
-                        state.pendingSave = null;
-                    }
-                }, 1500);
             } else {
                 try { localStorage.setItem('guest_stats_' + state.guestId, JSON.stringify(state.stats)); } catch (e) {}
             }
@@ -4225,16 +3683,8 @@
             updateHintButton();
             showToast('Hints Purchased!', `${hints} hints added to your inventory.`, 'fa-coins', 'hint');
 
-            if (!state.isGuest && auth.currentUser && state.statsLoaded) {
+            if (!state.isGuest && auth.currentUser) {
                 saveUserStats(auth.currentUser.uid, s);
-            } else if (!state.isGuest && auth.currentUser && !state.statsLoaded) {
-                state.pendingSave = { uid: auth.currentUser.uid, stats: { ...s } };
-                setTimeout(async () => {
-                    if (state.statsLoaded && state.pendingSave) {
-                        await saveUserStats(state.pendingSave.uid, state.pendingSave.stats);
-                        state.pendingSave = null;
-                    }
-                }, 1500);
             } else {
                 try { localStorage.setItem('guest_stats_' + state.guestId, JSON.stringify(s)); } catch (e) {}
             }
@@ -4430,7 +3880,7 @@
         }
 
         // ================================================================
-        // 21. LEADERBOARD
+        // 21. LEADERBOARD – GUESTS ARE EXCLUDED
         // ================================================================
 
         let leaderboardData = [];
@@ -4441,61 +3891,41 @@
             const empty = document.getElementById('lbEmpty');
             if (!tbody) return;
 
-            const currentEmail = auth.currentUser ? auth.currentUser.email : null;
+            // Filter out guest users (uid starting with 'guest_')
+            let filtered = leaderboardData.filter(u => !isGuestUid(u.id));
 
-            let filtered = leaderboardData.filter(u => !isGuestUid(u.id) && u.email);
+            // Sort
             let sorted = [...filtered];
             if (leaderboardSortKey === 'xp') sorted.sort((a, b) => b.xp - a.xp);
             else if (leaderboardSortKey === 'points') sorted.sort((a, b) => b.points - a.points);
             else if (leaderboardSortKey === 'accuracy') sorted.sort((a, b) => b.accuracy - a.accuracy);
             else if (leaderboardSortKey === 'badges') sorted.sort((a, b) => (b.badges || 0) - (a.badges || 0));
 
+            // Deduplicate by id
             const seen = new Set();
             const unique = [];
             for (const u of sorted) {
-                if (!seen.has(u.email)) { seen.add(u.email);
+                if (!seen.has(u.id)) { seen.add(u.id);
                     unique.push(u); }
             }
             sorted = unique;
 
-            if (currentEmail) {
-                const userIdx = sorted.findIndex(u => u.email === currentEmail);
-                if (userIdx !== -1) {
-                    const total = state.stats.correct + state.stats.wrong;
-                    const acc = total > 0 ? Math.round((state.stats.correct / total) * 100) : 0;
-                    sorted[userIdx] = {
-                        ...sorted[userIdx],
-                        xp: state.stats.xp || 0,
-                        points: state.stats.points || 0,
-                        accuracy: acc,
-                        badges: (state.stats.earnedBadges || []).length,
-                        email: sorted[userIdx].email,
-                        name: sorted[userIdx].name,
-                        photoURL: sorted[userIdx].photoURL,
-                        isUser: true,
-                    };
-                } else {
-                    const total = state.stats.correct + state.stats.wrong;
-                    const acc = total > 0 ? Math.round((state.stats.correct / total) * 100) : 0;
-                    const userObj = {
-                        email: currentEmail,
-                        name: auth.currentUser ? auth.currentUser.displayName || 'User' : 'User',
-                        photoURL: auth.currentUser ? auth.currentUser.photoURL || '' : '',
-                        xp: state.stats.xp || 0,
-                        points: state.stats.points || 0,
-                        accuracy: acc,
-                        badges: (state.stats.earnedBadges || []).length,
-                        isUser: true,
-                    };
-                    if (state.stats.totalQuestions > 0 || state.stats.xp > 0) {
-                        sorted.push(userObj);
-                        if (leaderboardSortKey === 'xp') sorted.sort((a, b) => b.xp - a.xp);
-                        else if (leaderboardSortKey === 'points') sorted.sort((a, b) => b.points - a.points);
-                        else if (leaderboardSortKey === 'accuracy') sorted.sort((a, b) => b.accuracy - a.accuracy);
-                        else if (leaderboardSortKey === 'badges') sorted.sort((a, b) => (b.badges || 0) - (a.badges ||
-                            0));
-                    }
+            // Highlight current user if logged in
+            const currentUid = auth.currentUser ? auth.currentUser.uid : null;
+            const userIdx = sorted.findIndex(u => u.id === currentUid);
+            if (userIdx > 0 && currentUid) {
+                const user = sorted.splice(userIdx, 1)[0];
+                let insertPos = 0;
+                if (leaderboardSortKey === 'xp') {
+                    while (insertPos < sorted.length && sorted[insertPos].xp > user.xp) insertPos++;
+                } else if (leaderboardSortKey === 'points') {
+                    while (insertPos < sorted.length && sorted[insertPos].points > user.points) insertPos++;
+                } else if (leaderboardSortKey === 'accuracy') {
+                    while (insertPos < sorted.length && sorted[insertPos].accuracy > user.accuracy) insertPos++;
+                } else if (leaderboardSortKey === 'badges') {
+                    while (insertPos < sorted.length && (sorted[insertPos].badges || 0) > (user.badges || 0)) insertPos++;
                 }
+                sorted.splice(insertPos, 0, user);
             }
 
             if (sorted.length === 0) {
@@ -4511,20 +3941,13 @@
                 if (rank === 1) rc += ' gold';
                 else if (rank === 2) rc += ' silver';
                 else if (rank === 3) rc += ' bronze';
-
-                const isUser = (e.email === currentEmail);
-                const rowClass = isUser ? ' class="lb-user-row"' : '';
-
+                const isUser = (e.id === currentUid) ? ' class="lb-user-row"' : '';
                 const avatar = e.photoURL ?
                     `<img src="${e.photoURL}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-right:6px;" />` :
                     '';
-
-                const displayName = isUser ? (auth.currentUser ? auth.currentUser.displayName || 'User' : 'User') : e
-                .name;
-
-                return `<tr${rowClass}>
+                return `<tr${isUser}>
                     <td><span class="${rc}">#${rank}</span></td>
-                    <td>${avatar}${displayName} ${isUser ? '<i class="fas fa-star" style="color:var(--accent-3);font-size:12px;margin-left:4px;"></i>' : ''}</td>
+                    <td>${avatar}${e.name} ${e.id === currentUid ? '<i class="fas fa-star" style="color:var(--accent-3);font-size:12px;margin-left:4px;"></i>' : ''}</td>
                     <td>${e.xp}</td>
                     <td>${e.points}</td>
                     <td>${e.accuracy}%</td>
@@ -4536,29 +3959,28 @@
         function setupLeaderboardListener() {
             if (state.unsubLeaderboard) { state.unsubLeaderboard();
                 state.unsubLeaderboard = null; }
-
             state.unsubLeaderboard = db.collection(USERS_COLLECTION)
                 .orderBy('xp', 'desc')
-                .limit(200)
+                .limit(100)
                 .onSnapshot((snapshot) => {
                     const users = [];
                     snapshot.forEach(doc => {
                         const data = doc.data();
-                        const email = data.email || doc.id;
-                        if (isGuestUid(email)) return;
+                        // Skip guest users entirely
+                        if (isGuestUid(doc.id)) return;
                         const total = (data.correct || 0) + (data.wrong || 0);
                         const acc = total > 0 ? Math.round(((data.correct || 0) / total) * 100) : 0;
+                        const isUser = doc.id === (auth.currentUser ? auth.currentUser.uid : null);
                         const badges = (data.earnedBadges || []).length;
                         users.push({
                             id: doc.id,
-                            email: email,
                             name: data.displayName || 'User',
                             xp: data.xp || 0,
                             points: data.points || 0,
                             accuracy: acc,
+                            isUser: isUser,
                             photoURL: data.photoURL || '',
                             badges: badges,
-                            isUser: false,
                         });
                     });
                     leaderboardData = users;
@@ -4567,23 +3989,17 @@
         }
 
         // ================================================================
-        // 22. USER DATA LISTENER
+        // 22. USER DATA LISTENER (only for logged-in users)
         // ================================================================
 
         function setupUserDataListener(uid) {
             if (state.unsubUser) { state.unsubUser();
                 state.unsubUser = null; }
+            // Never listen for guest data from Firestore
             if (isGuestUid(uid)) return;
 
-            const email = auth.currentUser ? auth.currentUser.email : null;
-            if (!email) return;
-            const docId = email.replace(/[.#$\/\[\]]/g, '_');
-
-            state.unsubUser = db.collection(USERS_COLLECTION).doc(docId)
+            state.unsubUser = db.collection(USERS_COLLECTION).doc(uid)
                 .onSnapshot((doc) => {
-                    state.statsLoaded = true;
-                    state.statsLoadAttempted = true;
-
                     if (doc.exists) {
                         const data = doc.data();
                         state.stats = {
@@ -4609,41 +4025,52 @@
                             effectiveDifficulty: data.effectiveDifficulty || 'easy',
                         };
                         state.stats.level = getLevelFromXP(state.stats.xp);
-
                         if (state.smartMode && state.stats.smartCategoryData) {
                             SMART_TRACKER.categoryCounts = state.stats.smartCategoryData;
                             SMART_TRACKER.baseMode = state.difficulty;
                             SMART_TRACKER.smartDifficulty = state.stats.effectiveDifficulty || state.difficulty;
                         }
-
-                        if (state.pendingSave) {
-                            const ps = state.pendingSave;
-                            Object.assign(state.stats, ps.stats);
-                            state.stats.level = getLevelFromXP(state.stats.xp);
-                            saveUserStats(ps.uid, state.stats);
-                            state.pendingSave = null;
-                        }
-
+                        updateHeaderStats();
+                        updateDashboard();
+                        updateBadges();
+                        updateWeakTopics();
+                        updateQuizProgress();
+                        updateShopUI();
+                        updateHintButton();
                     } else {
-                        if (state.stats.totalQuestions === 0 && state.stats.correct === 0 && state.stats.wrong === 0) {
-                            // keep defaults
-                        }
+                        const initialStats = {
+                            totalQuestions: 0,
+                            correct: 0,
+                            wrong: 0,
+                            streak: 0,
+                            bestStreak: 0,
+                            xp: 0,
+                            points: 0,
+                            coins: 0,
+                            hints: 0,
+                            level: 1,
+                            accuracyHistory: [],
+                            weakRules: {},
+                            quizHistory: [],
+                            fastAnswers: 0,
+                            ruleBreakerCount: 0,
+                            focusCount: 0,
+                            smartModeCount: 0,
+                            earnedBadges: [],
+                            smartCategoryData: {},
+                            effectiveDifficulty: 'easy',
+                        };
+                        state.stats = initialStats;
+                        saveUserStats(uid, initialStats);
+                        updateHeaderStats();
+                        updateDashboard();
+                        updateBadges();
+                        updateWeakTopics();
+                        updateQuizProgress();
+                        updateShopUI();
+                        updateHintButton();
                     }
-
-                    updateHeaderStats();
-                    updateDashboard();
-                    updateBadges();
-                    updateWeakTopics();
-                    updateQuizProgress();
-                    updateShopUI();
-                    updateHintButton();
-                    renderLeaderboard();
-
-                }, (error) => {
-                    console.error('User data error:', error);
-                    state.statsLoaded = true;
-                    state.statsLoadAttempted = true;
-                });
+                }, (error) => { console.error('User data error:', error); });
         }
 
         // ================================================================
@@ -4676,20 +4103,8 @@
             if (user) {
                 state.isGuest = false;
                 hideLogin();
+                // Only setup user data listener for non-guest users
                 if (!isGuestUid(user.uid)) {
-                    const guestId = localStorage.getItem('guest_id');
-                    if (guestId) {
-                        try {
-                            const saved = localStorage.getItem('guest_stats_' + guestId);
-                            if (saved) {
-                                const parsed = JSON.parse(saved);
-                                if (!state.statsLoaded) {
-                                    state.stats = { ...state.stats, ...parsed };
-                                    state.stats.level = getLevelFromXP(state.stats.xp);
-                                }
-                            }
-                        } catch (e) {}
-                    }
                     setupUserDataListener(user.uid);
                 }
                 updateRevisionBadges();
@@ -4698,11 +4113,7 @@
                 generateNextQuestionSet();
                 const avatar = document.getElementById('userAvatar');
                 if (user.photoURL && avatar) avatar.src = user.photoURL;
-                setTimeout(() => {
-                    if (state.statsLoaded) {
-                        showToast('Welcome!', `Signed in as ${user.displayName || 'User'}`, 'fa-smile', 'gain');
-                    }
-                }, 600);
+                showToast('Welcome!', `Signed in as ${user.displayName || 'User'}`, 'fa-smile', 'gain');
             } else {
                 const guestId = localStorage.getItem('guest_id');
                 if (guestId && state.isGuest) {
@@ -4713,7 +4124,6 @@
                             const parsed = JSON.parse(saved);
                             state.stats = { ...state.stats, ...parsed };
                             state.stats.level = getLevelFromXP(state.stats.xp);
-                            state.statsLoaded = true;
                             updateHeaderStats();
                             updateDashboard();
                             updateBadges();
@@ -4721,7 +4131,6 @@
                             updateQuizProgress();
                             updateShopUI();
                             updateHintButton();
-                            renderLeaderboard();
                         }
                     } catch (e) {}
                     setupLeaderboardListener();
@@ -4792,7 +4201,6 @@
                 }
                 state.isGuest = true;
                 state.guestId = guestId;
-                state.statsLoaded = true;
                 hideLogin();
                 try {
                     const saved = localStorage.getItem('guest_stats_' + guestId);
@@ -4841,14 +4249,9 @@
                 } catch (e) { console.error('Logout error:', e); }
             });
 
-            // Difficulty buttons
+            // Difficulty
             $$('.diff-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    if (state.smartMode) {
-                        showToast('Smart Mode Active', 'Difficulty is auto-adjusted in Smart Mode.', 'fa-brain',
-                            'gain');
-                        return;
-                    }
                     $$('.diff-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     state.difficulty = this.dataset.diff;
@@ -4861,7 +4264,6 @@
                     if (state.autoTimer) { clearInterval(state.autoTimer);
                         state.autoTimer = null; }
                     renderBusinessMini();
-                    updateDiffModeLabel(state.difficulty);
                     generateNextQuestionSet();
                 });
             });
@@ -4902,8 +4304,6 @@
                 this.classList.toggle('active');
                 const dot = this.querySelector('.toggle-dot');
                 if (dot) dot.style.background = state.smartMode ? 'var(--accent-1)' : 'var(--text-muted)';
-                SMART_TRACKER.isSmartMode = state.smartMode;
-
                 if (state.smartMode) {
                     SMART_TRACKER.baseMode = state.difficulty;
                     SMART_TRACKER.smartDifficulty = state.difficulty;
@@ -4911,28 +4311,16 @@
                     if (state.stats.effectiveDifficulty) SMART_TRACKER.smartDifficulty = state.stats
                         .effectiveDifficulty;
                     state.stats.smartModeCount = (state.stats.smartModeCount || 0) + 1;
-                    showToast('Smart Mode On',
-                        'Adaptive learning activated. Difficulty auto-adjusts based on performance.',
-                        'fa-brain', 'gain');
+                    showToast('Smart Mode On', 'Adaptive learning activated.', 'fa-brain', 'gain');
                     const indicator = document.getElementById('smartLevelIndicator');
                     if (indicator) indicator.style.display = 'inline-block';
-                    const diffBtns = document.querySelectorAll('.diff-btn');
-                    diffBtns.forEach(b => b.classList.add('diff-toggle-disabled'));
-                    const eff = SMART_TRACKER.getEffectiveMode();
-                    updateDifficultyButtons(eff);
-                    updateSmartBadge(eff);
-                    updateDiffModeLabel(eff);
                 } else {
                     SMART_TRACKER.reset();
                     SMART_TRACKER.baseMode = state.difficulty;
                     SMART_TRACKER.smartDifficulty = state.difficulty;
                     const indicator = document.getElementById('smartLevelIndicator');
                     if (indicator) indicator.style.display = 'none';
-                    document.getElementById('smartDiffBadge').style.display = 'none';
-                    showToast('Smart Mode Off', 'Switched to manual difficulty control.', 'fa-brain', 'gain');
-                    const diffBtns = document.querySelectorAll('.diff-btn');
-                    diffBtns.forEach(b => b.classList.remove('diff-toggle-disabled'));
-                    updateDiffModeLabel(state.difficulty);
+                    showToast('Smart Mode Off', 'Switched to regular mode.', 'fa-brain', 'gain');
                 }
                 if (state.autoTimer) { clearInterval(state.autoTimer);
                     state.autoTimer = null; }
@@ -5037,20 +4425,15 @@
                     const dot = smartToggle.querySelector('.toggle-dot');
                     if (dot) dot.style.background = 'var(--accent-1)';
                 }
-                SMART_TRACKER.isSmartMode = true;
                 SMART_TRACKER.baseMode = state.difficulty;
                 SMART_TRACKER.smartDifficulty = state.difficulty;
                 const indicator = document.getElementById('smartLevelIndicator');
                 if (indicator) indicator.style.display = 'inline-block';
-                const diffBtns = document.querySelectorAll('.diff-btn');
-                diffBtns.forEach(b => b.classList.add('diff-toggle-disabled'));
-                updateSmartBadge(state.difficulty);
             }
 
-            updateDiffModeLabel(state.difficulty);
-
-            console.log('📘 Version : 2.8.0 (Maintenance Pause Added)');
-            console.log('✅ Developed By - Faizul Islam Riyad');
+            console.log('📘 Journal Entry · MCQ Learner (IMPROVED)');
+            console.log('✅ Guests: localStorage only, never on leaderboard');
+            console.log('✅ Logged-in users: Firebase persistence, shown on leaderboard');
         }
 
         // ================================================================
@@ -5059,6 +4442,5 @@
 
         document.addEventListener('DOMContentLoaded', init);
     </script>
-
 </body>
 </html>
