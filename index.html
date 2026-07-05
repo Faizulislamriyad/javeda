@@ -649,7 +649,6 @@
             pointer-events: none;
         }
 
-        /* Hearts display next to Timer toggle */
         .hearts-inline {
             display: none;
             align-items: center;
@@ -823,54 +822,7 @@
             justify-content: space-between;
         }
 
-        .chart-container {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-sm);
-            padding: 20px;
-            margin-bottom: 24px;
-        }
-        .chart-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .chart-title i {
-            font-size: 18px;
-            color: var(--accent-1);
-        }
-        .chart-bars {
-            display: flex;
-            align-items: flex-end;
-            gap: 12px;
-            height: 130px;
-            padding-top: 10px;
-        }
-        .chart-bar-wrap {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-        }
-        .chart-bar {
-            width: 100%;
-            max-width: 36px;
-            border-radius: 6px 6px 0 0;
-            min-height: 4px;
-            transition: height 0.6s ease;
-            background: var(--gradient-1);
-        }
-        .chart-bar-label {
-            font-size: 10px;
-            color: var(--text-muted);
-            text-align: center;
-        }
+        /* Chart removed — no longer used */
 
         .badges-grid {
             display: grid;
@@ -1661,6 +1613,7 @@
             color: #fff;
         }
 
+        /* ===== SMALL SCREEN BADGE IMPROVEMENTS ===== */
         @media (max-width: 768px) {
             body {
                 padding: 12px 10px 30px;
@@ -1732,10 +1685,6 @@
             .dash-stat .val {
                 font-size: 22px;
             }
-            .chart-bars {
-                height: 100px;
-                gap: 8px;
-            }
             .logo-text {
                 font-size: 18px;
             }
@@ -1782,8 +1731,23 @@
                 width: 30px;
                 height: 30px;
             }
+            /* BADGES — more compact & scannable on small screens */
             .badges-grid {
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 6px;
+            }
+            .badge-item {
+                padding: 6px 10px;
+                gap: 6px;
+                font-size: 11px;
+                border-radius: var(--radius-xs);
+            }
+            .badge-item .b-icon {
+                font-size: 16px;
+                width: 22px;
+            }
+            .badge-item .b-info .b-name {
+                font-size: 11px;
             }
             .shop-grid {
                 grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -1865,16 +1829,23 @@
             .lb-table td {
                 padding: 4px 6px;
             }
+            /* BADGES — even tighter on very small screens */
             .badges-grid {
-                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 4px;
             }
             .badge-item {
-                font-size: 11px;
-                padding: 6px 8px;
+                padding: 4px 8px;
+                gap: 4px;
+                font-size: 10px;
+                border-radius: 6px;
             }
             .badge-item .b-icon {
-                font-size: 16px;
-                width: 22px;
+                font-size: 14px;
+                width: 18px;
+            }
+            .badge-item .b-info .b-name {
+                font-size: 10px;
             }
             .shop-grid {
                 grid-template-columns: 1fr 1fr;
@@ -2213,21 +2184,13 @@
                 </div>
             </div>
             <div class="header-stats" id="headerStats">
-                <!-- Rubies -->
                 <span class="stat-pill"><i class="fas fa-gem" style="color:var(--ruby-color);"></i> <span class="num rubies" id="hRubies">0</span></span>
-                <!-- Coins -->
                 <span class="stat-pill"><i class="fas fa-coins"></i> <span class="num coins" id="hCoins">0</span></span>
-                <!-- XP -->
                 <span class="stat-pill"><i class="fas fa-bolt"></i> <span class="num xp" id="hXp">0</span></span>
-                <!-- Points -->
                 <span class="stat-pill"><i class="fas fa-star"></i> <span class="num points" id="hPoints">0</span></span>
-                <!-- Level -->
                 <span class="stat-pill"><i class="fas fa-trophy"></i> Lv.<span class="num level" id="hLevel">1</span></span>
-                <!-- Streak -->
                 <span class="stat-pill"><i class="fas fa-fire"></i> <span class="num" id="hStreak">0</span></span>
-                <!-- Boosters -->
                 <div class="booster-status-bar" id="boosterStatusBar"></div>
-                <!-- User menu with name -->
                 <div class="user-menu" id="userMenu">
                     <div class="user-info" id="userInfo">
                         <img class="user-avatar" id="userAvatar" src="https://ui-avatars.com/api/?name=Guest&background=5b4bd5&color=fff&size=36" alt="User" />
@@ -2378,10 +2341,7 @@
                 <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBarFill" style="width:0%;"></div></div>
             </div>
 
-            <div class="chart-container">
-                <div class="chart-title"><i class="fas fa-chart-line"></i> Accuracy (last 7 days)</div>
-                <div class="chart-bars" id="accuracyChart"></div>
-            </div>
+            <!-- Chart removed per request -->
 
             <div class="glass-card" style="margin-bottom:20px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
@@ -3349,57 +3309,43 @@
         // 7. BADGES (TOTAL 100)
         // ================================================================
 
-        // Generate 50 new badges (IDs b51 to b100) covering leaderboard, timer, streaks, etc.
         function generateExtraBadges() {
             const extra = [];
-            // Leaderboard ranks
             extra.push({ id: 'b51', icon: '🏆', name: 'Top 10 Leaderboard' });
             extra.push({ id: 'b52', icon: '🏆', name: 'Top 50 Leaderboard' });
             extra.push({ id: 'b53', icon: '🏆', name: 'Top 100 Leaderboard' });
             extra.push({ id: 'b54', icon: '🏆', name: 'Top 500 Leaderboard' });
-            // Timer mode
-            extra.push({ id: 'b55', icon: '⏱️', name: 'Timer Novice' }); // 10 timer questions
-            extra.push({ id: 'b56', icon: '⏱️', name: 'Timer Adept' }); // 50
-            extra.push({ id: 'b57', icon: '⏱️', name: 'Timer Master' }); // 100
-            extra.push({ id: 'b58', icon: '⏱️', name: 'Speed Demon (5s)' }); // 50 with 5s
-            extra.push({ id: 'b59', icon: '⏱️', name: 'Quick Thinker (10s)' }); // 50 with 10s
-            // Streaks
+            extra.push({ id: 'b55', icon: '⏱️', name: 'Timer Novice' });
+            extra.push({ id: 'b56', icon: '⏱️', name: 'Timer Adept' });
+            extra.push({ id: 'b57', icon: '⏱️', name: 'Timer Master' });
+            extra.push({ id: 'b58', icon: '⏱️', name: 'Speed Demon (5s)' });
+            extra.push({ id: 'b59', icon: '⏱️', name: 'Quick Thinker (10s)' });
             extra.push({ id: 'b60', icon: '🔥', name: 'Streak 100' });
             extra.push({ id: 'b61', icon: '🔥', name: 'Streak 200' });
             extra.push({ id: 'b62', icon: '🔥', name: 'Streak 500' });
-            // Total questions
             extra.push({ id: 'b63', icon: '📚', name: '2000 Questions' });
             extra.push({ id: 'b64', icon: '📚', name: '5000 Questions' });
             extra.push({ id: 'b65', icon: '📚', name: '10000 Questions' });
-            // Accuracy
             extra.push({ id: 'b66', icon: '🎯', name: 'Perfect 50' });
             extra.push({ id: 'b67', icon: '🎯', name: 'Perfect 100' });
-            // Rubies
             extra.push({ id: 'b68', icon: '💎', name: 'Ruby Collector (50)' });
             extra.push({ id: 'b69', icon: '💎', name: 'Ruby Hoarder (100)' });
             extra.push({ id: 'b70', icon: '💎', name: 'Ruby Tycoon (500)' });
-            // Coins
             extra.push({ id: 'b71', icon: '🪙', name: 'Coin Collector (1000)' });
             extra.push({ id: 'b72', icon: '🪙', name: 'Coin Hoarder (5000)' });
             extra.push({ id: 'b73', icon: '🪙', name: 'Coin Tycoon (10000)' });
-            // XP / Level
             extra.push({ id: 'b74', icon: '⬆️', name: 'Level 20' });
             extra.push({ id: 'b75', icon: '⬆️', name: 'Level 50' });
             extra.push({ id: 'b76', icon: '⬆️', name: 'Level 100' });
-            // Smart Mode
             extra.push({ id: 'b77', icon: '🧠', name: 'Smart User (100)' });
             extra.push({ id: 'b78', icon: '🧠', name: 'Smart Master (500)' });
-            // Revision
             extra.push({ id: 'b79', icon: '🔄', name: 'Revise 50' });
             extra.push({ id: 'b80', icon: '🔄', name: 'Revise 100' });
-            // Boosters
             extra.push({ id: 'b81', icon: '⚡', name: 'Point Booster x10' });
             extra.push({ id: 'b82', icon: '🪙', name: 'Coin Booster x10' });
             extra.push({ id: 'b83', icon: '🛡️', name: 'Streak Protector x10' });
-            // Hearts
             extra.push({ id: 'b84', icon: '❤️', name: 'Heart Saver (0 lost)' });
             extra.push({ id: 'b85', icon: '❤️', name: 'Heart Collector (full 5)' });
-            // Misc
             extra.push({ id: 'b86', icon: '🏅', name: 'All Rounder' });
             extra.push({ id: 'b87', icon: '⭐', name: '5-Star Performer' });
             extra.push({ id: 'b88', icon: '🎖️', name: 'Dedicated Scholar' });
@@ -3415,7 +3361,6 @@
             extra.push({ id: 'b98', icon: '👑', name: 'Royal Accountant' });
             extra.push({ id: 'b99', icon: '💼', name: 'Finance Pro' });
             extra.push({ id: 'b100', icon: '🏆', name: 'Ultimate Champion' });
-
             return extra;
         }
 
@@ -3473,7 +3418,6 @@
             ...generateExtraBadges()
         ];
 
-        // Ensure we have exactly 100
         console.assert(ALL_BADGES.length === 100, 'Badges count should be 100');
 
         function checkBadges(stats) {
@@ -3490,7 +3434,6 @@
                 }
             }
 
-            // Existing badges (b1-b50)
             if (stats.correct >= 1) earned.push('b1', 'b2', 'b33');
             if (stats.correct >= 1 && stats.quizHistory && stats.quizHistory.some(h => h.correctAnswer === 'debit' && h
                     .userAnswer === 'debit')) earned.push('b3');
@@ -3542,66 +3485,37 @@
             if (stats.correct >= 1000) earned.push('b49');
             if (stats.correct >= 5000) earned.push('b50');
 
-            // New badges (b51-b100)
-            // Leaderboard ranks - we need to check leaderboard position, but we don't have it here. We'll add placeholders.
-            // We'll check if user is in top 10/50/100/500 by using the leaderboard data stored globally.
-            // But we don't have access to leaderboardData here. We'll assume the check is done elsewhere.
-            // We'll implement a function to update badges based on leaderboard later.
-
-            // Timer mode
             if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 10) earned.push('b55');
             if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 50) earned.push('b56');
             if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 100) earned.push('b57');
             if (stats.timer5sCompleted && stats.timer5sCompleted >= 50) earned.push('b58');
             if (stats.timer10sCompleted && stats.timer10sCompleted >= 50) earned.push('b59');
-
-            // Streaks
             if (stats.bestStreak >= 100) earned.push('b60');
             if (stats.bestStreak >= 200) earned.push('b61');
             if (stats.bestStreak >= 500) earned.push('b62');
-
-            // Total questions
             if (total >= 2000) earned.push('b63');
             if (total >= 5000) earned.push('b64');
             if (total >= 10000) earned.push('b65');
-
-            // Accuracy
             if (accPct === 100 && total >= 50) earned.push('b66');
             if (accPct === 100 && total >= 100) earned.push('b67');
-
-            // Rubies
             if (stats.rubies >= 50) earned.push('b68');
             if (stats.rubies >= 100) earned.push('b69');
             if (stats.rubies >= 500) earned.push('b70');
-
-            // Coins
             if (stats.coins >= 1000) earned.push('b71');
             if (stats.coins >= 5000) earned.push('b72');
             if (stats.coins >= 10000) earned.push('b73');
-
-            // Level
             if (stats.level >= 20) earned.push('b74');
             if (stats.level >= 50) earned.push('b75');
             if (stats.level >= 100) earned.push('b76');
-
-            // Smart Mode
             if (stats.smartModeCount && stats.smartModeCount >= 100) earned.push('b77');
             if (stats.smartModeCount && stats.smartModeCount >= 500) earned.push('b78');
-
-            // Revision
             if (stats.revisionCorrect && stats.revisionCorrect >= 50) earned.push('b79');
             if (stats.revisionCorrect && stats.revisionCorrect >= 100) earned.push('b80');
-
-            // Boosters (we need counts)
             if (stats.pointBoosterUsed && stats.pointBoosterUsed >= 10) earned.push('b81');
             if (stats.coinBoosterUsed && stats.coinBoosterUsed >= 10) earned.push('b82');
             if (stats.streakBoosterUsed && stats.streakBoosterUsed >= 10) earned.push('b83');
-
-            // Hearts
             if (stats.heartsLost && stats.heartsLost === 0) earned.push('b84');
             if (stats.hearts === stats.maxHearts) earned.push('b85');
-
-            // Misc
             if (accPct >= 80 && total >= 200 && stats.bestStreak >= 50) earned.push('b86');
             if (accPct >= 90 && total >= 500 && stats.bestStreak >= 100) earned.push('b87');
             if (total >= 1000 && stats.correct / total >= 0.7) earned.push('b88');
@@ -3856,7 +3770,6 @@
                 topicStats: { asset: { total: 0, wrong: 0 }, liability: { total: 0, wrong: 0 }, capital: { total: 0,
                         wrong: 0 }, revenue: { total: 0, wrong: 0 }, expense: { total: 0, wrong: 0 },
                     drawing: { total: 0, wrong: 0 } },
-                // New stats for badges
                 timerQuestionsCompleted: 0,
                 timer5sCompleted: 0,
                 timer10sCompleted: 0,
@@ -3865,7 +3778,7 @@
                 coinBoosterUsed: 0,
                 streakBoosterUsed: 0,
                 heartsLost: 0,
-                _heartRefillDone: false, // flag to prevent multiple refills on load
+                _heartRefillDone: false,
             },
             unsubUser: null,
             unsubLeaderboard: null,
@@ -3883,6 +3796,8 @@
             timerRemaining: 5,
             timerActive: false,
             heartRefillInterval: null,
+            // ---- BADGE DEDUPE: track which badges have been shown this session ----
+            _shownBadges: new Set(),
         };
 
         // ================================================================
@@ -3898,55 +3813,35 @@
         }
 
         // ================================================================
-        // 12. HEART SYSTEM (FIXED: no auto-fill on refresh)
+        // 12. HEART SYSTEM
         // ================================================================
 
         function checkHeartRefill() {
             const s = state.stats;
-
-            // Prevent multiple refills on page load
-            if (s._heartRefillDone) {
-                return;
-            }
-
+            if (s._heartRefillDone) return;
             const now = Date.now();
-            const refillInterval = 15 * 60 * 1000; // 15 minutes
+            const refillInterval = 15 * 60 * 1000;
             const elapsed = now - s.lastHeartRefill;
-
-            // If hearts are already full, just update timestamp and return
             if (s.hearts >= s.maxHearts) {
                 s.lastHeartRefill = now;
                 s._heartRefillDone = true;
                 return;
             }
-
-            // Only refill if at least one full interval has passed
             if (elapsed >= refillInterval) {
                 const heartsToAdd = Math.min(s.maxHearts - s.hearts, Math.floor(elapsed / refillInterval));
                 if (heartsToAdd > 0) {
                     s.hearts += heartsToAdd;
-                    // Adjust lastHeartRefill to account for remaining time after refill
                     s.lastHeartRefill = now - (elapsed % refillInterval);
                     showHeartToast(s.hearts, false);
                     updateHeartsDisplay();
                     saveStats();
                 }
-            } else {
-                // No refill happened, but we still want to save the current state
-                // Just update the timestamp to prevent future miscalculations
-                // But only if hearts are not full
-                if (s.hearts < s.maxHearts) {
-                    // Don't update lastHeartRefill if no refill happened
-                    // This keeps the timer running for the next interval
-                }
             }
-
             s._heartRefillDone = true;
         }
 
         function updateHeartsDisplay() {
             const s = state.stats;
-            // Inline hearts next to Timer toggle
             const inlineContainer = document.getElementById('heartsInline');
             const inlineDisplay = document.getElementById('heartsInlineDisplay');
             const inlineCount = document.getElementById('heartsInlineCount');
@@ -3966,17 +3861,13 @@
             } else {
                 inlineContainer.classList.remove('show');
             }
-
-            // Dashboard hearts
             setText('dHearts', s.hearts);
         }
 
         function loseHeart() {
             const s = state.stats;
             if (!state.timerMode || state.difficulty === 'easy') return;
-
             if (s.hearts <= 0) {
-                // Already zero, but disable timer mode
                 state.timerMode = false;
                 const toggle = document.getElementById('timerToggle');
                 if (toggle) {
@@ -3997,18 +3888,14 @@
                 generateNextQuestionSet();
                 return;
             }
-
             s.hearts = Math.max(0, s.hearts - 1);
             s.timerWrongCount = 0;
             s.heartsLost = (s.heartsLost || 0) + 1;
-            // Reset refill flag so next check can refill
             s._heartRefillDone = false;
             updateHeartsDisplay();
             showHeartToast(s.hearts, true);
             saveStats();
-
             if (s.hearts <= 0) {
-                // Disable Timer Mode
                 state.timerMode = false;
                 const toggle = document.getElementById('timerToggle');
                 if (toggle) {
@@ -4256,7 +4143,6 @@
             state.hintUsedForQuestion = false;
             state.advancePending = false;
 
-            // Check heart refill on every question render (but only if not done yet)
             if (!state.stats._heartRefillDone) {
                 checkHeartRefill();
             }
@@ -4484,19 +4370,15 @@
             const q = state.currentQuestion;
             const s = state.stats;
 
-            // Timer timeout → lose 1 heart immediately
             if (state.timerMode && state.difficulty !== 'easy') {
                 loseHeart();
             }
 
-            // Count as wrong (but don't add to revision if timer mode)
             s.wrong++;
 
-            // Check No Streak Break booster
             const boosters = getBoosters();
             if (boosters.streakActive) {
                 s.noStreakBreakRemaining--;
-                // Streak preserved
                 showToast('🛡️ Streak Protected!', `${s.noStreakBreakRemaining} protections left.`, 'fa-shield',
                 'gain');
                 if (s.noStreakBreakRemaining <= 0) {
@@ -4527,14 +4409,10 @@
             });
             if (s.quizHistory.length > 200) s.quizHistory.shift();
 
-            // Update rolling accuracy
             const total = s.correct + s.wrong;
             const acc = total > 0 ? Math.round((s.correct / total) * 100) : 0;
             s.accuracyHistory.push(acc);
             if (s.accuracyHistory.length > 7) s.accuracyHistory.shift();
-
-            // Timer mode wrong answers → NOT stored in revision
-            // if (!state.isRevisionQuestion && !state.timerMode) { saveRevisionQuestion(...); }
 
             state.userAnswer = 'timeout';
             showFeedback(false, q, state.currentJournal, state.currentTransaction);
@@ -4870,7 +4748,6 @@
                 }
             }
 
-            // Timer mode: track wrong count for heart loss (3 wrong = 1 heart)
             if (isTimerMode && !isCorrect) {
                 s.timerWrongCount = (s.timerWrongCount || 0) + 1;
                 if (s.timerWrongCount >= 3) {
@@ -4905,7 +4782,6 @@
                 if (coinsChanged > 0) showCoinToast(coinsChanged);
                 if (rubiesChanged > 0) showRubyToast(rubiesChanged);
 
-                // Timer mode tracking
                 if (isTimerMode) {
                     s.timerQuestionsCompleted = (s.timerQuestionsCompleted || 0) + 1;
                     if (state.timerSec === 5) {
@@ -4959,7 +4835,6 @@
             });
             if (s.quizHistory.length > 200) s.quizHistory.shift();
 
-            // Update rolling accuracy
             const total = s.correct + s.wrong;
             const acc = total > 0 ? Math.round((s.correct / total) * 100) : 0;
             s.accuracyHistory.push(acc);
@@ -4973,10 +4848,19 @@
 
             const earnedIds = checkBadges(s);
             s.earnedBadges = earnedIds;
-            const newBadges = earnedIds.filter(id => !prevBadges.has(id));
+
+            // ---- BADGE DEDUPE: use _shownBadges to avoid duplicate toasts ----
+            const newBadges = earnedIds.filter(id => !state._shownBadges.has(id));
             for (const id of newBadges) {
                 const badge = ALL_BADGES.find(b => b.id === id);
-                if (badge) setTimeout(() => showBadgeToast(badge), 400);
+                if (badge) {
+                    state._shownBadges.add(id);
+                    setTimeout(() => showBadgeToast(badge), 400);
+                }
+            }
+            // Also add all earned badges to _shownBadges so they won't trigger again
+            for (const id of earnedIds) {
+                state._shownBadges.add(id);
             }
 
             s.focusCount = (s.focusCount || 0) + 1;
@@ -5052,17 +4936,19 @@
                 showToast('Not Enough Coins', `Need ${price} coins. You have ${s.coins}.`, 'fa-coins', 'loss');
                 return;
             }
-            s.coins -= price;
-            s.hints = (s.hints || 0) + hints;
-            if (rubiesBonus) {
-                s.rubies = (s.rubies || 0) + rubiesBonus;
+            if (s.rubies < (rubiesBonus || 0)) {
+                showToast('Not Enough Rubies', `Need ${rubiesBonus} rubies. You have ${s.rubies}.`, 'fa-gem', 'loss');
+                return;
             }
+            s.coins -= price;
+            s.rubies = (s.rubies || 0) - (rubiesBonus || 0);
+            s.hints = (s.hints || 0) + hints;
             updateHeaderStats();
             updateDashboard();
             updateShopUI();
             updateHintButton();
-            showToast('Hints Purchased!', `${hints} hints added${rubiesBonus ? ` + ${rubiesBonus} rubies` : ''}.`, 'fa-coins',
-                'hint');
+            showToast('Hints Purchased!', `${hints} hints added${rubiesBonus ? ` (${rubiesBonus} rubies spent)` : ''}.`,
+                'fa-coins', 'hint');
             saveStats();
         }
 
@@ -5132,37 +5018,7 @@
             if (fill) fill.style.width = pct + '%';
             setText('xpProgressText', `${s.xp} / ${progress.next} XP`);
 
-            renderChart(s.accuracyHistory);
             updateShopUI();
-        }
-
-        function renderChart(history) {
-            const container = document.getElementById('accuracyChart');
-            if (!container) return;
-            container.innerHTML = '';
-            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            // history is an array of last 7 values (most recent last)
-            const data = history.slice(-7);
-            // Pad if less than 7
-            while (data.length < 7) data.unshift(0);
-            const maxVal = Math.max(100, ...data);
-            for (let i = 0; i < 7; i++) {
-                const val = data[i];
-                const pct = maxVal > 0 ? (val / maxVal) * 100 : 0;
-                const wrap = document.createElement('div');
-                wrap.className = 'chart-bar-wrap';
-                const bar = document.createElement('div');
-                bar.className = 'chart-bar';
-                bar.style.height = Math.max(4, pct * 0.85) + '%';
-                bar.style.background = val >= 80 ? 'var(--gradient-2)' : val >= 50 ? 'var(--gradient-3)' :
-                    'var(--gradient-1)';
-                const label = document.createElement('div');
-                label.className = 'chart-bar-label';
-                label.textContent = days[i];
-                wrap.appendChild(bar);
-                wrap.appendChild(label);
-                container.appendChild(wrap);
-            }
         }
 
         function updateBadges() {
@@ -5369,10 +5225,6 @@
             }
             if (empty) empty.style.display = 'none';
 
-            // Update leaderboard badges based on rank
-            // We'll check if user is in top 10/50/100/500 and unlock badges
-            // But we need to do this outside this function, we'll call it after render.
-
             tbody.innerHTML = sorted.map((e, i) => {
                 const rank = i + 1;
                 let rc = 'lb-rank';
@@ -5400,7 +5252,6 @@
                 </tr>`;
             }).join('');
 
-            // After rendering, check if user is in top ranks to unlock badges
             if (currentEmail) {
                 const userRank = sorted.findIndex(e => e.email === currentEmail) + 1;
                 const s = state.stats;
@@ -5410,13 +5261,17 @@
                 if (userRank > 0 && userRank <= 50) newBadges.push('b52');
                 if (userRank > 0 && userRank <= 100) newBadges.push('b53');
                 if (userRank > 0 && userRank <= 500) newBadges.push('b54');
-                // Filter only those not already earned
                 newBadges = newBadges.filter(id => !prevBadges.has(id));
                 if (newBadges.length > 0) {
                     s.earnedBadges = [...prevBadges, ...newBadges];
                     for (const id of newBadges) {
                         const badge = ALL_BADGES.find(b => b.id === id);
-                        if (badge) setTimeout(() => showBadgeToast(badge), 300);
+                        if (badge) {
+                            if (!state._shownBadges.has(id)) {
+                                state._shownBadges.add(id);
+                                setTimeout(() => showBadgeToast(badge), 300);
+                            }
+                        }
                     }
                     saveStats();
                     updateBadges();
@@ -5511,9 +5366,14 @@
                             coinBoosterUsed: data.coinBoosterUsed || 0,
                             streakBoosterUsed: data.streakBoosterUsed || 0,
                             heartsLost: data.heartsLost || 0,
-                            _heartRefillDone: false, // reset on load
+                            _heartRefillDone: false,
                         };
                         state.stats.level = getLevelFromXP(state.stats.xp);
+
+                        // ---- Initialize _shownBadges with already earned badges ----
+                        for (const id of state.stats.earnedBadges || []) {
+                            state._shownBadges.add(id);
+                        }
 
                         if (state.smartMode && state.stats.smartCategoryData) {
                             SMART_TRACKER.categoryCounts = state.stats.smartCategoryData;
@@ -5536,14 +5396,10 @@
                                     wrong: 0 }, expense: { total: 0, wrong: 0 }, drawing: { total: 0,
                                     wrong: 0 } };
                         }
-                        // Initialize _heartRefillDone
                         state.stats._heartRefillDone = false;
                     }
 
-                    // Reset heart refill flag to allow refill check on load
                     state.stats._heartRefillDone = false;
-
-                    // On page load / data load, check heart refill immediately
                     checkHeartRefill();
 
                     updateHeaderStats();
@@ -5612,6 +5468,10 @@
                                     }
                                     state.stats.level = getLevelFromXP(state.stats.xp);
                                     state.stats._heartRefillDone = false;
+                                    // Initialize _shownBadges
+                                    for (const id of state.stats.earnedBadges || []) {
+                                        state._shownBadges.add(id);
+                                    }
                                 }
                             }
                         } catch (e) {}
@@ -5649,7 +5509,10 @@
                             state.stats.level = getLevelFromXP(state.stats.xp);
                             state.stats._heartRefillDone = false;
                             state.statsLoaded = true;
-                            // On guest login, check heart refill
+                            // Initialize _shownBadges
+                            for (const id of state.stats.earnedBadges || []) {
+                                state._shownBadges.add(id);
+                            }
                             checkHeartRefill();
                             updateHeaderStats();
                             updateDashboard();
@@ -5738,9 +5601,12 @@
                         }
                         state.stats.level = getLevelFromXP(state.stats.xp);
                         state.stats._heartRefillDone = false;
+                        // Initialize _shownBadges
+                        for (const id of state.stats.earnedBadges || []) {
+                            state._shownBadges.add(id);
+                        }
                     }
                 } catch (e) {}
-                // Check heart refill on guest login
                 checkHeartRefill();
                 updateHeaderStats();
                 updateDashboard();
@@ -5759,7 +5625,6 @@
                 showToast('Guest Mode', 'Your progress is saved locally.', 'fa-user', 'gain');
             });
 
-            // User menu click to toggle dropdown
             const userInfo = document.getElementById('userInfo');
             if (userInfo) {
                 userInfo.addEventListener('click', function(e) {
@@ -5784,7 +5649,6 @@
                 } catch (e) { console.error('Logout error:', e); }
             });
 
-            // Difficulty buttons
             $$('.diff-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     if (state.smartMode) {
@@ -5813,7 +5677,6 @@
                 });
             });
 
-            // Quiz options
             $$('.quiz-opt').forEach(btn => {
                 btn.addEventListener('click', function() {
                     if (state.answered) return;
@@ -5821,10 +5684,8 @@
                 });
             });
 
-            // Hint button
             document.getElementById('hintBtn').addEventListener('click', useHint);
 
-            // Next button fallback
             document.getElementById('nextBtnFallback').addEventListener('click', function() {
                 if (state.autoTimer) {
                     clearInterval(state.autoTimer);
@@ -5836,14 +5697,12 @@
                 advanceQuestion();
             });
 
-            // Navigation
             $$('.nav-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     navigateTo(this.dataset.section);
                 });
             });
 
-            // Smart Mode
             document.getElementById('smartToggle').addEventListener('click', function() {
                 if (state.revisionMode) {
                     state.revisionMode = false;
@@ -5914,7 +5773,6 @@
                 generateNextQuestionSet();
             });
 
-            // Revision Mode
             document.getElementById('revisionToggle').addEventListener('click', async function() {
                 if (state.smartMode) {
                     state.smartMode = false;
@@ -5976,7 +5834,6 @@
                 generateNextQuestionSet();
             });
 
-            // Timer Mode
             document.getElementById('timerToggle').addEventListener('click', function() {
                 if (state.smartMode) {
                     state.smartMode = false;
@@ -6064,7 +5921,6 @@
                 generateNextQuestionSet();
             });
 
-            // Timer option buttons
             document.querySelectorAll('.timer-opt').forEach(btn => {
                 btn.addEventListener('click', function() {
                     if (!state.timerMode) {
@@ -6085,7 +5941,6 @@
                 });
             });
 
-            // Shop items
             document.querySelectorAll('.shop-item .item-buy').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const type = this.dataset.type;
@@ -6111,7 +5966,6 @@
                 });
             });
 
-            // Revision Mode button
             document.getElementById('revisionModeBtn').addEventListener('click', async function() {
                 const count = await getRevisionCount();
                 if (count === 0) {
@@ -6148,7 +6002,6 @@
                 showToast('Refreshed', 'Revision list updated.', 'fa-sync', 'gain');
             });
 
-            // Leaderboard filter buttons
             $$('.lb-filter-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     $$('.lb-filter-btn').forEach(b => b.classList.remove('active'));
@@ -6158,10 +6011,7 @@
                 });
             });
 
-            // Heart refill and booster check every minute
             setInterval(() => {
-                // Reset the refill flag every minute to allow refill check
-                // But only if hearts are not full
                 if (state.stats.hearts < state.stats.maxHearts) {
                     state.stats._heartRefillDone = false;
                     checkHeartRefill();
@@ -6171,7 +6021,6 @@
                 updateBoosterStatus();
             }, 60000);
 
-            // Initial setup
             if (state.smartMode) {
                 const smartToggle = document.getElementById('smartToggle');
                 if (smartToggle) {
@@ -6195,10 +6044,7 @@
                         wrong: 0 }, drawing: { total: 0, wrong: 0 } };
             }
 
-            // Reset heart refill flag for initial load
             state.stats._heartRefillDone = false;
-
-            // Initial heart refill check on load
             checkHeartRefill();
 
             updateDiffModeLabel(state.difficulty);
@@ -6206,7 +6052,7 @@
             updateHeartsDisplay();
             updateBoosterStatus();
 
-            console.log('📘 Version : 5.0.0 (Heart refill FINAL FIX + Accuracy chart fixed)');
+            console.log('📘 Version : 5.0.1 (Badge dedupe + chart removed + shop prices updated)');
             console.log('✅ Developed By - Faizul Islam Riyad');
         }
 
