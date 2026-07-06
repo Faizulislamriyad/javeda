@@ -13,7 +13,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js">
     </script>
     <style>
-        /* ===== FULL STYLES ===== */
+        /* ===== FULL STYLES (unchanged) ===== */
         * {
             margin: 0;
             padding: 0;
@@ -295,6 +295,7 @@
             }
         }
 
+        /* ----- rest of CSS unchanged (too long, omitted for brevity) ----- */
         .quiz-container {
             max-width: 820px;
             margin: 0 auto;
@@ -821,8 +822,6 @@
             display: flex;
             justify-content: space-between;
         }
-
-        /* Chart removed — no longer used */
 
         .badges-grid {
             display: grid;
@@ -1613,7 +1612,6 @@
             color: #fff;
         }
 
-        /* ===== SMALL SCREEN BADGE IMPROVEMENTS ===== */
         @media (max-width: 768px) {
             body {
                 padding: 12px 10px 30px;
@@ -1731,7 +1729,6 @@
                 width: 30px;
                 height: 30px;
             }
-            /* BADGES — more compact & scannable on small screens */
             .badges-grid {
                 grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
                 gap: 6px;
@@ -1829,7 +1826,6 @@
             .lb-table td {
                 padding: 4px 6px;
             }
-            /* BADGES — even tighter on very small screens */
             .badges-grid {
                 grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
                 gap: 4px;
@@ -2214,7 +2210,7 @@
         </nav>
 
         <!-- ============================================================
-        SECTION: QUIZ
+        SECTION: QUIZ (unchanged)
         ============================================================ -->
         <section class="section-panel active" id="section-quiz">
             <div class="quiz-container">
@@ -2303,7 +2299,7 @@
                 </div>
 
                 <div class="Lern" style="margin-top:18px;">
-                    <a href="lern.html" class="learn-more">
+                    <a href="lern.html" class="learn-more" id="learnJavedaBtn">
                         <i class="fas fa-book-open"></i> Learn Javeda
                     </a>
                 </div>
@@ -2312,7 +2308,7 @@
         </section>
 
         <!-- ============================================================
-        SECTION: DASHBOARD
+        SECTION: DASHBOARD (unchanged)
         ============================================================ -->
         <section class="section-panel" id="section-dashboard">
             <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
@@ -2341,8 +2337,6 @@
                 <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xpBarFill" style="width:0%;"></div></div>
             </div>
 
-            <!-- Chart removed per request -->
-
             <div class="glass-card" style="margin-bottom:20px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
                     <span style="font-weight:600;"><i class="fas fa-award" style="color:var(--accent-3);"></i> Badges</span>
@@ -2363,7 +2357,7 @@
         </section>
 
         <!-- ============================================================
-        SECTION: SHOP
+        SECTION: SHOP (unchanged)
         ============================================================ -->
         <section class="section-panel" id="section-shop">
             <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
@@ -2497,7 +2491,7 @@
         </section>
 
         <!-- ============================================================
-        SECTION: REVISION
+        SECTION: REVISION (unchanged)
         ============================================================ -->
         <section class="section-panel" id="section-revision">
             <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
@@ -2528,7 +2522,7 @@
         </section>
 
         <!-- ============================================================
-        SECTION: LEADERBOARD
+        SECTION: LEADERBOARD (unchanged)
         ============================================================ -->
         <section class="section-panel" id="section-leaderboard">
             <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
@@ -2562,7 +2556,7 @@
 
     <script>
         // ================================================================
-        // 0. FIREBASE INIT
+        // 0. FIREBASE INIT (unchanged)
         // ================================================================
 
         const firebaseConfig = {
@@ -2580,7 +2574,7 @@
         const db = firebase.firestore();
 
         // ================================================================
-        // MAINTENANCE PAUSE DETECTION
+        // MAINTENANCE PAUSE DETECTION (unchanged)
         // ================================================================
 
         (function() {
@@ -2655,7 +2649,7 @@
         })();
 
         // ================================================================
-        // 1. HELPERS
+        // 1. HELPERS (unchanged)
         // ================================================================
 
         function isGuestUid(uid) {
@@ -2691,7 +2685,7 @@
             return { level, current, next, progress: Math.min(1, progress) };
         }
 
-        // ===== REWARD SYSTEM =====
+        // ===== REWARD SYSTEM (unchanged) =====
         function getRewards(diff, correct, isRevision, timerMode, timerSec, boosters) {
             if (isRevision) {
                 return { points: 0, xp: 0, coins: 1, rubies: 0 };
@@ -2766,7 +2760,7 @@
         function getRandomName() { return pickRandom(BENGALI_PERSON_NAMES); }
 
         // ================================================================
-        // 2. MASTER ACCOUNT CLASSIFICATION SYSTEM
+        // 2. MASTER ACCOUNT CLASSIFICATION SYSTEM (unchanged)
         // ================================================================
 
         const ACCOUNT_CLASSIFICATIONS = {
@@ -2851,7 +2845,7 @@
         BENGALI_NAMES['Creditor'] = 'পাওনাদার';
 
         // ================================================================
-        // 3. TEMPLATE DEFINITIONS (shortened for brevity - keeping core ones)
+        // 3. TEMPLATE DEFINITIONS (unchanged)
         // ================================================================
 
         const TEMPLATE_DEFINITIONS = {
@@ -3084,7 +3078,7 @@
         };
 
         // ================================================================
-        // 4. DIFFICULTY FILTERING & DIVERSITY
+        // 4. DIFFICULTY FILTERING & DIVERSITY (unchanged)
         // ================================================================
 
         function getAvailableTemplates(mode) {
@@ -3142,7 +3136,7 @@
         }
 
         // ================================================================
-        // 5. TRANSACTION GENERATOR
+        // 5. TRANSACTION GENERATOR (unchanged)
         // ================================================================
 
         function generateTransactionFromTemplate(templateInfo, mode) {
@@ -3203,7 +3197,7 @@
         }
 
         // ================================================================
-        // 6. SMART TRACKER
+        // 6. SMART TRACKER (unchanged)
         // ================================================================
 
         const SMART_TRACKER = {
@@ -3306,80 +3300,64 @@
         }
 
         // ================================================================
-        // 7. BADGES (TOTAL 100)
+        // 7. BADGES (TOTAL 100) — NEW BADGES WITH NEW LOGIC
         // ================================================================
 
+        // This array holds all 100 badges. The 28 removed badges are replaced with new ones (n1–n28).
+        // The remaining 72 badges are kept as before (b3,b4,b5,b7,b8,b9,b10,b11,b13,b14,b16,b17,b18,b19,b20,
+        // b21,b22,b23,b24,b25,b26,b27,b28,b29,b30,b31,b32,b33,b34,b35,b36,b37,b38,b39,b40,b42,b43,b44,
+        // b46,b50,b51,b55,b56,b57,b58,b59,b63,b70,b71,b72,b73,b74,b75,b76,b77,b78,b79,b80,b81,b82,b83,b85,
+        // b86,b87,b88,b93,b94,b95,b96,b97,b98,b99)
+        // plus the new ones: n1–n28.
+
         function generateExtraBadges() {
-            const extra = [];
-            extra.push({ id: 'b51', icon: '🏆', name: 'Top 10 Leaderboard' });
-            extra.push({ id: 'b52', icon: '🏆', name: 'Top 50 Leaderboard' });
-            extra.push({ id: 'b53', icon: '🏆', name: 'Top 100 Leaderboard' });
-            extra.push({ id: 'b54', icon: '🏆', name: 'Top 500 Leaderboard' });
-            extra.push({ id: 'b55', icon: '⏱️', name: 'Timer Novice' });
-            extra.push({ id: 'b56', icon: '⏱️', name: 'Timer Adept' });
-            extra.push({ id: 'b57', icon: '⏱️', name: 'Timer Master' });
-            extra.push({ id: 'b58', icon: '⏱️', name: 'Speed Demon (5s)' });
-            extra.push({ id: 'b59', icon: '⏱️', name: 'Quick Thinker (10s)' });
-            extra.push({ id: 'b60', icon: '🔥', name: 'Streak 100' });
-            extra.push({ id: 'b61', icon: '🔥', name: 'Streak 200' });
-            extra.push({ id: 'b62', icon: '🔥', name: 'Streak 500' });
-            extra.push({ id: 'b63', icon: '📚', name: '2000 Questions' });
-            extra.push({ id: 'b64', icon: '📚', name: '5000 Questions' });
-            extra.push({ id: 'b65', icon: '📚', name: '10000 Questions' });
-            extra.push({ id: 'b66', icon: '🎯', name: 'Perfect 50' });
-            extra.push({ id: 'b67', icon: '🎯', name: 'Perfect 100' });
-            extra.push({ id: 'b68', icon: '💎', name: 'Ruby Collector (50)' });
-            extra.push({ id: 'b69', icon: '💎', name: 'Ruby Hoarder (100)' });
-            extra.push({ id: 'b70', icon: '💎', name: 'Ruby Tycoon (500)' });
-            extra.push({ id: 'b71', icon: '🪙', name: 'Coin Collector (1000)' });
-            extra.push({ id: 'b72', icon: '🪙', name: 'Coin Hoarder (5000)' });
-            extra.push({ id: 'b73', icon: '🪙', name: 'Coin Tycoon (10000)' });
-            extra.push({ id: 'b74', icon: '⬆️', name: 'Level 20' });
-            extra.push({ id: 'b75', icon: '⬆️', name: 'Level 50' });
-            extra.push({ id: 'b76', icon: '⬆️', name: 'Level 100' });
-            extra.push({ id: 'b77', icon: '🧠', name: 'Smart User (100)' });
-            extra.push({ id: 'b78', icon: '🧠', name: 'Smart Master (500)' });
-            extra.push({ id: 'b79', icon: '🔄', name: 'Revise 50' });
-            extra.push({ id: 'b80', icon: '🔄', name: 'Revise 100' });
-            extra.push({ id: 'b81', icon: '⚡', name: 'Point Booster x10' });
-            extra.push({ id: 'b82', icon: '🪙', name: 'Coin Booster x10' });
-            extra.push({ id: 'b83', icon: '🛡️', name: 'Streak Protector x10' });
-            extra.push({ id: 'b84', icon: '❤️', name: 'Heart Saver (0 lost)' });
-            extra.push({ id: 'b85', icon: '❤️', name: 'Heart Collector (full 5)' });
-            extra.push({ id: 'b86', icon: '🏅', name: 'All Rounder' });
-            extra.push({ id: 'b87', icon: '⭐', name: '5-Star Performer' });
-            extra.push({ id: 'b88', icon: '🎖️', name: 'Dedicated Scholar' });
-            extra.push({ id: 'b89', icon: '📖', name: 'Bookworm' });
-            extra.push({ id: 'b90', icon: '💡', name: 'Enlightened' });
-            extra.push({ id: 'b91', icon: '🏁', name: 'Quick Starter' });
-            extra.push({ id: 'b92', icon: '🧘', name: 'Calm Mind' });
-            extra.push({ id: 'b93', icon: '🤝', name: 'Collaborator' });
-            extra.push({ id: 'b94', icon: '🎓', name: 'Scholar' });
-            extra.push({ id: 'b95', icon: '📈', name: 'Rising Star' });
-            extra.push({ id: 'b96', icon: '🌟', name: 'Shining Star' });
-            extra.push({ id: 'b97', icon: '✨', name: 'Legendary' });
-            extra.push({ id: 'b98', icon: '👑', name: 'Royal Accountant' });
-            extra.push({ id: 'b99', icon: '💼', name: 'Finance Pro' });
-            extra.push({ id: 'b100', icon: '🏆', name: 'Ultimate Champion' });
-            return extra;
+            // Keep only the extra badges that are not removed (b51, b55–b59, b63, b70–b83, b85–b88, b93–b99)
+            // We will build ALL_BADGES manually below.
+            return [];
         }
 
         const ALL_BADGES = [
-            { id: 'b1', icon: '🔰', name: 'First Step' },
-            { id: 'b2', icon: '👣', name: 'Beginner' },
+            // === REPLACED 28 BADGES (NEW ONES) ===
+            { id: 'n1', icon: '👑', name: 'Leaderboard XP King' },
+            { id: 'n2', icon: '🏅', name: 'Leaderboard Points Pro' },
+            { id: 'n3', icon: '🎯', name: 'Leaderboard Accuracy Ace' },
+            { id: 'n4', icon: '🏆', name: 'Leaderboard Badge Collector' },
+            { id: 'n5', icon: '📚', name: 'Javeda Explorer' },
+            { id: 'n6', icon: '📖', name: 'Javeda Scholar' },
+            { id: 'n7', icon: '💡', name: 'Hint Hoarder' },
+            { id: 'n8', icon: '💡', name: 'Hint Master' },
+            { id: 'n9', icon: '📅', name: 'Perfect Week' },
+            { id: 'n10', icon: '📅', name: 'Monthly Mentor' },
+            { id: 'n11', icon: '⚡', name: 'Quick Learner' },
+            { id: 'n12', icon: '🏃', name: 'Marathon Runner' },
+            { id: 'n13', icon: '🌙', name: 'Night Owl' },
+            { id: 'n14', icon: '🌅', name: 'Early Bird' },
+            { id: 'n15', icon: '🔄', name: 'Revision King' },
+            { id: 'n16', icon: '🔄', name: 'Revision Master' },
+            { id: 'n17', icon: '⏱️', name: 'Timer Survivor' },
+            { id: 'n18', icon: '⏱️', name: 'Timer Legend' },
+            { id: 'n19', icon: '🧠', name: 'Smart Learner' },
+            { id: 'n20', icon: '🧠', name: 'Smart Guru' },
+            { id: 'n21', icon: '💰', name: 'Coin Millionaire' },
+            { id: 'n22', icon: '💎', name: 'Ruby Baron' },
+            { id: 'n23', icon: '🛡️', name: 'Streak Protector' },
+            { id: 'n24', icon: '⚡', name: 'Point Booster Fan' },
+            { id: 'n25', icon: '🪙', name: 'Coin Booster Fan' },
+            { id: 'n26', icon: '📊', name: 'Accountant Pro' },
+            { id: 'n27', icon: '🏅', name: 'Ultimate Journal Master' },
+            { id: 'n28', icon: '👑', name: 'Journal Legend' },
+
+            // === KEPT BADGES (72) ===
             { id: 'b3', icon: '💳', name: 'Debit Starter' },
             { id: 'b4', icon: '💳', name: 'Credit Starter' },
             { id: 'b5', icon: '🔥', name: 'Warmed Up' },
-            { id: 'b6', icon: '✨', name: 'No Mistake Start' },
             { id: 'b7', icon: '📓', name: 'Journal Rookie' },
             { id: 'b8', icon: '🗺️', name: 'Accounting Explorer' },
             { id: 'b9', icon: '📊', name: 'Ledger Learner' },
             { id: 'b10', icon: '⚖️', name: 'Trial Balance Maker' },
             { id: 'b11', icon: '👨‍💼', name: 'Entry Master' },
-            { id: 'b12', icon: '👑', name: 'Entry King' },
             { id: 'b13', icon: '🧠', name: 'Sharp Mind' },
             { id: 'b14', icon: '🎯', name: 'Precision Player' },
-            { id: 'b15', icon: '🏃', name: 'Perfect Run' },
             { id: 'b16', icon: '💎', name: 'Flawless Brain' },
             { id: 'b17', icon: '🛡️', name: 'Zero Error Zone' },
             { id: 'b18', icon: '🔥', name: 'Streak 5x' },
@@ -3405,21 +3383,48 @@
             { id: 'b38', icon: '🏆', name: 'Accounting Pro' },
             { id: 'b39', icon: '🏆', name: 'Debit-Credit Champ' },
             { id: 'b40', icon: '👼', name: 'Journal God' },
-            { id: 'b41', icon: '📜', name: 'Ledger Legend' },
             { id: 'b42', icon: '🧠', name: 'Financial Brain' },
             { id: 'b43', icon: '🔍', name: 'Error Hunter' },
             { id: 'b44', icon: '🎯', name: 'Focus Mode' },
-            { id: 'b45', icon: '🤫', name: 'Silent Accountant' },
             { id: 'b46', icon: '💡', name: 'Smart Thinker' },
-            { id: 'b47', icon: '⚡', name: 'Quick Ledger Mind' },
-            { id: 'b48', icon: '🎖️', name: 'Dedicated Learner' },
-            { id: 'b49', icon: '🏅', name: 'Quiz Master' },
             { id: 'b50', icon: '👑', name: 'Ultimate Accountant' },
-            ...generateExtraBadges()
+            { id: 'b51', icon: '🏆', name: 'Top 10 Leaderboard' },
+            { id: 'b55', icon: '⏱️', name: 'Timer Novice' },
+            { id: 'b56', icon: '⏱️', name: 'Timer Adept' },
+            { id: 'b57', icon: '⏱️', name: 'Timer Master' },
+            { id: 'b58', icon: '⏱️', name: 'Speed Demon (5s)' },
+            { id: 'b59', icon: '⏱️', name: 'Quick Thinker (10s)' },
+            { id: 'b63', icon: '📚', name: '2000 Questions' },
+            { id: 'b70', icon: '💎', name: 'Ruby Tycoon (500)' },
+            { id: 'b71', icon: '🪙', name: 'Coin Collector (1000)' },
+            { id: 'b72', icon: '🪙', name: 'Coin Hoarder (5000)' },
+            { id: 'b73', icon: '🪙', name: 'Coin Tycoon (10000)' },
+            { id: 'b74', icon: '⬆️', name: 'Level 20' },
+            { id: 'b75', icon: '⬆️', name: 'Level 50' },
+            { id: 'b76', icon: '⬆️', name: 'Level 100' },
+            { id: 'b77', icon: '🧠', name: 'Smart User (100)' },
+            { id: 'b78', icon: '🧠', name: 'Smart Master (500)' },
+            { id: 'b79', icon: '🔄', name: 'Revise 50' },
+            { id: 'b80', icon: '🔄', name: 'Revise 100' },
+            { id: 'b81', icon: '⚡', name: 'Point Booster x10' },
+            { id: 'b82', icon: '🪙', name: 'Coin Booster x10' },
+            { id: 'b83', icon: '🛡️', name: 'Streak Protector x10' },
+            { id: 'b85', icon: '❤️', name: 'Heart Collector (full 5)' },
+            { id: 'b86', icon: '🏅', name: 'All Rounder' },
+            { id: 'b87', icon: '⭐', name: '5-Star Performer' },
+            { id: 'b88', icon: '🎖️', name: 'Dedicated Scholar' },
+            { id: 'b93', icon: '🤝', name: 'Collaborator' },
+            { id: 'b94', icon: '🎓', name: 'Scholar' },
+            { id: 'b95', icon: '📈', name: 'Rising Star' },
+            { id: 'b96', icon: '🌟', name: 'Shining Star' },
+            { id: 'b97', icon: '✨', name: 'Legendary' },
+            { id: 'b98', icon: '👑', name: 'Royal Accountant' },
+            { id: 'b99', icon: '💼', name: 'Finance Pro' },
         ];
 
         console.assert(ALL_BADGES.length === 100, 'Badges count should be 100');
 
+        // ===== BADGE UNLOCK LOGIC =====
         function checkBadges(stats) {
             const earned = [];
             const total = stats.correct + stats.wrong;
@@ -3434,22 +3439,19 @@
                 }
             }
 
-            if (stats.correct >= 1) earned.push('b1', 'b2', 'b33');
+            // --- Existing kept badges (b3,b4,...) same logic as before ---
             if (stats.correct >= 1 && stats.quizHistory && stats.quizHistory.some(h => h.correctAnswer === 'debit' && h
                     .userAnswer === 'debit')) earned.push('b3');
             if (stats.correct >= 1 && stats.quizHistory && stats.quizHistory.some(h => h.correctAnswer === 'credit' && h
                     .userAnswer === 'credit')) earned.push('b4');
             if (stats.correct >= 5) earned.push('b5');
-            if (stats.correct >= 3 && stats.wrong === 0) earned.push('b6');
             if (stats.correct >= 10) earned.push('b7');
             if (stats.correct >= 25) earned.push('b8');
             if (stats.correct >= 50) earned.push('b9');
             if (stats.correct >= 100) earned.push('b10');
             if (stats.correct >= 200) earned.push('b11');
-            if (stats.correct >= 1000) earned.push('b12');
             if (accPct >= 80 && total >= 10) earned.push('b13');
             if (accPct >= 90 && total >= 20) earned.push('b14');
-            if (stats.bestStreak >= 10) earned.push('b15');
             if (stats.bestStreak >= 20) earned.push('b16');
             if (stats.wrong === 0 && total >= 50) earned.push('b17');
             if (stats.bestStreak >= 5) earned.push('b18');
@@ -3467,6 +3469,7 @@
             if (stats.correct >= 15) earned.push('b30');
             if (stats.fastAnswers && stats.fastAnswers >= 1) earned.push('b31');
             if (stats.fastAnswers && stats.fastAnswers >= 10) earned.push('b32');
+            if (stats.correct >= 1) earned.push('b33');
             if (stats.correct >= 10 && stats.wrong === 0 && total >= 10) earned.push('b34');
             if (total >= 100) earned.push('b35');
             if (total >= 500) earned.push('b36');
@@ -3474,32 +3477,21 @@
             if (stats.level >= 10) earned.push('b38');
             if (stats.correct >= 500) earned.push('b39');
             if (stats.correct >= 1000) earned.push('b40');
-            if (total >= 2000) earned.push('b41');
             if (accPct >= 95 && total >= 100) earned.push('b42');
             if (stats.wrong > 0 && (stats.wrong / total) < 0.1 && total >= 20) earned.push('b43');
             if (stats.focusCount && stats.focusCount >= 20) earned.push('b44');
-            if (stats.wrong === 0 && total >= 50) earned.push('b45');
             if (stats.smartModeCount && stats.smartModeCount >= 50) earned.push('b46');
-            if (stats.fastAnswers && stats.fastAnswers >= 100) earned.push('b47');
-            if (stats.correct >= 500) earned.push('b48');
-            if (stats.correct >= 1000) earned.push('b49');
             if (stats.correct >= 5000) earned.push('b50');
 
+            // Timer badges (kept)
             if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 10) earned.push('b55');
             if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 50) earned.push('b56');
             if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 100) earned.push('b57');
             if (stats.timer5sCompleted && stats.timer5sCompleted >= 50) earned.push('b58');
             if (stats.timer10sCompleted && stats.timer10sCompleted >= 50) earned.push('b59');
-            if (stats.bestStreak >= 100) earned.push('b60');
-            if (stats.bestStreak >= 200) earned.push('b61');
-            if (stats.bestStreak >= 500) earned.push('b62');
+
+            // Other kept badges
             if (total >= 2000) earned.push('b63');
-            if (total >= 5000) earned.push('b64');
-            if (total >= 10000) earned.push('b65');
-            if (accPct === 100 && total >= 50) earned.push('b66');
-            if (accPct === 100 && total >= 100) earned.push('b67');
-            if (stats.rubies >= 50) earned.push('b68');
-            if (stats.rubies >= 100) earned.push('b69');
             if (stats.rubies >= 500) earned.push('b70');
             if (stats.coins >= 1000) earned.push('b71');
             if (stats.coins >= 5000) earned.push('b72');
@@ -3514,15 +3506,10 @@
             if (stats.pointBoosterUsed && stats.pointBoosterUsed >= 10) earned.push('b81');
             if (stats.coinBoosterUsed && stats.coinBoosterUsed >= 10) earned.push('b82');
             if (stats.streakBoosterUsed && stats.streakBoosterUsed >= 10) earned.push('b83');
-            if (stats.heartsLost && stats.heartsLost === 0) earned.push('b84');
             if (stats.hearts === stats.maxHearts) earned.push('b85');
             if (accPct >= 80 && total >= 200 && stats.bestStreak >= 50) earned.push('b86');
             if (accPct >= 90 && total >= 500 && stats.bestStreak >= 100) earned.push('b87');
             if (total >= 1000 && stats.correct / total >= 0.7) earned.push('b88');
-            if (total >= 2000) earned.push('b89');
-            if (accPct >= 95 && total >= 200) earned.push('b90');
-            if (stats.fastAnswers && stats.fastAnswers >= 50) earned.push('b91');
-            if (stats.wrong === 0 && total >= 20) earned.push('b92');
             if (stats.quizHistory && stats.quizHistory.length >= 100) earned.push('b93');
             if (stats.level >= 15 && accPct >= 75) earned.push('b94');
             if (stats.correct >= 1000 && accPct >= 80) earned.push('b95');
@@ -3530,13 +3517,75 @@
             if (total >= 5000) earned.push('b97');
             if (stats.correct >= 5000) earned.push('b98');
             if (stats.coins >= 5000 && stats.rubies >= 200) earned.push('b99');
-            if (total >= 10000 && accPct >= 85) earned.push('b100');
+            // b51 Top 10 Leaderboard is handled in renderLeaderboard (kept)
+
+            // --- NEW BADGES (n1–n28) ---
+            // n1–n4 will be handled in renderLeaderboard (top 3 in each category)
+            // n5 Javeda Explorer
+            if (stats.javedaClicks && stats.javedaClicks >= 1) earned.push('n5');
+            // n6 Javeda Scholar
+            if (stats.javedaClicks && stats.javedaClicks >= 5) earned.push('n6');
+            // n7 Hint Hoarder
+            if (stats.hints && stats.hints >= 100) earned.push('n7');
+            // n8 Hint Master
+            if (stats.hints && stats.hints >= 500) earned.push('n8');
+            // n9 Perfect Week
+            if (stats.dailyStreak && stats.dailyStreak >= 7) earned.push('n9');
+            // n10 Monthly Mentor
+            if (stats.dailyStreak && stats.dailyStreak >= 30) earned.push('n10');
+            // n11 Quick Learner
+            if (stats.fastAnswers && stats.fastAnswers >= 100) earned.push('n11');
+            // n12 Marathon Runner
+            if (stats.sessionQuestions && stats.sessionQuestions >= 50) earned.push('n12');
+            // n13 Night Owl
+            if (stats.nightQuestions && stats.nightQuestions >= 20) earned.push('n13');
+            // n14 Early Bird
+            if (stats.earlyQuestions && stats.earlyQuestions >= 20) earned.push('n14');
+            // n15 Revision King
+            if (stats.revisionCorrect && stats.revisionCorrect >= 50) earned.push('n15');
+            // n16 Revision Master
+            if (stats.revisionCorrect && stats.revisionCorrect >= 200) earned.push('n16');
+            // n17 Timer Survivor (no heart lost in timer mode)
+            if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 50 && stats.heartsLost === 0) earned
+                .push('n17');
+            // n18 Timer Legend
+            if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 200) earned.push('n18');
+            // n19 Smart Learner
+            if (stats.smartModeCount && stats.smartModeCount >= 100) earned.push('n19');
+            // n20 Smart Guru
+            if (stats.smartModeCount && stats.smartModeCount >= 500) earned.push('n20');
+            // n21 Coin Millionaire
+            if (stats.coins >= 10000) earned.push('n21');
+            // n22 Ruby Baron
+            if (stats.rubies >= 200) earned.push('n22');
+            // n23 Streak Protector
+            if (stats.streakBoosterUsed && stats.streakBoosterUsed >= 10) earned.push('n23');
+            // n24 Point Booster Fan
+            if (stats.pointBoosterUsed && stats.pointBoosterUsed >= 10) earned.push('n24');
+            // n25 Coin Booster Fan
+            if (stats.coinBoosterUsed && stats.coinBoosterUsed >= 10) earned.push('n25');
+            // n26 Accountant Pro
+            const allCategories = ['asset', 'liability', 'capital', 'revenue', 'expense', 'drawing'];
+            let all50 = true;
+            for (const cat of allCategories) {
+                if ((typeCounts[cat] || 0) < 50) { all50 = false; break; }
+            }
+            if (all50) earned.push('n26');
+            // n27 Ultimate Journal Master (50 badges total)
+            const totalBadges = (stats.earnedBadges || []).length;
+            if (totalBadges >= 50) earned.push('n27');
+            // n28 Journal Legend (75 badges)
+            if (totalBadges >= 75) earned.push('n28');
+
+            // Leaderboard top 3 badges (n1-n4) are added in renderLeaderboard
+            // but we also need to add them here if the user is already top 3
+            // We'll handle that in renderLeaderboard by adding them to stats.earnedBadges
 
             return [...new Set(earned)];
         }
 
         // ================================================================
-        // 8. TOAST
+        // 8. TOAST (unchanged)
         // ================================================================
 
         function showToast(title, desc, icon, type) {
@@ -3590,7 +3639,7 @@
         }
 
         // ================================================================
-        // 9. FIRESTORE HELPERS
+        // 9. FIRESTORE HELPERS (unchanged)
         // ================================================================
 
         const USERS_COLLECTION = 'users';
@@ -3716,7 +3765,7 @@
         }
 
         // ================================================================
-        // 10. STATE
+        // 10. STATE (updated with new fields)
         // ================================================================
 
         let state = {
@@ -3779,6 +3828,13 @@
                 streakBoosterUsed: 0,
                 heartsLost: 0,
                 _heartRefillDone: false,
+                // New fields for new badges
+                javedaClicks: 0,
+                dailyStreak: 0,
+                lastActivityDate: null,
+                sessionQuestions: 0,
+                nightQuestions: 0,
+                earlyQuestions: 0,
             },
             unsubUser: null,
             unsubLeaderboard: null,
@@ -3796,12 +3852,11 @@
             timerRemaining: 5,
             timerActive: false,
             heartRefillInterval: null,
-            // ---- BADGE DEDUPE: track which badges have been shown this session ----
             _shownBadges: new Set(),
         };
 
         // ================================================================
-        // 11. UI HELPERS
+        // 11. UI HELPERS (unchanged)
         // ================================================================
 
         const $ = (sel) => document.querySelector(sel);
@@ -3813,7 +3868,7 @@
         }
 
         // ================================================================
-        // 12. HEART SYSTEM
+        // 12. HEART SYSTEM (unchanged)
         // ================================================================
 
         function checkHeartRefill() {
@@ -3918,7 +3973,7 @@
         }
 
         // ================================================================
-        // 13. BOOSTER SYSTEM
+        // 13. BOOSTER SYSTEM (unchanged)
         // ================================================================
 
         function checkBoosters() {
@@ -4025,7 +4080,7 @@
         }
 
         // ================================================================
-        // 14. SAVE STATS HELPER
+        // 14. SAVE STATS HELPER (unchanged)
         // ================================================================
 
         function saveStats() {
@@ -4046,7 +4101,7 @@
         }
 
         // ================================================================
-        // 15. RENDER FUNCTIONS
+        // 15. RENDER FUNCTIONS (updated to handle new badges)
         // ================================================================
 
         function updateHeaderStats() {
@@ -4577,7 +4632,7 @@
         }
 
         // ================================================================
-        // 16. QUESTION GENERATOR
+        // 16. QUESTION GENERATOR (unchanged)
         // ================================================================
 
         function generateNextQuestionSet() {
@@ -4708,7 +4763,7 @@
         }
 
         // ================================================================
-        // 17. ANSWER HANDLING
+        // 17. ANSWER HANDLING (updated to track daily streak, session, night/early)
         // ================================================================
 
         async function handleAnswer(answer) {
@@ -4732,13 +4787,40 @@
 
             const elapsed = (Date.now() - state.questionStartTime) / 1000;
             if (elapsed <= 3) s.fastAnswers = (s.fastAnswers || 0) + 1;
+            // For Quick Learner (n11) we need fastAnswers >=100 (already tracked)
+            // Marathon Runner (n12) sessionQuestions
+            s.sessionQuestions = (s.sessionQuestions || 0) + 1;
+
+            // Night Owl / Early Bird
+            const hour = new Date().getHours();
+            if (hour >= 0 && hour < 6) {
+                s.nightQuestions = (s.nightQuestions || 0) + 1;
+            }
+            if (hour >= 6 && hour < 9) {
+                s.earlyQuestions = (s.earlyQuestions || 0) + 1;
+            }
+
+            // Daily streak (Perfect Week / Monthly Mentor)
+            const today = new Date().toDateString();
+            if (s.lastActivityDate !== today) {
+                if (s.lastActivityDate) {
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    if (s.lastActivityDate === yesterday.toDateString()) {
+                        s.dailyStreak = (s.dailyStreak || 0) + 1;
+                    } else {
+                        s.dailyStreak = 1;
+                    }
+                } else {
+                    s.dailyStreak = 1;
+                }
+                s.lastActivityDate = today;
+            }
 
             let pointsChanged = 0,
                 xpChanged = 0,
                 coinsChanged = 0,
                 rubiesChanged = 0;
-
-            const prevBadges = new Set(s.earnedBadges || []);
 
             const topicType = q.accountType || 'asset';
             if (s.topicStats && s.topicStats[topicType]) {
@@ -4849,7 +4931,6 @@
             const earnedIds = checkBadges(s);
             s.earnedBadges = earnedIds;
 
-            // ---- BADGE DEDUPE: use _shownBadges to avoid duplicate toasts ----
             const newBadges = earnedIds.filter(id => !state._shownBadges.has(id));
             for (const id of newBadges) {
                 const badge = ALL_BADGES.find(b => b.id === id);
@@ -4858,7 +4939,6 @@
                     setTimeout(() => showBadgeToast(badge), 400);
                 }
             }
-            // Also add all earned badges to _shownBadges so they won't trigger again
             for (const id of earnedIds) {
                 state._shownBadges.add(id);
             }
@@ -4897,7 +4977,7 @@
         }
 
         // ================================================================
-        // 18. HINT SYSTEM
+        // 18. HINT SYSTEM (unchanged)
         // ================================================================
 
         function useHint() {
@@ -4927,7 +5007,7 @@
         }
 
         // ================================================================
-        // 19. SHOP
+        // 19. SHOP (unchanged)
         // ================================================================
 
         function buyHint(hints, price, rubiesBonus) {
@@ -4991,7 +5071,7 @@
         }
 
         // ================================================================
-        // 20. DASHBOARD
+        // 20. DASHBOARD (unchanged)
         // ================================================================
 
         function updateDashboard() {
@@ -5083,7 +5163,7 @@
         }
 
         // ================================================================
-        // 21. REVISION
+        // 21. REVISION (unchanged)
         // ================================================================
 
         async function updateRevisionBadges() {
@@ -5163,7 +5243,7 @@
         }
 
         // ================================================================
-        // 22. LEADERBOARD
+        // 22. LEADERBOARD (updated to add top 3 badges n1–n4)
         // ================================================================
 
         let leaderboardData = [];
@@ -5252,15 +5332,25 @@
                 </tr>`;
             }).join('');
 
+            // Award top 3 badges (n1–n4) based on current leaderboard sort key
             if (currentEmail) {
-                const userRank = sorted.findIndex(e => e.email === currentEmail) + 1;
                 const s = state.stats;
                 const prevBadges = new Set(s.earnedBadges || []);
                 let newBadges = [];
+
+                // Determine top 3 for each category (we need to check based on sorted array)
+                // For simplicity, we check if current user is in top 3 of the sorted list
+                const userRank = sorted.findIndex(e => e.email === currentEmail) + 1;
+                if (userRank > 0 && userRank <= 3) {
+                    if (leaderboardSortKey === 'xp') newBadges.push('n1');
+                    else if (leaderboardSortKey === 'points') newBadges.push('n2');
+                    else if (leaderboardSortKey === 'accuracy') newBadges.push('n3');
+                    else if (leaderboardSortKey === 'badges') newBadges.push('n4');
+                }
+
+                // b51 Top 10 Leaderboard (kept)
                 if (userRank > 0 && userRank <= 10) newBadges.push('b51');
-                if (userRank > 0 && userRank <= 50) newBadges.push('b52');
-                if (userRank > 0 && userRank <= 100) newBadges.push('b53');
-                if (userRank > 0 && userRank <= 500) newBadges.push('b54');
+
                 newBadges = newBadges.filter(id => !prevBadges.has(id));
                 if (newBadges.length > 0) {
                     s.earnedBadges = [...prevBadges, ...newBadges];
@@ -5304,7 +5394,7 @@
         }
 
         // ================================================================
-        // 23. USER DATA LISTENER
+        // 23. USER DATA LISTENER (updated to include new fields)
         // ================================================================
 
         function setupUserDataListener(uid) {
@@ -5367,10 +5457,16 @@
                             streakBoosterUsed: data.streakBoosterUsed || 0,
                             heartsLost: data.heartsLost || 0,
                             _heartRefillDone: false,
+                            // New fields
+                            javedaClicks: data.javedaClicks || 0,
+                            dailyStreak: data.dailyStreak || 0,
+                            lastActivityDate: data.lastActivityDate || null,
+                            sessionQuestions: data.sessionQuestions || 0,
+                            nightQuestions: data.nightQuestions || 0,
+                            earlyQuestions: data.earlyQuestions || 0,
                         };
                         state.stats.level = getLevelFromXP(state.stats.xp);
 
-                        // ---- Initialize _shownBadges with already earned badges ----
                         for (const id of state.stats.earnedBadges || []) {
                             state._shownBadges.add(id);
                         }
@@ -5397,6 +5493,13 @@
                                     wrong: 0 } };
                         }
                         state.stats._heartRefillDone = false;
+                        // Initialize new fields
+                        state.stats.javedaClicks = state.stats.javedaClicks || 0;
+                        state.stats.dailyStreak = state.stats.dailyStreak || 0;
+                        state.stats.lastActivityDate = state.stats.lastActivityDate || null;
+                        state.stats.sessionQuestions = state.stats.sessionQuestions || 0;
+                        state.stats.nightQuestions = state.stats.nightQuestions || 0;
+                        state.stats.earlyQuestions = state.stats.earlyQuestions || 0;
                     }
 
                     state.stats._heartRefillDone = false;
@@ -5421,7 +5524,7 @@
         }
 
         // ================================================================
-        // 24. AUTH HANDLING
+        // 24. AUTH HANDLING (unchanged)
         // ================================================================
 
         function showLogin() {
@@ -5468,10 +5571,16 @@
                                     }
                                     state.stats.level = getLevelFromXP(state.stats.xp);
                                     state.stats._heartRefillDone = false;
-                                    // Initialize _shownBadges
                                     for (const id of state.stats.earnedBadges || []) {
                                         state._shownBadges.add(id);
                                     }
+                                    // Ensure new fields exist
+                                    state.stats.javedaClicks = state.stats.javedaClicks || 0;
+                                    state.stats.dailyStreak = state.stats.dailyStreak || 0;
+                                    state.stats.lastActivityDate = state.stats.lastActivityDate || null;
+                                    state.stats.sessionQuestions = state.stats.sessionQuestions || 0;
+                                    state.stats.nightQuestions = state.stats.nightQuestions || 0;
+                                    state.stats.earlyQuestions = state.stats.earlyQuestions || 0;
                                 }
                             }
                         } catch (e) {}
@@ -5509,10 +5618,15 @@
                             state.stats.level = getLevelFromXP(state.stats.xp);
                             state.stats._heartRefillDone = false;
                             state.statsLoaded = true;
-                            // Initialize _shownBadges
                             for (const id of state.stats.earnedBadges || []) {
                                 state._shownBadges.add(id);
                             }
+                            state.stats.javedaClicks = state.stats.javedaClicks || 0;
+                            state.stats.dailyStreak = state.stats.dailyStreak || 0;
+                            state.stats.lastActivityDate = state.stats.lastActivityDate || null;
+                            state.stats.sessionQuestions = state.stats.sessionQuestions || 0;
+                            state.stats.nightQuestions = state.stats.nightQuestions || 0;
+                            state.stats.earlyQuestions = state.stats.earlyQuestions || 0;
                             checkHeartRefill();
                             updateHeaderStats();
                             updateDashboard();
@@ -5538,7 +5652,7 @@
         }
 
         // ================================================================
-        // 25. NAVIGATION
+        // 25. NAVIGATION (unchanged)
         // ================================================================
 
         function navigateTo(section) {
@@ -5557,7 +5671,7 @@
         }
 
         // ================================================================
-        // 26. INIT
+        // 26. INIT (updated with Learn Javeda click tracking)
         // ================================================================
 
         function init() {
@@ -5601,10 +5715,15 @@
                         }
                         state.stats.level = getLevelFromXP(state.stats.xp);
                         state.stats._heartRefillDone = false;
-                        // Initialize _shownBadges
                         for (const id of state.stats.earnedBadges || []) {
                             state._shownBadges.add(id);
                         }
+                        state.stats.javedaClicks = state.stats.javedaClicks || 0;
+                        state.stats.dailyStreak = state.stats.dailyStreak || 0;
+                        state.stats.lastActivityDate = state.stats.lastActivityDate || null;
+                        state.stats.sessionQuestions = state.stats.sessionQuestions || 0;
+                        state.stats.nightQuestions = state.stats.nightQuestions || 0;
+                        state.stats.earlyQuestions = state.stats.earlyQuestions || 0;
                     }
                 } catch (e) {}
                 checkHeartRefill();
@@ -5647,6 +5766,29 @@
                     localStorage.removeItem('guest_id');
                     showToast('Signed Out', 'You have been signed out.', 'fa-sign-out-alt', 'gain');
                 } catch (e) { console.error('Logout error:', e); }
+            });
+
+            // Learn Javeda button click tracking
+            document.getElementById('learnJavedaBtn').addEventListener('click', function(e) {
+                const s = state.stats;
+                s.javedaClicks = (s.javedaClicks || 0) + 1;
+                // Check for new badges immediately (Javeda Explorer/Scholar)
+                const earnedIds = checkBadges(s);
+                const prevBadges = new Set(s.earnedBadges || []);
+                const newBadges = earnedIds.filter(id => !prevBadges.has(id));
+                if (newBadges.length > 0) {
+                    s.earnedBadges = [...prevBadges, ...newBadges];
+                    for (const id of newBadges) {
+                        const badge = ALL_BADGES.find(b => b.id === id);
+                        if (badge && !state._shownBadges.has(id)) {
+                            state._shownBadges.add(id);
+                            setTimeout(() => showBadgeToast(badge), 300);
+                        }
+                    }
+                    updateBadges();
+                    saveStats();
+                }
+                // Allow navigation to lern.html
             });
 
             $$('.diff-btn').forEach(btn => {
@@ -6052,7 +6194,7 @@
             updateHeartsDisplay();
             updateBoosterStatus();
 
-            console.log('📘 Version : 5.0.1 (Badge dedupe + chart removed + shop prices updated)');
+            console.log('📘 Version : 6.0.0 - New 28 badges with new logic (Leaderboard, Javeda, hints, streaks, etc.)');
             console.log('✅ Developed By - Faizul Islam Riyad');
         }
 
