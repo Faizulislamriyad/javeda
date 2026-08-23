@@ -1,115 +1,6 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyCvEyo8iJg-sGb5MVINjTR_q3ANMPeTd0o",
-  authDomain: "javeda-21ddd.firebaseapp.com",
-  projectId: "javeda-21ddd",
-  storageBucket: "javeda-21ddd.firebasestorage.app",
-  messagingSenderId: "72745884521",
-  appId: "1:72745884521:web:cd6c4818b97cc4ec8dbbf8",
-  measurementId: "G-J4Y1WJBL6K",
-};
-
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-
 // ================================================================
-// MAINTENANCE PAUSE DETECTION (unchanged)
+// 1. HELPERS (যেগুলো Firebase নির্ভর নয়)
 // ================================================================
-
-(function () {
-  const overlay = document.getElementById("maintenanceOverlay");
-  const countdownEl = document.getElementById("maintenanceCountdown");
-  let countdownInterval = null;
-
-  function showMaintenance(until) {
-    if (overlay) {
-      overlay.classList.add("active");
-      overlay.style.display = "flex";
-      document.body.style.overflow = "hidden";
-      startCountdown(until);
-    }
-  }
-
-  function hideMaintenance() {
-    if (overlay) {
-      overlay.classList.remove("active");
-      overlay.style.display = "none";
-      document.body.style.overflow = "";
-      if (countdownInterval) {
-        clearInterval(countdownInterval);
-        countdownInterval = null;
-      }
-    }
-  }
-
-  function startCountdown(until) {
-    if (countdownInterval) clearInterval(countdownInterval);
-    countdownInterval = setInterval(() => {
-      const remaining = Math.max(0, until - Date.now());
-      if (remaining <= 0) {
-        clearInterval(countdownInterval);
-        countdownInterval = null;
-        hideMaintenance();
-        return;
-      }
-      const mins = Math.floor(remaining / 60000);
-      const secs = Math.floor((remaining % 60000) / 1000);
-      if (countdownEl) {
-        countdownEl.textContent = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
-      }
-    }, 1000);
-  }
-
-  try {
-    db.collection("config")
-      .doc("pause")
-      .onSnapshot(
-        (doc) => {
-          if (doc.exists) {
-            const data = doc.data();
-            if (
-              data.paused &&
-              data.pausedUntil &&
-              data.pausedUntil > Date.now()
-            ) {
-              showMaintenance(data.pausedUntil);
-            } else {
-              hideMaintenance();
-              if (
-                data.paused &&
-                data.pausedUntil &&
-                data.pausedUntil <= Date.now()
-              ) {
-                db.collection("config").doc("pause").set(
-                  {
-                    paused: false,
-                    pausedUntil: null,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                  },
-                  { merge: true },
-                );
-              }
-            }
-          } else {
-            hideMaintenance();
-          }
-        },
-        (error) => {
-          console.error("Maintenance listener error:", error);
-        },
-      );
-  } catch (e) {
-    console.warn("Maintenance feature requires Firebase initialization.");
-  }
-})();
-
-// ================================================================
-// 1. HELPERS (unchanged)
-// ================================================================
-
-function isGuestUid(uid) {
-  return uid && uid.startsWith("guest_");
-}
 
 function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -142,7 +33,6 @@ function getXPProgress(xp) {
   return { level, current, next, progress: Math.min(1, progress) };
 }
 
-// ===== REWARD SYSTEM (unchanged) =====
 function getRewards(diff, correct, isRevision, timerMode, timerSec, boosters) {
   if (isRevision) {
     return { points: 0, xp: 0, coins: 1, rubies: 0 };
@@ -249,7 +139,7 @@ function getRandomName() {
 }
 
 // ================================================================
-// 2. MASTER ACCOUNT CLASSIFICATION SYSTEM (unchanged)
+// 2. MASTER ACCOUNT CLASSIFICATION SYSTEM
 // ================================================================
 
 const ACCOUNT_CLASSIFICATIONS = {
@@ -518,7 +408,7 @@ BENGALI_NAMES["Debtor"] = "দেনাদার";
 BENGALI_NAMES["Creditor"] = "পাওনাদার";
 
 // ================================================================
-// 3. TEMPLATE DEFINITIONS (unchanged)
+// 3. TEMPLATE DEFINITIONS
 // ================================================================
 
 const TEMPLATE_DEFINITIONS = {
@@ -914,7 +804,7 @@ const TEMPLATE_DEFINITIONS = {
 };
 
 // ================================================================
-// 4. DIFFICULTY FILTERING & DIVERSITY (unchanged)
+// 4. DIFFICULTY FILTERING & DIVERSITY
 // ================================================================
 
 function getAvailableTemplates(mode) {
@@ -994,7 +884,7 @@ function pickTemplateWithDiversity(mode, smartBias) {
 }
 
 // ================================================================
-// 5. TRANSACTION GENERATOR (unchanged)
+// 5. TRANSACTION GENERATOR
 // ================================================================
 
 function generateTransactionFromTemplate(templateInfo, mode) {
@@ -1065,7 +955,7 @@ function generateTransactionFromTemplate(templateInfo, mode) {
 }
 
 // ================================================================
-// 6. SMART TRACKER (unchanged)
+// 6. SMART TRACKER
 // ================================================================
 
 const SMART_TRACKER = {
@@ -1199,21 +1089,8 @@ function showModeChangeToast(newMode) {
 }
 
 // ================================================================
-// 7. BADGES (TOTAL 100) — NEW BADGES WITH NEW LOGIC
+// 7. BADGES (TOTAL 100)
 // ================================================================
-
-// This array holds all 100 badges. The 28 removed badges are replaced with new ones (n1–n28).
-// The remaining 72 badges are kept as before (b3,b4,b5,b7,b8,b9,b10,b11,b13,b14,b16,b17,b18,b19,b20,
-// b21,b22,b23,b24,b25,b26,b27,b28,b29,b30,b31,b32,b33,b34,b35,b36,b37,b38,b39,b40,b42,b43,b44,
-// b46,b50,b51,b55,b56,b57,b58,b59,b63,b70,b71,b72,b73,b74,b75,b76,b77,b78,b79,b80,b81,b82,b83,b85,
-// b86,b87,b88,b93,b94,b95,b96,b97,b98,b99)
-// plus the new ones: n1–n28.
-
-function generateExtraBadges() {
-  // Keep only the extra badges that are not removed (b51, b55–b59, b63, b70–b83, b85–b88, b93–b99)
-  // We will build ALL_BADGES manually below.
-  return [];
-}
 
 const ALL_BADGES = [
   // === REPLACED 28 BADGES (NEW ONES) ===
@@ -1323,7 +1200,6 @@ const ALL_BADGES = [
 
 console.assert(ALL_BADGES.length === 100, "Badges count should be 100");
 
-// ===== BADGE UNLOCK LOGIC =====
 function checkBadges(stats) {
   const earned = [];
   const total = stats.correct + stats.wrong;
@@ -1345,7 +1221,7 @@ function checkBadges(stats) {
     }
   }
 
-  // --- Existing kept badges (b3,b4,...) same logic as before ---
+  // Existing kept badges
   if (
     stats.correct >= 1 &&
     stats.quizHistory &&
@@ -1403,7 +1279,7 @@ function checkBadges(stats) {
   if (stats.smartModeCount && stats.smartModeCount >= 50) earned.push("b46");
   if (stats.correct >= 5000) earned.push("b50");
 
-  // Timer badges (kept)
+  // Timer badges
   if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 10)
     earned.push("b55");
   if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 50)
@@ -1446,62 +1322,38 @@ function checkBadges(stats) {
   if (total >= 5000) earned.push("b97");
   if (stats.correct >= 5000) earned.push("b98");
   if (stats.coins >= 5000 && stats.rubies >= 200) earned.push("b99");
-  // b51 Top 10 Leaderboard is handled in renderLeaderboard (kept)
 
-  // --- NEW BADGES (n1–n28) ---
-  // n1–n4 will be handled in renderLeaderboard (top 3 in each category)
-  // n5 Javeda Explorer
+  // New badges
   if (stats.javedaClicks && stats.javedaClicks >= 1) earned.push("n5");
-  // n6 Javeda Scholar
   if (stats.javedaClicks && stats.javedaClicks >= 5) earned.push("n6");
-  // n7 Hint Hoarder
   if (stats.hints && stats.hints >= 100) earned.push("n7");
-  // n8 Hint Master
   if (stats.hints && stats.hints >= 500) earned.push("n8");
-  // n9 Perfect Week
   if (stats.dailyStreak && stats.dailyStreak >= 7) earned.push("n9");
-  // n10 Monthly Mentor
   if (stats.dailyStreak && stats.dailyStreak >= 30) earned.push("n10");
-  // n11 Quick Learner
   if (stats.fastAnswers && stats.fastAnswers >= 100) earned.push("n11");
-  // n12 Marathon Runner
   if (stats.sessionQuestions && stats.sessionQuestions >= 50)
     earned.push("n12");
-  // n13 Night Owl
   if (stats.nightQuestions && stats.nightQuestions >= 20) earned.push("n13");
-  // n14 Early Bird
   if (stats.earlyQuestions && stats.earlyQuestions >= 20) earned.push("n14");
-  // n15 Revision King
   if (stats.revisionCorrect && stats.revisionCorrect >= 50) earned.push("n15");
-  // n16 Revision Master
   if (stats.revisionCorrect && stats.revisionCorrect >= 200) earned.push("n16");
-  // n17 Timer Survivor (no heart lost in timer mode)
   if (
     stats.timerQuestionsCompleted &&
     stats.timerQuestionsCompleted >= 50 &&
     stats.heartsLost === 0
   )
     earned.push("n17");
-  // n18 Timer Legend
   if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 200)
     earned.push("n18");
-  // n19 Smart Learner
   if (stats.smartModeCount && stats.smartModeCount >= 100) earned.push("n19");
-  // n20 Smart Guru
   if (stats.smartModeCount && stats.smartModeCount >= 500) earned.push("n20");
-  // n21 Coin Millionaire
   if (stats.coins >= 10000) earned.push("n21");
-  // n22 Ruby Baron
   if (stats.rubies >= 200) earned.push("n22");
-  // n23 Streak Protector
   if (stats.streakBoosterUsed && stats.streakBoosterUsed >= 10)
     earned.push("n23");
-  // n24 Point Booster Fan
   if (stats.pointBoosterUsed && stats.pointBoosterUsed >= 10)
     earned.push("n24");
-  // n25 Coin Booster Fan
   if (stats.coinBoosterUsed && stats.coinBoosterUsed >= 10) earned.push("n25");
-  // n26 Accountant Pro
   const allCategories = [
     "asset",
     "liability",
@@ -1518,321 +1370,15 @@ function checkBadges(stats) {
     }
   }
   if (all50) earned.push("n26");
-  // n27 Ultimate Journal Master (50 badges total)
   const totalBadges = (stats.earnedBadges || []).length;
   if (totalBadges >= 50) earned.push("n27");
-  // n28 Journal Legend (75 badges)
   if (totalBadges >= 75) earned.push("n28");
-
-  // Leaderboard top 3 badges (n1-n4) are added in renderLeaderboard
-  // but we also need to add them here if the user is already top 3
-  // We'll handle that in renderLeaderboard by adding them to stats.earnedBadges
 
   return [...new Set(earned)];
 }
 
 // ================================================================
-// 8. TOAST (unchanged)
-// ================================================================
-
-function showToast(title, desc, icon, type) {
-  const container = document.getElementById("toastContainer");
-  if (!container) return;
-  const toast = document.createElement("div");
-  toast.className =
-    "toast" +
-    (type === "badge" ? " badge-toast" : "") +
-    (type === "hint" ? " hint-toast" : "");
-  const iconClass =
-    type === "gain"
-      ? "gain"
-      : type === "loss"
-        ? "loss"
-        : type === "badge"
-          ? ""
-          : type === "hint"
-            ? "coin"
-            : "xp-gain";
-  toast.innerHTML = `<div class="toast-icon ${iconClass}"><i class="fas ${icon}"></i></div><div class="toast-content"><div class="toast-title">${title}</div><div class="toast-desc">${desc}</div></div><button class="toast-close"><i class="fas fa-times"></i></button>`;
-  container.appendChild(toast);
-  requestAnimationFrame(() => toast.classList.add("show"));
-  toast
-    .querySelector(".toast-close")
-    .addEventListener("click", () => dismissToast(toast));
-  const timeout = setTimeout(() => dismissToast(toast), 3500);
-  toast._timeout = timeout;
-  const toasts = container.querySelectorAll(".toast");
-  if (toasts.length > 4) dismissToast(toasts[0]);
-}
-
-function dismissToast(toast) {
-  if (toast._dismissed) return;
-  toast._dismissed = true;
-  if (toast._timeout) {
-    clearTimeout(toast._timeout);
-    toast._timeout = null;
-  }
-  toast.classList.remove("show");
-  toast.classList.add("hide");
-  setTimeout(() => {
-    if (toast.parentNode) toast.parentNode.removeChild(toast);
-  }, 400);
-}
-
-function showBadgeToast(badge) {
-  showToast(
-    `Badge Unlocked: ${badge.name}`,
-    badge.icon + " " + badge.name,
-    "fa-award",
-    "badge",
-  );
-}
-
-function showCoinToast(coins) {
-  if (coins > 0)
-    showToast(
-      "Coins Earned!",
-      `+${coins} <i class="fas fa-coins" style="color:#d4a017;"></i>`,
-      "fa-coins",
-      "hint",
-    );
-}
-
-function showRubyToast(rubies) {
-  if (rubies > 0)
-    showToast(
-      "Ruby Earned!",
-      `+${rubies} <i class="fas fa-gem" style="color:var(--ruby-color);"></i>`,
-      "fa-gem",
-      "gain",
-    );
-}
-
-function showHeartToast(hearts, lost) {
-  if (lost) {
-    showToast(
-      "💔 Heart Lost!",
-      `${hearts} hearts remaining.`,
-      "fa-heart",
-      "loss",
-    );
-  } else {
-    showToast(
-      "❤️ Heart Refilled!",
-      `${hearts} hearts available.`,
-      "fa-heart",
-      "gain",
-    );
-  }
-}
-
-// ================================================================
-// 9. FIRESTORE HELPERS (unchanged)
-// ================================================================
-
-const USERS_COLLECTION = "users";
-const REVISION_COLLECTION = "revisionQuestions";
-
-function getGuestRevisionKey(guestId) {
-  return `guest_revision_${guestId}`;
-}
-
-function loadGuestRevisions(guestId) {
-  try {
-    const raw = localStorage.getItem(getGuestRevisionKey(guestId));
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveGuestRevisions(guestId, data) {
-  try {
-    localStorage.setItem(getGuestRevisionKey(guestId), JSON.stringify(data));
-  } catch (e) {}
-}
-
-async function saveUserStats(uid, data) {
-  if (isGuestUid(uid) || !auth.currentUser) {
-    const guestId = localStorage.getItem("guest_id") || "guest";
-    try {
-      localStorage.setItem("guest_stats_" + guestId, JSON.stringify(data));
-    } catch (e) {}
-    return false;
-  }
-  const email = auth.currentUser.email;
-  if (!email) return false;
-  try {
-    const docId = email.replace(/[.#$\/\[\]]/g, "_");
-    await db
-      .collection(USERS_COLLECTION)
-      .doc(docId)
-      .set(
-        {
-          email,
-          displayName: auth.currentUser.displayName || "User",
-          photoURL: auth.currentUser.photoURL || "",
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-          ...data,
-        },
-        { merge: true },
-      );
-    return true;
-  } catch (e) {
-    console.error("Save error:", e);
-    return false;
-  }
-}
-
-async function saveRevisionQuestion(qData, tData, journal) {
-  const guestId = localStorage.getItem("guest_id");
-  if (!auth.currentUser && guestId) {
-    const revisions = loadGuestRevisions(guestId);
-    revisions.push({
-      id: "rev_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4),
-      timestamp: Date.now(),
-      question: {
-        accountName: qData.accountName,
-        accountType: qData.accountType,
-        effect: qData.effect,
-        correctAnswer: qData.correctAnswer,
-        explanation: qData.explanation,
-        ruleText: qData.ruleText,
-      },
-      transaction: {
-        display: tData.description,
-        account: qData.accountName,
-        accountType: qData.accountType,
-        effect: qData.effect,
-        amount: tData.amount || 0,
-      },
-      displayText: tData.description,
-      accountDisplay: qData.accountName,
-      questionAccount: qData.accountName,
-      questionType: qData.accountType,
-      questionEffect: qData.effect,
-      pattern: {
-        type: qData.accountType,
-        effect: qData.effect,
-        account: qData.accountName,
-        category: qData.accountType,
-      },
-      journal: journal.map((j) => ({
-        account: j.account,
-        type: j.type,
-        side: j.side,
-        amount: j.amount,
-      })),
-    });
-    saveGuestRevisions(guestId, revisions);
-    return true;
-  }
-  try {
-    const email = auth.currentUser ? auth.currentUser.email : null;
-    if (!email) return false;
-    const docId = email.replace(/[.#$\/\[\]]/g, "_");
-    await db.collection(REVISION_COLLECTION).add({
-      userId: docId,
-      email: email,
-      timestamp: Date.now(),
-      question: {
-        accountName: qData.accountName,
-        accountType: qData.accountType,
-        effect: qData.effect,
-        correctAnswer: qData.correctAnswer,
-        explanation: qData.explanation,
-        ruleText: qData.ruleText,
-      },
-      transaction: {
-        display: tData.description,
-        account: qData.accountName,
-        accountType: qData.accountType,
-        effect: qData.effect,
-        amount: tData.amount || 0,
-      },
-      displayText: tData.description,
-      accountDisplay: qData.accountName,
-      questionAccount: qData.accountName,
-      questionType: qData.accountType,
-      questionEffect: qData.effect,
-      pattern: {
-        type: qData.accountType,
-        effect: qData.effect,
-        account: qData.accountName,
-        category: qData.accountType,
-      },
-      journal: journal.map((j) => ({
-        account: j.account,
-        type: j.type,
-        side: j.side,
-        amount: j.amount,
-      })),
-    });
-    return true;
-  } catch (e) {
-    console.error("Save revision error:", e);
-    return false;
-  }
-}
-
-async function fetchRevisionQuestions() {
-  const guestId = localStorage.getItem("guest_id");
-  if (!auth.currentUser && guestId) {
-    const data = loadGuestRevisions(guestId);
-    return data.map((d) => ({ ...d, id: d.id || "rev_" + Date.now() }));
-  }
-  try {
-    const email = auth.currentUser ? auth.currentUser.email : null;
-    if (!email) return [];
-    const docId = email.replace(/[.#$\/\[\]]/g, "_");
-    const s = await db
-      .collection(REVISION_COLLECTION)
-      .where("userId", "==", docId)
-      .get();
-    const docs = [];
-    s.forEach((d) => docs.push({ id: d.id, ...d.data() }));
-    docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-    return docs;
-  } catch (e) {
-    return [];
-  }
-}
-
-async function deleteRevisionQuestion(id) {
-  const guestId = localStorage.getItem("guest_id");
-  if (!auth.currentUser && guestId) {
-    let revisions = loadGuestRevisions(guestId);
-    revisions = revisions.filter((d) => d.id !== id);
-    saveGuestRevisions(guestId, revisions);
-    return true;
-  }
-  try {
-    await db.collection(REVISION_COLLECTION).doc(id).delete();
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-async function getRevisionCount() {
-  const guestId = localStorage.getItem("guest_id");
-  if (!auth.currentUser && guestId) return loadGuestRevisions(guestId).length;
-  try {
-    const email = auth.currentUser ? auth.currentUser.email : null;
-    if (!email) return 0;
-    const docId = email.replace(/[.#$\/\[\]]/g, "_");
-    const s = await db
-      .collection(REVISION_COLLECTION)
-      .where("userId", "==", docId)
-      .get();
-    return s.size;
-  } catch (e) {
-    return 0;
-  }
-}
-
-// ================================================================
-// 10. STATE (updated with new fields)
+// 8. STATE
 // ================================================================
 
 let state = {
@@ -1900,7 +1446,6 @@ let state = {
     streakBoosterUsed: 0,
     heartsLost: 0,
     _heartRefillDone: false,
-    // New fields for new badges
     javedaClicks: 0,
     dailyStreak: 0,
     lastActivityDate: null,
@@ -1928,7 +1473,7 @@ let state = {
 };
 
 // ================================================================
-// 11. UI HELPERS (unchanged)
+// 9. UI HELPERS
 // ================================================================
 
 const $ = (sel) => document.querySelector(sel);
@@ -1940,7 +1485,7 @@ function setText(id, value) {
 }
 
 // ================================================================
-// 12. HEART SYSTEM (unchanged)
+// 10. HEART SYSTEM
 // ================================================================
 
 function checkHeartRefill() {
@@ -2056,7 +1601,7 @@ function loseHeart() {
 }
 
 // ================================================================
-// 13. BOOSTER SYSTEM (unchanged)
+// 11. BOOSTER SYSTEM
 // ================================================================
 
 function checkBoosters() {
@@ -2193,30 +1738,7 @@ function activateBooster(type, duration, costCoins, costRubies) {
 }
 
 // ================================================================
-// 14. SAVE STATS HELPER (unchanged)
-// ================================================================
-
-function saveStats() {
-  const s = state.stats;
-  if (state.isGuest) {
-    try {
-      localStorage.setItem("guest_stats_" + state.guestId, JSON.stringify(s));
-    } catch (e) {}
-  } else if (auth.currentUser && state.statsLoaded) {
-    saveUserStats(auth.currentUser.uid, s);
-  } else if (auth.currentUser && !state.statsLoaded) {
-    state.pendingSave = { uid: auth.currentUser.uid, stats: { ...s } };
-    setTimeout(async () => {
-      if (state.statsLoaded && state.pendingSave) {
-        await saveUserStats(state.pendingSave.uid, state.pendingSave.stats);
-        state.pendingSave = null;
-      }
-    }, 1500);
-  }
-}
-
-// ================================================================
-// 15. RENDER FUNCTIONS (updated to handle new badges)
+// 12. RENDER FUNCTIONS (UI updates)
 // ================================================================
 
 function updateHeaderStats() {
@@ -2780,7 +2302,7 @@ function advanceQuestion() {
 }
 
 // ================================================================
-// 16. QUESTION GENERATOR (unchanged)
+// 13. QUESTION GENERATOR
 // ================================================================
 
 function generateNextQuestionSet() {
@@ -2930,7 +2452,7 @@ function generateNextQuestionSet() {
 }
 
 // ================================================================
-// 17. ANSWER HANDLING (updated to track daily streak, session, night/early)
+// 14. ANSWER HANDLING
 // ================================================================
 
 async function handleAnswer(answer) {
@@ -2961,11 +2483,8 @@ async function handleAnswer(answer) {
 
   const elapsed = (Date.now() - state.questionStartTime) / 1000;
   if (elapsed <= 3) s.fastAnswers = (s.fastAnswers || 0) + 1;
-  // For Quick Learner (n11) we need fastAnswers >=100 (already tracked)
-  // Marathon Runner (n12) sessionQuestions
   s.sessionQuestions = (s.sessionQuestions || 0) + 1;
 
-  // Night Owl / Early Bird
   const hour = new Date().getHours();
   if (hour >= 0 && hour < 6) {
     s.nightQuestions = (s.nightQuestions || 0) + 1;
@@ -2974,7 +2493,6 @@ async function handleAnswer(answer) {
     s.earlyQuestions = (s.earlyQuestions || 0) + 1;
   }
 
-  // Daily streak (Perfect Week / Monthly Mentor)
   const today = new Date().toDateString();
   if (s.lastActivityDate !== today) {
     if (s.lastActivityDate) {
@@ -3178,7 +2696,7 @@ async function handleAnswer(answer) {
 }
 
 // ================================================================
-// 18. HINT SYSTEM (unchanged)
+// 15. HINT SYSTEM
 // ================================================================
 
 function useHint() {
@@ -3222,7 +2740,7 @@ function useHint() {
 }
 
 // ================================================================
-// 19. SHOP (unchanged)
+// 16. SHOP
 // ================================================================
 
 function buyHint(hints, price, rubiesBonus) {
@@ -3310,7 +2828,7 @@ function updateShopUI() {
 }
 
 // ================================================================
-// 20. DASHBOARD (unchanged)
+// 17. DASHBOARD
 // ================================================================
 
 function updateDashboard() {
@@ -3422,7 +2940,7 @@ function updateWeakTopics() {
 }
 
 // ================================================================
-// 21. REVISION (unchanged)
+// 18. REVISION
 // ================================================================
 
 async function updateRevisionBadges() {
@@ -3515,16 +3033,25 @@ async function loadRevisionQueue() {
 }
 
 // ================================================================
-// 22. LEADERBOARD (updated to add top 3 badges n1–n4)
+// 19. LEADERBOARD (Render only)
 // ================================================================
-
-let leaderboardData = [];
-let leaderboardSortKey = "xp";
 
 function renderLeaderboard() {
   const tbody = document.getElementById("lbBody");
   const empty = document.getElementById("lbEmpty");
-  if (!tbody) return;
+  if (!tbody || !empty) return;
+
+  // --- GUEST CHECK ---
+  if (state.isGuest) {
+    tbody.innerHTML = "";
+    empty.style.display = "block";
+    empty.innerHTML = `
+            <i class="fas fa-lock" style="font-size:48px;color:var(--accent-1);"></i>
+            <h3>Log in to View the Leaderboard</h3>
+            <p>Sign in with Google to see rankings and compete with others.</p>
+        `;
+    return;
+  }
 
   const currentEmail = auth.currentUser ? auth.currentUser.email : null;
 
@@ -3633,14 +3160,12 @@ function renderLeaderboard() {
     })
     .join("");
 
-  // Award top 3 badges (n1–n4) based on current leaderboard sort key
+  // Award top 3 badges (n1–n4)
   if (currentEmail) {
     const s = state.stats;
     const prevBadges = new Set(s.earnedBadges || []);
     let newBadges = [];
 
-    // Determine top 3 for each category (we need to check based on sorted array)
-    // For simplicity, we check if current user is in top 3 of the sorted list
     const userRank = sorted.findIndex((e) => e.email === currentEmail) + 1;
     if (userRank > 0 && userRank <= 3) {
       if (leaderboardSortKey === "xp") newBadges.push("n1");
@@ -3649,7 +3174,6 @@ function renderLeaderboard() {
       else if (leaderboardSortKey === "badges") newBadges.push("n4");
     }
 
-    // b51 Top 10 Leaderboard (kept)
     if (userRank > 0 && userRank <= 10) newBadges.push("b51");
 
     newBadges = newBadges.filter((id) => !prevBadges.has(id));
@@ -3670,338 +3194,8 @@ function renderLeaderboard() {
   }
 }
 
-function setupLeaderboardListener() {
-  if (state.unsubLeaderboard) {
-    state.unsubLeaderboard();
-    state.unsubLeaderboard = null;
-  }
-  state.unsubLeaderboard = db
-    .collection(USERS_COLLECTION)
-    .orderBy("xp", "desc")
-    .limit(200)
-    .onSnapshot(
-      (snapshot) => {
-        const users = [];
-        snapshot.forEach((doc) => {
-          const data = doc.data();
-          const email = data.email || doc.id;
-          if (isGuestUid(email)) return;
-          const total = (data.correct || 0) + (data.wrong || 0);
-          const acc =
-            total > 0 ? Math.round(((data.correct || 0) / total) * 100) : 0;
-          const badges = (data.earnedBadges || []).length;
-          users.push({
-            id: doc.id,
-            email: email,
-            name: data.displayName || "User",
-            xp: data.xp || 0,
-            points: data.points || 0,
-            accuracy: acc,
-            photoURL: data.photoURL || "",
-            badges: badges,
-            isUser: false,
-          });
-        });
-        leaderboardData = users;
-        renderLeaderboard();
-      },
-      (error) => {
-        console.error("Leaderboard error:", error);
-      },
-    );
-}
-
 // ================================================================
-// 23. USER DATA LISTENER (updated to include new fields)
-// ================================================================
-
-function setupUserDataListener(uid) {
-  if (state.unsubUser) {
-    state.unsubUser();
-    state.unsubUser = null;
-  }
-  if (isGuestUid(uid)) return;
-
-  const email = auth.currentUser ? auth.currentUser.email : null;
-  if (!email) return;
-  const docId = email.replace(/[.#$\/\[\]]/g, "_");
-
-  state.unsubUser = db
-    .collection(USERS_COLLECTION)
-    .doc(docId)
-    .onSnapshot(
-      (doc) => {
-        state.statsLoaded = true;
-        state.statsLoadAttempted = true;
-
-        if (doc.exists) {
-          const data = doc.data();
-          state.stats = {
-            totalQuestions: data.totalQuestions || 0,
-            correct: data.correct || 0,
-            wrong: data.wrong || 0,
-            streak: data.streak || 0,
-            bestStreak: data.bestStreak || 0,
-            xp: data.xp || 0,
-            points: data.points || 0,
-            coins: data.coins || 0,
-            rubies: data.rubies || 0,
-            hints: data.hints || 0,
-            level: data.level || 1,
-            accuracyHistory: data.accuracyHistory || [],
-            weakRules: data.weakRules || {},
-            quizHistory: data.quizHistory || [],
-            fastAnswers: data.fastAnswers || 0,
-            ruleBreakerCount: data.ruleBreakerCount || 0,
-            focusCount: data.focusCount || 0,
-            smartModeCount: data.smartModeCount || 0,
-            earnedBadges: data.earnedBadges || [],
-            smartCategoryData: data.smartCategoryData || {},
-            effectiveDifficulty: data.effectiveDifficulty || "easy",
-            hearts: data.hearts !== undefined ? data.hearts : 5,
-            maxHearts: data.maxHearts || 5,
-            lastHeartRefill: data.lastHeartRefill || Date.now(),
-            timerWrongCount: data.timerWrongCount || 0,
-            pointBoosterActive: data.pointBoosterActive || false,
-            pointBoosterExpiry: data.pointBoosterExpiry || 0,
-            coinBoosterActive: data.coinBoosterActive || false,
-            coinBoosterExpiry: data.coinBoosterExpiry || 0,
-            noStreakBreakRemaining: data.noStreakBreakRemaining || 0,
-            topicStats: data.topicStats || {
-              asset: { total: 0, wrong: 0 },
-              liability: { total: 0, wrong: 0 },
-              capital: { total: 0, wrong: 0 },
-              revenue: { total: 0, wrong: 0 },
-              expense: { total: 0, wrong: 0 },
-              drawing: { total: 0, wrong: 0 },
-            },
-            timerQuestionsCompleted: data.timerQuestionsCompleted || 0,
-            timer5sCompleted: data.timer5sCompleted || 0,
-            timer10sCompleted: data.timer10sCompleted || 0,
-            revisionCorrect: data.revisionCorrect || 0,
-            pointBoosterUsed: data.pointBoosterUsed || 0,
-            coinBoosterUsed: data.coinBoosterUsed || 0,
-            streakBoosterUsed: data.streakBoosterUsed || 0,
-            heartsLost: data.heartsLost || 0,
-            _heartRefillDone: false,
-            // New fields
-            javedaClicks: data.javedaClicks || 0,
-            dailyStreak: data.dailyStreak || 0,
-            lastActivityDate: data.lastActivityDate || null,
-            sessionQuestions: data.sessionQuestions || 0,
-            nightQuestions: data.nightQuestions || 0,
-            earlyQuestions: data.earlyQuestions || 0,
-          };
-          state.stats.level = getLevelFromXP(state.stats.xp);
-
-          for (const id of state.stats.earnedBadges || []) {
-            state._shownBadges.add(id);
-          }
-
-          if (state.smartMode && state.stats.smartCategoryData) {
-            SMART_TRACKER.categoryCounts = state.stats.smartCategoryData;
-            SMART_TRACKER.baseMode = state.difficulty;
-            SMART_TRACKER.smartDifficulty =
-              state.stats.effectiveDifficulty || state.difficulty;
-          }
-
-          if (state.pendingSave) {
-            const ps = state.pendingSave;
-            Object.assign(state.stats, ps.stats);
-            state.stats.level = getLevelFromXP(state.stats.xp);
-            saveUserStats(ps.uid, state.stats);
-            state.pendingSave = null;
-          }
-        } else {
-          if (!state.stats.topicStats) {
-            state.stats.topicStats = {
-              asset: { total: 0, wrong: 0 },
-              liability: { total: 0, wrong: 0 },
-              capital: { total: 0, wrong: 0 },
-              revenue: { total: 0, wrong: 0 },
-              expense: { total: 0, wrong: 0 },
-              drawing: { total: 0, wrong: 0 },
-            };
-          }
-          state.stats._heartRefillDone = false;
-          // Initialize new fields
-          state.stats.javedaClicks = state.stats.javedaClicks || 0;
-          state.stats.dailyStreak = state.stats.dailyStreak || 0;
-          state.stats.lastActivityDate = state.stats.lastActivityDate || null;
-          state.stats.sessionQuestions = state.stats.sessionQuestions || 0;
-          state.stats.nightQuestions = state.stats.nightQuestions || 0;
-          state.stats.earlyQuestions = state.stats.earlyQuestions || 0;
-        }
-
-        state.stats._heartRefillDone = false;
-        checkHeartRefill();
-
-        updateHeaderStats();
-        updateDashboard();
-        updateBadges();
-        updateWeakTopics();
-        updateQuizProgress();
-        updateShopUI();
-        updateHintButton();
-        renderLeaderboard();
-        updateHeartsDisplay();
-        updateBoosterStatus();
-      },
-      (error) => {
-        console.error("User data error:", error);
-        state.statsLoaded = true;
-        state.statsLoadAttempted = true;
-      },
-    );
-}
-
-// ================================================================
-// 24. AUTH HANDLING (unchanged)
-// ================================================================
-
-function showLogin() {
-  const overlay = document.getElementById("loginOverlay");
-  if (overlay) overlay.classList.remove("hidden");
-  const header = document.getElementById("appHeader");
-  const nav = document.getElementById("navTabs");
-  const panels = document.querySelectorAll(".section-panel");
-  if (header) header.style.opacity = "0.3";
-  if (nav) nav.style.opacity = "0.3";
-  panels.forEach((el) => (el.style.opacity = "0.3"));
-}
-
-function hideLogin() {
-  const overlay = document.getElementById("loginOverlay");
-  if (overlay) overlay.classList.add("hidden");
-  const header = document.getElementById("appHeader");
-  const nav = document.getElementById("navTabs");
-  const panels = document.querySelectorAll(".section-panel");
-  if (header) header.style.opacity = "1";
-  if (nav) nav.style.opacity = "1";
-  panels.forEach((el) => (el.style.opacity = "1"));
-}
-
-function handleAuthState(user) {
-  if (user) {
-    state.isGuest = false;
-    hideLogin();
-    if (!isGuestUid(user.uid)) {
-      const guestId = localStorage.getItem("guest_id");
-      if (guestId) {
-        try {
-          const saved = localStorage.getItem("guest_stats_" + guestId);
-          if (saved) {
-            const parsed = JSON.parse(saved);
-            if (!state.statsLoaded) {
-              state.stats = { ...state.stats, ...parsed };
-              if (!state.stats.topicStats) {
-                state.stats.topicStats = {
-                  asset: { total: 0, wrong: 0 },
-                  liability: { total: 0, wrong: 0 },
-                  capital: { total: 0, wrong: 0 },
-                  revenue: { total: 0, wrong: 0 },
-                  expense: { total: 0, wrong: 0 },
-                  drawing: { total: 0, wrong: 0 },
-                };
-              }
-              state.stats.level = getLevelFromXP(state.stats.xp);
-              state.stats._heartRefillDone = false;
-              for (const id of state.stats.earnedBadges || []) {
-                state._shownBadges.add(id);
-              }
-              // Ensure new fields exist
-              state.stats.javedaClicks = state.stats.javedaClicks || 0;
-              state.stats.dailyStreak = state.stats.dailyStreak || 0;
-              state.stats.lastActivityDate =
-                state.stats.lastActivityDate || null;
-              state.stats.sessionQuestions = state.stats.sessionQuestions || 0;
-              state.stats.nightQuestions = state.stats.nightQuestions || 0;
-              state.stats.earlyQuestions = state.stats.earlyQuestions || 0;
-            }
-          }
-        } catch (e) {}
-      }
-      setupUserDataListener(user.uid);
-    }
-    updateRevisionBadges();
-    setupLeaderboardListener();
-    loadRevisionList();
-    generateNextQuestionSet();
-    const avatar = document.getElementById("userAvatar");
-    const nameDisplay = document.getElementById("userNameDisplay");
-    if (user.photoURL && avatar) avatar.src = user.photoURL;
-    if (nameDisplay) nameDisplay.textContent = user.displayName || "User";
-    setTimeout(() => {
-      if (state.statsLoaded) {
-        showToast(
-          "Welcome!",
-          `Signed in as ${user.displayName || "User"}`,
-          "fa-smile",
-          "gain",
-        );
-      }
-    }, 600);
-  } else {
-    const guestId = localStorage.getItem("guest_id");
-    if (guestId && state.isGuest) {
-      hideLogin();
-      try {
-        const saved = localStorage.getItem("guest_stats_" + guestId);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          state.stats = { ...state.stats, ...parsed };
-          if (!state.stats.topicStats) {
-            state.stats.topicStats = {
-              asset: { total: 0, wrong: 0 },
-              liability: { total: 0, wrong: 0 },
-              capital: { total: 0, wrong: 0 },
-              revenue: { total: 0, wrong: 0 },
-              expense: { total: 0, wrong: 0 },
-              drawing: { total: 0, wrong: 0 },
-            };
-          }
-          state.stats.level = getLevelFromXP(state.stats.xp);
-          state.stats._heartRefillDone = false;
-          state.statsLoaded = true;
-          for (const id of state.stats.earnedBadges || []) {
-            state._shownBadges.add(id);
-          }
-          state.stats.javedaClicks = state.stats.javedaClicks || 0;
-          state.stats.dailyStreak = state.stats.dailyStreak || 0;
-          state.stats.lastActivityDate = state.stats.lastActivityDate || null;
-          state.stats.sessionQuestions = state.stats.sessionQuestions || 0;
-          state.stats.nightQuestions = state.stats.nightQuestions || 0;
-          state.stats.earlyQuestions = state.stats.earlyQuestions || 0;
-          checkHeartRefill();
-          updateHeaderStats();
-          updateDashboard();
-          updateBadges();
-          updateWeakTopics();
-          updateQuizProgress();
-          updateShopUI();
-          updateHintButton();
-          renderLeaderboard();
-        }
-      } catch (e) {}
-      setupLeaderboardListener();
-      loadRevisionList();
-      generateNextQuestionSet();
-    } else {
-      showLogin();
-      if (state.unsubUser) {
-        state.unsubUser();
-        state.unsubUser = null;
-      }
-      if (state.unsubLeaderboard) {
-        state.unsubLeaderboard();
-        state.unsubLeaderboard = null;
-      }
-    }
-  }
-}
-
-// ================================================================
-// 25. NAVIGATION (unchanged)
+// 20. NAVIGATION
 // ================================================================
 
 function navigateTo(section) {
@@ -4024,7 +3218,7 @@ function navigateTo(section) {
 }
 
 // ================================================================
-// 26. INIT (updated with Learn Javeda click tracking)
+// 21. INIT (all event listeners)
 // ================================================================
 
 function init() {
@@ -4151,13 +3345,11 @@ function init() {
       }
     });
 
-  // Learn Javeda button click tracking
   document
     .getElementById("learnJavedaBtn")
     .addEventListener("click", function (e) {
       const s = state.stats;
       s.javedaClicks = (s.javedaClicks || 0) + 1;
-      // Check for new badges immediately (Javeda Explorer/Scholar)
       const earnedIds = checkBadges(s);
       const prevBadges = new Set(s.earnedBadges || []);
       const newBadges = earnedIds.filter((id) => !prevBadges.has(id));
@@ -4173,7 +3365,6 @@ function init() {
         updateBadges();
         saveStats();
       }
-      // Allow navigation to lern.html
     });
 
   $$(".diff-btn").forEach((btn) => {
