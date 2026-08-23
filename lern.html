@@ -35,6 +35,8 @@
             --transition: 0.25s ease;
             --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
             --font-bn: 'Noto Sans Bengali', 'Bangla', 'SolaimanLipi', sans-serif;
+            --ruby-color: #e0115f;
+            --heart-color: #ff3b6f;
         }
         html {
             scroll-behavior: smooth;
@@ -692,25 +694,32 @@
         .badge-table-wrap {
             overflow-x: auto;
             margin: 12px 0 16px;
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
         }
         .badge-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 14px;
+            font-size: 13px;
             background: rgba(255, 255, 255, 0.20);
-            border-radius: var(--radius-xs);
-            overflow: hidden;
         }
         .badge-table th {
             background: rgba(91, 75, 213, 0.10);
-            padding: 10px 14px;
+            padding: 8px 12px;
             text-align: left;
             font-weight: 600;
             color: var(--text-primary);
             border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            background: rgba(238, 242, 247, 0.95);
+            backdrop-filter: blur(4px);
+            z-index: 2;
         }
         .badge-table td {
-            padding: 10px 14px;
+            padding: 6px 12px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.04);
             color: var(--text-secondary);
         }
@@ -719,7 +728,46 @@
         }
         .badge-table .b-icon {
             font-size: 20px;
-            margin-right: 6px;
+            margin-right: 4px;
+        }
+
+        /* ===== REWARD TABLES ===== */
+        .reward-table-wrap {
+            overflow-x: auto;
+            margin: 12px 0 16px;
+        }
+        .reward-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.20);
+            border-radius: var(--radius-xs);
+            overflow: hidden;
+        }
+        .reward-table th {
+            background: rgba(91, 75, 213, 0.10);
+            padding: 8px 12px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .reward-table td {
+            padding: 8px 12px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            color: var(--text-secondary);
+        }
+        .reward-table tr:hover td {
+            background: rgba(255, 255, 255, 0.20);
+        }
+        .reward-table .highlight-gain {
+            color: var(--accent-2);
+            font-weight: 600;
+        }
+        .reward-table .highlight-loss {
+            color: var(--accent-4);
+            font-weight: 600;
         }
 
         /* ===== RESPONSIVE ===== */
@@ -798,7 +846,14 @@
             }
             .badge-table th,
             .badge-table td {
-                padding: 6px 10px;
+                padding: 4px 8px;
+            }
+            .reward-table {
+                font-size: 12px;
+            }
+            .reward-table th,
+            .reward-table td {
+                padding: 4px 8px;
             }
         }
         @media (max-width: 480px) {
@@ -838,6 +893,9 @@
             }
             .feature-card {
                 padding: 14px 16px;
+            }
+            .badge-table-wrap {
+                max-height: 300px;
             }
         }
 
@@ -1335,30 +1393,51 @@
                     </div>
 
                     <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-hourglass-half"></i></span>
+                        <div class="f-title">Timer Mode &amp; Hearts</div>
+                        <div class="f-desc">
+                            <strong>Medium/Hard</strong> এর জন্য সময়সীমা (5s বা 10s) এবং <strong>❤️ ৫টি হার্ট</strong> থাকে।<br>
+                            প্রতি ৫ মিনিটে ১টি হার্ট রিফিল হয়। ৩টি ধারাবাহিক ভুল বা সময় শেষ হলে ১টি হার্ট কমে।<br>
+                            হার্ট শেষ হলে Timer Mode পজ হয়।
+                            <span class="f-tag red">Challenge</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-rocket"></i></span>
+                        <div class="f-title">Boosters</div>
+                        <div class="f-desc">
+                            <strong>Point Booster</strong> (2× Points, 10 min)<br>
+                            <strong>Coin Booster</strong> (1.5× Coins, 5 min)<br>
+                            <strong>No Streak Break</strong> (পরবর্তী ১০টি ভুল streak ভাঙবে না)
+                            <span class="f-tag gold">Power‑Up</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
                         <span class="f-icon"><i class="fas fa-lightbulb"></i></span>
                         <div class="f-title">Hint System</div>
                         <div class="f-desc">
                             প্রশ্নের উত্তর দেওয়ার আগে <strong>Hint</strong> ব্যবহার করে নিয়ম দেখতে পারেন।<br>
-                            প্রতিটি Hint খরচ হয় <strong>1টি</strong> (Shop থেকে কিনতে হবে)।
+                            Shop থেকে বিভিন্ন প্যাক কিনতে হয় (6, 48, 90+2💎, 220+5💎 coins)।
                             <span class="f-tag gold">Helper</span>
                         </div>
                     </div>
 
                     <div class="feature-card">
                         <span class="f-icon"><i class="fas fa-store"></i></span>
-                        <div class="f-title">Hint Shop</div>
+                        <div class="f-title">Shop</div>
                         <div class="f-desc">
-                            <strong>Coins</strong> দিয়ে Hints কিনতে পারেন।<br>
-                            Single (6 coins), Starter (48 coins), Pro (94 coins), Master (230 coins) — বিভিন্ন প্যাক উপলব্ধ।
+                            <strong>Hints</strong>, <strong>Coins</strong> (rubies দিয়ে কেনা যায়), এবং <strong>Boosters</strong> বিক্রি হয়।
                             <span class="f-tag purple">Store</span>
                         </div>
                     </div>
 
                     <div class="feature-card">
                         <span class="f-icon"><i class="fas fa-medal"></i></span>
-                        <div class="f-title">Badges (50টি)</div>
+                        <div class="f-title">Badges (100টি)</div>
                         <div class="f-desc">
-                            বিভিন্ন মাইলস্টোনে <strong>Badge</strong> আনলক হয়। যেমন: প্রথম সঠিক উত্তর, ১০০টি প্রশ্ন, ৫টি স্ট্রীক, ৯৫%+ Accuracy ইত্যাদি।
+                            বিভিন্ন মাইলস্টোনে <strong>Badge</strong> আনলক হয়। যেমন: প্রথম সঠিক উত্তর, ১০০টি প্রশ্ন, ৫টি স্ট্রীক, ৯৫%+ Accuracy, Leaderboard শীর্ষ ১০, ইত্যাদি।
                             <span class="f-tag gold">Achievements</span>
                         </div>
                     </div>
@@ -1388,7 +1467,7 @@
                         <div class="f-title">Dashboard</div>
                         <div class="f-desc">
                             মোট প্রশ্ন, সঠিক/ভুল, Accuracy, Coins, XP, Level, Streak, Hints — সব পরিসংখ্যান এক জায়গায়।<br>
-                            <strong>Accuracy Chart</strong> (গত ৭ দিন) এবং <strong>Weak Topics</strong> দেখানো হয়।
+                            <strong>Weak Topics</strong> দেখিয়ে দেয় কোন ধরনের হিসাবে বেশি ভুল হয়।
                             <span class="f-tag green">Analytics</span>
                         </div>
                     </div>
@@ -1404,92 +1483,190 @@
 
                 </div>
 
-                <!-- ===== BADGE EARNING GUIDE (emojis used here) ===== -->
-                <h3 style="margin-top:24px;"><i class="fas fa-medal" style="color:var(--accent-3);margin-right:8px;"></i> How to Earn Badges</h3>
-                <p>মোট <strong>৫০টি</strong> Badge রয়েছে। নিচে কয়েকটি গুরুত্বপূর্ণ Badge-এর শর্ত দেওয়া হলো:</p>
-
-                <div class="badge-table-wrap">
-                    <table class="badge-table">
+                <!-- ===== REWARDS TABLE ===== -->
+                <h3><i class="fas fa-star" style="color:var(--accent-3);margin-right:8px;"></i> Points, XP, Coins &amp; Rubies — কীভাবে পাবেন?</h3>
+                <h4>Normal Mode (no timer)</h4>
+                <div class="reward-table-wrap">
+                    <table class="reward-table">
                         <thead>
                             <tr>
-                                <th>Icon</th>
-                                <th>Badge Name</th>
-                                <th>কীভাবে পাবেন</th>
+                                <th>Difficulty</th>
+                                <th>Correct</th>
+                                <th>Wrong (Penalty)</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td><span class="b-icon">🔰</span></td><td>First Step</td><td>১টি সঠিক উত্তর দিন</td></tr>
-                            <tr><td><span class="b-icon">👣</span></td><td>Beginner</td><td>১টি সঠিক উত্তর দিন (একই)</td></tr>
-                            <tr><td><span class="b-icon">💳</span></td><td>Debit Starter</td><td>কোনো Debit প্রশ্ন সঠিক করুন</td></tr>
-                            <tr><td><span class="b-icon">💳</span></td><td>Credit Starter</td><td>কোনো Credit প্রশ্ন সঠিক করুন</td></tr>
-                            <tr><td><span class="b-icon">🔥</span></td><td>Warmed Up</td><td>৫টি সঠিক উত্তর দিন</td></tr>
-                            <tr><td><span class="b-icon">✨</span></td><td>No Mistake Start</td><td>৩টি সঠিক ও ০টি ভুল (শুরুতে)</td></tr>
-                            <tr><td><span class="b-icon">📓</span></td><td>Journal Rookie</td><td>১০টি সঠিক উত্তর দিন</td></tr>
-                            <tr><td><span class="b-icon">🗺️</span></td><td>Accounting Explorer</td><td>২৫টি সঠিক উত্তর দিন</td></tr>
-                            <tr><td><span class="b-icon">📊</span></td><td>Ledger Learner</td><td>৫০টি সঠিক উত্তর দিন</td></tr>
-                            <tr><td><span class="b-icon">⚖️</span></td><td>Trial Balance Maker</td><td>১০০টি সঠিক উত্তর দিন</td></tr>
-                            <tr><td><span class="b-icon">🧠</span></td><td>Sharp Mind</td><td>≥৮০% Accuracy ও কমপক্ষে ১০টি প্রশ্ন</td></tr>
-                            <tr><td><span class="b-icon">🎯</span></td><td>Precision Player</td><td>≥৯০% Accuracy ও কমপক্ষে ২০টি প্রশ্ন</td></tr>
-                            <tr><td><span class="b-icon">🏃</span></td><td>Perfect Run</td><td>১০টি Streak (একটানা সঠিক)</td></tr>
-                            <tr><td><span class="b-icon">🔥</span></td><td>Streak 5x / 10x / 25x / 50x</td><td>যথাক্রমে ৫, ১০, ২৫, ৫০ Streak</td></tr>
-                            <tr><td><span class="b-icon">👑</span></td><td>Streak King</td><td>১০০ Streak</td></tr>
-                            <tr><td><span class="b-icon">🏦</span></td><td>Asset Expert</td><td>১০টি Asset-সংক্রান্ত প্রশ্ন সঠিক</td></tr>
-                            <tr><td><span class="b-icon">📉</span></td><td>Liability Genius</td><td>১০টি Liability-সংক্রান্ত প্রশ্ন সঠিক</td></tr>
-                            <tr><td><span class="b-icon">💰</span></td><td>Capital Controller</td><td>১০টি Capital-সংক্রান্ত প্রশ্ন সঠিক</td></tr>
-                            <tr><td><span class="b-icon">📈</span></td><td>Revenue Master</td><td>১০টি Revenue-সংক্রান্ত প্রশ্ন সঠিক</td></tr>
-                            <tr><td><span class="b-icon">💸</span></td><td>Expense Specialist</td><td>১০টি Expense-সংক্রান্ত প্রশ্ন সঠিক</td></tr>
-                            <tr><td><span class="b-icon">🏅</span></td><td>100 Questions</td><td>মোট ১০০টি প্রশ্ন সম্পূর্ণ</td></tr>
-                            <tr><td><span class="b-icon">🥈</span></td><td>500 Questions</td><td>মোট ৫০০টি প্রশ্ন সম্পূর্ণ</td></tr>
-                            <tr><td><span class="b-icon">🥇</span></td><td>1000 Questions</td><td>মোট ১০০০টি প্রশ্ন সম্পূর্ণ</td></tr>
-                            <tr><td><span class="b-icon">🏆</span></td><td>Accounting Pro</td><td>Level ১০ পৌঁছান</td></tr>
-                            <tr><td><span class="b-icon">👑</span></td><td>Ultimate Accountant</td><td>৫০০০টি সঠিক উত্তর</td></tr>
+                            <tr><td>Easy</td><td><span class="highlight-gain">+4 pts, +2 XP, +1 🪙</span></td><td><span class="highlight-loss">-2 pts</span></td></tr>
+                            <tr><td>Medium</td><td><span class="highlight-gain">+8 pts, +4 XP, +2 🪙</span></td><td><span class="highlight-loss">-4 pts</span></td></tr>
+                            <tr><td>Hard</td><td><span class="highlight-gain">+14 pts, +8 XP, +2 🪙</span></td><td><span class="highlight-loss">-6 pts</span></td></tr>
                         </tbody>
                     </table>
                 </div>
-                <p style="font-size:14px;color:var(--text-muted);">
-                    <i class="fas fa-info-circle"></i> বাকি Badge-গুলোর শর্ত Dashboard-এর Badges সেকশনে দেখতে পাবেন।
-                </p>
+                <p style="font-size:13px;color:var(--text-muted);"><i class="fas fa-info-circle"></i> Rubies only earned in Timer Mode (see below).</p>
 
-                <!-- ===== POINTS & REWARDS ===== -->
-                <h3><i class="fas fa-star" style="color:var(--accent-3);margin-right:8px;"></i> Points, XP, Coins — কীভাবে পাবেন?</h3>
-                <div class="feature-grid">
-                    <div class="feature-card">
-                        <span class="f-icon"><i class="fas fa-check-circle" style="color:var(--accent-2);"></i></span>
-                        <div class="f-title">সঠিক উত্তর</div>
-                        <div class="f-desc">
-                            <strong>Easy:</strong> +5 Points, +2 XP, +2 Coins<br>
-                            <strong>Medium:</strong> +10 Points, +5 XP, +2 Coins<br>
-                            <strong>Hard:</strong> +15 Points, +8 XP, +2 Coins
-                        </div>
-                    </div>
-                    <div class="feature-card">
-                        <span class="f-icon"><i class="fas fa-times-circle" style="color:var(--accent-4);"></i></span>
-                        <div class="f-title">ভুল উত্তর</div>
-                        <div class="f-desc">
-                            Easy : -2 Points<br>
-                            Medium : -5 Points<br>
-                            Hard : -10 Points<br>
-                            <span style="font-size:13px;color:var(--text-muted);">(XP বা Coins কমে না)</span>
-                        </div>
-                    </div>
-                    <div class="feature-card">
-                        <span class="f-icon"><i class="fas fa-fire" style="color:var(--accent-4);"></i></span>
-                        <div class="f-title">Streak Bonus</div>
-                        <div class="f-desc">
-                            একটানা সঠিক উত্তর দিলে <strong>Streak</strong> বাড়ে।<br>
-                            Streak ভাঙলে আবার ০ থেকে শুরু হয়।<br>
-                            <strong>Best Streak</strong> রেকর্ড থাকে।
-                        </div>
-                    </div>
-                    <div class="feature-card">
-                        <span class="f-icon"><i class="fas fa-bullseye" style="color:var(--accent-3);"></i></span>
-                        <div class="f-title">Level Up</div>
-                        <div class="f-desc">
-                            প্রতিটি Level-এর জন্য নির্দিষ্ট XP প্রয়োজন।<br>
-                            Level বাড়লে নতুন Badge আনলক হতে পারে।
-                        </div>
-                    </div>
+                <h4>Timer Mode (Medium &amp; Hard only)</h4>
+                <div class="reward-table-wrap">
+                    <table class="reward-table">
+                        <thead>
+                            <tr>
+                                <th>Difficulty</th>
+                                <th>Timer</th>
+                                <th>Correct</th>
+                                <th>Wrong (Penalty)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Medium</td><td>5s</td><td><span class="highlight-gain">+14 pts, +8 XP, +3 🪙, +1 💎</span></td><td><span class="highlight-loss">-7 pts</span></td></tr>
+                            <tr><td>Medium</td><td>10s</td><td><span class="highlight-gain">+12 pts, +6 XP, +2 🪙</span></td><td><span class="highlight-loss">-6 pts</span></td></tr>
+                            <tr><td>Hard</td><td>5s</td><td><span class="highlight-gain">+18 pts, +12 XP, +4 🪙, +2 💎</span></td><td><span class="highlight-loss">-9 pts</span></td></tr>
+                            <tr><td>Hard</td><td>10s</td><td><span class="highlight-gain">+16 pts, +10 XP, +3 🪙</span></td><td><span class="highlight-loss">-8 pts</span></td></tr>
+                        </tbody>
+                    </table>
                 </div>
+                <p style="font-size:13px;color:var(--text-muted);"><i class="fas fa-info-circle"></i> Boosters multiply these rewards (Point Booster doubles Points, Coin Booster multiplies Coins by 1.5).</p>
+
+                <!-- ===== BADGE EARNING GUIDE (all 100 badges) ===== -->
+                <h3 style="margin-top:24px;"><i class="fas fa-medal" style="color:var(--accent-3);margin-right:8px;"></i> Complete Badge List (100 badges)</h3>
+                <p>নিচে সব <strong>১০০টি</strong> Badge-এর তালিকা দেওয়া হলো। এগুলো বিভিন্ন মাইলস্টোন, স্ট্রীক, অ্যাকুরেসি, লিডারবোর্ড অবস্থান, এবং ফিচার ব্যবহারের মাধ্যমে আনলক হয়।</p>
+                <div class="badge-table-wrap">
+                    <table class="badge-table">
+                        <thead>
+                            <tr><th>Icon</th><th>Badge Name</th></tr>
+                        </thead>
+                        <tbody>
+                            <!-- Group 1: Leaderboard (n1-n4) -->
+                            <tr><td>👑</td><td>Leaderboard XP King</td></tr>
+                            <tr><td>🏅</td><td>Leaderboard Points Pro</td></tr>
+                            <tr><td>🎯</td><td>Leaderboard Accuracy Ace</td></tr>
+                            <tr><td>🏆</td><td>Leaderboard Badge Collector</td></tr>
+                            <!-- Javeda (n5-n6) -->
+                            <tr><td>📚</td><td>Javeda Explorer</td></tr>
+                            <tr><td>📖</td><td>Javeda Scholar</td></tr>
+                            <!-- Hints (n7-n8) -->
+                            <tr><td>💡</td><td>Hint Hoarder</td></tr>
+                            <tr><td>💡</td><td>Hint Master</td></tr>
+                            <!-- Daily (n9-n10) -->
+                            <tr><td>📅</td><td>Perfect Week</td></tr>
+                            <tr><td>📅</td><td>Monthly Mentor</td></tr>
+                            <!-- Speed & Marathon (n11-n12) -->
+                            <tr><td>⚡</td><td>Quick Learner</td></tr>
+                            <tr><td>🏃</td><td>Marathon Runner</td></tr>
+                            <!-- Night/Early (n13-n14) -->
+                            <tr><td>🌙</td><td>Night Owl</td></tr>
+                            <tr><td>🌅</td><td>Early Bird</td></tr>
+                            <!-- Revision (n15-n16) -->
+                            <tr><td>🔄</td><td>Revision King</td></tr>
+                            <tr><td>🔄</td><td>Revision Master</td></tr>
+                            <!-- Timer (n17-n18) -->
+                            <tr><td>⏱️</td><td>Timer Survivor</td></tr>
+                            <tr><td>⏱️</td><td>Timer Legend</td></tr>
+                            <!-- Smart (n19-n20) -->
+                            <tr><td>🧠</td><td>Smart Learner</td></tr>
+                            <tr><td>🧠</td><td>Smart Guru</td></tr>
+                            <!-- Wealth (n21-n22) -->
+                            <tr><td>💰</td><td>Coin Millionaire</td></tr>
+                            <tr><td>💎</td><td>Ruby Baron</td></tr>
+                            <!-- Boosters (n23-n25) -->
+                            <tr><td>🛡️</td><td>Streak Protector</td></tr>
+                            <tr><td>⚡</td><td>Point Booster Fan</td></tr>
+                            <tr><td>🪙</td><td>Coin Booster Fan</td></tr>
+                            <!-- Accountant (n26-n28) -->
+                            <tr><td>📊</td><td>Accountant Pro</td></tr>
+                            <tr><td>🏅</td><td>Ultimate Journal Master</td></tr>
+                            <tr><td>👑</td><td>Journal Legend</td></tr>
+                            <!-- Debit/Credit starters (b3-b4) -->
+                            <tr><td>💳</td><td>Debit Starter</td></tr>
+                            <tr><td>💳</td><td>Credit Starter</td></tr>
+                            <!-- Progression (b5, b7-b11, b35-b37, b63) -->
+                            <tr><td>🔥</td><td>Warmed Up</td></tr>
+                            <tr><td>📓</td><td>Journal Rookie</td></tr>
+                            <tr><td>🗺️</td><td>Accounting Explorer</td></tr>
+                            <tr><td>📊</td><td>Ledger Learner</td></tr>
+                            <tr><td>⚖️</td><td>Trial Balance Maker</td></tr>
+                            <tr><td>👨‍💼</td><td>Entry Master</td></tr>
+                            <tr><td>🏅</td><td>100 Questions</td></tr>
+                            <tr><td>🥈</td><td>500 Questions</td></tr>
+                            <tr><td>🥇</td><td>1000 Questions</td></tr>
+                            <tr><td>📚</td><td>2000 Questions</td></tr>
+                            <!-- Accuracy (b13-b14, b42-b43) -->
+                            <tr><td>🧠</td><td>Sharp Mind</td></tr>
+                            <tr><td>🎯</td><td>Precision Player</td></tr>
+                            <tr><td>🧠</td><td>Financial Brain</td></tr>
+                            <tr><td>🔍</td><td>Error Hunter</td></tr>
+                            <!-- Streak (b16, b18-b22) -->
+                            <tr><td>💎</td><td>Flawless Brain</td></tr>
+                            <tr><td>🛡️</td><td>Zero Error Zone</td></tr>
+                            <tr><td>🔥</td><td>Streak 5x</td></tr>
+                            <tr><td>🔥</td><td>Streak 10x</td></tr>
+                            <tr><td>🔥</td><td>Streak 25x</td></tr>
+                            <tr><td>🔥</td><td>Streak 50x</td></tr>
+                            <tr><td>👑</td><td>Streak King</td></tr>
+                            <!-- Category Experts (b23-b28) -->
+                            <tr><td>🏦</td><td>Asset Expert</td></tr>
+                            <tr><td>📉</td><td>Liability Genius</td></tr>
+                            <tr><td>💰</td><td>Capital Controller</td></tr>
+                            <tr><td>📈</td><td>Revenue Master</td></tr>
+                            <tr><td>💸</td><td>Expense Specialist</td></tr>
+                            <tr><td>✏️</td><td>Drawing Handler</td></tr>
+                            <!-- Other (b29-b34, b44, b46, b86-b88, b93-b99) -->
+                            <tr><td>🔧</td><td>Rule Breaker</td></tr>
+                            <tr><td>⚖️</td><td>Balance Thinker</td></tr>
+                            <tr><td>⚡</td><td>Fast Decision</td></tr>
+                            <tr><td>💪</td><td>No Hesitation</td></tr>
+                            <tr><td>📝</td><td>First Entry</td></tr>
+                            <tr><td>🌟</td><td>Perfect Quiz</td></tr>
+                            <tr><td>🎯</td><td>Focus Mode</td></tr>
+                            <tr><td>💡</td><td>Smart Thinker</td></tr>
+                            <tr><td>🏅</td><td>All Rounder</td></tr>
+                            <tr><td>⭐</td><td>5-Star Performer</td></tr>
+                            <tr><td>🎖️</td><td>Dedicated Scholar</td></tr>
+                            <tr><td>🤝</td><td>Collaborator</td></tr>
+                            <tr><td>🎓</td><td>Scholar</td></tr>
+                            <tr><td>📈</td><td>Rising Star</td></tr>
+                            <tr><td>🌟</td><td>Shining Star</td></tr>
+                            <tr><td>✨</td><td>Legendary</td></tr>
+                            <tr><td>👑</td><td>Royal Accountant</td></tr>
+                            <tr><td>💼</td><td>Finance Pro</td></tr>
+                            <!-- Level (b74-b76) -->
+                            <tr><td>⬆️</td><td>Level 20</td></tr>
+                            <tr><td>⬆️</td><td>Level 50</td></tr>
+                            <tr><td>⬆️</td><td>Level 100</td></tr>
+                            <!-- Smart usage (b77-b78) -->
+                            <tr><td>🧠</td><td>Smart User (100)</td></tr>
+                            <tr><td>🧠</td><td>Smart Master (500)</td></tr>
+                            <!-- Revision correct (b79-b80) -->
+                            <tr><td>🔄</td><td>Revise 50</td></tr>
+                            <tr><td>🔄</td><td>Revise 100</td></tr>
+                            <!-- Booster usage (b81-b83) -->
+                            <tr><td>⚡</td><td>Point Booster x10</td></tr>
+                            <tr><td>🪙</td><td>Coin Booster x10</td></tr>
+                            <tr><td>🛡️</td><td>Streak Protector x10</td></tr>
+                            <!-- Hearts (b85) -->
+                            <tr><td>❤️</td><td>Heart Collector (full 5)</td></tr>
+                            <!-- Timer specific (b55-b59) -->
+                            <tr><td>⏱️</td><td>Timer Novice</td></tr>
+                            <tr><td>⏱️</td><td>Timer Adept</td></tr>
+                            <tr><td>⏱️</td><td>Timer Master</td></tr>
+                            <tr><td>⏱️</td><td>Speed Demon (5s)</td></tr>
+                            <tr><td>⏱️</td><td>Quick Thinker (10s)</td></tr>
+                            <!-- Coin/Ruby Tycoon (b70-b73) -->
+                            <tr><td>💎</td><td>Ruby Tycoon (500)</td></tr>
+                            <tr><td>🪙</td><td>Coin Collector (1000)</td></tr>
+                            <tr><td>🪙</td><td>Coin Hoarder (5000)</td></tr>
+                            <tr><td>🪙</td><td>Coin Tycoon (10000)</td></tr>
+                            <!-- Ultimate (b50, b51) -->
+                            <tr><td>👑</td><td>Ultimate Accountant</td></tr>
+                            <tr><td>🏆</td><td>Top 10 Leaderboard</td></tr>
+                            <!-- b38, b39, b40 -->
+                            <tr><td>🏆</td><td>Accounting Pro</td></tr>
+                            <tr><td>🏆</td><td>Debit-Credit Champ</td></tr>
+                            <tr><td>👼</td><td>Journal God</td></tr>
+                            <!-- b17 already included as Zero Error Zone? Actually b17 is Zero Error Zone, we have it. b16 is Flawless Brain. -->
+                            <!-- All remaining badges are already covered. -->
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size:13px;color:var(--text-muted);"><i class="fas fa-info-circle"></i> প্রতিটি Badge-এর নির্দিষ্ট শর্ত Dashboard-এর Badges সেকশনে দেখতে পাবেন।</p>
 
                 <!-- ===== QUICK TIPS ===== -->
                 <h3><i class="fas fa-lightbulb" style="color:var(--accent-3);margin-right:8px;"></i> Quick Tips</h3>
@@ -1500,6 +1677,8 @@
                     <li><strong>Leaderboard</strong>-এ উঠতে Accuracy ও Consistency গুরুত্বপূর্ণ।</li>
                     <li><strong>Dashboard</strong>-এ Weak Topics দেখে বুঝুন কোন ধরনের হিসাবে ভুল বেশি হয়।</li>
                     <li><strong>Guest</strong> হিসেবে খেললে ডেটা লোকালে সেভ হয় — লগইন করলে Server এ সেভ হয় এবং Leaderboard-এ অংশ নিতে পারেন।</li>
+                    <li><strong>Timer Mode</strong> এ Hearts সাবধানে ব্যবহার করুন — ৩টি ধারাবাহিক ভুলে হার্ট কমে।</li>
+                    <li><strong>Boosters</strong> কিনলে পুরস্কার বাড়ে — Point Booster ও Coin Booster বিশেষভাবে কার্যকর।</li>
                 </ul>
 
                 <!-- ===== FINAL NOTE ===== -->
@@ -1620,9 +1799,8 @@
                 });
             });
 
-            console.log('📘 Learn Javeda · Interactive Learning System');
+            console.log('📘 Learn Javeda · Interactive Learning System (Updated with accurate rewards & 100 badges)');
             console.log('💡 Press E to expand all, C to collapse all');
-            console.log('❓ "How to Work" chapter added with full feature guide (badges use emojis)');
         });
     </script>
 
