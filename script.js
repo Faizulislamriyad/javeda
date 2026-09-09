@@ -207,7 +207,7 @@ BENGALI_NAMES["Debtor"] = "দেনাদার";
 BENGALI_NAMES["Creditor"] = "পাওনাদার";
 
 // ================================================================
-// 3. TEMPLATE DEFINITIONS (সংক্ষিপ্ত)
+// 3. TEMPLATE DEFINITIONS
 // ================================================================
 
 const TEMPLATE_DEFINITIONS = {
@@ -725,7 +725,6 @@ const ALL_BADGES = [
   { id: "b81", icon: "⚡", name: "Point Booster x10" },
   { id: "b82", icon: "🪙", name: "Coin Booster x10" },
   { id: "b83", icon: "🛡️", name: "Streak Protector x10" },
-  { id: "b85", icon: "❤️", name: "Heart Collector (full 5)" },
   { id: "b86", icon: "🏅", name: "All Rounder" },
   { id: "b87", icon: "⭐", name: "5-Star Performer" },
   { id: "b88", icon: "🎖️", name: "Dedicated Scholar" },
@@ -813,7 +812,7 @@ function checkBadges(stats) {
   if (stats.pointBoosterUsed && stats.pointBoosterUsed >= 10) earned.push("b81");
   if (stats.coinBoosterUsed && stats.coinBoosterUsed >= 10) earned.push("b82");
   if (stats.streakBoosterUsed && stats.streakBoosterUsed >= 10) earned.push("b83");
-  if (stats.hearts === stats.maxHearts) earned.push("b85");
+  // Heart Collector badge removed because heart system is removed
   if (accPct >= 80 && total >= 200 && stats.bestStreak >= 50) earned.push("b86");
   if (accPct >= 90 && total >= 500 && stats.bestStreak >= 100) earned.push("b87");
   if (total >= 1000 && stats.correct / total >= 0.7) earned.push("b88");
@@ -838,7 +837,8 @@ function checkBadges(stats) {
   if (stats.earlyQuestions && stats.earlyQuestions >= 20) earned.push("n14");
   if (stats.revisionCorrect && stats.revisionCorrect >= 50) earned.push("n15");
   if (stats.revisionCorrect && stats.revisionCorrect >= 200) earned.push("n16");
-  if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 50 && stats.heartsLost === 0) earned.push("n17");
+  // Timer Survivor badge condition updated: removed heartsLost check
+  if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 50) earned.push("n17");
   if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 200) earned.push("n18");
   if (stats.smartModeCount && stats.smartModeCount >= 100) earned.push("n19");
   if (stats.smartModeCount && stats.smartModeCount >= 500) earned.push("n20");
@@ -858,6 +858,280 @@ function checkBadges(stats) {
   if (totalBadges >= 75) earned.push("n28");
 
   return [...new Set(earned)];
+}
+
+// ================================================================
+// 7.5. BADGE DETAILS & PROGRESS (NEW)
+// ================================================================
+
+function getBadgeDescription(badgeId) {
+  const descriptions = {
+    // Leaderboard (n1-n4)
+    n1: "Reach #1 on the Leaderboard by XP.",
+    n2: "Reach #1 on the Leaderboard by Points.",
+    n3: "Reach #1 on the Leaderboard by Accuracy.",
+    n4: "Reach #1 on the Leaderboard by Badges.",
+    // Javeda (n5-n6)
+    n5: "Click the 'Learn Javeda' button 1 time.",
+    n6: "Click the 'Learn Javeda' button 5 times.",
+    // Hints (n7-n8)
+    n7: "Use 100 hints in total.",
+    n8: "Use 500 hints in total.",
+    // Daily (n9-n10)
+    n9: "Maintain a daily streak of 7 days.",
+    n10: "Maintain a daily streak of 30 days.",
+    // Speed & Marathon (n11-n12)
+    n11: "Answer 100 questions within 3 seconds each.",
+    n12: "Answer 50 questions in a single session.",
+    // Night/Early (n13-n14)
+    n13: "Answer 20 questions between midnight and 6 AM.",
+    n14: "Answer 20 questions between 6 AM and 9 AM.",
+    // Revision (n15-n16)
+    n15: "Correctly answer 50 revision questions.",
+    n16: "Correctly answer 200 revision questions.",
+    // Timer (n17-n18)
+    n17: "Complete 50 Timer Mode questions.",
+    n18: "Complete 200 Timer Mode questions.",
+    // Smart (n19-n20)
+    n19: "Answer 100 questions in Smart Mode.",
+    n20: "Answer 500 questions in Smart Mode.",
+    // Wealth (n21-n22)
+    n21: "Collect 10,000 coins.",
+    n22: "Collect 200 rubies.",
+    // Boosters (n23-n25)
+    n23: "Use the Streak Protector booster 10 times.",
+    n24: "Use the Point Booster 10 times.",
+    n25: "Use the Coin Booster 10 times.",
+    // Accountant (n26-n28)
+    n26: "Correctly answer 50 questions in each of the 6 account categories (Asset, Liability, Capital, Revenue, Expense, Drawing).",
+    n27: "Earn 50 total badges.",
+    n28: "Earn 75 total badges.",
+    // Debit/Credit starters (b3-b4)
+    b3: "Answer your first Debit question correctly.",
+    b4: "Answer your first Credit question correctly.",
+    // Progression (b5, b7-b11, b35-b37, b63)
+    b5: "Get 5 correct answers.",
+    b7: "Get 10 correct answers.",
+    b8: "Get 25 correct answers.",
+    b9: "Get 50 correct answers.",
+    b10: "Get 100 correct answers.",
+    b11: "Get 200 correct answers.",
+    b35: "Answer 100 total questions.",
+    b36: "Answer 500 total questions.",
+    b37: "Answer 1,000 total questions.",
+    b63: "Answer 2,000 total questions.",
+    // Accuracy (b13-b14, b42-b43)
+    b13: "Achieve 80%+ accuracy with at least 10 questions.",
+    b14: "Achieve 90%+ accuracy with at least 20 questions.",
+    b42: "Achieve 95%+ accuracy with at least 100 questions.",
+    b43: "Keep wrong answers below 10% of total questions (min 20 questions).",
+    // Streak (b16, b18-b22)
+    b16: "Achieve a streak of 20 correct answers.",
+    b17: "Get 50 correct answers with zero wrong answers.",
+    b18: "Achieve a streak of 5 correct answers.",
+    b19: "Achieve a streak of 10 correct answers.",
+    b20: "Achieve a streak of 25 correct answers.",
+    b21: "Achieve a streak of 50 correct answers.",
+    b22: "Achieve a streak of 100 correct answers.",
+    // Category Experts (b23-b28)
+    b23: "Correctly answer 10 Asset questions.",
+    b24: "Correctly answer 10 Liability questions.",
+    b25: "Correctly answer 10 Capital questions.",
+    b26: "Correctly answer 10 Revenue questions.",
+    b27: "Correctly answer 10 Expense questions.",
+    b28: "Correctly answer 5 Drawing questions.",
+    // Other (b29-b34, b44, b46, b86-b88, b93-b99)
+    b29: "Get at least 1 'Rule Breaker' (correct after previously wrong on same rule).",
+    b30: "Get 15 correct answers.",
+    b31: "Answer your first question within 3 seconds.",
+    b32: "Answer 10 questions within 3 seconds each.",
+    b33: "Get your first correct answer.",
+    b34: "Get 10 correct answers with zero wrong (perfect quiz).",
+    b44: "Answer 20 questions in Focus Mode (timer or smart).",
+    b46: "Answer 50 questions in Smart Mode.",
+    b86: "Achieve 80% accuracy, 200 total questions, and streak 50.",
+    b87: "Achieve 90% accuracy, 500 total questions, and streak 100.",
+    b88: "Answer 1,000 questions with 70%+ accuracy.",
+    b93: "Answer 100 total questions.",
+    b94: "Reach Level 15 with 75%+ accuracy.",
+    b95: "Get 1,000 correct answers with 80%+ accuracy.",
+    b96: "Get 2,000 correct answers.",
+    b97: "Answer 5,000 total questions.",
+    b98: "Get 5,000 correct answers.",
+    b99: "Collect 5,000 coins and 200 rubies.",
+    // Timer specific (b55-b59)
+    b55: "Complete 10 Timer Mode questions.",
+    b56: "Complete 50 Timer Mode questions.",
+    b57: "Complete 100 Timer Mode questions.",
+    b58: "Complete 50 Timer Mode questions with 5-second timer.",
+    b59: "Complete 50 Timer Mode questions with 10-second timer.",
+    // Coin/Ruby Tycoon (b70-b73)
+    b70: "Collect 500 rubies.",
+    b71: "Collect 1,000 coins.",
+    b72: "Collect 5,000 coins.",
+    b73: "Collect 10,000 coins.",
+    // Ultimate (b50, b51)
+    b50: "Get 5,000 correct answers.",
+    b51: "Reach Top 10 on the Leaderboard.",
+    // Level (b74-b76)
+    b74: "Reach Level 20.",
+    b75: "Reach Level 50.",
+    b76: "Reach Level 100.",
+    // Smart usage (b77-b78)
+    b77: "Answer 100 questions in Smart Mode.",
+    b78: "Answer 500 questions in Smart Mode.",
+    // Revision correct (b79-b80)
+    b79: "Correctly answer 50 revision questions.",
+    b80: "Correctly answer 100 revision questions.",
+    // Booster usage (b81-b83)
+    b81: "Use Point Booster 10 times.",
+    b82: "Use Coin Booster 10 times.",
+    b83: "Use Streak Protector 10 times.",
+    // Additional
+    b38: "Reach Level 10.",
+    b39: "Get 500 correct answers.",
+    b40: "Get 1,000 correct answers.",
+  };
+  return descriptions[badgeId] || "Earn this badge by meeting specific conditions.";
+}
+
+function getBadgeProgress(badgeId, stats) {
+  const total = stats.correct + stats.wrong;
+  const acc = total > 0 ? stats.correct / total : 0;
+  const accPct = Math.round(acc * 100);
+
+  const typeCounts = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
+  if (stats.quizHistory) {
+    for (const h of stats.quizHistory) {
+      if (h.userAnswer === h.correctAnswer) {
+        if (typeCounts[h.type] !== undefined) typeCounts[h.type]++;
+      }
+    }
+  }
+  const totalBadges = (stats.earnedBadges || []).length;
+
+  switch (badgeId) {
+    case 'n1': case 'n2': case 'n3': case 'n4': return 0;
+    case 'n5': return Math.min(100, (stats.javedaClicks || 0) / 1 * 100);
+    case 'n6': return Math.min(100, (stats.javedaClicks || 0) / 5 * 100);
+    case 'n7': return Math.min(100, (stats.hints || 0) / 100 * 100);
+    case 'n8': return Math.min(100, (stats.hints || 0) / 500 * 100);
+    case 'n9': return Math.min(100, (stats.dailyStreak || 0) / 7 * 100);
+    case 'n10': return Math.min(100, (stats.dailyStreak || 0) / 30 * 100);
+    case 'n11': return Math.min(100, (stats.fastAnswers || 0) / 100 * 100);
+    case 'n12': return Math.min(100, (stats.sessionQuestions || 0) / 50 * 100);
+    case 'n13': return Math.min(100, (stats.nightQuestions || 0) / 20 * 100);
+    case 'n14': return Math.min(100, (stats.earlyQuestions || 0) / 20 * 100);
+    case 'n15': return Math.min(100, (stats.revisionCorrect || 0) / 50 * 100);
+    case 'n16': return Math.min(100, (stats.revisionCorrect || 0) / 200 * 100);
+    case 'n17': return Math.min(100, (stats.timerQuestionsCompleted || 0) / 50 * 100);
+    case 'n18': return Math.min(100, (stats.timerQuestionsCompleted || 0) / 200 * 100);
+    case 'n19': return Math.min(100, (stats.smartModeCount || 0) / 100 * 100);
+    case 'n20': return Math.min(100, (stats.smartModeCount || 0) / 500 * 100);
+    case 'n21': return Math.min(100, (stats.coins || 0) / 10000 * 100);
+    case 'n22': return Math.min(100, (stats.rubies || 0) / 200 * 100);
+    case 'n23': return Math.min(100, (stats.streakBoosterUsed || 0) / 10 * 100);
+    case 'n24': return Math.min(100, (stats.pointBoosterUsed || 0) / 10 * 100);
+    case 'n25': return Math.min(100, (stats.coinBoosterUsed || 0) / 10 * 100);
+    case 'n26': {
+      let totalCat = 0;
+      for (const cat of ['asset','liability','capital','revenue','expense','drawing']) {
+        totalCat += Math.min(50, typeCounts[cat] || 0);
+      }
+      return Math.round((totalCat / 300) * 100);
+    }
+    case 'n27': return Math.min(100, totalBadges / 50 * 100);
+    case 'n28': return Math.min(100, totalBadges / 75 * 100);
+    case 'b3': return stats.correct >= 1 ? 100 : 0;
+    case 'b4': return stats.correct >= 1 ? 100 : 0;
+    case 'b5': return Math.min(100, stats.correct / 5 * 100);
+    case 'b7': return Math.min(100, stats.correct / 10 * 100);
+    case 'b8': return Math.min(100, stats.correct / 25 * 100);
+    case 'b9': return Math.min(100, stats.correct / 50 * 100);
+    case 'b10': return Math.min(100, stats.correct / 100 * 100);
+    case 'b11': return Math.min(100, stats.correct / 200 * 100);
+    case 'b35': return Math.min(100, total / 100 * 100);
+    case 'b36': return Math.min(100, total / 500 * 100);
+    case 'b37': return Math.min(100, total / 1000 * 100);
+    case 'b63': return Math.min(100, total / 2000 * 100);
+    case 'b13': return total >= 10 ? Math.min(100, accPct / 80 * 100) : 0;
+    case 'b14': return total >= 20 ? Math.min(100, accPct / 90 * 100) : 0;
+    case 'b42': return total >= 100 ? Math.min(100, accPct / 95 * 100) : 0;
+    case 'b43': return total >= 20 ? (stats.wrong / total <= 0.1 ? 100 : Math.max(0, 100 - (stats.wrong / total - 0.1) * 1000)) : 0;
+    case 'b16': return Math.min(100, stats.bestStreak / 20 * 100);
+    case 'b17': return stats.wrong === 0 && total >= 50 ? 100 : 0;
+    case 'b18': return Math.min(100, stats.bestStreak / 5 * 100);
+    case 'b19': return Math.min(100, stats.bestStreak / 10 * 100);
+    case 'b20': return Math.min(100, stats.bestStreak / 25 * 100);
+    case 'b21': return Math.min(100, stats.bestStreak / 50 * 100);
+    case 'b22': return Math.min(100, stats.bestStreak / 100 * 100);
+    case 'b23': return Math.min(100, (typeCounts.asset || 0) / 10 * 100);
+    case 'b24': return Math.min(100, (typeCounts.liability || 0) / 10 * 100);
+    case 'b25': return Math.min(100, (typeCounts.capital || 0) / 10 * 100);
+    case 'b26': return Math.min(100, (typeCounts.revenue || 0) / 10 * 100);
+    case 'b27': return Math.min(100, (typeCounts.expense || 0) / 10 * 100);
+    case 'b28': return Math.min(100, (typeCounts.drawing || 0) / 5 * 100);
+    case 'b29': return stats.ruleBreakerCount >= 1 ? 100 : 0;
+    case 'b30': return Math.min(100, stats.correct / 15 * 100);
+    case 'b31': return stats.fastAnswers >= 1 ? 100 : 0;
+    case 'b32': return Math.min(100, (stats.fastAnswers || 0) / 10 * 100);
+    case 'b33': return stats.correct >= 1 ? 100 : 0;
+    case 'b34': return stats.correct >= 10 && stats.wrong === 0 ? 100 : 0;
+    case 'b44': return Math.min(100, (stats.focusCount || 0) / 20 * 100);
+    case 'b46': return Math.min(100, (stats.smartModeCount || 0) / 50 * 100);
+    case 'b86': return (accPct >= 80 && total >= 200 && stats.bestStreak >= 50) ? 100 : 0;
+    case 'b87': return (accPct >= 90 && total >= 500 && stats.bestStreak >= 100) ? 100 : 0;
+    case 'b88': return (total >= 1000 && stats.correct / total >= 0.7) ? 100 : 0;
+    case 'b93': return total >= 100 ? 100 : 0;
+    case 'b94': return (stats.level >= 15 && accPct >= 75) ? 100 : 0;
+    case 'b95': return (stats.correct >= 1000 && accPct >= 80) ? 100 : 0;
+    case 'b96': return Math.min(100, stats.correct / 2000 * 100);
+    case 'b97': return Math.min(100, total / 5000 * 100);
+    case 'b98': return Math.min(100, stats.correct / 5000 * 100);
+    case 'b99': return (stats.coins >= 5000 && stats.rubies >= 200) ? 100 : 0;
+    case 'b55': return Math.min(100, (stats.timerQuestionsCompleted || 0) / 10 * 100);
+    case 'b56': return Math.min(100, (stats.timerQuestionsCompleted || 0) / 50 * 100);
+    case 'b57': return Math.min(100, (stats.timerQuestionsCompleted || 0) / 100 * 100);
+    case 'b58': return Math.min(100, (stats.timer5sCompleted || 0) / 50 * 100);
+    case 'b59': return Math.min(100, (stats.timer10sCompleted || 0) / 50 * 100);
+    case 'b70': return Math.min(100, (stats.rubies || 0) / 500 * 100);
+    case 'b71': return Math.min(100, (stats.coins || 0) / 1000 * 100);
+    case 'b72': return Math.min(100, (stats.coins || 0) / 5000 * 100);
+    case 'b73': return Math.min(100, (stats.coins || 0) / 10000 * 100);
+    case 'b50': return Math.min(100, stats.correct / 5000 * 100);
+    case 'b51': return 0;
+    case 'b74': return Math.min(100, stats.level / 20 * 100);
+    case 'b75': return Math.min(100, stats.level / 50 * 100);
+    case 'b76': return Math.min(100, stats.level / 100 * 100);
+    case 'b77': return Math.min(100, (stats.smartModeCount || 0) / 100 * 100);
+    case 'b78': return Math.min(100, (stats.smartModeCount || 0) / 500 * 100);
+    case 'b79': return Math.min(100, (stats.revisionCorrect || 0) / 50 * 100);
+    case 'b80': return Math.min(100, (stats.revisionCorrect || 0) / 100 * 100);
+    case 'b81': return Math.min(100, (stats.pointBoosterUsed || 0) / 10 * 100);
+    case 'b82': return Math.min(100, (stats.coinBoosterUsed || 0) / 10 * 100);
+    case 'b83': return Math.min(100, (stats.streakBoosterUsed || 0) / 10 * 100);
+    case 'b38': return Math.min(100, stats.level / 10 * 100);
+    case 'b39': return Math.min(100, stats.correct / 500 * 100);
+    case 'b40': return Math.min(100, stats.correct / 1000 * 100);
+    default: return 0;
+  }
+}
+
+function showBadgeDetails(badgeId) {
+  const badge = ALL_BADGES.find(b => b.id === badgeId);
+  if (!badge) return;
+
+  const s = state.stats;
+  const progress = getBadgeProgress(badgeId, s);
+  const description = getBadgeDescription(badgeId);
+
+  document.getElementById("badgeModalIcon").textContent = badge.icon;
+  document.getElementById("badgeModalTitle").textContent = badge.name;
+  document.getElementById("badgeModalDesc").textContent = description;
+  document.getElementById("badgeProgressFill").style.width = Math.min(100, progress) + "%";
+  document.getElementById("badgeProgressPct").textContent = Math.min(100, Math.round(progress)) + "%";
+
+  document.getElementById("badgeModal").classList.add("show");
 }
 
 // ================================================================
@@ -887,8 +1161,7 @@ let state = {
     accuracyHistory: [], weakRules: {}, quizHistory: [],
     fastAnswers: 0, ruleBreakerCount: 0, focusCount: 0, smartModeCount: 0,
     earnedBadges: [], smartCategoryData: {}, effectiveDifficulty: "easy",
-    hearts: 5, maxHearts: 5, lastHeartRefill: Date.now(),
-    timerWrongCount: 0,
+    // heart system removed completely
     pointBoosterActive: false, pointBoosterExpiry: 0,
     coinBoosterActive: false, coinBoosterExpiry: 0,
     noStreakBreakRemaining: 0,
@@ -903,19 +1176,15 @@ let state = {
     timerQuestionsCompleted: 0, timer5sCompleted: 0, timer10sCompleted: 0,
     revisionCorrect: 0,
     pointBoosterUsed: 0, coinBoosterUsed: 0, streakBoosterUsed: 0,
-    heartsLost: 0,
     javedaClicks: 0, dailyStreak: 0, lastActivityDate: null,
     sessionQuestions: 0, nightQuestions: 0, earlyQuestions: 0,
-    heartsEmptySince: null, heartsRefillPending: false,
   },
   unsubUser: null, unsubLeaderboard: null,
   isGuest: false, guestId: null,
   questionStartTime: 0, hintUsedForQuestion: false, advancePending: false,
   statsLoaded: false, statsLoadAttempted: false, pendingSave: null,
   timerMode: false, timerSec: 5, timerInterval: null, timerRemaining: 5, timerActive: false,
-  heartRefillInterval: null,
   _shownBadges: new Set(),
-  _heartCountdownInterval: null,
 };
 
 // ================================================================
@@ -931,218 +1200,8 @@ function setText(id, value) {
 }
 
 // ================================================================
-// 10. HEART SYSTEM (শুধু Timer Mode-এর জন্য)
+// 10. HEART SYSTEM REMOVED
 // ================================================================
-
-function checkHeartRefill() {
-  // শুধুমাত্র Timer Mode (Medium/Hard) এ heart ব্যবস্থা সক্রিয়
-  if (!state.timerMode || state.difficulty === "easy") return;
-
-  const s = state.stats;
-  const now = Date.now();
-  const refillInterval = 5 * 60 * 1000; // ৫ মিনিট
-
-  if (s.hearts >= s.maxHearts) {
-    s.lastHeartRefill = now;
-    if (s.heartsRefillPending) {
-      s.heartsRefillPending = false;
-      s.heartsEmptySince = null;
-      stopHeartCountdown();
-      // যদি টাইমার মোড চালু থাকে, কুইজ আবার শুরু করুন
-      if (state.timerMode && state.difficulty !== "easy") {
-        generateNextQuestionSet();
-        showToast("❤️ Heart Refilled!", "Timer Mode resumed.", "fa-heart", "gain");
-      }
-    }
-    return;
-  }
-
-  if (s.hearts === 0) {
-    if (!s.heartsRefillPending) {
-      s.heartsRefillPending = true;
-      s.heartsEmptySince = now;
-      startHeartCountdown();
-      renderNoHeartsState();
-    }
-    const elapsed = now - s.lastHeartRefill;
-    if (elapsed >= refillInterval) {
-      s.hearts = 1;
-      s.lastHeartRefill = now - (elapsed % refillInterval);
-      s.heartsRefillPending = false;
-      s.heartsEmptySince = null;
-      stopHeartCountdown();
-      updateHeartsDisplay();
-      saveStats();
-      showHeartToast(s.hearts, false);
-      if (state.timerMode && state.difficulty !== "easy") {
-        generateNextQuestionSet();
-        showToast("❤️ Heart Refilled!", "Timer Mode resumed.", "fa-heart", "gain");
-      }
-    }
-    return;
-  }
-
-  // hearts > 0 এবং < max
-  const elapsed = now - s.lastHeartRefill;
-  if (elapsed >= refillInterval) {
-    const heartsToAdd = Math.min(s.maxHearts - s.hearts, Math.floor(elapsed / refillInterval));
-    if (heartsToAdd > 0) {
-      s.hearts += heartsToAdd;
-      s.lastHeartRefill = now - (elapsed % refillInterval);
-      showHeartToast(s.hearts, false);
-      updateHeartsDisplay();
-      saveStats();
-    } else {
-      s.lastHeartRefill = now;
-    }
-  }
-}
-
-function startHeartCountdown() {
-  stopHeartCountdown();
-  state._heartCountdownInterval = setInterval(() => {
-    updateHeartCountdownDisplay();
-  }, 1000);
-  updateHeartCountdownDisplay();
-}
-
-function stopHeartCountdown() {
-  if (state._heartCountdownInterval) {
-    clearInterval(state._heartCountdownInterval);
-    state._heartCountdownInterval = null;
-  }
-}
-
-function updateHeartCountdownDisplay() {
-  const s = state.stats;
-  if (!s.heartsRefillPending || s.hearts > 0) {
-    if (s.hearts > 0 && s.heartsRefillPending) {
-      s.heartsRefillPending = false;
-      s.heartsEmptySince = null;
-      stopHeartCountdown();
-      if (state.timerMode && state.difficulty !== "easy") {
-        generateNextQuestionSet();
-        showToast("❤️ Heart Refilled!", "Timer Mode resumed.", "fa-heart", "gain");
-      }
-    }
-    return;
-  }
-
-  const now = Date.now();
-  const refillInterval = 5 * 60 * 1000;
-  const elapsed = now - s.lastHeartRefill;
-  const remaining = Math.max(0, refillInterval - elapsed);
-  const seconds = Math.ceil(remaining / 1000);
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  const timeStr = `${mins}:${secs.toString().padStart(2, '0')}`;
-
-  const transactionDisplay = document.getElementById("transactionDisplay");
-  const accountName = document.getElementById("accountName");
-  if (transactionDisplay) {
-    transactionDisplay.innerHTML = `💔 No Hearts Left`;
-  }
-  if (accountName) {
-    accountName.textContent = `Refilling in ${timeStr}`;
-  }
-
-  const timerDisplay = document.getElementById("timerDisplay");
-  const timerCountdown = document.getElementById("timerCountdown");
-  if (timerDisplay && state.timerMode) {
-    timerDisplay.classList.add("show");
-    timerDisplay.classList.remove("warning");
-    if (timerCountdown) {
-      timerCountdown.textContent = seconds;
-    }
-  }
-}
-
-function renderNoHeartsState() {
-  // শুধুমাত্র Timer Mode-এ এই ফাংশন কল হবে
-  const transactionDisplay = document.getElementById("transactionDisplay");
-  const accountName = document.getElementById("accountName");
-  if (transactionDisplay) {
-    transactionDisplay.innerHTML = `💔 No Hearts Left`;
-  }
-  if (accountName) {
-    accountName.textContent = `Refilling...`;
-  }
-
-  $$(".quiz-opt").forEach((b) => (b.disabled = true));
-  const fb = document.getElementById("feedbackBox");
-  if (fb) fb.classList.remove("show");
-
-  if (state.timerMode && state.difficulty !== "easy") {
-    const timerDisplay = document.getElementById("timerDisplay");
-    const timerCountdown = document.getElementById("timerCountdown");
-    if (timerDisplay) {
-      timerDisplay.classList.add("show");
-      timerDisplay.classList.remove("warning");
-    }
-    if (timerCountdown) {
-      timerCountdown.textContent = "0";
-    }
-  }
-
-  updateHeartsDisplay();
-  updateHintButton();
-}
-
-function updateHeartsDisplay() {
-  const s = state.stats;
-  const inlineContainer = document.getElementById("heartsInline");
-  const inlineDisplay = document.getElementById("heartsInlineDisplay");
-  const inlineCount = document.getElementById("heartsInlineCount");
-
-  if (state.timerMode && state.difficulty !== "easy") {
-    inlineContainer.classList.add("show");
-    let html = "";
-    for (let i = 0; i < s.maxHearts; i++) {
-      if (i < s.hearts) {
-        html += `<span class="heart">❤️</span>`;
-      } else {
-        html += `<span class="heart lost">🤍</span>`;
-      }
-    }
-    if (inlineDisplay) inlineDisplay.innerHTML = html;
-    if (inlineCount) inlineCount.textContent = s.hearts;
-  } else {
-    inlineContainer.classList.remove("show");
-  }
-  setText("dHearts", s.hearts);
-}
-
-function loseHeart() {
-  const s = state.stats;
-  if (!state.timerMode || state.difficulty === "easy") return;
-
-  s.hearts = Math.max(0, s.hearts - 1);
-  s.timerWrongCount = 0;
-  s.heartsLost = (s.heartsLost || 0) + 1;
-  updateHeartsDisplay();
-  saveStats();
-
-  if (s.hearts <= 0) {
-    s.heartsRefillPending = true;
-    s.heartsEmptySince = Date.now();
-    startHeartCountdown();
-    renderNoHeartsState();
-    showToast(
-      "💔 No Hearts Left!",
-      "Timer Mode paused. Refilling in 5 minutes.",
-      "fa-heart",
-      "loss"
-    );
-    stopTimer();
-    const timerDisplay = document.getElementById("timerDisplay");
-    if (timerDisplay) {
-      timerDisplay.classList.add("show");
-      timerDisplay.classList.remove("warning");
-    }
-  } else {
-    showHeartToast(s.hearts, true);
-  }
-}
 
 // ================================================================
 // 11. BOOSTER SYSTEM
@@ -1259,7 +1318,6 @@ function updateHeaderStats() {
   }
   const hintCount = document.getElementById("hintCountDisplay");
   if (hintCount) hintCount.textContent = s.hints || 0;
-  updateHeartsDisplay();
   updateBoosterStatus();
   checkBoosters();
 }
@@ -1279,7 +1337,7 @@ function updateHintButton() {
   const hintBtn = document.getElementById("hintBtn");
   if (!hintBtn) return;
   const hints = state.stats.hints || 0;
-  const disabled = state.revisionMode || state.timerMode || (state.timerMode && state.difficulty !== "easy" && state.stats.hearts <= 0);
+  const disabled = state.revisionMode || state.timerMode;
   if (hints > 0 && !disabled) {
     hintBtn.disabled = false;
     hintBtn.innerHTML = `<i class="fas fa-lightbulb"></i> Use Hint <span class="hint-count">${hints}</span>`;
@@ -1295,12 +1353,6 @@ function renderQuestion() {
   const q = state.currentQuestion;
   const transactionDisplay = document.getElementById("transactionDisplay");
   const accountName = document.getElementById("accountName");
-
-  // শুধু Timer Mode (Medium/Hard) এ heart ০ চেক
-  if (state.timerMode && state.difficulty !== "easy" && state.stats.hearts <= 0) {
-    renderNoHeartsState();
-    return;
-  }
 
   if (!q) {
     if (transactionDisplay) transactionDisplay.textContent = "Loading...";
@@ -1340,25 +1392,18 @@ function renderQuestion() {
   state.hintUsedForQuestion = false;
   state.advancePending = false;
 
-  // Timer Mode-এ heart চেক
   if (state.timerMode && state.difficulty !== "easy") {
-    checkHeartRefill();
-    if (state.stats.hearts > 0) {
-      const timerDisplay = document.getElementById("timerDisplay");
-      const timerCountdown = document.getElementById("timerCountdown");
-      if (timerDisplay) {
-        timerDisplay.classList.add("show");
-        timerDisplay.classList.remove("warning");
-      }
-      if (timerCountdown) {
-        timerCountdown.textContent = state.timerSec;
-      }
-      state.timerRemaining = state.timerSec;
-      startTimer();
-    } else {
-      renderNoHeartsState();
-      return;
+    const timerDisplay = document.getElementById("timerDisplay");
+    const timerCountdown = document.getElementById("timerCountdown");
+    if (timerDisplay) {
+      timerDisplay.classList.add("show");
+      timerDisplay.classList.remove("warning");
     }
+    if (timerCountdown) {
+      timerCountdown.textContent = state.timerSec;
+    }
+    state.timerRemaining = state.timerSec;
+    startTimer();
   } else {
     const timerDisplay = document.getElementById("timerDisplay");
     if (timerDisplay) timerDisplay.classList.remove("show");
@@ -1408,7 +1453,6 @@ function renderQuestion() {
     }
   }
 
-  updateHeartsDisplay();
   updateQuizProgress();
   if (state.autoTimer) {
     clearInterval(state.autoTimer);
@@ -1441,7 +1485,6 @@ function updateModeToggles() {
       if (dot) dot.style.background = "var(--text-muted)";
       document.getElementById("timerOptions").classList.remove("show");
       document.getElementById("timerBadge").style.display = "none";
-      document.getElementById("heartsInline").classList.remove("show");
       stopTimer();
       document.querySelectorAll(".diff-btn").forEach((b) => b.classList.remove("diff-toggle-disabled"));
     }
@@ -1471,7 +1514,6 @@ function updateModeToggles() {
       if (dot) dot.style.background = "var(--text-muted)";
       document.getElementById("timerOptions").classList.remove("show");
       document.getElementById("timerBadge").style.display = "none";
-      document.getElementById("heartsInline").classList.remove("show");
       stopTimer();
       document.querySelectorAll(".diff-btn").forEach((b) => b.classList.remove("diff-toggle-disabled"));
     }
@@ -1506,7 +1548,6 @@ function updateModeToggles() {
     }
     timerToggle.classList.remove("disabled-mode");
     if (hintBtn) hintBtn.disabled = true;
-    updateHeartsDisplay();
   } else {
     timerToggle.classList.remove("disabled-mode");
     if (!state.revisionMode) updateHintButton();
@@ -1526,7 +1567,7 @@ function updateModeToggles() {
 
 function startTimer() {
   stopTimer();
-  if (!state.timerMode || state.difficulty === "easy" || state.stats.hearts <= 0) return;
+  if (!state.timerMode || state.difficulty === "easy") return;
   state.timerActive = true;
   state.timerRemaining = state.timerSec;
   const timerCountdown = document.getElementById("timerCountdown");
@@ -1544,7 +1585,7 @@ function startTimer() {
     }
     if (state.timerRemaining <= 0) {
       stopTimer();
-      if (!state.answered && state.stats.hearts > 0) {
+      if (!state.answered) {
         if (timerDisplay) timerDisplay.classList.remove("show");
         handleTimerTimeout();
       }
@@ -1572,13 +1613,17 @@ function handleTimerTimeout() {
   const q = state.currentQuestion;
   const s = state.stats;
 
-  if (state.timerMode && state.difficulty !== "easy") {
-    loseHeart();
-    if (s.hearts <= 0) return;
-  }
+  const TIMEOUT_PENALTIES = {
+    medium: { 5: -4, 10: -3 },
+    hard: { 5: -5, 10: -4 },
+  };
+  const timeoutPenalty = TIMEOUT_PENALTIES[state.difficulty]?.[state.timerSec] || -2;
+  
+  s.points = Math.max(0, s.points + timeoutPenalty);
 
-  s.wrong++;
   const boosters = getBoosters();
+  s.wrong++;
+  
   if (boosters.streakActive) {
     s.noStreakBreakRemaining--;
     showToast("🛡️ Streak Protected!", `${s.noStreakBreakRemaining} protections left.`, "fa-shield", "gain");
@@ -1592,7 +1637,6 @@ function handleTimerTimeout() {
 
   const key = `${q.accountType}.${q.effect}`;
   s.weakRules[key] = (s.weakRules[key] || 0) + 1;
-
   if (s.topicStats && s.topicStats[q.accountType]) {
     s.topicStats[q.accountType].total++;
     s.topicStats[q.accountType].wrong++;
@@ -1610,6 +1654,13 @@ function handleTimerTimeout() {
   const acc = total > 0 ? Math.round((s.correct / total) * 100) : 0;
   s.accuracyHistory.push(acc);
   if (s.accuracyHistory.length > 7) s.accuracyHistory.shift();
+
+  showToast(
+    "⏱ Time's Up!",
+    `${timeoutPenalty} pts (time loss penalty)`,
+    "fa-hourglass-end",
+    "loss"
+  );
 
   state.userAnswer = "timeout";
   showFeedback(false, q, state.currentJournal, state.currentTransaction);
@@ -1774,12 +1825,6 @@ function generateNextQuestionSet() {
 
   const mode = state.difficulty;
 
-  // শুধু Timer Mode-এ heart ০ চেক
-  if (state.timerMode && state.difficulty !== "easy" && state.stats.hearts <= 0) {
-    renderNoHeartsState();
-    return;
-  }
-
   if (state.revisionMode) {
     if (state.revisionQueue.length > 0) {
       const revData = state.revisionQueue.shift();
@@ -1921,11 +1966,6 @@ async function handleAnswer(answer) {
   const isRevision = state.isRevisionQuestion && state.currentRevisionDocId;
   const isTimerMode = state.timerMode && state.difficulty !== "easy";
 
-  if (isTimerMode && s.hearts <= 0) {
-    renderNoHeartsState();
-    return;
-  }
-
   const boosters = getBoosters();
 
   const rewards = getRewards(
@@ -1972,15 +2012,6 @@ async function handleAnswer(answer) {
     s.topicStats[topicType].total++;
     if (!isCorrect) {
       s.topicStats[topicType].wrong++;
-    }
-  }
-
-  if (isTimerMode && !isCorrect) {
-    s.timerWrongCount = (s.timerWrongCount || 0) + 1;
-    if (s.timerWrongCount >= 3) {
-      loseHeart();
-      s.timerWrongCount = 0;
-      if (s.hearts <= 0) return;
     }
   }
 
@@ -2125,8 +2156,8 @@ function useHint() {
     showToast("Hint Not Available", "Answer the current question first.", "fa-exclamation-circle", "loss");
     return;
   }
-  if (state.revisionMode || state.timerMode || (state.timerMode && state.difficulty !== "easy" && state.stats.hearts <= 0)) {
-    showToast("Hint Disabled", "Hints are not available in Revision, Timer Mode, or when no hearts.", "fa-exclamation-circle", "loss");
+  if (state.revisionMode || state.timerMode) {
+    showToast("Hint Disabled", "Hints are not available in Revision or Timer Mode.", "fa-exclamation-circle", "loss");
     return;
   }
   if (state.stats.hints <= 0) {
@@ -2222,7 +2253,7 @@ function updateDashboard() {
   setText("dAccuracy", acc + "%");
   setText("dCoins", s.coins);
   setText("dRubies", s.rubies || 0);
-  setText("dHearts", s.hearts || 0);
+  setText("dHearts", 0);
   setText("dPoints", s.points);
   setText("dXp", s.xp);
   const level = getLevelFromXP(s.xp);
@@ -2252,6 +2283,15 @@ function updateBadges() {
     const el = document.createElement("div");
     el.className = "badge-item" + (unlockedBadge ? "" : " locked");
     el.innerHTML = `<div class="b-icon ${unlockedBadge ? "unlocked" : "locked"}">${badge.icon}</div><div class="b-info"><div class="b-name">${badge.name}</div></div>`;
+    // Click event for locked badges only
+    if (!unlockedBadge) {
+      el.style.cursor = "pointer";
+      el.addEventListener("click", (function(bid) {
+        return function() {
+          showBadgeDetails(bid);
+        };
+      })(badge.id));
+    }
     grid.appendChild(el);
   }
   setText("badgeCount", `${unlocked} / 100`);
@@ -2601,7 +2641,6 @@ function init() {
         state.stats.earlyQuestions = state.stats.earlyQuestions || 0;
       }
     } catch (e) {}
-    checkHeartRefill();
     updateHeaderStats();
     updateDashboard();
     updateBadges();
@@ -2744,7 +2783,6 @@ function init() {
       }
       document.getElementById("timerOptions").classList.remove("show");
       document.getElementById("timerBadge").style.display = "none";
-      document.getElementById("heartsInline").classList.remove("show");
       stopTimer();
       document.querySelectorAll(".diff-btn").forEach((b) => b.classList.remove("diff-toggle-disabled"));
     }
@@ -2814,7 +2852,6 @@ function init() {
       }
       document.getElementById("timerOptions").classList.remove("show");
       document.getElementById("timerBadge").style.display = "none";
-      document.getElementById("heartsInline").classList.remove("show");
       stopTimer();
       document.querySelectorAll(".diff-btn").forEach((b) => b.classList.remove("diff-toggle-disabled"));
     }
@@ -2895,8 +2932,6 @@ function init() {
     if (dot) dot.style.background = state.timerMode ? "var(--accent-1)" : "var(--text-muted)";
 
     if (state.timerMode) {
-      // Heart রিসেট করবেন না
-      state.stats.timerWrongCount = 0;
       document.getElementById("timerOptions").classList.add("show");
       showToast("Timer Mode On", `⏱ ${state.timerSec}s per question. Medium & Hard only.`, "fa-hourglass-half", "gain");
       document.querySelectorAll(".diff-btn").forEach((b) => {
@@ -2916,13 +2951,7 @@ function init() {
         timerBadge.textContent = `⏱ ${state.timerSec}s`;
         timerBadge.className = "timer-badge ruby";
       }
-      if (state.stats.hearts <= 0) {
-        renderNoHeartsState();
-        startHeartCountdown();
-      } else {
-        generateNextQuestionSet();
-      }
-      updateHeartsDisplay();
+      generateNextQuestionSet();
     } else {
       document.getElementById("timerOptions").classList.remove("show");
       document.querySelectorAll(".diff-btn").forEach((b) => {
@@ -2931,11 +2960,7 @@ function init() {
       });
       const timerBadge = document.getElementById("timerBadge");
       if (timerBadge) timerBadge.style.display = "none";
-      document.getElementById("heartsInline").classList.remove("show");
       stopTimer();
-      stopHeartCountdown();
-      state.stats.heartsRefillPending = false;
-      state.stats.heartsEmptySince = null;
       showToast("Timer Mode Off", "Timer disabled.", "fa-hourglass-half", "gain");
       generateNextQuestionSet();
     }
@@ -3039,22 +3064,6 @@ function init() {
     });
   });
 
-  setInterval(() => {
-    if (state.stats.hearts < state.stats.maxHearts && state.timerMode && state.difficulty !== "easy") {
-      checkHeartRefill();
-    }
-    checkBoosters();
-    updateHeartsDisplay();
-    updateBoosterStatus();
-    if (state.stats.hearts <= 0 && state.stats.heartsRefillPending && state.timerMode && state.difficulty !== "easy") {
-      updateHeartCountdownDisplay();
-    }
-  }, 60000);
-
-  if (state.stats.hearts <= 0 && state.stats.heartsRefillPending && state.timerMode && state.difficulty !== "easy") {
-    startHeartCountdown();
-  }
-
   if (state.smartMode) {
     const smartToggle = document.getElementById("smartToggle");
     if (smartToggle) {
@@ -3083,15 +3092,34 @@ function init() {
     };
   }
 
-  if (state.timerMode && state.difficulty !== "easy") checkHeartRefill();
-
   updateDiffModeLabel(state.difficulty);
   updateModeToggles();
-  updateHeartsDisplay();
   updateBoosterStatus();
 
-  console.log("📘 Version : 6.0.0 - New 28 badges with new logic (Leaderboard, Javeda, hints, streaks, etc.)");
+  console.log("📘 Version : 6.0.2 - Timer Mode updated: Heart system removed, Timeout penalty added, Badge detail modal added");
   console.log("✅ Developed By - Faizul Islam Riyad");
 }
+
+// ================================================================
+// MODAL CLOSE EVENT
+// ================================================================
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Badge modal close
+  const closeBtn = document.getElementById("badgeModalClose");
+  const modal = document.getElementById("badgeModal");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", function() {
+      modal.classList.remove("show");
+    });
+  }
+  if (modal) {
+    modal.addEventListener("click", function(e) {
+      if (e.target === this) {
+        this.classList.remove("show");
+      }
+    });
+  }
+});
 
 document.addEventListener("DOMContentLoaded", init);

@@ -94,7 +94,7 @@
         </nav>
 
         <!-- ============================================================
-        SECTION: QUIZ (UPDATED)
+        SECTION: QUIZ (UPDATED – Timer Mode Hearts Removed)
         ============================================================ -->
         <section class="section-panel active" id="section-quiz">
             <div class="quiz-container">
@@ -123,10 +123,7 @@
                     <button class="mode-toggle" id="timerToggle">
                         <span class="toggle-dot"></span> <i class="fas fa-hourglass-half"></i> Timer Mode
                         <span class="timer-badge" id="timerBadge" style="display:none;">⏱</span>
-                        <span class="hearts-inline" id="heartsInline">
-                            <span id="heartsInlineDisplay"></span>
-                            <span class="heart-count" id="heartsInlineCount">5</span>
-                        </span>
+                        <!-- ===== Hearts UI সম্পূর্ণ রিমুভ করা হয়েছে ===== -->
                     </button>
                     <div class="timer-options" id="timerOptions">
                         <button class="timer-opt active" data-timer="5">5s</button>
@@ -140,7 +137,6 @@
                     </div>
                     <div class="transaction-display" id="transactionDisplay">Loading...</div>
 
-                    <!-- UPDATED: Account name first, then "Debit or Credit ?" -->
                     <div class="account-prompt">
                         <strong id="accountName">—</strong>
                         <div class="account-question">Debit or Credit ?</div>
@@ -194,7 +190,7 @@
         </section>
 
         <!-- ============================================================
-        SECTION: DASHBOARD (unchanged)
+        SECTION: DASHBOARD (UPDATED)
         ============================================================ -->
         <section class="section-panel" id="section-dashboard">
             <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
@@ -438,6 +434,28 @@
             </div>
         </section>
     </div>
+
+    <!-- ===== BADGE DETAIL MODAL ===== -->
+    <div class="modal-overlay" id="badgeModal">
+        <div class="modal" style="max-width:460px;">
+            <div class="modal-icon" id="badgeModalIcon" style="font-size:48px;text-align:center;">🏆</div>
+            <h2 id="badgeModalTitle" style="text-align:center;font-size:22px;font-weight:700;">Badge Name</h2>
+            <p id="badgeModalDesc" style="text-align:center;color:var(--text-secondary);font-size:15px;line-height:1.6;margin:8px 0 16px;">How to earn this badge</p>
+            <div style="margin:12px 0;">
+                <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary);margin-bottom:4px;">
+                    <span>Progress</span>
+                    <span id="badgeProgressPct">0%</span>
+                </div>
+                <div class="progress-track" style="height:8px;background:rgba(255,255,255,0.4);border-radius:30px;overflow:hidden;">
+                    <div class="fill" id="badgeProgressFill" style="width:0%;height:100%;border-radius:30px;background:var(--gradient-1);transition:width 0.6s ease;"></div>
+                </div>
+            </div>
+            <div class="modal-actions" style="display:flex;justify-content:center;gap:12px;margin-top:16px;">
+                <button class="btn btn-primary" id="badgeModalClose" style="padding:8px 32px;border-radius:30px;border:none;background:var(--gradient-1);color:#fff;font-weight:600;cursor:pointer;">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script src="firebase.js"></script>
     <script src="script.js"></script>
 </body>

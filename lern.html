@@ -769,6 +769,10 @@
             color: var(--accent-4);
             font-weight: 600;
         }
+        .reward-table .highlight-timeout {
+            color: #b87333;
+            font-weight: 600;
+        }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
@@ -1333,7 +1337,7 @@
         </div>
 
         <!-- ============================================================
-        NEW CHAPTER: HOW TO WORK – Full Feature Guide
+        NEW CHAPTER: HOW TO WORK – Full Feature Guide (UPDATED)
         ============================================================ -->
         <div class="chapter" id="ch-howto">
             <div class="ch-header" onclick="toggleChapter(this)">
@@ -1394,11 +1398,12 @@
 
                     <div class="feature-card">
                         <span class="f-icon"><i class="fas fa-hourglass-half"></i></span>
-                        <div class="f-title">Timer Mode &amp; Hearts</div>
+                        <div class="f-title">Timer Mode (Updated)</div>
                         <div class="f-desc">
-                            <strong>Medium/Hard</strong> এর জন্য সময়সীমা (5s বা 10s) এবং <strong>❤️ ৫টি হার্ট</strong> থাকে।<br>
-                            প্রতি ৫ মিনিটে ১টি হার্ট রিফিল হয়। ৩টি ধারাবাহিক ভুল বা সময় শেষ হলে ১টি হার্ট কমে।<br>
-                            হার্ট শেষ হলে Timer Mode পজ হয়।
+                            <strong>Medium/Hard</strong> এর জন্য সময়সীমা (5s বা 10s)।<br>
+                            <strong>সঠিক উত্তর</strong> → রিওয়ার্ড (Points, XP, Coins, Rubies)<br>
+                            <strong>ভুল উত্তর</strong> → পেনাল্টি (যেমন -৭ পয়েন্ট)<br>
+                            <strong>সময় শেষ (Timeout)</strong> → আলাদা পেনাল্টি (যেমন -৪ পয়েন্ট) — <strong>হার্ট সিস্টেম নেই</strong>।
                             <span class="f-tag red">Challenge</span>
                         </div>
                     </div>
@@ -1483,7 +1488,7 @@
 
                 </div>
 
-                <!-- ===== REWARDS TABLE ===== -->
+                <!-- ===== REWARDS TABLE (UPDATED) ===== -->
                 <h3><i class="fas fa-star" style="color:var(--accent-3);margin-right:8px;"></i> Points, XP, Coins &amp; Rubies — কীভাবে পাবেন?</h3>
                 <h4>Normal Mode (no timer)</h4>
                 <div class="reward-table-wrap">
@@ -1504,7 +1509,7 @@
                 </div>
                 <p style="font-size:13px;color:var(--text-muted);"><i class="fas fa-info-circle"></i> Rubies only earned in Timer Mode (see below).</p>
 
-                <h4>Timer Mode (Medium &amp; Hard only)</h4>
+                <h4>Timer Mode (Medium &amp; Hard only) — Updated</h4>
                 <div class="reward-table-wrap">
                     <table class="reward-table">
                         <thead>
@@ -1513,17 +1518,18 @@
                                 <th>Timer</th>
                                 <th>Correct</th>
                                 <th>Wrong (Penalty)</th>
+                                <th>Timeout (Penalty)</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td>Medium</td><td>5s</td><td><span class="highlight-gain">+14 pts, +8 XP, +3 🪙, +1 💎</span></td><td><span class="highlight-loss">-7 pts</span></td></tr>
-                            <tr><td>Medium</td><td>10s</td><td><span class="highlight-gain">+12 pts, +6 XP, +2 🪙</span></td><td><span class="highlight-loss">-6 pts</span></td></tr>
-                            <tr><td>Hard</td><td>5s</td><td><span class="highlight-gain">+18 pts, +12 XP, +4 🪙, +2 💎</span></td><td><span class="highlight-loss">-9 pts</span></td></tr>
-                            <tr><td>Hard</td><td>10s</td><td><span class="highlight-gain">+16 pts, +10 XP, +3 🪙</span></td><td><span class="highlight-loss">-8 pts</span></td></tr>
+                            <tr><td>Medium</td><td>5s</td><td><span class="highlight-gain">+14 pts, +8 XP, +3 🪙, +1 💎</span></td><td><span class="highlight-loss">-7 pts</span></td><td><span class="highlight-timeout">-4 pts</span></td></tr>
+                            <tr><td>Medium</td><td>10s</td><td><span class="highlight-gain">+12 pts, +6 XP, +2 🪙</span></td><td><span class="highlight-loss">-6 pts</span></td><td><span class="highlight-timeout">-3 pts</span></td></tr>
+                            <tr><td>Hard</td><td>5s</td><td><span class="highlight-gain">+18 pts, +12 XP, +4 🪙, +2 💎</span></td><td><span class="highlight-loss">-9 pts</span></td><td><span class="highlight-timeout">-5 pts</span></td></tr>
+                            <tr><td>Hard</td><td>10s</td><td><span class="highlight-gain">+16 pts, +10 XP, +3 🪙</span></td><td><span class="highlight-loss">-8 pts</span></td><td><span class="highlight-timeout">-4 pts</span></td></tr>
                         </tbody>
                     </table>
                 </div>
-                <p style="font-size:13px;color:var(--text-muted);"><i class="fas fa-info-circle"></i> Boosters multiply these rewards (Point Booster doubles Points, Coin Booster multiplies Coins by 1.5).</p>
+                <p style="font-size:13px;color:var(--text-muted);"><i class="fas fa-info-circle"></i> Boosters multiply these rewards (Point Booster doubles Points, Coin Booster multiplies Coins by 1.5). <strong>Timeout penalty is separate and not affected by boosters.</strong></p>
 
                 <!-- ===== BADGE EARNING GUIDE (all 100 badges) ===== -->
                 <h3 style="margin-top:24px;"><i class="fas fa-medal" style="color:var(--accent-3);margin-right:8px;"></i> Complete Badge List (100 badges)</h3>
@@ -1557,7 +1563,7 @@
                             <!-- Revision (n15-n16) -->
                             <tr><td>🔄</td><td>Revision King</td></tr>
                             <tr><td>🔄</td><td>Revision Master</td></tr>
-                            <!-- Timer (n17-n18) -->
+                            <!-- Timer (n17-n18) - updated condition (no hearts) -->
                             <tr><td>⏱️</td><td>Timer Survivor</td></tr>
                             <tr><td>⏱️</td><td>Timer Legend</td></tr>
                             <!-- Smart (n19-n20) -->
@@ -1641,8 +1647,8 @@
                             <tr><td>⚡</td><td>Point Booster x10</td></tr>
                             <tr><td>🪙</td><td>Coin Booster x10</td></tr>
                             <tr><td>🛡️</td><td>Streak Protector x10</td></tr>
-                            <!-- Hearts (b85) -->
-                            <tr><td>❤️</td><td>Heart Collector (full 5)</td></tr>
+                            <!-- Hearts (b85) – no longer applicable, kept for legacy? We'll remove it -->
+                            <!-- <tr><td>❤️</td><td>Heart Collector (full 5)</td></tr> -->
                             <!-- Timer specific (b55-b59) -->
                             <tr><td>⏱️</td><td>Timer Novice</td></tr>
                             <tr><td>⏱️</td><td>Timer Adept</td></tr>
@@ -1661,14 +1667,13 @@
                             <tr><td>🏆</td><td>Accounting Pro</td></tr>
                             <tr><td>🏆</td><td>Debit-Credit Champ</td></tr>
                             <tr><td>👼</td><td>Journal God</td></tr>
-                            <!-- b17 already included as Zero Error Zone? Actually b17 is Zero Error Zone, we have it. b16 is Flawless Brain. -->
                             <!-- All remaining badges are already covered. -->
                         </tbody>
                     </table>
                 </div>
                 <p style="font-size:13px;color:var(--text-muted);"><i class="fas fa-info-circle"></i> প্রতিটি Badge-এর নির্দিষ্ট শর্ত Dashboard-এর Badges সেকশনে দেখতে পাবেন।</p>
 
-                <!-- ===== QUICK TIPS ===== -->
+                <!-- ===== QUICK TIPS (UPDATED) ===== -->
                 <h3><i class="fas fa-lightbulb" style="color:var(--accent-3);margin-right:8px;"></i> Quick Tips</h3>
                 <ul>
                     <li><strong>Smart Mode</strong> চালু রাখুন — এটি আপনার দুর্বল দিক চিহ্নিত করে বেশি প্রশ্ন দেয়।</li>
@@ -1677,7 +1682,7 @@
                     <li><strong>Leaderboard</strong>-এ উঠতে Accuracy ও Consistency গুরুত্বপূর্ণ।</li>
                     <li><strong>Dashboard</strong>-এ Weak Topics দেখে বুঝুন কোন ধরনের হিসাবে ভুল বেশি হয়।</li>
                     <li><strong>Guest</strong> হিসেবে খেললে ডেটা লোকালে সেভ হয় — লগইন করলে Server এ সেভ হয় এবং Leaderboard-এ অংশ নিতে পারেন।</li>
-                    <li><strong>Timer Mode</strong> এ Hearts সাবধানে ব্যবহার করুন — ৩টি ধারাবাহিক ভুলে হার্ট কমে।</li>
+                    <li><strong>Timer Mode</strong>-এ সময়ের দিকে খেয়াল রাখুন — সময় শেষ হলে পেনাল্টি আছে, কিন্তু আগের মতো হার্ট কমে না। তাই চিন্তা না করে ফোকাস করুন।</li>
                     <li><strong>Boosters</strong> কিনলে পুরস্কার বাড়ে — Point Booster ও Coin Booster বিশেষভাবে কার্যকর।</li>
                 </ul>
 
@@ -1799,7 +1804,7 @@
                 });
             });
 
-            console.log('📘 Learn Javeda · Interactive Learning System (Updated with accurate rewards & 100 badges)');
+            console.log('📘 Learn Javeda · Interactive Learning System (Updated: Timer Mode without Hearts, separate Timeout penalty)');
             console.log('💡 Press E to expand all, C to collapse all');
         });
     </script>
