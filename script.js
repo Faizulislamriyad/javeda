@@ -861,141 +861,10 @@ function checkBadges(stats) {
 }
 
 // ================================================================
-// 7.5. BADGE DETAILS & PROGRESS (NEW)
+// 7.5. BADGE DETAILS & PROGRESS (UPDATED - Multi-condition support)
 // ================================================================
 
-function getBadgeDescription(badgeId) {
-  const descriptions = {
-    // Leaderboard (n1-n4)
-    n1: "Reach #1 on the Leaderboard by XP.",
-    n2: "Reach #1 on the Leaderboard by Points.",
-    n3: "Reach #1 on the Leaderboard by Accuracy.",
-    n4: "Reach #1 on the Leaderboard by Badges.",
-    // Javeda (n5-n6)
-    n5: "Click the 'Learn Javeda' button 1 time.",
-    n6: "Click the 'Learn Javeda' button 5 times.",
-    // Hints (n7-n8)
-    n7: "Use 100 hints in total.",
-    n8: "Use 500 hints in total.",
-    // Daily (n9-n10)
-    n9: "Maintain a daily streak of 7 days.",
-    n10: "Maintain a daily streak of 30 days.",
-    // Speed & Marathon (n11-n12)
-    n11: "Answer 100 questions within 3 seconds each.",
-    n12: "Answer 50 questions in a single session.",
-    // Night/Early (n13-n14)
-    n13: "Answer 20 questions between midnight and 6 AM.",
-    n14: "Answer 20 questions between 6 AM and 9 AM.",
-    // Revision (n15-n16)
-    n15: "Correctly answer 50 revision questions.",
-    n16: "Correctly answer 200 revision questions.",
-    // Timer (n17-n18)
-    n17: "Complete 50 Timer Mode questions.",
-    n18: "Complete 200 Timer Mode questions.",
-    // Smart (n19-n20)
-    n19: "Answer 100 questions in Smart Mode.",
-    n20: "Answer 500 questions in Smart Mode.",
-    // Wealth (n21-n22)
-    n21: "Collect 10,000 coins.",
-    n22: "Collect 200 rubies.",
-    // Boosters (n23-n25)
-    n23: "Use the Streak Protector booster 10 times.",
-    n24: "Use the Point Booster 10 times.",
-    n25: "Use the Coin Booster 10 times.",
-    // Accountant (n26-n28)
-    n26: "Correctly answer 50 questions in each of the 6 account categories (Asset, Liability, Capital, Revenue, Expense, Drawing).",
-    n27: "Earn 50 total badges.",
-    n28: "Earn 75 total badges.",
-    // Debit/Credit starters (b3-b4)
-    b3: "Answer your first Debit question correctly.",
-    b4: "Answer your first Credit question correctly.",
-    // Progression (b5, b7-b11, b35-b37, b63)
-    b5: "Get 5 correct answers.",
-    b7: "Get 10 correct answers.",
-    b8: "Get 25 correct answers.",
-    b9: "Get 50 correct answers.",
-    b10: "Get 100 correct answers.",
-    b11: "Get 200 correct answers.",
-    b35: "Answer 100 total questions.",
-    b36: "Answer 500 total questions.",
-    b37: "Answer 1,000 total questions.",
-    b63: "Answer 2,000 total questions.",
-    // Accuracy (b13-b14, b42-b43)
-    b13: "Achieve 80%+ accuracy with at least 10 questions.",
-    b14: "Achieve 90%+ accuracy with at least 20 questions.",
-    b42: "Achieve 95%+ accuracy with at least 100 questions.",
-    b43: "Keep wrong answers below 10% of total questions (min 20 questions).",
-    // Streak (b16, b18-b22)
-    b16: "Achieve a streak of 20 correct answers.",
-    b17: "Get 50 correct answers with zero wrong answers.",
-    b18: "Achieve a streak of 5 correct answers.",
-    b19: "Achieve a streak of 10 correct answers.",
-    b20: "Achieve a streak of 25 correct answers.",
-    b21: "Achieve a streak of 50 correct answers.",
-    b22: "Achieve a streak of 100 correct answers.",
-    // Category Experts (b23-b28)
-    b23: "Correctly answer 10 Asset questions.",
-    b24: "Correctly answer 10 Liability questions.",
-    b25: "Correctly answer 10 Capital questions.",
-    b26: "Correctly answer 10 Revenue questions.",
-    b27: "Correctly answer 10 Expense questions.",
-    b28: "Correctly answer 5 Drawing questions.",
-    // Other (b29-b34, b44, b46, b86-b88, b93-b99)
-    b29: "Get at least 1 'Rule Breaker' (correct after previously wrong on same rule).",
-    b30: "Get 15 correct answers.",
-    b31: "Answer your first question within 3 seconds.",
-    b32: "Answer 10 questions within 3 seconds each.",
-    b33: "Get your first correct answer.",
-    b34: "Get 10 correct answers with zero wrong (perfect quiz).",
-    b44: "Answer 20 questions in Focus Mode (timer or smart).",
-    b46: "Answer 50 questions in Smart Mode.",
-    b86: "Achieve 80% accuracy, 200 total questions, and streak 50.",
-    b87: "Achieve 90% accuracy, 500 total questions, and streak 100.",
-    b88: "Answer 1,000 questions with 70%+ accuracy.",
-    b93: "Answer 100 total questions.",
-    b94: "Reach Level 15 with 75%+ accuracy.",
-    b95: "Get 1,000 correct answers with 80%+ accuracy.",
-    b96: "Get 2,000 correct answers.",
-    b97: "Answer 5,000 total questions.",
-    b98: "Get 5,000 correct answers.",
-    b99: "Collect 5,000 coins and 200 rubies.",
-    // Timer specific (b55-b59)
-    b55: "Complete 10 Timer Mode questions.",
-    b56: "Complete 50 Timer Mode questions.",
-    b57: "Complete 100 Timer Mode questions.",
-    b58: "Complete 50 Timer Mode questions with 5-second timer.",
-    b59: "Complete 50 Timer Mode questions with 10-second timer.",
-    // Coin/Ruby Tycoon (b70-b73)
-    b70: "Collect 500 rubies.",
-    b71: "Collect 1,000 coins.",
-    b72: "Collect 5,000 coins.",
-    b73: "Collect 10,000 coins.",
-    // Ultimate (b50, b51)
-    b50: "Get 5,000 correct answers.",
-    b51: "Reach Top 10 on the Leaderboard.",
-    // Level (b74-b76)
-    b74: "Reach Level 20.",
-    b75: "Reach Level 50.",
-    b76: "Reach Level 100.",
-    // Smart usage (b77-b78)
-    b77: "Answer 100 questions in Smart Mode.",
-    b78: "Answer 500 questions in Smart Mode.",
-    // Revision correct (b79-b80)
-    b79: "Correctly answer 50 revision questions.",
-    b80: "Correctly answer 100 revision questions.",
-    // Booster usage (b81-b83)
-    b81: "Use Point Booster 10 times.",
-    b82: "Use Coin Booster 10 times.",
-    b83: "Use Streak Protector 10 times.",
-    // Additional
-    b38: "Reach Level 10.",
-    b39: "Get 500 correct answers.",
-    b40: "Get 1,000 correct answers.",
-  };
-  return descriptions[badgeId] || "Earn this badge by meeting specific conditions.";
-}
-
-function getBadgeProgress(badgeId, stats) {
+function getBadgeDetails(badgeId, stats) {
   const total = stats.correct + stats.wrong;
   const acc = total > 0 ? stats.correct / total : 0;
   const accPct = Math.round(acc * 100);
@@ -1010,110 +879,143 @@ function getBadgeProgress(badgeId, stats) {
   }
   const totalBadges = (stats.earnedBadges || []).length;
 
+  // Helper to create progress item
+  function item(current, target, label, icon = "") {
+    const pct = Math.min(100, Math.round((current / target) * 100));
+    return { current, target, pct, label, icon };
+  }
+
   switch (badgeId) {
-    case 'n1': case 'n2': case 'n3': case 'n4': return 0;
-    case 'n5': return Math.min(100, (stats.javedaClicks || 0) / 1 * 100);
-    case 'n6': return Math.min(100, (stats.javedaClicks || 0) / 5 * 100);
-    case 'n7': return Math.min(100, (stats.hints || 0) / 100 * 100);
-    case 'n8': return Math.min(100, (stats.hints || 0) / 500 * 100);
-    case 'n9': return Math.min(100, (stats.dailyStreak || 0) / 7 * 100);
-    case 'n10': return Math.min(100, (stats.dailyStreak || 0) / 30 * 100);
-    case 'n11': return Math.min(100, (stats.fastAnswers || 0) / 100 * 100);
-    case 'n12': return Math.min(100, (stats.sessionQuestions || 0) / 50 * 100);
-    case 'n13': return Math.min(100, (stats.nightQuestions || 0) / 20 * 100);
-    case 'n14': return Math.min(100, (stats.earlyQuestions || 0) / 20 * 100);
-    case 'n15': return Math.min(100, (stats.revisionCorrect || 0) / 50 * 100);
-    case 'n16': return Math.min(100, (stats.revisionCorrect || 0) / 200 * 100);
-    case 'n17': return Math.min(100, (stats.timerQuestionsCompleted || 0) / 50 * 100);
-    case 'n18': return Math.min(100, (stats.timerQuestionsCompleted || 0) / 200 * 100);
-    case 'n19': return Math.min(100, (stats.smartModeCount || 0) / 100 * 100);
-    case 'n20': return Math.min(100, (stats.smartModeCount || 0) / 500 * 100);
-    case 'n21': return Math.min(100, (stats.coins || 0) / 10000 * 100);
-    case 'n22': return Math.min(100, (stats.rubies || 0) / 200 * 100);
-    case 'n23': return Math.min(100, (stats.streakBoosterUsed || 0) / 10 * 100);
-    case 'n24': return Math.min(100, (stats.pointBoosterUsed || 0) / 10 * 100);
-    case 'n25': return Math.min(100, (stats.coinBoosterUsed || 0) / 10 * 100);
+    // Leaderboard - not trackable
+    case 'n1': case 'n2': case 'n3': case 'n4': case 'b51':
+      return { description: "Reach Top position on Leaderboard.", items: [] };
+
+    // Single condition - simple count
+    case 'n5': return { description: "Click the 'Learn Javeda' button 1 time.", items: [item(stats.javedaClicks || 0, 1, "Clicks")] };
+    case 'n6': return { description: "Click the 'Learn Javeda' button 5 times.", items: [item(stats.javedaClicks || 0, 5, "Clicks")] };
+    case 'n7': return { description: "Use 100 hints in total.", items: [item(stats.hints || 0, 100, "Hints used")] };
+    case 'n8': return { description: "Use 500 hints in total.", items: [item(stats.hints || 0, 500, "Hints used")] };
+    case 'n9': return { description: "Maintain a daily streak of 7 days.", items: [item(stats.dailyStreak || 0, 7, "Days streak")] };
+    case 'n10': return { description: "Maintain a daily streak of 30 days.", items: [item(stats.dailyStreak || 0, 30, "Days streak")] };
+    case 'n11': return { description: "Answer 100 questions within 3 seconds each.", items: [item(stats.fastAnswers || 0, 100, "Fast answers")] };
+    case 'n12': return { description: "Answer 50 questions in a single session.", items: [item(stats.sessionQuestions || 0, 50, "Session questions")] };
+    case 'n13': return { description: "Answer 20 questions between midnight and 6 AM.", items: [item(stats.nightQuestions || 0, 20, "Night questions")] };
+    case 'n14': return { description: "Answer 20 questions between 6 AM and 9 AM.", items: [item(stats.earlyQuestions || 0, 20, "Early questions")] };
+    case 'n15': return { description: "Correctly answer 50 revision questions.", items: [item(stats.revisionCorrect || 0, 50, "Revision correct")] };
+    case 'n16': return { description: "Correctly answer 200 revision questions.", items: [item(stats.revisionCorrect || 0, 200, "Revision correct")] };
+    case 'n17': return { description: "Complete 50 Timer Mode questions.", items: [item(stats.timerQuestionsCompleted || 0, 50, "Timer questions")] };
+    case 'n18': return { description: "Complete 200 Timer Mode questions.", items: [item(stats.timerQuestionsCompleted || 0, 200, "Timer questions")] };
+    case 'n19': return { description: "Answer 100 questions in Smart Mode.", items: [item(stats.smartModeCount || 0, 100, "Smart questions")] };
+    case 'n20': return { description: "Answer 500 questions in Smart Mode.", items: [item(stats.smartModeCount || 0, 500, "Smart questions")] };
+    case 'n21': return { description: "Collect 10,000 coins.", items: [item(stats.coins || 0, 10000, "Coins", "🪙")] };
+    case 'n22': return { description: "Collect 200 rubies.", items: [item(stats.rubies || 0, 200, "Rubies", "💎")] };
+    case 'n23': return { description: "Use the Streak Protector booster 10 times.", items: [item(stats.streakBoosterUsed || 0, 10, "Streak Protector used")] };
+    case 'n24': return { description: "Use the Point Booster 10 times.", items: [item(stats.pointBoosterUsed || 0, 10, "Point Booster used")] };
+    case 'n25': return { description: "Use the Coin Booster 10 times.", items: [item(stats.coinBoosterUsed || 0, 10, "Coin Booster used")] };
     case 'n26': {
-      let totalCat = 0;
+      const catItems = [];
       for (const cat of ['asset','liability','capital','revenue','expense','drawing']) {
-        totalCat += Math.min(50, typeCounts[cat] || 0);
+        const count = typeCounts[cat] || 0;
+        catItems.push(item(Math.min(50, count), 50, cat.charAt(0).toUpperCase() + cat.slice(1)));
       }
-      return Math.round((totalCat / 300) * 100);
+      return { description: "Correctly answer 50 questions in each of the 6 account categories.", items: catItems };
     }
-    case 'n27': return Math.min(100, totalBadges / 50 * 100);
-    case 'n28': return Math.min(100, totalBadges / 75 * 100);
-    case 'b3': return stats.correct >= 1 ? 100 : 0;
-    case 'b4': return stats.correct >= 1 ? 100 : 0;
-    case 'b5': return Math.min(100, stats.correct / 5 * 100);
-    case 'b7': return Math.min(100, stats.correct / 10 * 100);
-    case 'b8': return Math.min(100, stats.correct / 25 * 100);
-    case 'b9': return Math.min(100, stats.correct / 50 * 100);
-    case 'b10': return Math.min(100, stats.correct / 100 * 100);
-    case 'b11': return Math.min(100, stats.correct / 200 * 100);
-    case 'b35': return Math.min(100, total / 100 * 100);
-    case 'b36': return Math.min(100, total / 500 * 100);
-    case 'b37': return Math.min(100, total / 1000 * 100);
-    case 'b63': return Math.min(100, total / 2000 * 100);
-    case 'b13': return total >= 10 ? Math.min(100, accPct / 80 * 100) : 0;
-    case 'b14': return total >= 20 ? Math.min(100, accPct / 90 * 100) : 0;
-    case 'b42': return total >= 100 ? Math.min(100, accPct / 95 * 100) : 0;
-    case 'b43': return total >= 20 ? (stats.wrong / total <= 0.1 ? 100 : Math.max(0, 100 - (stats.wrong / total - 0.1) * 1000)) : 0;
-    case 'b16': return Math.min(100, stats.bestStreak / 20 * 100);
-    case 'b17': return stats.wrong === 0 && total >= 50 ? 100 : 0;
-    case 'b18': return Math.min(100, stats.bestStreak / 5 * 100);
-    case 'b19': return Math.min(100, stats.bestStreak / 10 * 100);
-    case 'b20': return Math.min(100, stats.bestStreak / 25 * 100);
-    case 'b21': return Math.min(100, stats.bestStreak / 50 * 100);
-    case 'b22': return Math.min(100, stats.bestStreak / 100 * 100);
-    case 'b23': return Math.min(100, (typeCounts.asset || 0) / 10 * 100);
-    case 'b24': return Math.min(100, (typeCounts.liability || 0) / 10 * 100);
-    case 'b25': return Math.min(100, (typeCounts.capital || 0) / 10 * 100);
-    case 'b26': return Math.min(100, (typeCounts.revenue || 0) / 10 * 100);
-    case 'b27': return Math.min(100, (typeCounts.expense || 0) / 10 * 100);
-    case 'b28': return Math.min(100, (typeCounts.drawing || 0) / 5 * 100);
-    case 'b29': return stats.ruleBreakerCount >= 1 ? 100 : 0;
-    case 'b30': return Math.min(100, stats.correct / 15 * 100);
-    case 'b31': return stats.fastAnswers >= 1 ? 100 : 0;
-    case 'b32': return Math.min(100, (stats.fastAnswers || 0) / 10 * 100);
-    case 'b33': return stats.correct >= 1 ? 100 : 0;
-    case 'b34': return stats.correct >= 10 && stats.wrong === 0 ? 100 : 0;
-    case 'b44': return Math.min(100, (stats.focusCount || 0) / 20 * 100);
-    case 'b46': return Math.min(100, (stats.smartModeCount || 0) / 50 * 100);
-    case 'b86': return (accPct >= 80 && total >= 200 && stats.bestStreak >= 50) ? 100 : 0;
-    case 'b87': return (accPct >= 90 && total >= 500 && stats.bestStreak >= 100) ? 100 : 0;
-    case 'b88': return (total >= 1000 && stats.correct / total >= 0.7) ? 100 : 0;
-    case 'b93': return total >= 100 ? 100 : 0;
-    case 'b94': return (stats.level >= 15 && accPct >= 75) ? 100 : 0;
-    case 'b95': return (stats.correct >= 1000 && accPct >= 80) ? 100 : 0;
-    case 'b96': return Math.min(100, stats.correct / 2000 * 100);
-    case 'b97': return Math.min(100, total / 5000 * 100);
-    case 'b98': return Math.min(100, stats.correct / 5000 * 100);
-    case 'b99': return (stats.coins >= 5000 && stats.rubies >= 200) ? 100 : 0;
-    case 'b55': return Math.min(100, (stats.timerQuestionsCompleted || 0) / 10 * 100);
-    case 'b56': return Math.min(100, (stats.timerQuestionsCompleted || 0) / 50 * 100);
-    case 'b57': return Math.min(100, (stats.timerQuestionsCompleted || 0) / 100 * 100);
-    case 'b58': return Math.min(100, (stats.timer5sCompleted || 0) / 50 * 100);
-    case 'b59': return Math.min(100, (stats.timer10sCompleted || 0) / 50 * 100);
-    case 'b70': return Math.min(100, (stats.rubies || 0) / 500 * 100);
-    case 'b71': return Math.min(100, (stats.coins || 0) / 1000 * 100);
-    case 'b72': return Math.min(100, (stats.coins || 0) / 5000 * 100);
-    case 'b73': return Math.min(100, (stats.coins || 0) / 10000 * 100);
-    case 'b50': return Math.min(100, stats.correct / 5000 * 100);
-    case 'b51': return 0;
-    case 'b74': return Math.min(100, stats.level / 20 * 100);
-    case 'b75': return Math.min(100, stats.level / 50 * 100);
-    case 'b76': return Math.min(100, stats.level / 100 * 100);
-    case 'b77': return Math.min(100, (stats.smartModeCount || 0) / 100 * 100);
-    case 'b78': return Math.min(100, (stats.smartModeCount || 0) / 500 * 100);
-    case 'b79': return Math.min(100, (stats.revisionCorrect || 0) / 50 * 100);
-    case 'b80': return Math.min(100, (stats.revisionCorrect || 0) / 100 * 100);
-    case 'b81': return Math.min(100, (stats.pointBoosterUsed || 0) / 10 * 100);
-    case 'b82': return Math.min(100, (stats.coinBoosterUsed || 0) / 10 * 100);
-    case 'b83': return Math.min(100, (stats.streakBoosterUsed || 0) / 10 * 100);
-    case 'b38': return Math.min(100, stats.level / 10 * 100);
-    case 'b39': return Math.min(100, stats.correct / 500 * 100);
-    case 'b40': return Math.min(100, stats.correct / 1000 * 100);
-    default: return 0;
+    case 'n27': return { description: "Earn 50 total badges.", items: [item(totalBadges, 50, "Badges earned")] };
+    case 'n28': return { description: "Earn 75 total badges.", items: [item(totalBadges, 75, "Badges earned")] };
+    case 'b3': return { description: "Answer your first Debit question correctly.", items: [] };
+    case 'b4': return { description: "Answer your first Credit question correctly.", items: [] };
+    case 'b5': return { description: "Get 5 correct answers.", items: [item(stats.correct, 5, "Correct answers")] };
+    case 'b7': return { description: "Get 10 correct answers.", items: [item(stats.correct, 10, "Correct answers")] };
+    case 'b8': return { description: "Get 25 correct answers.", items: [item(stats.correct, 25, "Correct answers")] };
+    case 'b9': return { description: "Get 50 correct answers.", items: [item(stats.correct, 50, "Correct answers")] };
+    case 'b10': return { description: "Get 100 correct answers.", items: [item(stats.correct, 100, "Correct answers")] };
+    case 'b11': return { description: "Get 200 correct answers.", items: [item(stats.correct, 200, "Correct answers")] };
+    case 'b35': return { description: "Answer 100 total questions.", items: [item(total, 100, "Total questions")] };
+    case 'b36': return { description: "Answer 500 total questions.", items: [item(total, 500, "Total questions")] };
+    case 'b37': return { description: "Answer 1,000 total questions.", items: [item(total, 1000, "Total questions")] };
+    case 'b63': return { description: "Answer 2,000 total questions.", items: [item(total, 2000, "Total questions")] };
+    case 'b13': return { description: "Achieve 80%+ accuracy with at least 10 questions.", items: total >= 10 ? [item(accPct, 80, "Accuracy %")] : [] };
+    case 'b14': return { description: "Achieve 90%+ accuracy with at least 20 questions.", items: total >= 20 ? [item(accPct, 90, "Accuracy %")] : [] };
+    case 'b42': return { description: "Achieve 95%+ accuracy with at least 100 questions.", items: total >= 100 ? [item(accPct, 95, "Accuracy %")] : [] };
+    case 'b43': {
+      const wrongPct = total > 0 ? Math.round((stats.wrong / total) * 100) : 0;
+      return { description: "Keep wrong answers below 10% of total questions (min 20 questions).", items: total >= 20 ? [item(Math.max(0, 100 - wrongPct), 90, "Correctness %")] : [] };
+    }
+    case 'b16': return { description: "Achieve a streak of 20 correct answers.", items: [item(stats.bestStreak, 20, "Best streak")] };
+    case 'b17': return { description: "Get 50 correct answers with zero wrong answers.", items: [item(stats.correct, 50, "Correct answers (0 wrong)")] };
+    case 'b18': return { description: "Achieve a streak of 5 correct answers.", items: [item(stats.bestStreak, 5, "Best streak")] };
+    case 'b19': return { description: "Achieve a streak of 10 correct answers.", items: [item(stats.bestStreak, 10, "Best streak")] };
+    case 'b20': return { description: "Achieve a streak of 25 correct answers.", items: [item(stats.bestStreak, 25, "Best streak")] };
+    case 'b21': return { description: "Achieve a streak of 50 correct answers.", items: [item(stats.bestStreak, 50, "Best streak")] };
+    case 'b22': return { description: "Achieve a streak of 100 correct answers.", items: [item(stats.bestStreak, 100, "Best streak")] };
+    case 'b23': return { description: "Correctly answer 10 Asset questions.", items: [item(typeCounts.asset || 0, 10, "Asset correct")] };
+    case 'b24': return { description: "Correctly answer 10 Liability questions.", items: [item(typeCounts.liability || 0, 10, "Liability correct")] };
+    case 'b25': return { description: "Correctly answer 10 Capital questions.", items: [item(typeCounts.capital || 0, 10, "Capital correct")] };
+    case 'b26': return { description: "Correctly answer 10 Revenue questions.", items: [item(typeCounts.revenue || 0, 10, "Revenue correct")] };
+    case 'b27': return { description: "Correctly answer 10 Expense questions.", items: [item(typeCounts.expense || 0, 10, "Expense correct")] };
+    case 'b28': return { description: "Correctly answer 5 Drawing questions.", items: [item(typeCounts.drawing || 0, 5, "Drawing correct")] };
+    case 'b29': return { description: "Get at least 1 'Rule Breaker' (correct after previously wrong on same rule).", items: [] };
+    case 'b30': return { description: "Get 15 correct answers.", items: [item(stats.correct, 15, "Correct answers")] };
+    case 'b31': return { description: "Answer your first question within 3 seconds.", items: [] };
+    case 'b32': return { description: "Answer 10 questions within 3 seconds each.", items: [item(stats.fastAnswers || 0, 10, "Fast answers")] };
+    case 'b33': return { description: "Get your first correct answer.", items: [] };
+    case 'b34': return { description: "Get 10 correct answers with zero wrong (perfect quiz).", items: [item(stats.correct, 10, "Correct answers (0 wrong)")] };
+    case 'b44': return { description: "Answer 20 questions in Focus Mode (timer or smart).", items: [item(stats.focusCount || 0, 20, "Focus questions")] };
+    case 'b46': return { description: "Answer 50 questions in Smart Mode.", items: [item(stats.smartModeCount || 0, 50, "Smart questions")] };
+    case 'b86': return { description: "Achieve 80% accuracy, 200 total questions, and streak 50.", items: [
+        item(accPct, 80, "Accuracy %"),
+        item(total, 200, "Total questions"),
+        item(stats.bestStreak, 50, "Best streak")
+      ] };
+    case 'b87': return { description: "Achieve 90% accuracy, 500 total questions, and streak 100.", items: [
+        item(accPct, 90, "Accuracy %"),
+        item(total, 500, "Total questions"),
+        item(stats.bestStreak, 100, "Best streak")
+      ] };
+    case 'b88': return { description: "Answer 1,000 questions with 70%+ accuracy.", items: [
+        item(total, 1000, "Total questions"),
+        item(accPct, 70, "Accuracy %")
+      ] };
+    case 'b93': return { description: "Answer 100 total questions.", items: [item(total, 100, "Total questions")] };
+    case 'b94': return { description: "Reach Level 15 with 75%+ accuracy.", items: [
+        item(stats.level, 15, "Level"),
+        item(accPct, 75, "Accuracy %")
+      ] };
+    case 'b95': return { description: "Get 1,000 correct answers with 80%+ accuracy.", items: [
+        item(stats.correct, 1000, "Correct answers"),
+        item(accPct, 80, "Accuracy %")
+      ] };
+    case 'b96': return { description: "Get 2,000 correct answers.", items: [item(stats.correct, 2000, "Correct answers")] };
+    case 'b97': return { description: "Answer 5,000 total questions.", items: [item(total, 5000, "Total questions")] };
+    case 'b98': return { description: "Get 5,000 correct answers.", items: [item(stats.correct, 5000, "Correct answers")] };
+    case 'b99': return { description: "Collect 5,000 coins and 200 rubies.", items: [
+        item(stats.coins || 0, 5000, "Coins", "🪙"),
+        item(stats.rubies || 0, 200, "Rubies", "💎")
+      ] };
+    case 'b55': return { description: "Complete 10 Timer Mode questions.", items: [item(stats.timerQuestionsCompleted || 0, 10, "Timer questions")] };
+    case 'b56': return { description: "Complete 50 Timer Mode questions.", items: [item(stats.timerQuestionsCompleted || 0, 50, "Timer questions")] };
+    case 'b57': return { description: "Complete 100 Timer Mode questions.", items: [item(stats.timerQuestionsCompleted || 0, 100, "Timer questions")] };
+    case 'b58': return { description: "Complete 50 Timer Mode questions with 5-second timer.", items: [item(stats.timer5sCompleted || 0, 50, "5s Timer questions")] };
+    case 'b59': return { description: "Complete 50 Timer Mode questions with 10-second timer.", items: [item(stats.timer10sCompleted || 0, 50, "10s Timer questions")] };
+    case 'b70': return { description: "Collect 500 rubies.", items: [item(stats.rubies || 0, 500, "Rubies", "💎")] };
+    case 'b71': return { description: "Collect 1,000 coins.", items: [item(stats.coins || 0, 1000, "Coins", "🪙")] };
+    case 'b72': return { description: "Collect 5,000 coins.", items: [item(stats.coins || 0, 5000, "Coins", "🪙")] };
+    case 'b73': return { description: "Collect 10,000 coins.", items: [item(stats.coins || 0, 10000, "Coins", "🪙")] };
+    case 'b50': return { description: "Get 5,000 correct answers.", items: [item(stats.correct, 5000, "Correct answers")] };
+    case 'b74': return { description: "Reach Level 20.", items: [item(stats.level, 20, "Level")] };
+    case 'b75': return { description: "Reach Level 50.", items: [item(stats.level, 50, "Level")] };
+    case 'b76': return { description: "Reach Level 100.", items: [item(stats.level, 100, "Level")] };
+    case 'b77': return { description: "Answer 100 questions in Smart Mode.", items: [item(stats.smartModeCount || 0, 100, "Smart questions")] };
+    case 'b78': return { description: "Answer 500 questions in Smart Mode.", items: [item(stats.smartModeCount || 0, 500, "Smart questions")] };
+    case 'b79': return { description: "Correctly answer 50 revision questions.", items: [item(stats.revisionCorrect || 0, 50, "Revision correct")] };
+    case 'b80': return { description: "Correctly answer 100 revision questions.", items: [item(stats.revisionCorrect || 0, 100, "Revision correct")] };
+    case 'b81': return { description: "Use Point Booster 10 times.", items: [item(stats.pointBoosterUsed || 0, 10, "Point Booster used")] };
+    case 'b82': return { description: "Use Coin Booster 10 times.", items: [item(stats.coinBoosterUsed || 0, 10, "Coin Booster used")] };
+    case 'b83': return { description: "Use Streak Protector 10 times.", items: [item(stats.streakBoosterUsed || 0, 10, "Streak Protector used")] };
+    case 'b38': return { description: "Reach Level 10.", items: [item(stats.level, 10, "Level")] };
+    case 'b39': return { description: "Get 500 correct answers.", items: [item(stats.correct, 500, "Correct answers")] };
+    case 'b40': return { description: "Get 1,000 correct answers.", items: [item(stats.correct, 1000, "Correct answers")] };
+    default: return { description: "Earn this badge by meeting specific conditions.", items: [] };
   }
 }
 
@@ -1122,14 +1024,39 @@ function showBadgeDetails(badgeId) {
   if (!badge) return;
 
   const s = state.stats;
-  const progress = getBadgeProgress(badgeId, s);
-  const description = getBadgeDescription(badgeId);
+  const data = getBadgeDetails(badgeId, s);
 
   document.getElementById("badgeModalIcon").textContent = badge.icon;
   document.getElementById("badgeModalTitle").textContent = badge.name;
-  document.getElementById("badgeModalDesc").textContent = description;
-  document.getElementById("badgeProgressFill").style.width = Math.min(100, progress) + "%";
-  document.getElementById("badgeProgressPct").textContent = Math.min(100, Math.round(progress)) + "%";
+  document.getElementById("badgeModalDesc").textContent = data.description;
+
+  const container = document.getElementById("badgeProgressContainer");
+  container.innerHTML = "";
+
+  if (data.items.length === 0) {
+    // No progress bar needed (e.g., leaderboard badges or simple ones)
+    container.innerHTML = `<p style="text-align:center;color:var(--text-muted);font-size:14px;padding:8px 0;">Check your stats to earn this badge.</p>`;
+  } else {
+    data.items.forEach((item, index) => {
+      const pct = Math.min(100, item.pct);
+      const isComplete = item.current >= item.target;
+      const color = isComplete ? "var(--accent-2)" : "var(--gradient-1)";
+
+      const div = document.createElement("div");
+      div.style.marginBottom = "12px";
+      div.innerHTML = `
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary);margin-bottom:2px;">
+          <span>${item.icon ? item.icon + ' ' : ''}${item.label}</span>
+          <span>${item.current.toLocaleString()} / ${item.target.toLocaleString()}</span>
+        </div>
+        <div style="height:8px;background:rgba(255,255,255,0.4);border-radius:30px;overflow:hidden;">
+          <div style="width:${pct}%;height:100%;border-radius:30px;background:${color};transition:width 0.6s ease;"></div>
+        </div>
+        <div style="text-align:right;font-size:11px;color:var(--text-muted);margin-top:2px;">${pct}%</div>
+      `;
+      container.appendChild(div);
+    });
+  }
 
   document.getElementById("badgeModal").classList.add("show");
 }
@@ -1161,7 +1088,6 @@ let state = {
     accuracyHistory: [], weakRules: {}, quizHistory: [],
     fastAnswers: 0, ruleBreakerCount: 0, focusCount: 0, smartModeCount: 0,
     earnedBadges: [], smartCategoryData: {}, effectiveDifficulty: "easy",
-    // heart system removed completely
     pointBoosterActive: false, pointBoosterExpiry: 0,
     coinBoosterActive: false, coinBoosterExpiry: 0,
     noStreakBreakRemaining: 0,
@@ -3096,12 +3022,12 @@ function init() {
   updateModeToggles();
   updateBoosterStatus();
 
-  console.log("📘 Version : 6.0.2 - Timer Mode updated: Heart system removed, Timeout penalty added, Badge detail modal added");
+  console.log("📘 Version : 6.0.3 - Badge system updated with multi-condition support & real-time progress");
   console.log("✅ Developed By - Faizul Islam Riyad");
 }
 
 // ================================================================
-// MODAL CLOSE EVENT
+// MODAL CLOSE EVENTS
 // ================================================================
 
 document.addEventListener("DOMContentLoaded", function() {
