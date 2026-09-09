@@ -71,6 +71,13 @@
                 <span class="stat-pill"><i class="fas fa-trophy"></i> Lv.<span class="num level" id="hLevel">1</span></span>
                 <span class="stat-pill"><i class="fas fa-fire"></i> <span class="num" id="hStreak">0</span></span>
                 <div class="booster-status-bar" id="boosterStatusBar"></div>
+
+                <!-- ===== BELL NOTIFICATION ICON ===== -->
+                <span class="stat-pill" id="bellContainer" style="position:relative;cursor:pointer;padding:4px 10px;">
+                    <i class="fas fa-bell" style="font-size:16px;color:var(--text-secondary);"></i>
+                    <span id="bellBadge" style="position:absolute;top:-4px;right:-4px;background:var(--accent-4);color:#fff;font-size:9px;border-radius:50%;padding:2px 6px;min-width:16px;text-align:center;display:none;font-weight:700;line-height:1.4;">0</span>
+                </span>
+
                 <div class="user-menu" id="userMenu">
                     <div class="user-info" id="userInfo">
                         <img class="user-avatar" id="userAvatar" src="https://ui-avatars.com/api/?name=Guest&background=5b4bd5&color=fff&size=36" alt="User" />
@@ -84,6 +91,20 @@
             </div>
         </header>
 
+        <!-- ===== NOTIFICATION DROPDOWN ===== -->
+        <div id="notificationDropdown" style="display:none;position:absolute;right:20px;top:72px;background:var(--glass-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:var(--radius-sm);padding:8px 0;min-width:280px;max-height:340px;overflow-y:auto;z-index:999;box-shadow:var(--glass-shadow);">
+            <div style="padding:8px 16px 10px;font-weight:700;font-size:15px;border-bottom:1px solid var(--glass-border);color:var(--text-primary);display:flex;justify-content:space-between;align-items:center;">
+                <span><i class="fas fa-bell" style="color:var(--accent-1);margin-right:8px;"></i>Notifications</span>
+                <span style="font-size:12px;font-weight:400;color:var(--text-muted);" id="notifCountLabel">0 unread</span>
+            </div>
+            <div id="notificationList" style="padding:4px 0;"></div>
+            <div style="padding:8px 16px;text-align:center;border-top:1px solid var(--glass-border);">
+                <button id="markAllReadBtn" style="background:none;border:none;color:var(--accent-1);font-weight:600;cursor:pointer;font-size:13px;font-family:var(--font);padding:4px 12px;border-radius:20px;transition:var(--transition);">
+                    <i class="fas fa-check-double"></i> Mark all as read
+                </button>
+            </div>
+        </div>
+
         <!-- ===== NAV ===== -->
         <nav class="nav-tabs" id="navTabs">
             <button class="nav-tab active" data-section="quiz"><i class="fas fa-pen-fancy"></i> Quiz</button>
@@ -94,7 +115,7 @@
         </nav>
 
         <!-- ============================================================
-        SECTION: QUIZ (UPDATED – Timer Mode Hearts Removed)
+        SECTION: QUIZ
         ============================================================ -->
         <section class="section-panel active" id="section-quiz">
             <div class="quiz-container">
@@ -183,8 +204,7 @@
                     <a href="lern.html" class="learn-more" id="learnJavedaBtn">
                         <i class="fas fa-book-open"></i> Learn Javeda
                     </a>
-                    <!-- Share button for "Bring a Friend" badge -->
-                    <button class="learn-more" id="shareBtn" style="background:rgba(15,184,138,0.10);">
+                    <button class="learn-more" id="shareBtn" style="border-color:var(--accent-2);background:rgba(15,184,138,0.10);">
                         <i class="fas fa-share-alt"></i> Share & Invite
                     </button>
                 </div>
@@ -193,7 +213,7 @@
         </section>
 
         <!-- ============================================================
-        SECTION: DASHBOARD (unchanged)
+        SECTION: DASHBOARD
         ============================================================ -->
         <section class="section-panel" id="section-dashboard">
             <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
@@ -242,7 +262,7 @@
         </section>
 
         <!-- ============================================================
-        SECTION: SHOP (unchanged)
+        SECTION: SHOP
         ============================================================ -->
         <section class="section-panel" id="section-shop">
             <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
@@ -376,7 +396,7 @@
         </section>
 
         <!-- ============================================================
-        SECTION: REVISION (unchanged)
+        SECTION: REVISION
         ============================================================ -->
         <section class="section-panel" id="section-revision">
             <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
@@ -407,7 +427,7 @@
         </section>
 
         <!-- ============================================================
-        SECTION: LEADERBOARD (unchanged)
+        SECTION: LEADERBOARD
         ============================================================ -->
         <section class="section-panel" id="section-leaderboard">
             <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
@@ -451,6 +471,7 @@
         </div>
     </div>
 
+    <script src="bell.js"></script>
     <script src="firebase.js"></script>
     <script src="script.js"></script>
 </body>

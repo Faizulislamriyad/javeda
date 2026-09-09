@@ -643,7 +643,7 @@ const ALL_BADGES = [
   // Javeda / Learn (n5-n6)
   { id: "n5", icon: "📚", name: "Javeda Explorer" },
   { id: "n6", icon: "📖", name: "Learner" },
-  // Hints (n7-n8) — Hint Hoarder target changed to 300
+  // Hints (n7-n8)
   { id: "n7", icon: "💡", name: "Hint Hoarder" },
   { id: "n8", icon: "💡", name: "Hint Master" },
   // New: Bring a Friend (n9) and Rapid Thinker (n10)
@@ -653,8 +653,8 @@ const ALL_BADGES = [
   { id: "n11", icon: "⚡", name: "Quick Learner" },
   { id: "n12", icon: "🏃", name: "Marathon Runner" },
   // NEW: h3 (Experienced), h4 (Associate), h1 (Timed Warrior), h2 (Balanced Accountant)
-  { id: "h3", icon: "🎯", name: "Experienced" },        // 3000 XP
-  { id: "h4", icon: "🤝", name: "Associate" },          // Google Login (once)
+  { id: "h3", icon: "🎯", name: "Experienced" },
+  { id: "h4", icon: "🤝", name: "Associate" },
   // Revision (n15-n16)
   { id: "n15", icon: "🔄", name: "Revision King" },
   { id: "n16", icon: "🔄", name: "Revision Master" },
@@ -675,9 +675,9 @@ const ALL_BADGES = [
   { id: "n26", icon: "📊", name: "Accountant Pro" },
   { id: "n27", icon: "🏅", name: "Ultimate Journal Master" },
   { id: "n28", icon: "👑", name: "Journal Legend" },
-  // NEW: h1 (Timed Warrior) replaces b17 (Zero Error Zone)
+  // NEW: h1 (Timed Warrior) replaces b17
   { id: "h1", icon: "⚔️", name: "Timed Warrior" },
-  // NEW: h2 (Balanced Accountant) replaces b34 (Perfect Quiz)
+  // NEW: h2 (Balanced Accountant) replaces b34
   { id: "h2", icon: "⚖️", name: "Balanced Accountant" },
   // Debit/Credit starters (b3-b4)
   { id: "b3", icon: "💳", name: "Debit Starter" },
@@ -778,8 +778,6 @@ function checkBadges(stats) {
     }
   }
   const totalBadges = (stats.earnedBadges || []).length;
-
-  // Helper to check if user is logged in (for Associate badge)
   const isLoggedIn = auth.currentUser !== null;
 
   // ----- NEW BADGES (h1, h2, h3, h4) -----
@@ -798,7 +796,7 @@ function checkBadges(stats) {
   // ----- NEW n10: Rapid Thinker -----
   if ((stats.timer5sCompleted || 0) >= 500 && (stats.timer10sCompleted || 0) >= 500) earned.push("n10");
 
-  // ----- Existing badges (unchanged) -----
+  // ----- Existing badges -----
   if (stats.correct >= 1 && stats.quizHistory && stats.quizHistory.some(h => h.correctAnswer === "debit" && h.userAnswer === "debit")) earned.push("b3");
   if (stats.correct >= 1 && stats.quizHistory && stats.quizHistory.some(h => h.correctAnswer === "credit" && h.userAnswer === "credit")) earned.push("b4");
   if (stats.correct >= 5) earned.push("b5");
@@ -810,7 +808,6 @@ function checkBadges(stats) {
   if (accPct >= 80 && total >= 10) earned.push("b13");
   if (accPct >= 90 && total >= 20) earned.push("b14");
   if (stats.bestStreak >= 20) earned.push("b16");
-  // b17 removed
   if (stats.bestStreak >= 5) earned.push("b18");
   if (stats.bestStreak >= 10) earned.push("b19");
   if (stats.bestStreak >= 25) earned.push("b20");
@@ -827,7 +824,6 @@ function checkBadges(stats) {
   if (stats.fastAnswers && stats.fastAnswers >= 1) earned.push("b31");
   if (stats.fastAnswers && stats.fastAnswers >= 10) earned.push("b32");
   if (stats.correct >= 1) earned.push("b33");
-  // b34 removed
   if (total >= 100) earned.push("b35");
   if (total >= 500) earned.push("b36");
   if (total >= 1000) earned.push("b37");
@@ -870,12 +866,11 @@ function checkBadges(stats) {
   if (stats.correct >= 5000) earned.push("b98");
   if (stats.coins >= 5000 && stats.rubies >= 200) earned.push("b99");
 
-  // New badges from earlier (n5-n28 etc.) – unchanged except n6, n7, n9, n10
+  // n5-n28 badges (excluding n9, n10 which are handled above)
   if (stats.javedaClicks && stats.javedaClicks >= 1) earned.push("n5");
-  if (stats.javedaClicks && stats.javedaClicks >= 5) earned.push("n6"); // Learner
-  if (stats.hints && stats.hints >= 300) earned.push("n7"); // Hint Hoarder (300)
+  if (stats.javedaClicks && stats.javedaClicks >= 5) earned.push("n6");
+  if (stats.hints && stats.hints >= 300) earned.push("n7");
   if (stats.hints && stats.hints >= 500) earned.push("n8");
-  // n9 and n10 handled above
   if (stats.fastAnswers && stats.fastAnswers >= 100) earned.push("n11");
   if (stats.sessionQuestions && stats.sessionQuestions >= 50) earned.push("n12");
   if (stats.revisionCorrect && stats.revisionCorrect >= 50) earned.push("n15");
@@ -902,7 +897,7 @@ function checkBadges(stats) {
 }
 
 // ================================================================
-// 7.5. BADGE DETAILS & PROGRESS (UPDATED)
+// 7.5. BADGE DETAILS & PROGRESS
 // ================================================================
 
 function getBadgeDetails(badgeId, stats) {
@@ -1155,7 +1150,7 @@ let state = {
     timerQuestionsCompleted: 0, timer5sCompleted: 0, timer10sCompleted: 0,
     revisionCorrect: 0,
     pointBoosterUsed: 0, coinBoosterUsed: 0, streakBoosterUsed: 0,
-    javedaClicks: 0, shared: 0, // shared flag for Bring a Friend badge
+    javedaClicks: 0, shared: 0,
     dailyStreak: 0, lastActivityDate: null,
     sessionQuestions: 0, nightQuestions: 0, earlyQuestions: 0,
   },
@@ -2508,6 +2503,18 @@ function renderLeaderboard() {
                 </tr>`;
   }).join("");
 
+  // ===== RANK CHECK FOR BELL NOTIFICATIONS (FIXED: use encoded email) =====
+  if (currentEmail) {
+    const userRank = sorted.findIndex((u) => u.email === currentEmail) + 1;
+    if (userRank >= 1 && userRank <= 5 && auth.currentUser) {
+      if (typeof checkForRankNotifications === 'function') {
+        const encodedEmail = currentEmail.replace(/[.#$\/\[\]]/g, '_');
+        checkForRankNotifications(encodedEmail, userRank);
+      }
+    }
+  }
+
+  // ===== LEADERBOARD BADGE CHECK =====
   if (currentEmail) {
     const s = state.stats;
     const prevBadges = new Set(s.earnedBadges || []);
@@ -2644,7 +2651,6 @@ function init() {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(url).then(() => {
         showToast("Link Copied!", "Share this link with your friends.", "fa-share-alt", "gain");
-        // Mark as shared
         if (!state.stats.shared) {
           state.stats.shared = 1;
           const earnedIds = checkBadges(state.stats);
@@ -2746,6 +2752,8 @@ function init() {
   document.addEventListener("click", function () {
     const dropdown = document.getElementById("userDropdown");
     if (dropdown) dropdown.classList.remove("show");
+    const notifDropdown = document.getElementById("notificationDropdown");
+    if (notifDropdown) notifDropdown.style.display = "none";
   });
 
   document.getElementById("logoutBtn").addEventListener("click", async function () {
@@ -3173,7 +3181,16 @@ function init() {
   updateModeToggles();
   updateBoosterStatus();
 
-  console.log("📘 Version : 6.0.5 - Badge system updated: Removed Perfect Week & Monthly Mentor, added Bring a Friend & Rapid Thinker. Fixed Learner badge and leaderboard badges.");
+  // ===== INIT BELL NOTIFICATIONS (FIXED: use encoded email) =====
+  if (auth.currentUser && typeof initBell === 'function') {
+    const email = auth.currentUser.email;
+    if (email) {
+      const encodedEmail = email.replace(/[.#$\/\[\]]/g, '_');
+      initBell(encodedEmail);
+    }
+  }
+
+  console.log("📘 Version : 6.0.6 - Bell notification system added. Leaderboard rank notifications (Top 1-5). Fixed badge tracking issues.");
   console.log("✅ Developed By - Faizul Islam Riyad");
 }
 
