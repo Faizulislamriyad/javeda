@@ -631,100 +631,95 @@ function showModeChangeToast(newMode) {
 }
 
 // ================================================================
-// 7. BADGES (TOTAL 100)
+// 7. BADGES (TOTAL 100) — UPDATED
 // ================================================================
 
 const ALL_BADGES = [
+  // Leaderboard (n1-n4)
   { id: "n1", icon: "👑", name: "Leaderboard XP King" },
   { id: "n2", icon: "🏅", name: "Leaderboard Points Pro" },
   { id: "n3", icon: "🎯", name: "Leaderboard Accuracy Ace" },
   { id: "n4", icon: "🏆", name: "Leaderboard Badge Collector" },
+  // Javeda / Learn (n5-n6)
   { id: "n5", icon: "📚", name: "Javeda Explorer" },
-  { id: "n6", icon: "📖", name: "Javeda Scholar" },
+  { id: "n6", icon: "📖", name: "Learner" },
+  // Hints (n7-n8) — Hint Hoarder target changed to 300
   { id: "n7", icon: "💡", name: "Hint Hoarder" },
   { id: "n8", icon: "💡", name: "Hint Master" },
-  { id: "n9", icon: "📅", name: "Perfect Week" },
-  { id: "n10", icon: "📅", name: "Monthly Mentor" },
+  // New: Bring a Friend (n9) and Rapid Thinker (n10)
+  { id: "n9", icon: "🤝", name: "Bring a Friend" },
+  { id: "n10", icon: "⚡", name: "Rapid Thinker" },
+  // Speed & Marathon (n11-n12)
   { id: "n11", icon: "⚡", name: "Quick Learner" },
   { id: "n12", icon: "🏃", name: "Marathon Runner" },
-  { id: "n13", icon: "🌙", name: "Night Owl" },
-  { id: "n14", icon: "🌅", name: "Early Bird" },
+  // NEW: h3 (Experienced), h4 (Associate), h1 (Timed Warrior), h2 (Balanced Accountant)
+  { id: "h3", icon: "🎯", name: "Experienced" },        // 3000 XP
+  { id: "h4", icon: "🤝", name: "Associate" },          // Google Login (once)
+  // Revision (n15-n16)
   { id: "n15", icon: "🔄", name: "Revision King" },
   { id: "n16", icon: "🔄", name: "Revision Master" },
+  // Timer (n17-n18)
   { id: "n17", icon: "⏱️", name: "Timer Survivor" },
   { id: "n18", icon: "⏱️", name: "Timer Legend" },
+  // Smart (n19-n20)
   { id: "n19", icon: "🧠", name: "Smart Learner" },
   { id: "n20", icon: "🧠", name: "Smart Guru" },
+  // Wealth (n21-n22)
   { id: "n21", icon: "💰", name: "Coin Millionaire" },
   { id: "n22", icon: "💎", name: "Ruby Baron" },
+  // Boosters (n23-n25)
   { id: "n23", icon: "🛡️", name: "Streak Protector" },
   { id: "n24", icon: "⚡", name: "Point Booster Fan" },
   { id: "n25", icon: "🪙", name: "Coin Booster Fan" },
+  // Accountant (n26-n28)
   { id: "n26", icon: "📊", name: "Accountant Pro" },
   { id: "n27", icon: "🏅", name: "Ultimate Journal Master" },
   { id: "n28", icon: "👑", name: "Journal Legend" },
-  // kept 72 badges
+  // NEW: h1 (Timed Warrior) replaces b17 (Zero Error Zone)
+  { id: "h1", icon: "⚔️", name: "Timed Warrior" },
+  // NEW: h2 (Balanced Accountant) replaces b34 (Perfect Quiz)
+  { id: "h2", icon: "⚖️", name: "Balanced Accountant" },
+  // Debit/Credit starters (b3-b4)
   { id: "b3", icon: "💳", name: "Debit Starter" },
   { id: "b4", icon: "💳", name: "Credit Starter" },
+  // Progression (b5, b7-b11, b35-b37, b63)
   { id: "b5", icon: "🔥", name: "Warmed Up" },
   { id: "b7", icon: "📓", name: "Journal Rookie" },
   { id: "b8", icon: "🗺️", name: "Accounting Explorer" },
   { id: "b9", icon: "📊", name: "Ledger Learner" },
   { id: "b10", icon: "⚖️", name: "Trial Balance Maker" },
   { id: "b11", icon: "👨‍💼", name: "Entry Master" },
+  { id: "b35", icon: "🏅", name: "100 Questions" },
+  { id: "b36", icon: "🥈", name: "500 Questions" },
+  { id: "b37", icon: "🥇", name: "1000 Questions" },
+  { id: "b63", icon: "📚", name: "2000 Questions" },
+  // Accuracy (b13-b14, b42-b43)
   { id: "b13", icon: "🧠", name: "Sharp Mind" },
   { id: "b14", icon: "🎯", name: "Precision Player" },
+  { id: "b42", icon: "🧠", name: "Financial Brain" },
+  { id: "b43", icon: "🔍", name: "Error Hunter" },
+  // Streak (b16, b18-b22) — b17 removed
   { id: "b16", icon: "💎", name: "Flawless Brain" },
-  { id: "b17", icon: "🛡️", name: "Zero Error Zone" },
   { id: "b18", icon: "🔥", name: "Streak 5x" },
   { id: "b19", icon: "🔥", name: "Streak 10x" },
   { id: "b20", icon: "🔥", name: "Streak 25x" },
   { id: "b21", icon: "🔥", name: "Streak 50x" },
   { id: "b22", icon: "👑", name: "Streak King" },
+  // Category Experts (b23-b28)
   { id: "b23", icon: "🏦", name: "Asset Expert" },
   { id: "b24", icon: "📉", name: "Liability Genius" },
   { id: "b25", icon: "💰", name: "Capital Controller" },
   { id: "b26", icon: "📈", name: "Revenue Master" },
   { id: "b27", icon: "💸", name: "Expense Specialist" },
   { id: "b28", icon: "✏️", name: "Drawing Handler" },
+  // Other (b29-b34, b44, b46, b86-b88, b93-b99) — b34 removed
   { id: "b29", icon: "🔧", name: "Rule Breaker" },
   { id: "b30", icon: "⚖️", name: "Balance Thinker" },
   { id: "b31", icon: "⚡", name: "Fast Decision" },
   { id: "b32", icon: "💪", name: "No Hesitation" },
   { id: "b33", icon: "📝", name: "First Entry" },
-  { id: "b34", icon: "🌟", name: "Perfect Quiz" },
-  { id: "b35", icon: "🏅", name: "100 Questions" },
-  { id: "b36", icon: "🥈", name: "500 Questions" },
-  { id: "b37", icon: "🥇", name: "1000 Questions" },
-  { id: "b38", icon: "🏆", name: "Accounting Pro" },
-  { id: "b39", icon: "🏆", name: "Debit-Credit Champ" },
-  { id: "b40", icon: "👼", name: "Journal God" },
-  { id: "b42", icon: "🧠", name: "Financial Brain" },
-  { id: "b43", icon: "🔍", name: "Error Hunter" },
   { id: "b44", icon: "🎯", name: "Focus Mode" },
   { id: "b46", icon: "💡", name: "Smart Thinker" },
-  { id: "b50", icon: "👑", name: "Ultimate Accountant" },
-  { id: "b51", icon: "🏆", name: "Top 10 Leaderboard" },
-  { id: "b55", icon: "⏱️", name: "Timer Novice" },
-  { id: "b56", icon: "⏱️", name: "Timer Adept" },
-  { id: "b57", icon: "⏱️", name: "Timer Master" },
-  { id: "b58", icon: "⏱️", name: "Speed Demon (5s)" },
-  { id: "b59", icon: "⏱️", name: "Quick Thinker (10s)" },
-  { id: "b63", icon: "📚", name: "2000 Questions" },
-  { id: "b70", icon: "💎", name: "Ruby Tycoon (500)" },
-  { id: "b71", icon: "🪙", name: "Coin Collector (1000)" },
-  { id: "b72", icon: "🪙", name: "Coin Hoarder (5000)" },
-  { id: "b73", icon: "🪙", name: "Coin Tycoon (10000)" },
-  { id: "b74", icon: "⬆️", name: "Level 20" },
-  { id: "b75", icon: "⬆️", name: "Level 50" },
-  { id: "b76", icon: "⬆️", name: "Level 100" },
-  { id: "b77", icon: "🧠", name: "Smart User (100)" },
-  { id: "b78", icon: "🧠", name: "Smart Master (500)" },
-  { id: "b79", icon: "🔄", name: "Revise 50" },
-  { id: "b80", icon: "🔄", name: "Revise 100" },
-  { id: "b81", icon: "⚡", name: "Point Booster x10" },
-  { id: "b82", icon: "🪙", name: "Coin Booster x10" },
-  { id: "b83", icon: "🛡️", name: "Streak Protector x10" },
   { id: "b86", icon: "🏅", name: "All Rounder" },
   { id: "b87", icon: "⭐", name: "5-Star Performer" },
   { id: "b88", icon: "🎖️", name: "Dedicated Scholar" },
@@ -735,6 +730,38 @@ const ALL_BADGES = [
   { id: "b97", icon: "✨", name: "Legendary" },
   { id: "b98", icon: "👑", name: "Royal Accountant" },
   { id: "b99", icon: "💼", name: "Finance Pro" },
+  // Timer specific (b55-b59)
+  { id: "b55", icon: "⏱️", name: "Timer Novice" },
+  { id: "b56", icon: "⏱️", name: "Timer Adept" },
+  { id: "b57", icon: "⏱️", name: "Timer Master" },
+  { id: "b58", icon: "⏱️", name: "Speed Demon (5s)" },
+  { id: "b59", icon: "⏱️", name: "Quick Thinker (10s)" },
+  // Coin/Ruby Tycoon (b70-b73)
+  { id: "b70", icon: "💎", name: "Ruby Tycoon (500)" },
+  { id: "b71", icon: "🪙", name: "Coin Collector (1000)" },
+  { id: "b72", icon: "🪙", name: "Coin Hoarder (5000)" },
+  { id: "b73", icon: "🪙", name: "Coin Tycoon (10000)" },
+  // Ultimate (b50, b51)
+  { id: "b50", icon: "👑", name: "Ultimate Accountant" },
+  { id: "b51", icon: "🏆", name: "Top 10 Leaderboard" },
+  // Level (b74-b76)
+  { id: "b74", icon: "⬆️", name: "Level 20" },
+  { id: "b75", icon: "⬆️", name: "Level 50" },
+  { id: "b76", icon: "⬆️", name: "Level 100" },
+  // Smart usage (b77-b78)
+  { id: "b77", icon: "🧠", name: "Smart User (100)" },
+  { id: "b78", icon: "🧠", name: "Smart Master (500)" },
+  // Revision correct (b79-b80)
+  { id: "b79", icon: "🔄", name: "Revise 50" },
+  { id: "b80", icon: "🔄", name: "Revise 100" },
+  // Booster usage (b81-b83)
+  { id: "b81", icon: "⚡", name: "Point Booster x10" },
+  { id: "b82", icon: "🪙", name: "Coin Booster x10" },
+  { id: "b83", icon: "🛡️", name: "Streak Protector x10" },
+  // Additional
+  { id: "b38", icon: "🏆", name: "Accounting Pro" },
+  { id: "b39", icon: "🏆", name: "Debit-Credit Champ" },
+  { id: "b40", icon: "👼", name: "Journal God" },
 ];
 
 function checkBadges(stats) {
@@ -750,8 +777,28 @@ function checkBadges(stats) {
       }
     }
   }
+  const totalBadges = (stats.earnedBadges || []).length;
 
-  // Existing badges
+  // Helper to check if user is logged in (for Associate badge)
+  const isLoggedIn = auth.currentUser !== null;
+
+  // ----- NEW BADGES (h1, h2, h3, h4) -----
+  if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 500) earned.push("h1");
+  let all100 = true;
+  for (const cat of ['asset','liability','capital','revenue','expense','drawing']) {
+    if ((typeCounts[cat] || 0) < 100) { all100 = false; break; }
+  }
+  if (all100) earned.push("h2");
+  if (stats.xp >= 3000) earned.push("h3");
+  if (isLoggedIn) earned.push("h4");
+
+  // ----- NEW n9: Bring a Friend -----
+  if (stats.shared && stats.shared >= 1) earned.push("n9");
+
+  // ----- NEW n10: Rapid Thinker -----
+  if ((stats.timer5sCompleted || 0) >= 500 && (stats.timer10sCompleted || 0) >= 500) earned.push("n10");
+
+  // ----- Existing badges (unchanged) -----
   if (stats.correct >= 1 && stats.quizHistory && stats.quizHistory.some(h => h.correctAnswer === "debit" && h.userAnswer === "debit")) earned.push("b3");
   if (stats.correct >= 1 && stats.quizHistory && stats.quizHistory.some(h => h.correctAnswer === "credit" && h.userAnswer === "credit")) earned.push("b4");
   if (stats.correct >= 5) earned.push("b5");
@@ -763,7 +810,7 @@ function checkBadges(stats) {
   if (accPct >= 80 && total >= 10) earned.push("b13");
   if (accPct >= 90 && total >= 20) earned.push("b14");
   if (stats.bestStreak >= 20) earned.push("b16");
-  if (stats.wrong === 0 && total >= 50) earned.push("b17");
+  // b17 removed
   if (stats.bestStreak >= 5) earned.push("b18");
   if (stats.bestStreak >= 10) earned.push("b19");
   if (stats.bestStreak >= 25) earned.push("b20");
@@ -780,7 +827,7 @@ function checkBadges(stats) {
   if (stats.fastAnswers && stats.fastAnswers >= 1) earned.push("b31");
   if (stats.fastAnswers && stats.fastAnswers >= 10) earned.push("b32");
   if (stats.correct >= 1) earned.push("b33");
-  if (stats.correct >= 10 && stats.wrong === 0 && total >= 10) earned.push("b34");
+  // b34 removed
   if (total >= 100) earned.push("b35");
   if (total >= 500) earned.push("b36");
   if (total >= 1000) earned.push("b37");
@@ -812,7 +859,6 @@ function checkBadges(stats) {
   if (stats.pointBoosterUsed && stats.pointBoosterUsed >= 10) earned.push("b81");
   if (stats.coinBoosterUsed && stats.coinBoosterUsed >= 10) earned.push("b82");
   if (stats.streakBoosterUsed && stats.streakBoosterUsed >= 10) earned.push("b83");
-  // Heart Collector badge removed because heart system is removed
   if (accPct >= 80 && total >= 200 && stats.bestStreak >= 50) earned.push("b86");
   if (accPct >= 90 && total >= 500 && stats.bestStreak >= 100) earned.push("b87");
   if (total >= 1000 && stats.correct / total >= 0.7) earned.push("b88");
@@ -824,20 +870,16 @@ function checkBadges(stats) {
   if (stats.correct >= 5000) earned.push("b98");
   if (stats.coins >= 5000 && stats.rubies >= 200) earned.push("b99");
 
-  // New badges
+  // New badges from earlier (n5-n28 etc.) – unchanged except n6, n7, n9, n10
   if (stats.javedaClicks && stats.javedaClicks >= 1) earned.push("n5");
-  if (stats.javedaClicks && stats.javedaClicks >= 5) earned.push("n6");
-  if (stats.hints && stats.hints >= 100) earned.push("n7");
+  if (stats.javedaClicks && stats.javedaClicks >= 5) earned.push("n6"); // Learner
+  if (stats.hints && stats.hints >= 300) earned.push("n7"); // Hint Hoarder (300)
   if (stats.hints && stats.hints >= 500) earned.push("n8");
-  if (stats.dailyStreak && stats.dailyStreak >= 7) earned.push("n9");
-  if (stats.dailyStreak && stats.dailyStreak >= 30) earned.push("n10");
+  // n9 and n10 handled above
   if (stats.fastAnswers && stats.fastAnswers >= 100) earned.push("n11");
   if (stats.sessionQuestions && stats.sessionQuestions >= 50) earned.push("n12");
-  if (stats.nightQuestions && stats.nightQuestions >= 20) earned.push("n13");
-  if (stats.earlyQuestions && stats.earlyQuestions >= 20) earned.push("n14");
   if (stats.revisionCorrect && stats.revisionCorrect >= 50) earned.push("n15");
   if (stats.revisionCorrect && stats.revisionCorrect >= 200) earned.push("n16");
-  // Timer Survivor badge condition updated: removed heartsLost check
   if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 50) earned.push("n17");
   if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 200) earned.push("n18");
   if (stats.smartModeCount && stats.smartModeCount >= 100) earned.push("n19");
@@ -853,7 +895,6 @@ function checkBadges(stats) {
     if ((typeCounts[cat] || 0) < 50) { all50 = false; break; }
   }
   if (all50) earned.push("n26");
-  const totalBadges = (stats.earnedBadges || []).length;
   if (totalBadges >= 50) earned.push("n27");
   if (totalBadges >= 75) earned.push("n28");
 
@@ -861,7 +902,7 @@ function checkBadges(stats) {
 }
 
 // ================================================================
-// 7.5. BADGE DETAILS & PROGRESS (UPDATED - Multi-condition support)
+// 7.5. BADGE DETAILS & PROGRESS (UPDATED)
 // ================================================================
 
 function getBadgeDetails(badgeId, stats) {
@@ -879,7 +920,6 @@ function getBadgeDetails(badgeId, stats) {
   }
   const totalBadges = (stats.earnedBadges || []).length;
 
-  // Helper to create progress item
   function item(current, target, label, icon = "") {
     const pct = Math.min(100, Math.round((current / target) * 100));
     return { current, target, pct, label, icon };
@@ -890,17 +930,18 @@ function getBadgeDetails(badgeId, stats) {
     case 'n1': case 'n2': case 'n3': case 'n4': case 'b51':
       return { description: "Reach Top position on Leaderboard.", items: [] };
 
-    // Single condition - simple count
+    // Single condition
     case 'n5': return { description: "Click the 'Learn Javeda' button 1 time.", items: [item(stats.javedaClicks || 0, 1, "Clicks")] };
     case 'n6': return { description: "Click the 'Learn Javeda' button 5 times.", items: [item(stats.javedaClicks || 0, 5, "Clicks")] };
-    case 'n7': return { description: "Use 100 hints in total.", items: [item(stats.hints || 0, 100, "Hints used")] };
-    case 'n8': return { description: "Use 500 hints in total.", items: [item(stats.hints || 0, 500, "Hints used")] };
-    case 'n9': return { description: "Maintain a daily streak of 7 days.", items: [item(stats.dailyStreak || 0, 7, "Days streak")] };
-    case 'n10': return { description: "Maintain a daily streak of 30 days.", items: [item(stats.dailyStreak || 0, 30, "Days streak")] };
+    case 'n7': return { description: "Gather 300 hints in total.", items: [item(stats.hints || 0, 300, "Hints gathered")] };
+    case 'n8': return { description: "Gather 500 hints in total.", items: [item(stats.hints || 0, 500, "Hints gathered")] };
+    case 'n9': return { description: "Share the website with a friend (click the Share button).", items: [] };
+    case 'n10': return { description: "Complete 500 Timer Mode questions with 5-second timer AND 500 with 10-second timer.", items: [
+        item(stats.timer5sCompleted || 0, 500, "5s Timer correct"),
+        item(stats.timer10sCompleted || 0, 500, "10s Timer correct")
+      ] };
     case 'n11': return { description: "Answer 100 questions within 3 seconds each.", items: [item(stats.fastAnswers || 0, 100, "Fast answers")] };
     case 'n12': return { description: "Answer 50 questions in a single session.", items: [item(stats.sessionQuestions || 0, 50, "Session questions")] };
-    case 'n13': return { description: "Answer 20 questions between midnight and 6 AM.", items: [item(stats.nightQuestions || 0, 20, "Night questions")] };
-    case 'n14': return { description: "Answer 20 questions between 6 AM and 9 AM.", items: [item(stats.earlyQuestions || 0, 20, "Early questions")] };
     case 'n15': return { description: "Correctly answer 50 revision questions.", items: [item(stats.revisionCorrect || 0, 50, "Revision correct")] };
     case 'n16': return { description: "Correctly answer 200 revision questions.", items: [item(stats.revisionCorrect || 0, 200, "Revision correct")] };
     case 'n17': return { description: "Complete 50 Timer Mode questions.", items: [item(stats.timerQuestionsCompleted || 0, 50, "Timer questions")] };
@@ -922,6 +963,21 @@ function getBadgeDetails(badgeId, stats) {
     }
     case 'n27': return { description: "Earn 50 total badges.", items: [item(totalBadges, 50, "Badges earned")] };
     case 'n28': return { description: "Earn 75 total badges.", items: [item(totalBadges, 75, "Badges earned")] };
+
+    // NEW BADGES
+    case 'h1': return { description: "Get 500 correct answers in Timer Mode.", items: [item(stats.timerQuestionsCompleted || 0, 500, "Timer correct answers")] };
+    case 'h2': {
+      const catItems = [];
+      for (const cat of ['asset','liability','capital','revenue','expense','drawing']) {
+        const count = typeCounts[cat] || 0;
+        catItems.push(item(Math.min(100, count), 100, cat.charAt(0).toUpperCase() + cat.slice(1)));
+      }
+      return { description: "Correctly answer 100 questions in each of the 6 account categories.", items: catItems };
+    }
+    case 'h3': return { description: "Reach 3,000 total XP.", items: [item(stats.xp || 0, 3000, "XP")] };
+    case 'h4': return { description: "Sign in with Google account (one time).", items: [] };
+
+    // Debit/Credit starters
     case 'b3': return { description: "Answer your first Debit question correctly.", items: [] };
     case 'b4': return { description: "Answer your first Credit question correctly.", items: [] };
     case 'b5': return { description: "Get 5 correct answers.", items: [item(stats.correct, 5, "Correct answers")] };
@@ -942,7 +998,6 @@ function getBadgeDetails(badgeId, stats) {
       return { description: "Keep wrong answers below 10% of total questions (min 20 questions).", items: total >= 20 ? [item(Math.max(0, 100 - wrongPct), 90, "Correctness %")] : [] };
     }
     case 'b16': return { description: "Achieve a streak of 20 correct answers.", items: [item(stats.bestStreak, 20, "Best streak")] };
-    case 'b17': return { description: "Get 50 correct answers with zero wrong answers.", items: [item(stats.correct, 50, "Correct answers (0 wrong)")] };
     case 'b18': return { description: "Achieve a streak of 5 correct answers.", items: [item(stats.bestStreak, 5, "Best streak")] };
     case 'b19': return { description: "Achieve a streak of 10 correct answers.", items: [item(stats.bestStreak, 10, "Best streak")] };
     case 'b20': return { description: "Achieve a streak of 25 correct answers.", items: [item(stats.bestStreak, 25, "Best streak")] };
@@ -959,7 +1014,6 @@ function getBadgeDetails(badgeId, stats) {
     case 'b31': return { description: "Answer your first question within 3 seconds.", items: [] };
     case 'b32': return { description: "Answer 10 questions within 3 seconds each.", items: [item(stats.fastAnswers || 0, 10, "Fast answers")] };
     case 'b33': return { description: "Get your first correct answer.", items: [] };
-    case 'b34': return { description: "Get 10 correct answers with zero wrong (perfect quiz).", items: [item(stats.correct, 10, "Correct answers (0 wrong)")] };
     case 'b44': return { description: "Answer 20 questions in Focus Mode (timer or smart).", items: [item(stats.focusCount || 0, 20, "Focus questions")] };
     case 'b46': return { description: "Answer 50 questions in Smart Mode.", items: [item(stats.smartModeCount || 0, 50, "Smart questions")] };
     case 'b86': return { description: "Achieve 80% accuracy, 200 total questions, and streak 50.", items: [
@@ -1034,10 +1088,9 @@ function showBadgeDetails(badgeId) {
   container.innerHTML = "";
 
   if (data.items.length === 0) {
-    // No progress bar needed (e.g., leaderboard badges or simple ones)
     container.innerHTML = `<p style="text-align:center;color:var(--text-muted);font-size:14px;padding:8px 0;">Check your stats to earn this badge.</p>`;
   } else {
-    data.items.forEach((item, index) => {
+    data.items.forEach((item) => {
       const pct = Math.min(100, item.pct);
       const isComplete = item.current >= item.target;
       const color = isComplete ? "var(--accent-2)" : "var(--gradient-1)";
@@ -1102,7 +1155,8 @@ let state = {
     timerQuestionsCompleted: 0, timer5sCompleted: 0, timer10sCompleted: 0,
     revisionCorrect: 0,
     pointBoosterUsed: 0, coinBoosterUsed: 0, streakBoosterUsed: 0,
-    javedaClicks: 0, dailyStreak: 0, lastActivityDate: null,
+    javedaClicks: 0, shared: 0, // shared flag for Bring a Friend badge
+    dailyStreak: 0, lastActivityDate: null,
     sessionQuestions: 0, nightQuestions: 0, earlyQuestions: 0,
   },
   unsubUser: null, unsubLeaderboard: null,
@@ -2209,7 +2263,6 @@ function updateBadges() {
     const el = document.createElement("div");
     el.className = "badge-item" + (unlockedBadge ? "" : " locked");
     el.innerHTML = `<div class="b-icon ${unlockedBadge ? "unlocked" : "locked"}">${badge.icon}</div><div class="b-info"><div class="b-name">${badge.name}</div></div>`;
-    // Click event for locked badges only
     if (!unlockedBadge) {
       el.style.cursor = "pointer";
       el.addEventListener("click", (function(bid) {
@@ -2560,6 +2613,7 @@ function init() {
           state._shownBadges.add(id);
         }
         state.stats.javedaClicks = state.stats.javedaClicks || 0;
+        state.stats.shared = state.stats.shared || 0;
         state.stats.dailyStreak = state.stats.dailyStreak || 0;
         state.stats.lastActivityDate = state.stats.lastActivityDate || null;
         state.stats.sessionQuestions = state.stats.sessionQuestions || 0;
@@ -2582,6 +2636,103 @@ function init() {
     if (avatar) avatar.src = "https://ui-avatars.com/api/?name=Guest&background=5b4bd5&color=fff&size=36";
     if (nameDisplay) nameDisplay.textContent = "Guest";
     showToast("Guest Mode", "Your progress is saved locally.", "fa-user", "gain");
+  });
+
+  // Share button: copy link and award "Bring a Friend" badge
+  document.getElementById("shareBtn").addEventListener("click", function () {
+    const url = window.location.href;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(() => {
+        showToast("Link Copied!", "Share this link with your friends.", "fa-share-alt", "gain");
+        // Mark as shared
+        if (!state.stats.shared) {
+          state.stats.shared = 1;
+          const earnedIds = checkBadges(state.stats);
+          const prevBadges = new Set(state.stats.earnedBadges || []);
+          const newBadges = earnedIds.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
+          if (newBadges.length > 0) {
+            state.stats.earnedBadges = [...prevBadges, ...newBadges];
+            for (const id of newBadges) {
+              const badge = ALL_BADGES.find(b => b.id === id);
+              if (badge && !state._shownBadges.has(id)) {
+                state._shownBadges.add(id);
+                setTimeout(() => showBadgeToast(badge), 300);
+              }
+            }
+            updateBadges();
+            saveStats();
+          }
+        } else {
+          showToast("Already Shared", "You already earned the Bring a Friend badge.", "fa-check-circle", "gain");
+        }
+      }).catch(() => {
+        // Fallback: prompt to copy
+        const textArea = document.createElement("textarea");
+        textArea.value = url;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          showToast("Link Copied!", "Share this link with your friends.", "fa-share-alt", "gain");
+          if (!state.stats.shared) {
+            state.stats.shared = 1;
+            const earnedIds = checkBadges(state.stats);
+            const prevBadges = new Set(state.stats.earnedBadges || []);
+            const newBadges = earnedIds.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
+            if (newBadges.length > 0) {
+              state.stats.earnedBadges = [...prevBadges, ...newBadges];
+              for (const id of newBadges) {
+                const badge = ALL_BADGES.find(b => b.id === id);
+                if (badge && !state._shownBadges.has(id)) {
+                  state._shownBadges.add(id);
+                  setTimeout(() => showBadgeToast(badge), 300);
+                }
+              }
+              updateBadges();
+              saveStats();
+            }
+          } else {
+            showToast("Already Shared", "You already earned the Bring a Friend badge.", "fa-check-circle", "gain");
+          }
+        } catch (e) {
+          showToast("Copy Failed", "Please manually copy the URL.", "fa-exclamation-circle", "loss");
+        }
+        document.body.removeChild(textArea);
+      });
+    } else {
+      // Fallback for older browsers
+      const textArea = document.createElement("textarea");
+      textArea.value = url;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showToast("Link Copied!", "Share this link with your friends.", "fa-share-alt", "gain");
+        if (!state.stats.shared) {
+          state.stats.shared = 1;
+          const earnedIds = checkBadges(state.stats);
+          const prevBadges = new Set(state.stats.earnedBadges || []);
+          const newBadges = earnedIds.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
+          if (newBadges.length > 0) {
+            state.stats.earnedBadges = [...prevBadges, ...newBadges];
+            for (const id of newBadges) {
+              const badge = ALL_BADGES.find(b => b.id === id);
+              if (badge && !state._shownBadges.has(id)) {
+                state._shownBadges.add(id);
+                setTimeout(() => showBadgeToast(badge), 300);
+              }
+            }
+            updateBadges();
+            saveStats();
+          }
+        } else {
+          showToast("Already Shared", "You already earned the Bring a Friend badge.", "fa-check-circle", "gain");
+        }
+      } catch (e) {
+        showToast("Copy Failed", "Please manually copy the URL.", "fa-exclamation-circle", "loss");
+      }
+      document.body.removeChild(textArea);
+    }
   });
 
   const userInfo = document.getElementById("userInfo");
@@ -3022,7 +3173,7 @@ function init() {
   updateModeToggles();
   updateBoosterStatus();
 
-  console.log("📘 Version : 6.0.3 - Badge system updated with multi-condition support & real-time progress");
+  console.log("📘 Version : 6.0.5 - Badge system updated: Removed Perfect Week & Monthly Mentor, added Bring a Friend & Rapid Thinker. Fixed Learner badge and leaderboard badges.");
   console.log("✅ Developed By - Faizul Islam Riyad");
 }
 
@@ -3031,7 +3182,6 @@ function init() {
 // ================================================================
 
 document.addEventListener("DOMContentLoaded", function() {
-  // Badge modal close
   const closeBtn = document.getElementById("badgeModalClose");
   const modal = document.getElementById("badgeModal");
   if (closeBtn) {

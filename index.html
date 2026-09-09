@@ -123,7 +123,6 @@
                     <button class="mode-toggle" id="timerToggle">
                         <span class="toggle-dot"></span> <i class="fas fa-hourglass-half"></i> Timer Mode
                         <span class="timer-badge" id="timerBadge" style="display:none;">⏱</span>
-                        <!-- ===== Hearts UI সম্পূর্ণ রিমুভ করা হয়েছে ===== -->
                     </button>
                     <div class="timer-options" id="timerOptions">
                         <button class="timer-opt active" data-timer="5">5s</button>
@@ -180,17 +179,21 @@
                     </div>
                 </div>
 
-                <div class="Lern" style="margin-top:18px;">
+                <div class="Lern" style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
                     <a href="lern.html" class="learn-more" id="learnJavedaBtn">
                         <i class="fas fa-book-open"></i> Learn Javeda
                     </a>
+                    <!-- Share button for "Bring a Friend" badge -->
+                    <button class="learn-more" id="shareBtn" style="background:rgba(15,184,138,0.10);">
+                        <i class="fas fa-share-alt"></i> Share & Invite
+                    </button>
                 </div>
 
             </div>
         </section>
 
         <!-- ============================================================
-        SECTION: DASHBOARD (UPDATED)
+        SECTION: DASHBOARD (unchanged)
         ============================================================ -->
         <section class="section-panel" id="section-dashboard">
             <h2 style="font-size:24px;margin-bottom:20px;display:flex;align-items:center;gap:10px;">
@@ -435,15 +438,13 @@
         </section>
     </div>
 
-    <!-- ===== BADGE DETAIL MODAL (UPDATED with multiple progress support) ===== -->
+    <!-- ===== BADGE DETAIL MODAL ===== -->
     <div class="modal-overlay" id="badgeModal">
         <div class="modal" style="max-width:500px;">
             <div class="modal-icon" id="badgeModalIcon" style="font-size:48px;text-align:center;">🏆</div>
             <h2 id="badgeModalTitle" style="text-align:center;font-size:22px;font-weight:700;margin:4px 0 2px;">Badge Name</h2>
             <p id="badgeModalDesc" style="text-align:center;color:var(--text-secondary);font-size:14px;line-height:1.5;margin:4px 0 16px;">How to earn this badge</p>
-            <div id="badgeProgressContainer" style="margin:8px 0 4px;">
-                <!-- dynamically rendered -->
-            </div>
+            <div id="badgeProgressContainer" style="margin:8px 0 4px;"></div>
             <div class="modal-actions" style="display:flex;justify-content:center;gap:12px;margin-top:16px;">
                 <button class="btn btn-primary" id="badgeModalClose" style="padding:8px 32px;border-radius:30px;border:none;background:var(--gradient-1);color:#fff;font-weight:600;cursor:pointer;">Close</button>
             </div>
