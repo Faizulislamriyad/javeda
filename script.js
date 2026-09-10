@@ -1696,11 +1696,11 @@ function showFeedback(isCorrect, q, journal, trans) {
     const correctAns = q.correctAnswer === "debit" ? "Debit" : "Credit";
 
     if (isTimeout) {
-      explanation = `সময় শেষ! সঠিক উত্তর ছিল <strong>${correctAns}</strong>।\n${bnName}${amtStr} একটি ${label}। ${label} ${side} হয়েছে, তাই ${bnName} হিসাব ${sideLabel} হবে।`;
+      explanation = `সময় শেষ! সঠিক উত্তর ছিল <strong>${correctAns}</strong>।\n${bnName}${amtStr} একটি ${label}। ${label} ${side} হয়েছে, তাই ${bnName} হিসাব ${sideLabel} হবে।`;
     } else if (!isCorrectFinal) {
-      explanation = `সঠিক উত্তর ছিল <strong>${correctAns}</strong>।\n${bnName}${amtStr} একটি ${label}। ${label} ${side} হয়েছে, তাই ${bnName} হিসাব ${sideLabel} হবে।`;
+      explanation = `সঠিক উত্তর ছিল <strong>${correctAns}</strong>।\n${bnName}${amtStr} একটি ${label}। ${label} ${side} হয়েছে, তাই ${bnName} হিসাব ${sideLabel} হবে।`;
     } else {
-      explanation = `${bnName}${amtStr} একটি ${label}। ${label} ${side} হয়েছে, তাই ${bnName} হিসাব ${sideLabel} হবে।`;
+      explanation = `${bnName}${amtStr} একটি ${label}। ${label} ${side} হয়েছে, তাই ${bnName} হিসাব ${sideLabel} হবে।`;
     }
     ruleText = `${label} ${side} = ${sideLabel}`;
   } else {
@@ -2503,7 +2503,7 @@ function renderLeaderboard() {
                 </tr>`;
   }).join("");
 
-  // ===== RANK CHECK FOR BELL NOTIFICATIONS =====
+  // ===== RANK CHECK FOR BELL NOTIFICATIONS (FIXED: use encoded email) =====
   if (currentEmail) {
     const userRank = sorted.findIndex((u) => u.email === currentEmail) + 1;
     if (userRank >= 1 && userRank <= 5 && auth.currentUser) {
@@ -2567,42 +2567,6 @@ function navigateTo(section) {
   }
   if (section === "revision") loadRevisionList();
   if (section === "leaderboard") renderLeaderboard();
-}
-
-// ================================================================
-// 20.5 AUTH STATE HANDLER (NEW)
-// ================================================================
-
-function handleAuthState(user) {
-    if (user) {
-        // লগইন সফল
-        state.isGuest = false;
-        state.guestId = null;
-        hideLogin();
-        loadUserData(user);
-
-        // বেল ইনিশিয়ালাইজ (লগইন ইউজার)
-        if (typeof initBell === 'function' && user.email) {
-            const encodedEmail = user.email.replace(/[.#$\/\[\]]/g, '_');
-            initBell(encodedEmail);
-        }
-    } else {
-        // লগআউট বা কেউ লগইন নেই → গেস্ট মোড
-        let guestId = localStorage.getItem('guest_id');
-        if (!guestId) {
-            guestId = 'guest_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-            localStorage.setItem('guest_id', guestId);
-        }
-        state.isGuest = true;
-        state.guestId = guestId;
-        
-        // গেস্ট মোডে বেল চালু
-        if (typeof initBell === 'function') {
-            initBell(guestId);
-        }
-        // লগইন স্ক্রিন দেখান (যদি গেস্ট না হয়)
-        // showLogin(); // কমেন্ট করলে গেস্ট ডিফল্ট থাকবে
-    }
 }
 
 // ================================================================
@@ -3217,9 +3181,16 @@ function init() {
   updateModeToggles();
   updateBoosterStatus();
 
-  // ===== INIT BELL NOTIFICATIONS - REMOVED (handled by handleAuthState) =====
+  // ===== INIT BELL NOTIFICATIONS (FIXED: use encoded email) =====
+  if (auth.currentUser && typeof initBell === 'function') {
+    const email = auth.currentUser.email;
+    if (email) {
+      const encodedEmail = email.replace(/[.#$\/\[\]]/g, '_');
+      initBell(encodedEmail);
+    }
+  }
 
-  console.log("📘 Version : 6.0.7 - Bell notification system fixed for guest + login modes.");
+  console.log("📘 Version : 6.0.6 - Bell notification system added. Leaderboard rank notifications (Top 1-5). Fixed badge tracking issues.");
   console.log("✅ Developed By - Faizul Islam Riyad");
 }
 
