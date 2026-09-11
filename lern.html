@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="jurnel entry.jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        /* ===== RESET & VARIABLES (same as index.html) ===== */
+        /* ===== RESET & VARIABLES ===== */
         * {
             margin: 0;
             padding: 0;
@@ -38,9 +38,7 @@
             --ruby-color: #e0115f;
             --heart-color: #ff3b6f;
         }
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
         body {
             font-family: var(--font);
             background: var(--bg-body);
@@ -50,16 +48,9 @@
             background-image: radial-gradient(circle at 10% 20%, rgba(91, 75, 213, 0.06) 0%, transparent 50%),
                 radial-gradient(circle at 90% 80%, rgba(15, 184, 138, 0.06) 0%, transparent 50%);
         }
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg-body);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent-1);
-            border-radius: 10px;
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-1); border-radius: 10px; }
 
         .app-container {
             max-width: 900px;
@@ -99,48 +90,32 @@
             border-radius: var(--radius);
             box-shadow: var(--glass-shadow);
         }
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
+        .logo-area { display: flex; align-items: center; gap: 14px; }
         .logo-icon {
-            width: 44px;
-            height: 44px;
+            width: 44px; height: 44px;
             background: var(--gradient-1);
             border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            font-weight: 700;
-            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; font-weight: 700; color: #fff;
         }
         .logo-text {
-            font-size: 22px;
-            font-weight: 700;
+            font-size: 22px; font-weight: 700;
             background: var(--gradient-1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: 0.3px;
         }
-        .logo-sub {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
+        .logo-sub { font-size: 13px; color: var(--text-muted); }
         .back-link {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            display: flex; align-items: center; gap: 8px;
             padding: 8px 18px;
             border-radius: 30px;
             border: 1px solid var(--glass-border);
             background: rgba(255, 255, 255, 0.30);
             color: var(--text-secondary);
             font-family: var(--font);
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 14px; font-weight: 500;
             cursor: pointer;
             text-decoration: none;
             transition: var(--transition);
@@ -150,10 +125,7 @@
             color: var(--text-primary);
             transform: translateY(-2px);
         }
-        .back-link i {
-            font-size: 14px;
-            color: var(--accent-1);
-        }
+        .back-link i { font-size: 14px; color: var(--accent-1); }
 
         /* ===== PROGRESS BAR ===== */
         .progress-wrap {
@@ -164,43 +136,30 @@
             border: 1px solid var(--glass-border);
             border-radius: var(--radius);
             box-shadow: var(--glass-shadow);
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
+            display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
         }
         .progress-wrap .label {
-            font-size: 14px;
-            color: var(--text-secondary);
+            font-size: 14px; color: var(--text-secondary);
             font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            display: flex; align-items: center; gap: 8px;
         }
-        .progress-wrap .label i {
-            color: var(--accent-3);
-        }
+        .progress-wrap .label i { color: var(--accent-3); }
         .progress-track {
-            flex: 1;
-            min-width: 120px;
+            flex: 1; min-width: 120px;
             height: 8px;
             background: rgba(255, 255, 255, 0.40);
             border-radius: 30px;
             overflow: hidden;
         }
         .progress-track .fill {
-            height: 100%;
-            border-radius: 30px;
+            height: 100%; border-radius: 30px;
             background: var(--gradient-1);
-            width: 0%;
-            transition: width 0.6s ease;
+            width: 0%; transition: width 0.6s ease;
         }
         .progress-wrap .pct {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 14px; font-weight: 600;
             color: var(--text-primary);
-            min-width: 44px;
-            text-align: right;
+            min-width: 44px; text-align: right;
         }
 
         /* ===== TOC ===== */
@@ -217,16 +176,12 @@
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-sm);
             text-align: center;
-            font-size: 13px;
-            font-weight: 500;
+            font-size: 13px; font-weight: 500;
             color: var(--text-secondary);
             cursor: pointer;
             transition: var(--transition);
             text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .toc-item:hover {
             background: rgba(255, 255, 255, 0.55);
@@ -236,47 +191,24 @@
         }
         .toc-item .num {
             display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
+            align-items: center; justify-content: center;
+            width: 24px; height: 24px;
             border-radius: 50%;
             background: var(--gradient-1);
             color: #fff;
-            font-size: 11px;
-            font-weight: 700;
+            font-size: 11px; font-weight: 700;
             flex-shrink: 0;
         }
-        .toc-item .num.gold {
-            background: var(--gradient-3);
-            color: #1a1a2e;
-        }
-        .toc-item .num.green {
-            background: var(--gradient-2);
-            color: #fff;
-        }
-        .toc-item .num.red {
-            background: var(--accent-4);
-            color: #fff;
-        }
-        .toc-item .num.teal {
-            background: #0fb8b0;
-            color: #fff;
-        }
-        .toc-item .num.purple {
-            background: var(--gradient-1);
-            color: #fff;
-        }
+        .toc-item .num.gold { background: var(--gradient-3); color: #1a1a2e; }
+        .toc-item .num.green { background: var(--gradient-2); color: #fff; }
+        .toc-item .num.red { background: var(--accent-4); color: #fff; }
+        .toc-item .num.teal { background: #0fb8b0; color: #fff; }
+        .toc-item .num.purple { background: var(--gradient-1); color: #fff; }
 
         /* ===== CHAPTER CARD ===== */
-        .chapter {
-            margin-bottom: 24px;
-            scroll-margin-top: 20px;
-        }
+        .chapter { margin-bottom: 24px; scroll-margin-top: 20px; }
         .chapter .ch-header {
-            display: flex;
-            align-items: center;
-            gap: 14px;
+            display: flex; align-items: center; gap: 14px;
             cursor: pointer;
             padding: 16px 20px;
             background: var(--glass-bg);
@@ -291,49 +223,27 @@
             border-color: rgba(255, 255, 255, 0.85);
         }
         .chapter .ch-header .ch-icon {
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
-            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; flex-shrink: 0; color: #fff;
         }
-        .chapter .ch-header .ch-icon.purple {
-            background: var(--gradient-1);
-        }
-        .chapter .ch-header .ch-icon.green {
-            background: var(--gradient-2);
-        }
-        .chapter .ch-header .ch-icon.gold {
-            background: var(--gradient-3);
-            color: #1a1a2e;
-        }
-        .chapter .ch-header .ch-icon.red {
-            background: var(--accent-4);
-        }
-        .chapter .ch-header .ch-icon.teal {
-            background: #0fb8b0;
-        }
-        .chapter .ch-header .ch-icon.blue {
-            background: #2a7de1;
-        }
+        .chapter .ch-header .ch-icon.purple { background: var(--gradient-1); }
+        .chapter .ch-header .ch-icon.green { background: var(--gradient-2); }
+        .chapter .ch-header .ch-icon.gold { background: var(--gradient-3); color: #1a1a2e; }
+        .chapter .ch-header .ch-icon.red { background: var(--accent-4); }
+        .chapter .ch-header .ch-icon.teal { background: #0fb8b0; }
+        .chapter .ch-header .ch-icon.blue { background: #2a7de1; }
         .chapter .ch-header .ch-title {
             flex: 1;
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 18px; font-weight: 600;
             color: var(--text-primary);
         }
         .chapter .ch-header .ch-toggle {
-            font-size: 18px;
-            color: var(--text-muted);
+            font-size: 18px; color: var(--text-muted);
             transition: transform 0.3s ease;
         }
-        .chapter .ch-header .ch-toggle.open {
-            transform: rotate(180deg);
-        }
+        .chapter .ch-header .ch-toggle.open { transform: rotate(180deg); }
         .chapter .ch-body {
             padding: 20px 24px;
             background: var(--glass-bg);
@@ -344,59 +254,37 @@
             display: none;
             animation: fadeUp 0.3s ease;
         }
-        .chapter .ch-body.open {
-            display: block;
-        }
+        .chapter .ch-body.open { display: block; }
         @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== TYPOGRAPHY INSIDE CHAPTERS ===== */
+        /* ===== TYPOGRAPHY ===== */
         .ch-body h3 {
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 20px; font-weight: 700;
             color: var(--text-primary);
             margin: 16px 0 8px;
         }
-        .ch-body h3:first-child {
-            margin-top: 0;
-        }
+        .ch-body h3:first-child { margin-top: 0; }
         .ch-body h4 {
-            font-size: 17px;
-            font-weight: 600;
+            font-size: 17px; font-weight: 600;
             color: var(--text-secondary);
             margin: 14px 0 6px;
         }
         .ch-body p {
-            font-size: 15px;
-            line-height: 1.8;
+            font-size: 15px; line-height: 1.8;
             color: var(--text-secondary);
             margin-bottom: 10px;
         }
-        .ch-body p strong {
-            color: var(--text-primary);
-        }
-        .ch-body ul,
-        .ch-body ol {
-            padding-left: 24px;
-            margin-bottom: 12px;
-        }
+        .ch-body p strong { color: var(--text-primary); }
+        .ch-body ul, .ch-body ol { padding-left: 24px; margin-bottom: 12px; }
         .ch-body li {
-            font-size: 15px;
-            line-height: 1.8;
+            font-size: 15px; line-height: 1.8;
             color: var(--text-secondary);
             margin-bottom: 4px;
         }
-        .ch-body li strong {
-            color: var(--text-primary);
-        }
+        .ch-body li strong { color: var(--text-primary); }
 
         /* ===== RULE CARDS ===== */
         .rule-grid {
@@ -417,28 +305,13 @@
             background: rgba(255, 255, 255, 0.55);
             transform: translateY(-2px);
         }
-        .rule-card .r-label {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        .rule-card .r-rule {
-            font-size: 20px;
-            font-weight: 700;
-            margin: 6px 0 2px;
-        }
-        .rule-card .r-rule.debit {
-            color: var(--accent-2);
-        }
-        .rule-card .r-rule.credit {
-            color: var(--accent-4);
-        }
-        .rule-card .r-desc {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
+        .rule-card .r-label { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+        .rule-card .r-rule { font-size: 20px; font-weight: 700; margin: 6px 0 2px; }
+        .rule-card .r-rule.debit { color: var(--accent-2); }
+        .rule-card .r-rule.credit { color: var(--accent-4); }
+        .rule-card .r-desc { font-size: 13px; color: var(--text-muted); }
 
-        /* ===== ADERC SHORTCUT ===== */
+        /* ===== ADERC BOX ===== */
         .aderc-box {
             background: rgba(255, 215, 0, 0.12);
             border: 2px solid var(--accent-3);
@@ -448,31 +321,16 @@
             text-align: center;
         }
         .aderc-box .big {
-            font-size: 28px;
-            font-weight: 800;
+            font-size: 28px; font-weight: 800;
             letter-spacing: 4px;
             color: var(--text-primary);
         }
-        .aderc-box .big span.a {
-            color: var(--accent-1);
-        }
-        .aderc-box .big span.d {
-            color: var(--accent-2);
-        }
-        .aderc-box .big span.e {
-            color: var(--accent-4);
-        }
-        .aderc-box .big span.r {
-            color: var(--accent-3);
-        }
-        .aderc-box .big span.c {
-            color: var(--accent-1);
-        }
-        .aderc-box .sub {
-            font-size: 15px;
-            color: var(--text-secondary);
-            margin-top: 6px;
-        }
+        .aderc-box .big span.a { color: var(--accent-1); }
+        .aderc-box .big span.d { color: var(--accent-2); }
+        .aderc-box .big span.e { color: var(--accent-4); }
+        .aderc-box .big span.r { color: var(--accent-3); }
+        .aderc-box .big span.c { color: var(--accent-1); }
+        .aderc-box .sub { font-size: 15px; color: var(--text-secondary); margin-top: 6px; }
 
         /* ===== EXAMPLE BOX ===== */
         .example-box {
@@ -482,39 +340,21 @@
             padding: 16px 20px;
             margin: 12px 0;
         }
-        .example-box .ex-title {
-            font-weight: 700;
-            color: var(--text-primary);
-            font-size: 16px;
-        }
+        .example-box .ex-title { font-weight: 700; color: var(--text-primary); font-size: 16px; }
         .example-box .ex-detail {
-            margin-top: 6px;
-            font-size: 15px;
-            color: var(--text-secondary);
-            line-height: 1.8;
+            margin-top: 6px; font-size: 15px;
+            color: var(--text-secondary); line-height: 1.8;
         }
-        .example-box .ex-detail .debit-text {
-            color: var(--accent-2);
-            font-weight: 600;
-        }
-        .example-box .ex-detail .credit-text {
-            color: var(--accent-4);
-            font-weight: 600;
-        }
+        .example-box .ex-detail .debit-text { color: var(--accent-2); font-weight: 600; }
+        .example-box .ex-detail .credit-text { color: var(--accent-4); font-weight: 600; }
         .example-box .ex-answer {
-            margin-top: 8px;
-            padding: 10px 16px;
+            margin-top: 8px; padding: 10px 16px;
             background: rgba(255, 255, 255, 0.40);
             border-radius: var(--radius-xs);
-            font-weight: 600;
-            font-size: 15px;
+            font-weight: 600; font-size: 15px;
         }
-        .example-box .ex-answer .debit-text {
-            color: var(--accent-2);
-        }
-        .example-box .ex-answer .credit-text {
-            color: var(--accent-4);
-        }
+        .example-box .ex-answer .debit-text { color: var(--accent-2); }
+        .example-box .ex-answer .credit-text { color: var(--accent-4); }
 
         /* ===== TRICK CARDS ===== */
         .trick-grid {
@@ -534,35 +374,14 @@
             background: rgba(255, 255, 255, 0.50);
             transform: translateY(-2px);
         }
-        .trick-card .t-phrase {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 15px;
-        }
-        .trick-card .t-meaning {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-        }
-        .trick-card .t-result {
-            font-size: 14px;
-            font-weight: 600;
-            margin-top: 4px;
-        }
-        .trick-card .t-result.debit {
-            color: var(--accent-2);
-        }
-        .trick-card .t-result.credit {
-            color: var(--accent-4);
-        }
+        .trick-card .t-phrase { font-weight: 600; color: var(--text-primary); font-size: 15px; }
+        .trick-card .t-meaning { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
+        .trick-card .t-result { font-size: 14px; font-weight: 600; margin-top: 4px; }
+        .trick-card .t-result.debit { color: var(--accent-2); }
+        .trick-card .t-result.credit { color: var(--accent-4); }
 
         /* ===== STEPS ===== */
-        .steps {
-            counter-reset: step;
-            padding-left: 0;
-            list-style: none;
-            margin: 12px 0 16px;
-        }
+        .steps { counter-reset: step; padding-left: 0; list-style: none; margin: 12px 0 16px; }
         .steps li {
             counter-increment: step;
             padding: 12px 16px 12px 56px;
@@ -570,37 +389,27 @@
             background: rgba(255, 255, 255, 0.25);
             border-radius: var(--radius-xs);
             margin-bottom: 8px;
-            font-size: 15px;
-            line-height: 1.7;
+            font-size: 15px; line-height: 1.7;
             color: var(--text-secondary);
             border: 1px solid var(--glass-border);
             transition: var(--transition);
         }
-        .steps li:hover {
-            background: rgba(255, 255, 255, 0.45);
-        }
+        .steps li:hover { background: rgba(255, 255, 255, 0.45); }
         .steps li::before {
             content: counter(step);
             position: absolute;
-            left: 14px;
-            top: 50%;
+            left: 14px; top: 50%;
             transform: translateY(-50%);
-            width: 30px;
-            height: 30px;
+            width: 30px; height: 30px;
             border-radius: 50%;
             background: var(--gradient-1);
             color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 14px;
         }
-        .steps li strong {
-            color: var(--text-primary);
-        }
+        .steps li strong { color: var(--text-primary); }
 
-        /* ===== FINAL GOAL ===== */
+        /* ===== GOAL BOX ===== */
         .goal-box {
             background: rgba(15, 184, 138, 0.08);
             border: 2px solid var(--accent-2);
@@ -609,27 +418,12 @@
             margin: 16px 0;
             text-align: center;
         }
-        .goal-box .goal-icon {
-            font-size: 36px;
-            color: var(--accent-2);
-            margin-bottom: 8px;
-        }
-        .goal-box h3 {
-            margin-top: 0 !important;
-        }
-        .goal-box ul {
-            display: inline-block;
-            text-align: left;
-            padding-left: 24px;
-            margin: 8px 0 0;
-        }
-        .goal-box ul li {
-            font-size: 15px;
-            line-height: 1.8;
-            color: var(--text-secondary);
-        }
+        .goal-box .goal-icon { font-size: 36px; color: var(--accent-2); margin-bottom: 8px; }
+        .goal-box h3 { margin-top: 0 !important; }
+        .goal-box ul { display: inline-block; text-align: left; padding-left: 24px; margin: 8px 0 0; }
+        .goal-box ul li { font-size: 15px; line-height: 1.8; color: var(--text-secondary); }
 
-        /* ===== FEATURE GRID (How to Work) ===== */
+        /* ===== FEATURE GRID ===== */
         .feature-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -649,96 +443,98 @@
             box-shadow: var(--glass-shadow);
         }
         .feature-card .f-icon {
-            font-size: 28px;
-            margin-bottom: 6px;
-            display: block;
-            color: var(--accent-1);
+            font-size: 28px; margin-bottom: 6px;
+            display: block; color: var(--accent-1);
         }
-        .feature-card .f-title {
-            font-weight: 700;
-            font-size: 16px;
-            color: var(--text-primary);
-        }
+        .feature-card .f-title { font-weight: 700; font-size: 16px; color: var(--text-primary); }
         .feature-card .f-desc {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-            line-height: 1.6;
+            font-size: 14px; color: var(--text-secondary);
+            margin-top: 4px; line-height: 1.6;
         }
         .feature-card .f-tag {
             display: inline-block;
             margin-top: 6px;
             padding: 2px 12px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 11px; font-weight: 600;
+        }
+        .feature-card .f-tag.gold { background: rgba(230, 168, 0, 0.15); color: #b88900; }
+        .feature-card .f-tag.green { background: rgba(15, 184, 138, 0.15); color: var(--accent-2); }
+        .feature-card .f-tag.purple { background: rgba(91, 75, 213, 0.12); color: var(--accent-1); }
+        .feature-card .f-tag.red { background: rgba(217, 79, 79, 0.12); color: var(--accent-4); }
+
+        /* ===== BADGE GROUPS ===== */
+        .badge-group-block {
+            margin-bottom: 16px;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.20);
+        }
+        .badge-group-header-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.30);
             font-weight: 600;
+            color: var(--text-primary);
+            font-size: 15px;
         }
-        .feature-card .f-tag.gold {
-            background: rgba(230, 168, 0, 0.15);
-            color: #b88900;
-        }
-        .feature-card .f-tag.green {
-            background: rgba(15, 184, 138, 0.15);
-            color: var(--accent-2);
-        }
-        .feature-card .f-tag.purple {
+        .badge-group-header-row .badge-group-icon { font-size: 20px; }
+        .badge-group-header-row .badge-group-count-pill {
+            margin-left: auto;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 12px;
+            border-radius: 12px;
             background: rgba(91, 75, 213, 0.12);
             color: var(--accent-1);
         }
-        .feature-card .f-tag.red {
-            background: rgba(217, 79, 79, 0.12);
-            color: var(--accent-4);
+        .badge-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 6px;
+            padding: 12px;
         }
-
-        /* ===== BADGE TABLE ===== */
-        .badge-table-wrap {
-            overflow-x: auto;
-            margin: 12px 0 16px;
-            max-height: 500px;
-            overflow-y: auto;
+        .badge-list-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: var(--radius-xs);
+            background: rgba(255, 255, 255, 0.45);
             border: 1px solid var(--glass-border);
-            border-radius: var(--radius-sm);
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: var(--transition);
         }
-        .badge-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            background: rgba(255, 255, 255, 0.20);
+        .badge-list-item:hover {
+            background: rgba(255, 255, 255, 0.70);
+            transform: translateY(-2px);
         }
-        .badge-table th {
-            background: rgba(91, 75, 213, 0.10);
-            padding: 8px 12px;
-            text-align: left;
+        .badge-list-item .b-icon {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .badge-list-item .b-name {
             font-weight: 600;
             color: var(--text-primary);
-            border-bottom: 1px solid var(--glass-border);
-            position: sticky;
-            top: 0;
-            background: rgba(238, 242, 247, 0.95);
-            backdrop-filter: blur(4px);
-            z-index: 2;
-        }
-        .badge-table td {
-            padding: 6px 12px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-            color: var(--text-secondary);
-        }
-        .badge-table tr:hover td {
-            background: rgba(255, 255, 255, 0.20);
-        }
-        .badge-table .b-icon {
-            font-size: 20px;
-            margin-right: 4px;
+            font-size: 12px;
+            line-height: 1.3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
 
         /* ===== REWARD TABLES ===== */
-        .reward-table-wrap {
-            overflow-x: auto;
-            margin: 12px 0 16px;
-        }
+        .reward-table-wrap { overflow-x: auto; margin: 12px 0 16px; }
         .reward-table {
-            width: 100%;
-            border-collapse: collapse;
+            width: 100%; border-collapse: collapse;
             font-size: 14px;
             background: rgba(255, 255, 255, 0.20);
             border-radius: var(--radius-xs);
@@ -758,173 +554,63 @@
             border-bottom: 1px solid rgba(0, 0, 0, 0.04);
             color: var(--text-secondary);
         }
-        .reward-table tr:hover td {
-            background: rgba(255, 255, 255, 0.20);
-        }
-        .reward-table .highlight-gain {
-            color: var(--accent-2);
-            font-weight: 600;
-        }
-        .reward-table .highlight-loss {
-            color: var(--accent-4);
-            font-weight: 600;
-        }
-        .reward-table .highlight-timeout {
-            color: #b87333;
-            font-weight: 600;
-        }
+        .reward-table tr:hover td { background: rgba(255, 255, 255, 0.20); }
+        .reward-table .highlight-gain { color: var(--accent-2); font-weight: 600; }
+        .reward-table .highlight-loss { color: var(--accent-4); font-weight: 600; }
+        .reward-table .highlight-timeout { color: #b87333; font-weight: 600; }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            body {
-                padding: 12px 10px 30px;
-            }
-            .app-header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 12px;
-                padding: 16px;
-            }
-            .logo-area {
-                justify-content: center;
-            }
-            .back-link {
-                justify-content: center;
-            }
-            .glass-card {
-                padding: 18px 14px;
-            }
-            .chapter .ch-header {
-                padding: 14px 16px;
-            }
-            .chapter .ch-header .ch-title {
-                font-size: 16px;
-            }
-            .chapter .ch-body {
-                padding: 16px 14px;
-            }
-            .ch-body h3 {
-                font-size: 18px;
-            }
-            .ch-body h4 {
-                font-size: 16px;
-            }
-            .ch-body p,
-            .ch-body li {
-                font-size: 14px;
-            }
-            .rule-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .trick-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-            .toc-grid {
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            }
-            .aderc-box .big {
-                font-size: 22px;
-                letter-spacing: 2px;
-            }
-            .steps li {
-                padding: 10px 12px 10px 48px;
-                font-size: 14px;
-            }
-            .steps li::before {
-                width: 26px;
-                height: 26px;
-                font-size: 12px;
-                left: 10px;
-            }
-            .progress-wrap {
-                padding: 12px 16px;
-            }
-            .progress-wrap .label {
-                font-size: 13px;
-            }
-            .badge-table {
-                font-size: 12px;
-            }
-            .badge-table th,
-            .badge-table td {
-                padding: 4px 8px;
-            }
-            .reward-table {
-                font-size: 12px;
-            }
-            .reward-table th,
-            .reward-table td {
-                padding: 4px 8px;
-            }
+            body { padding: 12px 10px 30px; }
+            .app-header { flex-direction: column; align-items: stretch; gap: 12px; padding: 16px; }
+            .logo-area { justify-content: center; }
+            .back-link { justify-content: center; }
+            .glass-card { padding: 18px 14px; }
+            .chapter .ch-header { padding: 14px 16px; }
+            .chapter .ch-header .ch-title { font-size: 16px; }
+            .chapter .ch-body { padding: 16px 14px; }
+            .ch-body h3 { font-size: 18px; }
+            .ch-body h4 { font-size: 16px; }
+            .ch-body p, .ch-body li { font-size: 14px; }
+            .rule-grid { grid-template-columns: 1fr 1fr; }
+            .trick-grid { grid-template-columns: 1fr 1fr; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .toc-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+            .aderc-box .big { font-size: 22px; letter-spacing: 2px; }
+            .steps li { padding: 10px 12px 10px 48px; font-size: 14px; }
+            .steps li::before { width: 26px; height: 26px; font-size: 12px; left: 10px; }
+            .progress-wrap { padding: 12px 16px; }
+            .progress-wrap .label { font-size: 13px; }
+            .reward-table { font-size: 12px; }
+            .reward-table th, .reward-table td { padding: 4px 8px; }
+            .badge-list { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
         }
         @media (max-width: 480px) {
-            .glass-card {
-                padding: 14px 10px;
-            }
-            .chapter .ch-header .ch-title {
-                font-size: 14px;
-            }
-            .chapter .ch-body {
-                padding: 12px 10px;
-            }
-            .rule-grid {
-                grid-template-columns: 1fr;
-            }
-            .trick-grid {
-                grid-template-columns: 1fr;
-            }
-            .toc-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .aderc-box .big {
-                font-size: 18px;
-                letter-spacing: 1px;
-            }
-            .aderc-box {
-                padding: 14px 16px;
-            }
-            .example-box {
-                padding: 12px 14px;
-            }
-            .goal-box {
-                padding: 14px 16px;
-            }
-            .ch-body h3 {
-                font-size: 16px;
-            }
-            .feature-card {
-                padding: 14px 16px;
-            }
-            .badge-table-wrap {
-                max-height: 300px;
-            }
+            .glass-card { padding: 14px 10px; }
+            .chapter .ch-header .ch-title { font-size: 14px; }
+            .chapter .ch-body { padding: 12px 10px; }
+            .rule-grid { grid-template-columns: 1fr; }
+            .trick-grid { grid-template-columns: 1fr; }
+            .toc-grid { grid-template-columns: 1fr 1fr; }
+            .aderc-box .big { font-size: 18px; letter-spacing: 1px; }
+            .aderc-box { padding: 14px 16px; }
+            .example-box { padding: 12px 14px; }
+            .goal-box { padding: 14px 16px; }
+            .ch-body h3 { font-size: 16px; }
+            .feature-card { padding: 14px 16px; }
+            .badge-list { grid-template-columns: 1fr 1fr; }
+            .badge-list-item { padding: 6px 8px; gap: 6px; }
+            .badge-list-item .b-icon { font-size: 16px; width: 20px; }
+            .badge-list-item .b-name { font-size: 10px; }
         }
 
         /* ===== UTILITY ===== */
-        .text-center {
-            text-align: center;
-        }
-        .mt-8 {
-            margin-top: 8px;
-        }
-        .mt-16 {
-            margin-top: 16px;
-        }
-        .mb-8 {
-            margin-bottom: 8px;
-        }
-        .mb-16 {
-            margin-bottom: 16px;
-        }
-        .flex-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
+        .text-center { text-align: center; }
+        .mt-8 { margin-top: 8px; }
+        .mt-16 { margin-top: 16px; }
+        .mb-8 { margin-bottom: 8px; }
+        .mb-16 { margin-bottom: 16px; }
+        .flex-center { display: flex; align-items: center; justify-content: center; gap: 8px; }
         .tag {
             display: inline-block;
             padding: 2px 12px;
@@ -932,49 +618,27 @@
             font-size: 12px;
             font-weight: 600;
         }
-        .tag.debit {
-            background: rgba(15, 184, 138, 0.15);
-            color: var(--accent-2);
-        }
-        .tag.credit {
-            background: rgba(217, 79, 79, 0.15);
-            color: var(--accent-4);
-        }
-        .tag.purple {
-            background: rgba(91, 75, 213, 0.12);
-            color: var(--accent-1);
-        }
-        .tag.gold {
-            background: rgba(230, 168, 0, 0.15);
-            color: #b88900;
-        }
-        .tag.green {
-            background: rgba(15, 184, 138, 0.15);
-            color: var(--accent-2);
-        }
-        .tag.red {
-            background: rgba(217, 79, 79, 0.12);
-            color: var(--accent-4);
-        }
-        .icon-circle {
+        .tag.debit { background: rgba(15, 184, 138, 0.15); color: var(--accent-2); }
+        .tag.credit { background: rgba(217, 79, 79, 0.15); color: var(--accent-4); }
+        .tag.purple { background: rgba(91, 75, 213, 0.12); color: var(--accent-1); }
+        .tag.gold { background: rgba(230, 168, 0, 0.15); color: #b88900; }
+        .tag.green { background: rgba(15, 184, 138, 0.15); color: var(--accent-2); }
+        .tag.red { background: rgba(217, 79, 79, 0.12); color: var(--accent-4); }
+        .icon-circle { display: inline-block; font-size: 14px; margin-right: 4px; }
+        .icon-circle.green { color: var(--accent-2); }
+        .icon-circle.red { color: var(--accent-4); }
+        .icon-circle.gold { color: var(--accent-3); }
+        .icon-circle.purple { color: var(--accent-1); }
+        .icon-circle.blue { color: #2a7de1; }
+        .version-badge {
             display: inline-block;
-            font-size: 14px;
-            margin-right: 4px;
-        }
-        .icon-circle.green {
-            color: var(--accent-2);
-        }
-        .icon-circle.red {
-            color: var(--accent-4);
-        }
-        .icon-circle.gold {
-            color: var(--accent-3);
-        }
-        .icon-circle.purple {
-            color: var(--accent-1);
-        }
-        .icon-circle.blue {
-            color: #2a7de1;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 12px;
+            border-radius: 20px;
+            background: var(--gradient-1);
+            color: #fff;
+            letter-spacing: 0.5px;
         }
     </style>
 </head>
@@ -988,7 +652,7 @@
                 <div class="logo-icon"><i class="fas fa-book-open"></i></div>
                 <div>
                     <div class="logo-text">Learn Javeda</div>
-                    <div class="logo-sub">Accounting Basics</div>
+                    <div class="logo-sub">Accounting Basics · v6.0.9</div>
                 </div>
             </div>
             <a href="index.html" class="back-link">
@@ -1080,7 +744,7 @@
                 <span class="ch-toggle"><i class="fas fa-chevron-down"></i></span>
             </div>
             <div class="ch-body">
-                <p>সব হিসাবকে <strong>৫টি প্রধান শ্রেণিতে</strong> ভাগ করা যায়।</p>
+                <p>সব হিসাবকে <strong>৬টি প্রধান শ্রেণিতে</strong> ভাগ করা যায় (Drawing সহ)।</p>
 
                 <h4><i class="fas fa-circle icon-circle green"></i> Asset (সম্পদ)</h4>
                 <p>উদাহরণ: নগদান, ব্যাংক, দেনাদার, কম্পিউটার, আসবাবপত্র</p>
@@ -1096,6 +760,9 @@
 
                 <h4><i class="fas fa-circle icon-circle blue"></i> Expense (ব্যয়)</h4>
                 <p>উদাহরণ: বেতন, ভাড়া, বিজ্ঞাপন, বীমা, খাজনা</p>
+
+                <h4><i class="fas fa-circle icon-circle gold"></i> Drawing (উত্তোলন)</h4>
+                <p>উদাহরণ: মালিকের ব্যক্তিগত উত্তোলন</p>
             </div>
         </div>
 
@@ -1135,6 +802,11 @@
                         <div class="r-rule debit">বৃদ্ধি → Debit</div>
                         <div class="r-rule credit">হ্রাস → Credit</div>
                     </div>
+                    <div class="rule-card">
+                        <div class="r-label"><i class="fas fa-circle icon-circle gold"></i> Drawing (উত্তোলন)</div>
+                        <div class="r-rule debit">বৃদ্ধি → Debit</div>
+                        <div class="r-rule credit">হ্রাস → Credit</div>
+                    </div>
                 </div>
 
                 <!-- ADERC Shortcut -->
@@ -1147,7 +819,7 @@
                         <strong>R</strong>evenue · <strong>C</strong>redit Increase
                     </div>
                     <div style="margin-top:10px;font-size:14px;color:var(--text-secondary);">
-                        <span class="tag debit">Asset &amp; Expense ↑ → Debit</span>
+                        <span class="tag debit">Asset, Expense &amp; Drawing ↑ → Debit</span>
                         <span class="tag credit">Liability, Capital &amp; Revenue ↑ → Credit</span>
                     </div>
                 </div>
@@ -1185,17 +857,12 @@
             </div>
             <div class="ch-body">
 
-                <!-- Example 1 -->
                 <div class="example-box">
                     <div class="ex-title"><i class="fas fa-star" style="color:var(--accent-3);margin-right:6px;"></i> Example 1</div>
                     <div class="ex-detail">
                         <strong>নগদে কম্পিউটার ক্রয় করা হয়েছে।</strong><br />
-                        <span style="color:var(--text-muted);font-size:14px;">
-                            জড়িত হিসাব: কম্পিউটার · নগদান
-                        </span><br />
-                        <span style="color:var(--text-muted);font-size:14px;">
-                            কম্পিউটার = Asset বৃদ্ধি · নগদান = Asset হ্রাস
-                        </span>
+                        <span style="color:var(--text-muted);font-size:14px;">জড়িত হিসাব: কম্পিউটার · নগদান</span><br />
+                        <span style="color:var(--text-muted);font-size:14px;">কম্পিউটার = Asset বৃদ্ধি · নগদান = Asset হ্রাস</span>
                     </div>
                     <div class="ex-answer">
                         <span class="debit-text">কম্পিউটার → Debit</span> &nbsp;|&nbsp;
@@ -1203,17 +870,12 @@
                     </div>
                 </div>
 
-                <!-- Example 2 -->
                 <div class="example-box">
                     <div class="ex-title"><i class="fas fa-star" style="color:var(--accent-3);margin-right:6px;"></i> Example 2</div>
                     <div class="ex-detail">
                         <strong>কর্মচারীর বেতন প্রদান করা হয়েছে।</strong><br />
-                        <span style="color:var(--text-muted);font-size:14px;">
-                            জড়িত হিসাব: বেতন · নগদান
-                        </span><br />
-                        <span style="color:var(--text-muted);font-size:14px;">
-                            বেতন = Expense বৃদ্ধি · নগদান = Asset হ্রাস
-                        </span>
+                        <span style="color:var(--text-muted);font-size:14px;">জড়িত হিসাব: বেতন · নগদান</span><br />
+                        <span style="color:var(--text-muted);font-size:14px;">বেতন = Expense বৃদ্ধি · নগদান = Asset হ্রাস</span>
                     </div>
                     <div class="ex-answer">
                         <span class="debit-text">বেতন → Debit</span> &nbsp;|&nbsp;
@@ -1221,17 +883,12 @@
                     </div>
                 </div>
 
-                <!-- Example 3 -->
                 <div class="example-box">
                     <div class="ex-title"><i class="fas fa-star" style="color:var(--accent-3);margin-right:6px;"></i> Example 3</div>
                     <div class="ex-detail">
                         <strong>ধারে মাল বিক্রয় করা হয়েছে।</strong><br />
-                        <span style="color:var(--text-muted);font-size:14px;">
-                            জড়িত হিসাব: দেনাদার · বিক্রয়
-                        </span><br />
-                        <span style="color:var(--text-muted);font-size:14px;">
-                            দেনাদার = Asset বৃদ্ধি · বিক্রয় = Revenue বৃদ্ধি
-                        </span>
+                        <span style="color:var(--text-muted);font-size:14px;">জড়িত হিসাব: দেনাদার · বিক্রয়</span><br />
+                        <span style="color:var(--text-muted);font-size:14px;">দেনাদার = Asset বৃদ্ধি · বিক্রয় = Revenue বৃদ্ধি</span>
                     </div>
                     <div class="ex-answer">
                         <span class="debit-text">দেনাদার → Debit</span> &nbsp;|&nbsp;
@@ -1337,7 +994,7 @@
         </div>
 
         <!-- ============================================================
-        NEW CHAPTER: HOW TO WORK – Full Feature Guide (UPDATED)
+        CHAPTER: HOW TO WORK
         ============================================================ -->
         <div class="chapter" id="ch-howto">
             <div class="ch-header" onclick="toggleChapter(this)">
@@ -1349,9 +1006,10 @@
 
                 <p style="font-size:16px;font-weight:500;color:var(--text-primary);">
                     <i class="fas fa-rocket" style="color:var(--accent-3);"></i>
-                    Welcome to the <strong>Journal Entry · MCQ Learner</strong> website! 
-                    This guide explains every feature and how to use them effectively.
+                    Welcome to <strong>Journal Entry · MCQ Learner</strong>!
+                    <span class="version-badge" style="margin-left:8px;">v6.0.9</span>
                 </p>
+                <p>This guide explains every feature and how to use them effectively.</p>
 
                 <!-- ===== FEATURE GRID ===== -->
                 <h3><i class="fas fa-list-check" style="color:var(--accent-1);margin-right:8px;"></i> Feature Overview</h3>
@@ -1370,9 +1028,9 @@
                         <span class="f-icon"><i class="fas fa-chart-bar"></i></span>
                         <div class="f-title">Difficulty Levels</div>
                         <div class="f-desc">
-                            <span class="tag green"><i class="fas fa-seedling"></i> Easy</span> — সরল লেনদেন (কোনো টাকার পরিমাণ নেই)<br>
-                            <span class="tag gold"><i class="fas fa-chart-simple"></i> Medium</span> — টাকার পরিমাণ সহ বাস্তব লেনদেন<br>
-                            <span class="tag red"><i class="fas fa-bolt"></i> Hard</span> — জটিল সমন্বয় ও উন্নত লেনদেন
+                            <span class="tag green"><i class="fas fa-seedling"></i> Easy</span> — সরল লেনদেন<br>
+                            <span class="tag gold"><i class="fas fa-chart-simple"></i> Medium</span> — টাকার পরিমাণ সহ<br>
+                            <span class="tag red"><i class="fas fa-bolt"></i> Hard</span> — জটিল সমন্বয়
                             <span class="f-tag gold">Adaptive</span>
                         </div>
                     </div>
@@ -1381,8 +1039,9 @@
                         <span class="f-icon"><i class="fas fa-brain"></i></span>
                         <div class="f-title">Smart Mode</div>
                         <div class="f-desc">
-                            আপনার পারফরম্যান্স অনুযায়ী difficulty নিজেই পরিবর্তন করে।<br>
-                            <strong>5টি সঠিক</strong> → difficulty বাড়ে &nbsp;|&nbsp; <strong>3টি ভুল</strong> → difficulty কমে।
+                            আপনার পারফরম্যান্স অনুযায়ী difficulty নিজেই পরিবর্তন করে।<br>
+                            <strong>5টি সঠিক</strong> → difficulty বাড়ে<br>
+                            <strong>3টি ভুল</strong> → difficulty কমে।
                             <span class="f-tag purple">AI-Driven</span>
                         </div>
                     </div>
@@ -1391,19 +1050,19 @@
                         <span class="f-icon"><i class="fas fa-sync"></i></span>
                         <div class="f-title">Revision Mode</div>
                         <div class="f-desc">
-                            আপনার <strong>ভুল উত্তরগুলো</strong> সংরক্ষণ করা হয়। Revision Mode চালু করলে শুধু সেগুলোই আবার অনুশীলন করতে পারবেন।
+                            আপনার <strong>ভুল উত্তরগুলো</strong> সংরক্ষণ করা হয়। Revision Mode চালু করলে শুধু সেগুলোই আবার অনুশীলন করতে পারবেন।
                             <span class="f-tag red">Weakness Fix</span>
                         </div>
                     </div>
 
                     <div class="feature-card">
                         <span class="f-icon"><i class="fas fa-hourglass-half"></i></span>
-                        <div class="f-title">Timer Mode (Updated)</div>
+                        <div class="f-title">Timer Mode</div>
                         <div class="f-desc">
-                            <strong>Medium/Hard</strong> এর জন্য সময়সীমা (5s বা 10s)।<br>
-                            <strong>সঠিক উত্তর</strong> → রিওয়ার্ড (Points, XP, Coins, Rubies)<br>
-                            <strong>ভুল উত্তর</strong> → পেনাল্টি (যেমন -৭ পয়েন্ট)<br>
-                            <strong>সময় শেষ (Timeout)</strong> → আলাদা পেনাল্টি (যেমন -৪ পয়েন্ট) — <strong>হার্ট সিস্টেম নেই</strong>।
+                            <strong>Medium/Hard</strong> এর জন্য সময়সীমা (5s বা 10s)।<br>
+                            <strong>Correct</strong> → রিওয়ার্ড<br>
+                            <strong>Wrong</strong> → পেনাল্টি<br>
+                            <strong>Timeout</strong> → আলাদা পেনাল্টি (হার্ট সিস্টেম নেই)।
                             <span class="f-tag red">Challenge</span>
                         </div>
                     </div>
@@ -1415,7 +1074,7 @@
                             <strong>Point Booster</strong> (2× Points, 10 min)<br>
                             <strong>Coin Booster</strong> (1.5× Coins, 5 min)<br>
                             <strong>No Streak Break</strong> (পরবর্তী ১০টি ভুল streak ভাঙবে না)
-                            <span class="f-tag gold">Power‑Up</span>
+                            <span class="f-tag gold">Power-Up</span>
                         </div>
                     </div>
 
@@ -1423,8 +1082,8 @@
                         <span class="f-icon"><i class="fas fa-lightbulb"></i></span>
                         <div class="f-title">Hint System</div>
                         <div class="f-desc">
-                            প্রশ্নের উত্তর দেওয়ার আগে <strong>Hint</strong> ব্যবহার করে নিয়ম দেখতে পারেন।<br>
-                            Shop থেকে বিভিন্ন প্যাক কিনতে হয় (6, 48, 90+2💎, 220+5💎 coins)।
+                            প্রশ্নের উত্তর দেওয়ার আগে <strong>Hint</strong> ব্যবহার করে নিয়ম দেখতে পারেন।<br>
+                            Shop থেকে বিভিন্ন প্যাক কিনতে হয়।
                             <span class="f-tag gold">Helper</span>
                         </div>
                     </div>
@@ -1433,16 +1092,16 @@
                         <span class="f-icon"><i class="fas fa-store"></i></span>
                         <div class="f-title">Shop</div>
                         <div class="f-desc">
-                            <strong>Hints</strong>, <strong>Coins</strong> (rubies দিয়ে কেনা যায়), এবং <strong>Boosters</strong> বিক্রি হয়।
+                            <strong>Hints</strong>, <strong>Coins</strong> (rubies দিয়ে কেনা যায়), এবং <strong>Boosters</strong> বিক্রি হয়।
                             <span class="f-tag purple">Store</span>
                         </div>
                     </div>
 
                     <div class="feature-card">
                         <span class="f-icon"><i class="fas fa-medal"></i></span>
-                        <div class="f-title">Badges (100টি)</div>
+                        <div class="f-title">Badges (137টি)</div>
                         <div class="f-desc">
-                            বিভিন্ন মাইলস্টোনে <strong>Badge</strong> আনলক হয়। যেমন: প্রথম সঠিক উত্তর, ১০০টি প্রশ্ন, ৫টি স্ট্রীক, ৯৫%+ Accuracy, Leaderboard শীর্ষ ১০, ইত্যাদি।
+                            বিভিন্ন মাইলস্টোনে <strong>Badge</strong> আনলক হয়। Topic-wise collapsible group এ সাজানো।
                             <span class="f-tag gold">Achievements</span>
                         </div>
                     </div>
@@ -1451,8 +1110,7 @@
                         <span class="f-icon"><i class="fas fa-trophy"></i></span>
                         <div class="f-title">Leaderboard</div>
                         <div class="f-desc">
-                            <strong>XP, Points, Accuracy, Badges</strong> — এই ৪টি মেট্রিকে শীর্ষ ব্যবহারকারীদের দেখা যায়।<br>
-                            <span class="tag purple"><i class="fas fa-filter"></i> Filter</span> দিয়ে যেকোনো একটি অনুযায়ী সাজানো যায়।
+                            <strong>XP, Points, Accuracy, Badges</strong> — এই ৪টি মেট্রিকে শীর্ষ ব্যবহারকারীদের দেখা যায়।
                             <span class="f-tag red">Competition</span>
                         </div>
                     </div>
@@ -1461,8 +1119,8 @@
                         <span class="f-icon"><i class="fas fa-user"></i></span>
                         <div class="f-title">Guest vs. Login</div>
                         <div class="f-desc">
-                            <strong>Guest:</strong> সব ডেটা localStorage-এ সংরক্ষিত হয় (Leaderboard-এ দেখা যায় না)।<br>
-                            <strong>Google Login:</strong> ডেটা Firebase-এ সংরক্ষিত হয় এবং Leaderboard-এ অংশ নেওয়া যায়।
+                            <strong>Guest:</strong> localStorage-এ সংরক্ষিত।<br>
+                            <strong>Google Login:</strong> Firebase-এ সংরক্ষিত + Leaderboard-এ অংশ নেওয়া যায়।
                             <span class="f-tag purple">Cloud Sync</span>
                         </div>
                     </div>
@@ -1471,9 +1129,27 @@
                         <span class="f-icon"><i class="fas fa-chart-line"></i></span>
                         <div class="f-title">Dashboard</div>
                         <div class="f-desc">
-                            মোট প্রশ্ন, সঠিক/ভুল, Accuracy, Coins, XP, Level, Streak, Hints — সব পরিসংখ্যান এক জায়গায়।<br>
-                            <strong>Weak Topics</strong> দেখিয়ে দেয় কোন ধরনের হিসাবে বেশি ভুল হয়।
+                            মোট প্রশ্ন, Accuracy, Coins, XP, Level, Streak, Hints।<br>
+                            <strong>Weak Topics</strong> দেখায় কোথায় ভুল বেশি হয়।
                             <span class="f-tag green">Analytics</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-shopping-bag"></i></span>
+                        <div class="f-title">Spending Tracking</div>
+                        <div class="f-desc">
+                            Shop-এ খরচ করা <strong>Coins</strong> ও <strong>Rubies</strong> ট্র্যাক হয়। নতুন badge আনলক হয় নির্দিষ্ট খরচের পর।
+                            <span class="f-tag gold">New</span>
+                        </div>
+                    </div>
+
+                    <div class="feature-card">
+                        <span class="f-icon"><i class="fas fa-share-alt"></i></span>
+                        <div class="f-title">Share & Invite</div>
+                        <div class="f-desc">
+                            বন্ধুদের সাথে link share করুন। <strong>10 shares</strong> = "Bring More Friend" badge।
+                            <span class="f-tag purple">Social</span>
                         </div>
                     </div>
 
@@ -1488,7 +1164,7 @@
 
                 </div>
 
-                <!-- ===== REWARDS TABLE (UPDATED) ===== -->
+                <!-- ===== REWARDS TABLE ===== -->
                 <h3><i class="fas fa-star" style="color:var(--accent-3);margin-right:8px;"></i> Points, XP, Coins &amp; Rubies — কীভাবে পাবেন?</h3>
                 <h4>Normal Mode (no timer)</h4>
                 <div class="reward-table-wrap">
@@ -1507,9 +1183,8 @@
                         </tbody>
                     </table>
                 </div>
-                <p style="font-size:13px;color:var(--text-muted);"><i class="fas fa-info-circle"></i> Rubies only earned in Timer Mode (see below).</p>
 
-                <h4>Timer Mode (Medium &amp; Hard only) — Updated</h4>
+                <h4>Timer Mode (Medium &amp; Hard only)</h4>
                 <div class="reward-table-wrap">
                     <table class="reward-table">
                         <thead>
@@ -1517,8 +1192,8 @@
                                 <th>Difficulty</th>
                                 <th>Timer</th>
                                 <th>Correct</th>
-                                <th>Wrong (Penalty)</th>
-                                <th>Timeout (Penalty)</th>
+                                <th>Wrong</th>
+                                <th>Timeout</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1529,169 +1204,361 @@
                         </tbody>
                     </table>
                 </div>
-                <p style="font-size:13px;color:var(--text-muted);"><i class="fas fa-info-circle"></i> Boosters multiply these rewards (Point Booster doubles Points, Coin Booster multiplies Coins by 1.5). <strong>Timeout penalty is separate and not affected by boosters.</strong></p>
+                <p style="font-size:13px;color:var(--text-muted);"><i class="fas fa-info-circle"></i> Boosters multiply these rewards (Point Booster doubles Points, Coin Booster multiplies Coins by 1.5). Timeout penalty is separate.</p>
 
-                <!-- ===== BADGE EARNING GUIDE (all 100 badges) ===== -->
-                <h3 style="margin-top:24px;"><i class="fas fa-medal" style="color:var(--accent-3);margin-right:8px;"></i> Complete Badge List (100 badges)</h3>
-                <p>নিচে সব <strong>১০০টি</strong> Badge-এর তালিকা দেওয়া হলো। এগুলো বিভিন্ন মাইলস্টোন, স্ট্রীক, অ্যাকুরেসি, লিডারবোর্ড অবস্থান, এবং ফিচার ব্যবহারের মাধ্যমে আনলক হয়।</p>
-                <div class="badge-table-wrap">
-                    <table class="badge-table">
-                        <thead>
-                            <tr><th>Icon</th><th>Badge Name</th></tr>
-                        </thead>
-                        <tbody>
-                            <!-- Group 1: Leaderboard (n1-n4) -->
-                            <tr><td>👑</td><td>Leaderboard XP King</td></tr>
-                            <tr><td>🏅</td><td>Leaderboard Points Pro</td></tr>
-                            <tr><td>🎯</td><td>Leaderboard Accuracy Ace</td></tr>
-                            <tr><td>🏆</td><td>Leaderboard Badge Collector</td></tr>
-                            <!-- Javeda (n5-n6) -->
-                            <tr><td>📚</td><td>Javeda Explorer</td></tr>
-                            <tr><td>📖</td><td>Javeda Scholar</td></tr>
-                            <!-- Hints (n7-n8) -->
-                            <tr><td>💡</td><td>Hint Hoarder</td></tr>
-                            <tr><td>💡</td><td>Hint Master</td></tr>
-                            <!-- Daily (n9-n10) -->
-                            <tr><td>📅</td><td>Perfect Week</td></tr>
-                            <tr><td>📅</td><td>Monthly Mentor</td></tr>
-                            <!-- Speed & Marathon (n11-n12) -->
-                            <tr><td>⚡</td><td>Quick Learner</td></tr>
-                            <tr><td>🏃</td><td>Marathon Runner</td></tr>
-                            <!-- Night/Early (n13-n14) -->
-                            <tr><td>🌙</td><td>Night Owl</td></tr>
-                            <tr><td>🌅</td><td>Early Bird</td></tr>
-                            <!-- Revision (n15-n16) -->
-                            <tr><td>🔄</td><td>Revision King</td></tr>
-                            <tr><td>🔄</td><td>Revision Master</td></tr>
-                            <!-- Timer (n17-n18) - updated condition (no hearts) -->
-                            <tr><td>⏱️</td><td>Timer Survivor</td></tr>
-                            <tr><td>⏱️</td><td>Timer Legend</td></tr>
-                            <!-- Smart (n19-n20) -->
-                            <tr><td>🧠</td><td>Smart Learner</td></tr>
-                            <tr><td>🧠</td><td>Smart Guru</td></tr>
-                            <!-- Wealth (n21-n22) -->
-                            <tr><td>💰</td><td>Coin Millionaire</td></tr>
-                            <tr><td>💎</td><td>Ruby Baron</td></tr>
-                            <!-- Boosters (n23-n25) -->
-                            <tr><td>🛡️</td><td>Streak Protector</td></tr>
-                            <tr><td>⚡</td><td>Point Booster Fan</td></tr>
-                            <tr><td>🪙</td><td>Coin Booster Fan</td></tr>
-                            <!-- Accountant (n26-n28) -->
-                            <tr><td>📊</td><td>Accountant Pro</td></tr>
-                            <tr><td>🏅</td><td>Ultimate Journal Master</td></tr>
-                            <tr><td>👑</td><td>Journal Legend</td></tr>
-                            <!-- Debit/Credit starters (b3-b4) -->
-                            <tr><td>💳</td><td>Debit Starter</td></tr>
-                            <tr><td>💳</td><td>Credit Starter</td></tr>
-                            <!-- Progression (b5, b7-b11, b35-b37, b63) -->
-                            <tr><td>🔥</td><td>Warmed Up</td></tr>
-                            <tr><td>📓</td><td>Journal Rookie</td></tr>
-                            <tr><td>🗺️</td><td>Accounting Explorer</td></tr>
-                            <tr><td>📊</td><td>Ledger Learner</td></tr>
-                            <tr><td>⚖️</td><td>Trial Balance Maker</td></tr>
-                            <tr><td>👨‍💼</td><td>Entry Master</td></tr>
-                            <tr><td>🏅</td><td>100 Questions</td></tr>
-                            <tr><td>🥈</td><td>500 Questions</td></tr>
-                            <tr><td>🥇</td><td>1000 Questions</td></tr>
-                            <tr><td>📚</td><td>2000 Questions</td></tr>
-                            <!-- Accuracy (b13-b14, b42-b43) -->
-                            <tr><td>🧠</td><td>Sharp Mind</td></tr>
-                            <tr><td>🎯</td><td>Precision Player</td></tr>
-                            <tr><td>🧠</td><td>Financial Brain</td></tr>
-                            <tr><td>🔍</td><td>Error Hunter</td></tr>
-                            <!-- Streak (b16, b18-b22) -->
-                            <tr><td>💎</td><td>Flawless Brain</td></tr>
-                            <tr><td>🛡️</td><td>Zero Error Zone</td></tr>
-                            <tr><td>🔥</td><td>Streak 5x</td></tr>
-                            <tr><td>🔥</td><td>Streak 10x</td></tr>
-                            <tr><td>🔥</td><td>Streak 25x</td></tr>
-                            <tr><td>🔥</td><td>Streak 50x</td></tr>
-                            <tr><td>👑</td><td>Streak King</td></tr>
-                            <!-- Category Experts (b23-b28) -->
-                            <tr><td>🏦</td><td>Asset Expert</td></tr>
-                            <tr><td>📉</td><td>Liability Genius</td></tr>
-                            <tr><td>💰</td><td>Capital Controller</td></tr>
-                            <tr><td>📈</td><td>Revenue Master</td></tr>
-                            <tr><td>💸</td><td>Expense Specialist</td></tr>
-                            <tr><td>✏️</td><td>Drawing Handler</td></tr>
-                            <!-- Other (b29-b34, b44, b46, b86-b88, b93-b99) -->
-                            <tr><td>🔧</td><td>Rule Breaker</td></tr>
-                            <tr><td>⚖️</td><td>Balance Thinker</td></tr>
-                            <tr><td>⚡</td><td>Fast Decision</td></tr>
-                            <tr><td>💪</td><td>No Hesitation</td></tr>
-                            <tr><td>📝</td><td>First Entry</td></tr>
-                            <tr><td>🌟</td><td>Perfect Quiz</td></tr>
-                            <tr><td>🎯</td><td>Focus Mode</td></tr>
-                            <tr><td>💡</td><td>Smart Thinker</td></tr>
-                            <tr><td>🏅</td><td>All Rounder</td></tr>
-                            <tr><td>⭐</td><td>5-Star Performer</td></tr>
-                            <tr><td>🎖️</td><td>Dedicated Scholar</td></tr>
-                            <tr><td>🤝</td><td>Collaborator</td></tr>
-                            <tr><td>🎓</td><td>Scholar</td></tr>
-                            <tr><td>📈</td><td>Rising Star</td></tr>
-                            <tr><td>🌟</td><td>Shining Star</td></tr>
-                            <tr><td>✨</td><td>Legendary</td></tr>
-                            <tr><td>👑</td><td>Royal Accountant</td></tr>
-                            <tr><td>💼</td><td>Finance Pro</td></tr>
-                            <!-- Level (b74-b76) -->
-                            <tr><td>⬆️</td><td>Level 20</td></tr>
-                            <tr><td>⬆️</td><td>Level 50</td></tr>
-                            <tr><td>⬆️</td><td>Level 100</td></tr>
-                            <!-- Smart usage (b77-b78) -->
-                            <tr><td>🧠</td><td>Smart User (100)</td></tr>
-                            <tr><td>🧠</td><td>Smart Master (500)</td></tr>
-                            <!-- Revision correct (b79-b80) -->
-                            <tr><td>🔄</td><td>Revise 50</td></tr>
-                            <tr><td>🔄</td><td>Revise 100</td></tr>
-                            <!-- Booster usage (b81-b83) -->
-                            <tr><td>⚡</td><td>Point Booster x10</td></tr>
-                            <tr><td>🪙</td><td>Coin Booster x10</td></tr>
-                            <tr><td>🛡️</td><td>Streak Protector x10</td></tr>
-                            <!-- Hearts (b85) – no longer applicable, kept for legacy? We'll remove it -->
-                            <!-- <tr><td>❤️</td><td>Heart Collector (full 5)</td></tr> -->
-                            <!-- Timer specific (b55-b59) -->
-                            <tr><td>⏱️</td><td>Timer Novice</td></tr>
-                            <tr><td>⏱️</td><td>Timer Adept</td></tr>
-                            <tr><td>⏱️</td><td>Timer Master</td></tr>
-                            <tr><td>⏱️</td><td>Speed Demon (5s)</td></tr>
-                            <tr><td>⏱️</td><td>Quick Thinker (10s)</td></tr>
-                            <!-- Coin/Ruby Tycoon (b70-b73) -->
-                            <tr><td>💎</td><td>Ruby Tycoon (500)</td></tr>
-                            <tr><td>🪙</td><td>Coin Collector (1000)</td></tr>
-                            <tr><td>🪙</td><td>Coin Hoarder (5000)</td></tr>
-                            <tr><td>🪙</td><td>Coin Tycoon (10000)</td></tr>
-                            <!-- Ultimate (b50, b51) -->
-                            <tr><td>👑</td><td>Ultimate Accountant</td></tr>
-                            <tr><td>🏆</td><td>Top 10 Leaderboard</td></tr>
-                            <!-- b38, b39, b40 -->
-                            <tr><td>🏆</td><td>Accounting Pro</td></tr>
-                            <tr><td>🏆</td><td>Debit-Credit Champ</td></tr>
-                            <tr><td>👼</td><td>Journal God</td></tr>
-                            <!-- All remaining badges are already covered. -->
-                        </tbody>
-                    </table>
+                <!-- ===== COMPLETE BADGE LIST (137 badges by group) ===== -->
+                <h3 style="margin-top:24px;">
+                    <i class="fas fa-medal" style="color:var(--accent-3);margin-right:8px;"></i>
+                    Complete Badge List (137 badges)
+                </h3>
+                <p>নিচে সব <strong>১৩৭টি</strong> badge, <strong>topic-wise group</strong> অনুযায়ী সাজানো। Dashboard-এও একই grouping অনুসরণ করা হয়েছে — যেকোনো group এ click করে expand/collapse করা যায়।</p>
+
+                <!-- Group 1: Leaderboard -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">🏆</span>
+                        <span>Leaderboard</span>
+                        <span class="badge-group-count-pill">5 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">👑</span><span class="b-name">Leaderboard XP King</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🏅</span><span class="b-name">Leaderboard Points Pro</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🎯</span><span class="b-name">Leaderboard Accuracy Ace</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🏆</span><span class="b-name">Leaderboard Badge Collector</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🏆</span><span class="b-name">Top 10 Leaderboard</span></div>
+                    </div>
                 </div>
-                <p style="font-size:13px;color:var(--text-muted);"><i class="fas fa-info-circle"></i> প্রতিটি Badge-এর নির্দিষ্ট শর্ত Dashboard-এর Badges সেকশনে দেখতে পাবেন।</p>
 
-                <!-- ===== QUICK TIPS (UPDATED) ===== -->
+                <!-- Group 2: Learning & Sharing -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">📚</span>
+                        <span>Learning &amp; Sharing</span>
+                        <span class="badge-group-count-pill">5 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">📚</span><span class="b-name">Javeda Explorer</span></div>
+                        <div class="badge-list-item"><span class="b-icon">📖</span><span class="b-name">Learner</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🎓</span><span class="b-name">Scholar</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🤝</span><span class="b-name">Bring a Friend</span></div>
+                        <div class="badge-list-item"><span class="b-icon">👥</span><span class="b-name">Bring More Friend</span></div>
+                    </div>
+                </div>
+
+                <!-- Group 3: Question Milestones -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">📝</span>
+                        <span>Question Milestones</span>
+                        <span class="badge-group-count-pill">15 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">📝</span><span class="b-name">First Entry</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🔥</span><span class="b-name">Warmed Up</span></div>
+                        <div class="badge-list-item"><span class="b-icon">📓</span><span class="b-name">Journal Rookie</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🗺️</span><span class="b-name">Accounting Explorer</span></div>
+                        <div class="badge-list-item"><span class="b-icon">📊</span><span class="b-name">Ledger Learner</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⚖️</span><span class="b-name">Trial Balance Maker</span></div>
+                        <div class="badge-list-item"><span class="b-icon">👨‍💼</span><span class="b-name">Entry Master</span></div>
+                        <div class="badge-list-item"><span class="b-icon">✨</span><span class="b-name">Entry Wizard</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🏅</span><span class="b-name">100 Questions</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🥈</span><span class="b-name">500 Questions</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🥇</span><span class="b-name">1000 Questions</span></div>
+                        <div class="badge-list-item"><span class="b-icon">📚</span><span class="b-name">2000 Questions</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🏆</span><span class="b-name">5000 Questions</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🤝</span><span class="b-name">Collaborator</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🏅</span><span class="b-name">Endurance Pro</span></div>
+                    </div>
+                </div>
+
+                <!-- Group 4: Streaks -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">🔥</span>
+                        <span>Streaks</span>
+                        <span class="badge-group-count-pill">7 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">🔥</span><span class="b-name">Streak 5x</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🔥</span><span class="b-name">Streak 10x</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💎</span><span class="b-name">Flawless Brain</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🔥</span><span class="b-name">Streak 25x</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🔥</span><span class="b-name">Streak 50x</span></div>
+                        <div class="badge-list-item"><span class="b-icon">👑</span><span class="b-name">Streak King</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💯</span><span class="b-name">Perfect Runner</span></div>
+                    </div>
+                </div>
+
+                <!-- Group 5: Accuracy -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">🎯</span>
+                        <span>Accuracy</span>
+                        <span class="badge-group-count-pill">5 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">🧠</span><span class="b-name">Sharp Mind</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🎯</span><span class="b-name">Precision Player</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🧠</span><span class="b-name">Financial Brain</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🔍</span><span class="b-name">Error Hunter</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⚖️</span><span class="b-name">Balance Thinker</span></div>
+                    </div>
+                </div>
+
+                <!-- Group 6: Category Experts -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">💼</span>
+                        <span>Category Experts</span>
+                        <span class="badge-group-count-pill">12 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">🏦</span><span class="b-name">Asset Expert</span></div>
+                        <div class="badge-list-item"><span class="b-icon">📉</span><span class="b-name">Liability Genius</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💰</span><span class="b-name">Capital Controller</span></div>
+                        <div class="badge-list-item"><span class="b-icon">📈</span><span class="b-name">Revenue Master</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💸</span><span class="b-name">Expense Specialist</span></div>
+                        <div class="badge-list-item"><span class="b-icon">✏️</span><span class="b-name">Drawing Handler</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🏦</span><span class="b-name">Asset Genius</span></div>
+                        <div class="badge-list-item"><span class="b-icon">📉</span><span class="b-name">Liability Specialist</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💰</span><span class="b-name">Capital Genius</span></div>
+                        <div class="badge-list-item"><span class="b-icon">📈</span><span class="b-name">Revenue Genius</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💸</span><span class="b-name">Expense Genius</span></div>
+                        <div class="badge-list-item"><span class="b-icon">✏️</span><span class="b-name">Drawing Genius</span></div>
+                    </div>
+                </div>
+
+                <!-- Group 7: Timer Mode -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">⏱️</span>
+                        <span>Timer Mode</span>
+                        <span class="badge-group-count-pill">13 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">⏱️</span><span class="b-name">Timer Novice</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⏱️</span><span class="b-name">Timer Adept</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⏱️</span><span class="b-name">Timer Master</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⏱️</span><span class="b-name">Speed Demon (5s)</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⏱️</span><span class="b-name">Quick Thinker (10s)</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⏱️</span><span class="b-name">Timer Survivor</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⏱️</span><span class="b-name">Timer Legend</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⚡</span><span class="b-name">Rapid Thinker</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⚔️</span><span class="b-name">Timed Warrior</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⏱️</span><span class="b-name">Mid Speedster</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⏱️</span><span class="b-name">Mid Timer</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⚡</span><span class="b-name">Hard Speedster</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⏱️</span><span class="b-name">Hard Timer</span></div>
+                    </div>
+                </div>
+
+                <!-- Group 8: Smart Mode -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">🧠</span>
+                        <span>Smart Mode</span>
+                        <span class="badge-group-count-pill">8 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">💡</span><span class="b-name">Smart Thinker</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🧠</span><span class="b-name">Smart Learner</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🧠</span><span class="b-name">Smart User (100)</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🧠</span><span class="b-name">Smart Guru</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🧠</span><span class="b-name">Smart Master (500)</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🧠</span><span class="b-name">Smart Switcher</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🚀</span><span class="b-name">Pro Switcher</span></div>
+                        <div class="badge-list-item"><span class="b-icon">👑</span><span class="b-name">Smart Champ</span></div>
+                    </div>
+                </div>
+
+                <!-- Group 9: Revision -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">🔄</span>
+                        <span>Revision</span>
+                        <span class="badge-group-count-pill">4 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">🔄</span><span class="b-name">Revision King</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🔄</span><span class="b-name">Revise 50</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🔄</span><span class="b-name">Revise 100</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🔄</span><span class="b-name">Revision Master</span></div>
+                    </div>
+                </div>
+
+                <!-- Group 10: Speed & Focus -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">⚡</span>
+                        <span>Speed &amp; Focus</span>
+                        <span class="badge-group-count-pill">8 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">⚡</span><span class="b-name">Fast Decision</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💪</span><span class="b-name">No Hesitation</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⚡</span><span class="b-name">Quick Learner</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🎯</span><span class="b-name">Focus Mode</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🏃</span><span class="b-name">Marathon Runner</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⚡</span><span class="b-name">Instant Mind</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🎯</span><span class="b-name">Sharp Thinker</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🏃</span><span class="b-name">Speed Master</span></div>
+                    </div>
+                </div>
+
+                <!-- Group 11: Wealth -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">💰</span>
+                        <span>Wealth (Coins &amp; Rubies)</span>
+                        <span class="badge-group-count-pill">7 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">🪙</span><span class="b-name">Coin Collector (1000)</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🪙</span><span class="b-name">Coin Hoarder (5000)</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🪙</span><span class="b-name">Coin Tycoon (10000)</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💰</span><span class="b-name">Coin Millionaire</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💎</span><span class="b-name">Ruby Tycoon (500)</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💎</span><span class="b-name">Ruby Baron</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💼</span><span class="b-name">Finance Pro</span></div>
+                    </div>
+                </div>
+
+                <!-- Group 12: Boosters -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">🚀</span>
+                        <span>Boosters</span>
+                        <span class="badge-group-count-pill">6 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">🛡️</span><span class="b-name">Streak Guardian</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🛡️</span><span class="b-name">Streak Protector x10</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⚡</span><span class="b-name">Point Booster Fan</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⚡</span><span class="b-name">Point Booster x10</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🪙</span><span class="b-name">Coin Booster Fan</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🪙</span><span class="b-name">Coin Booster x10</span></div>
+                    </div>
+                </div>
+
+                <!-- Group 13: Spending & Shopping -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">🛒</span>
+                        <span>Spending &amp; Shopping</span>
+                        <span class="badge-group-count-pill">8 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">🪙</span><span class="b-name">Coin Spender</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💎</span><span class="b-name">Ruby Spender</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🛒</span><span class="b-name">Smart Shopper</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🛍️</span><span class="b-name">Ruby Shopper</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💪</span><span class="b-name">Power Buyer</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🪙</span><span class="b-name">Coin Investor</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💎</span><span class="b-name">Ruby Investor</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💸</span><span class="b-name">Big Spender</span></div>
+                    </div>
+                </div>
+
+                <!-- Group 14: Shop Purchases -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">🎁</span>
+                        <span>Shop Purchases</span>
+                        <span class="badge-group-count-pill">8 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">🎁</span><span class="b-name">Perfect Hint Buyer</span></div>
+                        <div class="badge-list-item"><span class="b-icon">👝</span><span class="b-name">Pocket Buyer</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🪙</span><span class="b-name">Coin Piler</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💰</span><span class="b-name">Coin Bag Buyer</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⚡</span><span class="b-name">Booster Buyer</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🪙</span><span class="b-name">Coin Booster Buyer</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🛡️</span><span class="b-name">Streak Saver</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🛡️</span><span class="b-name">Streak Protector</span></div>
+                    </div>
+                </div>
+
+                <!-- Group 15: Levels & XP -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">📈</span>
+                        <span>Levels &amp; XP</span>
+                        <span class="badge-group-count-pill">5 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">🎯</span><span class="b-name">Experienced</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🏆</span><span class="b-name">Accounting Pro</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⬆️</span><span class="b-name">Level 20</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⬆️</span><span class="b-name">Level 50</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⬆️</span><span class="b-name">Level 100</span></div>
+                    </div>
+                </div>
+
+                <!-- Group 16: Hints -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">💡</span>
+                        <span>Hints</span>
+                        <span class="badge-group-count-pill">2 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">💡</span><span class="b-name">Hint Hoarder</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💡</span><span class="b-name">Hint Master</span></div>
+                    </div>
+                </div>
+
+                <!-- Group 17: Mastery & Elite -->
+                <div class="badge-group-block">
+                    <div class="badge-group-header-row">
+                        <span class="badge-group-icon">👑</span>
+                        <span>Mastery &amp; Elite</span>
+                        <span class="badge-group-count-pill">19 badges</span>
+                    </div>
+                    <div class="badge-list">
+                        <div class="badge-list-item"><span class="b-icon">💳</span><span class="b-name">Debit Starter</span></div>
+                        <div class="badge-list-item"><span class="b-icon">💳</span><span class="b-name">Credit Starter</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🤝</span><span class="b-name">Associate</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🔧</span><span class="b-name">Rule Breaker</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🏆</span><span class="b-name">Debit-Credit Champ</span></div>
+                        <div class="badge-list-item"><span class="b-icon">👼</span><span class="b-name">Journal God</span></div>
+                        <div class="badge-list-item"><span class="b-icon">👑</span><span class="b-name">Ultimate Accountant</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⚖️</span><span class="b-name">Balanced Accountant</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🏅</span><span class="b-name">All Rounder</span></div>
+                        <div class="badge-list-item"><span class="b-icon">⭐</span><span class="b-name">5-Star Performer</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🎖️</span><span class="b-name">Dedicated Scholar</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🎓</span><span class="b-name">Skilled Learner</span></div>
+                        <div class="badge-list-item"><span class="b-icon">📈</span><span class="b-name">Rising Star</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🌟</span><span class="b-name">Shining Star</span></div>
+                        <div class="badge-list-item"><span class="b-icon">✨</span><span class="b-name">Legendary</span></div>
+                        <div class="badge-list-item"><span class="b-icon">👑</span><span class="b-name">Royal Accountant</span></div>
+                        <div class="badge-list-item"><span class="b-icon">📊</span><span class="b-name">Accountant Pro</span></div>
+                        <div class="badge-list-item"><span class="b-icon">🏅</span><span class="b-name">Ultimate Journal Master</span></div>
+                        <div class="badge-list-item"><span class="b-icon">👑</span><span class="b-name">Journal Legend</span></div>
+                    </div>
+                </div>
+
+                <p style="font-size:13px;color:var(--text-muted);margin-top:12px;"><i class="fas fa-info-circle"></i> প্রতিটি Badge-এর নির্দিষ্ট শর্ত Dashboard-এ badge-এ click করলে দেখতে পাবেন।</p>
+
+                <!-- ===== QUICK TIPS ===== -->
                 <h3><i class="fas fa-lightbulb" style="color:var(--accent-3);margin-right:8px;"></i> Quick Tips</h3>
                 <ul>
-                    <li><strong>Smart Mode</strong> চালু রাখুন — এটি আপনার দুর্বল দিক চিহ্নিত করে বেশি প্রশ্ন দেয়।</li>
+                    <li><strong>Smart Mode</strong> চালু রাখুন — এটি আপনার দুর্বল দিক চিহ্নিত করে বেশি প্রশ্ন দেয়।</li>
                     <li><strong>Revision Mode</strong> ব্যবহার করুন — ভুল করা প্রশ্নগুলো বারবার অনুশীলন করুন।</li>
-                    <li><strong>Hint</strong> শুধু কঠিন প্রশ্নে ব্যবহার করুন — Shop থেকে কিনতে হয়।</li>
+                    <li><strong>Hint</strong> শুধু কঠিন প্রশ্নে ব্যবহার করুন — Shop থেকে কিনতে হয়।</li>
                     <li><strong>Leaderboard</strong>-এ উঠতে Accuracy ও Consistency গুরুত্বপূর্ণ।</li>
-                    <li><strong>Dashboard</strong>-এ Weak Topics দেখে বুঝুন কোন ধরনের হিসাবে ভুল বেশি হয়।</li>
-                    <li><strong>Guest</strong> হিসেবে খেললে ডেটা লোকালে সেভ হয় — লগইন করলে Server এ সেভ হয় এবং Leaderboard-এ অংশ নিতে পারেন।</li>
-                    <li><strong>Timer Mode</strong>-এ সময়ের দিকে খেয়াল রাখুন — সময় শেষ হলে পেনাল্টি আছে, কিন্তু আগের মতো হার্ট কমে না। তাই চিন্তা না করে ফোকাস করুন।</li>
-                    <li><strong>Boosters</strong> কিনলে পুরস্কার বাড়ে — Point Booster ও Coin Booster বিশেষভাবে কার্যকর।</li>
+                    <li><strong>Dashboard</strong>-এ Weak Topics দেখে বুঝুন কোন ধরনের হিসাবে ভুল বেশি হয়।</li>
+                    <li><strong>Timer Mode</strong>-এ সময়ের দিকে খেয়াল রাখুন — timeout হলে আলাদা পেনাল্টি, কিন্তু হার্ট সিস্টেম নেই।</li>
+                    <li><strong>Boosters</strong> কিনলে পুরস্কার বাড়ে — Point Booster ও Coin Booster বিশেষভাবে কার্যকর।</li>
+                    <li><strong>Spending badges</strong> পেতে অনেক item কিনতে হবে — Shop-এ খরচ track হয়।</li>
+                    <li><strong>Badges</strong> topic-wise group এ সাজানো — যেকোনো group expand/collapse করা যায়।</li>
                 </ul>
 
                 <!-- ===== FINAL NOTE ===== -->
                 <div style="margin-top:20px;padding:16px 20px;background:rgba(91,75,213,0.06);border-radius:var(--radius-sm);border:1px solid var(--glass-border);">
                     <p style="margin:0;font-size:15px;color:var(--text-secondary);">
                         <i class="fas fa-heart" style="color:var(--accent-4);"></i>
-                        <strong>Enjoy learning!</strong> প্রতিটি প্রশ্ন আপনাকে আরও দক্ষ করে তুলবে। 
-                        আরও প্রশ্ন করলে আরও Badge, আরও XP, আরও মজা! <i class="fas fa-rocket" style="color:var(--accent-3);"></i>
+                        <strong>Enjoy learning!</strong> প্রতিটি প্রশ্ন আপনাকে আরও দক্ষ করে তুলবে।
+                        আরও প্রশ্ন = আরও Badge, আরও XP, আরও মজা! <i class="fas fa-rocket" style="color:var(--accent-3);"></i>
                     </p>
                 </div>
 
@@ -1701,7 +1568,7 @@
         <!-- ===== FOOTER ===== -->
         <div style="text-align:center;margin-top:36px;padding:16px 0;color:var(--text-muted);font-size:13px;border-top:1px solid var(--glass-border);">
             <i class="fas fa-book-open" style="color:var(--accent-1);margin-right:6px;"></i>
-            Journal Entry · MCQ Learner
+            Journal Entry · MCQ Learner · v6.0.9
         </div>
 
     </div>
@@ -1755,7 +1622,7 @@
         }
 
         // ================================================================
-        // 4. INIT – expand first chapter + How-to by default
+        // 4. INIT
         // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
             // Expand Goal, Chapter 1, and How-to by default
@@ -1804,7 +1671,7 @@
                 });
             });
 
-            console.log('📘 Learn Javeda · Interactive Learning System (Updated: Timer Mode without Hearts, separate Timeout penalty)');
+            console.log('📘 Learn Javeda · v6.0.9 — Updated badge count (137), new tracking features documented.');
             console.log('💡 Press E to expand all, C to collapse all');
         });
     </script>
