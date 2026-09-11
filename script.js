@@ -2,9 +2,7 @@
 // 1. HELPERS
 // ================================================================
 
-function pickRandom(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 function getAmount(range) {
   const [min, max] = range;
@@ -81,16 +79,13 @@ function getRewards(diff, correct, isRevision, timerMode, timerSec, boosters) {
 
 const BENGALI_PERSON_NAMES = [
   "রহিম", "করিম", "আলম", "রিয়াদ", "সুমন", "হাসান", "রনি", "তাজিম", "ফাহিম",
-  "লিমন", "জসিম", "রাফি", "শাওন", "নাঈম", "রাসেল", "সজিব", "আরিফ", "তুহিন",
-  "শুভ", "নাবিল",
+  "লিমন", "জসিম", "রাফি", "শাওন", "নাঈম", "রাসেল", "সজিব", "আরিফ", "তুহিন", "শুভ", "নাবিল",
 ];
 
-function getRandomName() {
-  return pickRandom(BENGALI_PERSON_NAMES);
-}
+function getRandomName() { return pickRandom(BENGALI_PERSON_NAMES); }
 
 // ================================================================
-// 2. MASTER ACCOUNT CLASSIFICATION SYSTEM
+// 2. ACCOUNT CLASSIFICATION
 // ================================================================
 
 const ACCOUNT_CLASSIFICATIONS = {
@@ -142,9 +137,9 @@ const ACCOUNT_CLASSIFICATIONS = {
   "Discount Allowed": { category: "expense", bengali: "বাট্টা প্রদান", rule: "increase=debit,decrease=credit" },
 };
 
-function getAccountInfo(accountName) { return ACCOUNT_CLASSIFICATIONS[accountName] || null; }
-function getBengaliName(accountName) { const i = getAccountInfo(accountName); return i ? i.bengali : accountName; }
-function getAccountCategory(accountName) { const i = getAccountInfo(accountName); return i ? i.category : null; }
+function getAccountInfo(n) { return ACCOUNT_CLASSIFICATIONS[n] || null; }
+function getBengaliName(n) { const i = getAccountInfo(n); return i ? i.bengali : n; }
+function getAccountCategory(n) { const i = getAccountInfo(n); return i ? i.category : null; }
 
 const ACCOUNT_RULES = {
   asset: { increase: "debit", decrease: "credit", label: "Asset" },
@@ -272,7 +267,7 @@ const TEMPLATE_DEFINITIONS = {
 };
 
 // ================================================================
-// 4. DIFFICULTY FILTERING & DIVERSITY
+// 4. DIFFICULTY FILTERING
 // ================================================================
 
 function getAvailableTemplates(mode) {
@@ -368,7 +363,7 @@ function generateTransactionFromTemplate(templateInfo, mode) {
 }
 
 // ================================================================
-// 6. SMART TRACKER (with auto-switch tracking)
+// 6. SMART TRACKER
 // ================================================================
 
 const SMART_TRACKER = {
@@ -399,14 +394,9 @@ const SMART_TRACKER = {
       if (prevIdx !== currentIdx) { newMode = modes[prevIdx]; this.consecutiveWrong = 0; changed = true; }
     }
     if (changed && newMode !== this.smartDifficulty) {
-      // ⭐ Track auto-switches for new badges
-      if (oldMode === "easy" && newMode === "medium") {
-        state.stats.autoSwitchToMedium = (state.stats.autoSwitchToMedium || 0) + 1;
-      } else if (oldMode === "medium" && newMode === "hard") {
-        state.stats.autoSwitchToHard = (state.stats.autoSwitchToHard || 0) + 1;
-      }
+      if (oldMode === "easy" && newMode === "medium") state.stats.autoSwitchToMedium = (state.stats.autoSwitchToMedium || 0) + 1;
+      else if (oldMode === "medium" && newMode === "hard") state.stats.autoSwitchToHard = (state.stats.autoSwitchToHard || 0) + 1;
       if (newMode === "hard") state.stats.reachedHardInSmart = true;
-
       this.smartDifficulty = newMode;
       state.difficulty = newMode;
       updateDifficultyButtons(newMode);
@@ -429,7 +419,7 @@ const SMART_TRACKER = {
     for (const cat in biases) biases[cat] = (biases[cat] / sum) * 100;
     return biases;
   },
-  getEffectiveMode() { if (!this.isSmartMode) return this.baseMode; return this.smartDifficulty; },
+  getEffectiveMode() { return this.isSmartMode ? this.smartDifficulty : this.baseMode; },
   reset() { this.categoryCounts = {}; this.consecutiveCorrect = 0; this.consecutiveWrong = 0; this.smartDifficulty = this.baseMode; },
 };
 
@@ -467,7 +457,6 @@ function showModeChangeToast(newMode) {
 // ================================================================
 
 const ALL_BADGES = [
-  // Leaderboard (n1-n4)
   { id: "n1", icon: "👑", name: "Leaderboard XP King" },
   { id: "n2", icon: "🏅", name: "Leaderboard Points Pro" },
   { id: "n3", icon: "🎯", name: "Leaderboard Accuracy Ace" },
@@ -537,7 +526,7 @@ const ALL_BADGES = [
   { id: "b87", icon: "⭐", name: "5-Star Performer" },
   { id: "b88", icon: "🎖️", name: "Dedicated Scholar" },
   { id: "b93", icon: "🤝", name: "Collaborator" },
-  { id: "b94", icon: "🎓", name: "Skilled Learner" }, // renamed (was "Scholar")
+  { id: "b94", icon: "🎓", name: "Skilled Learner" },
   { id: "b95", icon: "📈", name: "Rising Star" },
   { id: "b96", icon: "🌟", name: "Shining Star" },
   { id: "b97", icon: "✨", name: "Legendary" },
@@ -567,37 +556,29 @@ const ALL_BADGES = [
   { id: "b38", icon: "🏆", name: "Accounting Pro" },
   { id: "b39", icon: "🏆", name: "Debit-Credit Champ" },
   { id: "b40", icon: "👼", name: "Journal God" },
-
-  // ============================================================
-  // ⭐ NEW BADGES (38 total)
-  // ============================================================
+  // NEW (38)
   { id: "j30", icon: "🎓", name: "Scholar" },
   { id: "bf10", icon: "👥", name: "Bring More Friend" },
   { id: "ew", icon: "✨", name: "Entry Wizard" },
   { id: "q5k", icon: "🏆", name: "5000 Questions" },
-
   { id: "asg", icon: "🏦", name: "Asset Genius" },
   { id: "lsp", icon: "📉", name: "Liability Specialist" },
   { id: "cpg", icon: "💰", name: "Capital Genius" },
   { id: "rvg", icon: "📈", name: "Revenue Genius" },
   { id: "exg", icon: "💸", name: "Expense Genius" },
   { id: "drg", icon: "✏️", name: "Drawing Genius" },
-
   { id: "m5t", icon: "⏱️", name: "Mid Speedster" },
   { id: "m10t", icon: "⏱️", name: "Mid Timer" },
   { id: "h5t", icon: "⚡", name: "Hard Speedster" },
   { id: "h10t", icon: "⏱️", name: "Hard Timer" },
-
   { id: "swm", icon: "🧠", name: "Smart Switcher" },
   { id: "swh", icon: "🚀", name: "Pro Switcher" },
   { id: "smc", icon: "👑", name: "Smart Champ" },
-
   { id: "inm", icon: "⚡", name: "Instant Mind" },
   { id: "sht", icon: "🎯", name: "Sharp Thinker" },
   { id: "spm", icon: "🏃", name: "Speed Master" },
   { id: "pfr", icon: "💯", name: "Perfect Runner" },
   { id: "enp", icon: "🏅", name: "Endurance Pro" },
-
   { id: "cns", icon: "🪙", name: "Coin Spender" },
   { id: "rbs", icon: "💎", name: "Ruby Spender" },
   { id: "shp", icon: "🛒", name: "Smart Shopper" },
@@ -606,7 +587,6 @@ const ALL_BADGES = [
   { id: "cni", icon: "🪙", name: "Coin Investor" },
   { id: "rbi", icon: "💎", name: "Ruby Investor" },
   { id: "bgs", icon: "💸", name: "Big Spender" },
-
   { id: "phb", icon: "🎁", name: "Perfect Hint Buyer" },
   { id: "pkb", icon: "👝", name: "Pocket Buyer" },
   { id: "cpb", icon: "🪙", name: "Coin Piler" },
@@ -616,10 +596,6 @@ const ALL_BADGES = [
   { id: "sts", icon: "🛡️", name: "Streak Saver" },
   { id: "stp", icon: "🛡️", name: "Streak Protector" },
 ];
-
-// ================================================================
-// BADGE GROUPS
-// ================================================================
 
 const BADGE_GROUPS = [
   { id: "leaderboard", name: "Leaderboard", icon: "🏆", badgeIds: ["n1", "n2", "n3", "n4", "b51"] },
@@ -632,7 +608,7 @@ const BADGE_GROUPS = [
   { id: "smart", name: "Smart Mode", icon: "🧠", badgeIds: ["b46", "n19", "b77", "n20", "b78", "swm", "swh", "smc"] },
   { id: "revision", name: "Revision", icon: "🔄", badgeIds: ["n15", "b79", "b80", "n16"] },
   { id: "speed", name: "Speed & Focus", icon: "⚡", badgeIds: ["b31", "b32", "n11", "b44", "n12", "inm", "sht", "spm"] },
-  { id: "wealth", name: "Wealth (Coins & Rubies)", icon: "💰", badgeIds: ["b71", "b72", "b73", "n21", "b70", "n22", "b99"] },
+  { id: "wealth", name: "Wealth", icon: "💰", badgeIds: ["b71", "b72", "b73", "n21", "b70", "n22", "b99"] },
   { id: "boosters", name: "Boosters", icon: "🚀", badgeIds: ["n23", "b83", "n24", "b81", "n25", "b82"] },
   { id: "spending", name: "Spending & Shopping", icon: "🛒", badgeIds: ["cns", "rbs", "shp", "rsh", "pwr", "cni", "rbi", "bgs"] },
   { id: "shop-purchases", name: "Shop Purchases", icon: "🎁", badgeIds: ["phb", "pkb", "cpb", "ccb", "bst", "cbbs", "sts", "stp"] },
@@ -641,22 +617,41 @@ const BADGE_GROUPS = [
   { id: "mastery", name: "Mastery & Elite", icon: "👑", badgeIds: ["b3", "b4", "h4", "b29", "b39", "b40", "b50", "h2", "b86", "b87", "b88", "b94", "b95", "b96", "b97", "b98", "n26", "n27", "n28"] },
 ];
 
+// ================================================================
+// ⭐⭐⭐ CRITICAL FIX: Helper — get category counts (max of both sources)
+// ================================================================
+function getCategoryCounts(stats) {
+  const result = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
+  // Source A: persistent counter (preferred)
+  if (stats.categoryCorrectCounts) {
+    for (const cat in result) {
+      result[cat] = Math.max(result[cat], stats.categoryCorrectCounts[cat] || 0);
+    }
+  }
+  // Source B: quizHistory fallback (last 200 entries)
+  if (Array.isArray(stats.quizHistory)) {
+    const hist = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
+    for (const h of stats.quizHistory) {
+      if (h.userAnswer === h.correctAnswer && hist[h.type] !== undefined) hist[h.type]++;
+    }
+    for (const cat in result) result[cat] = Math.max(result[cat], hist[cat]);
+  }
+  return result;
+}
+
 function checkBadges(stats) {
   const earned = [];
   const total = stats.correct + stats.wrong;
   const acc = total > 0 ? stats.correct / total : 0;
   const accPct = Math.round(acc * 100);
-  const typeCounts = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
-  if (stats.quizHistory) {
-    for (const h of stats.quizHistory) {
-      if (h.userAnswer === h.correctAnswer && typeCounts[h.type] !== undefined) typeCounts[h.type]++;
-    }
-  }
+  const typeCounts = getCategoryCounts(stats);
   const totalBadges = (stats.earnedBadges || []).length;
   const isLoggedIn = auth.currentUser !== null;
+  // ⭐ FIX: Use hintsPurchased instead of current balance
+  const hintsTotal = Math.max(stats.hintsPurchased || 0, stats.hints || 0);
 
   // h1-h4
-  if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 500) earned.push("h1");
+  if (stats.timerQuestionsCompleted >= 500) earned.push("h1");
   let all100 = true;
   for (const cat of ['asset','liability','capital','revenue','expense','drawing']) if ((typeCounts[cat] || 0) < 100) { all100 = false; break; }
   if (all100) earned.push("h2");
@@ -664,12 +659,12 @@ function checkBadges(stats) {
   if (isLoggedIn) earned.push("h4");
 
   // n9 / n10
-  if (stats.shared && stats.shared >= 1) earned.push("n9");
+  if (stats.shared >= 1) earned.push("n9");
   if ((stats.timer5sCompleted || 0) >= 500 && (stats.timer10sCompleted || 0) >= 500) earned.push("n10");
 
   // Existing badges
-  if (stats.correct >= 1 && stats.quizHistory && stats.quizHistory.some(h => h.correctAnswer === "debit" && h.userAnswer === "debit")) earned.push("b3");
-  if (stats.correct >= 1 && stats.quizHistory && stats.quizHistory.some(h => h.correctAnswer === "credit" && h.userAnswer === "credit")) earned.push("b4");
+  if (stats.correct >= 1 && stats.quizHistory?.some(h => h.correctAnswer === "debit" && h.userAnswer === "debit")) earned.push("b3");
+  if (stats.correct >= 1 && stats.quizHistory?.some(h => h.correctAnswer === "credit" && h.userAnswer === "credit")) earned.push("b4");
   if (stats.correct >= 5) earned.push("b5");
   if (stats.correct >= 10) earned.push("b7");
   if (stats.correct >= 25) earned.push("b8");
@@ -690,10 +685,10 @@ function checkBadges(stats) {
   if (typeCounts.revenue >= 10) earned.push("b26");
   if (typeCounts.expense >= 10) earned.push("b27");
   if (typeCounts.drawing >= 5) earned.push("b28");
-  if (stats.ruleBreakerCount && stats.ruleBreakerCount >= 1) earned.push("b29");
+  if (stats.ruleBreakerCount >= 1) earned.push("b29");
   if (stats.correct >= 15) earned.push("b30");
-  if (stats.fastAnswers && stats.fastAnswers >= 1) earned.push("b31");
-  if (stats.fastAnswers && stats.fastAnswers >= 10) earned.push("b32");
+  if (stats.fastAnswers >= 1) earned.push("b31");
+  if (stats.fastAnswers >= 10) earned.push("b32");
   if (stats.correct >= 1) earned.push("b33");
   if (total >= 100) earned.push("b35");
   if (total >= 500) earned.push("b36");
@@ -703,14 +698,14 @@ function checkBadges(stats) {
   if (stats.correct >= 1000) earned.push("b40");
   if (accPct >= 95 && total >= 100) earned.push("b42");
   if (stats.wrong > 0 && stats.wrong / total < 0.1 && total >= 20) earned.push("b43");
-  if (stats.focusCount && stats.focusCount >= 20) earned.push("b44");
-  if (stats.smartModeCount && stats.smartModeCount >= 50) earned.push("b46");
+  if (stats.focusCount >= 20) earned.push("b44");
+  if (stats.smartModeCount >= 50) earned.push("b46");
   if (stats.correct >= 5000) earned.push("b50");
-  if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 10) earned.push("b55");
-  if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 50) earned.push("b56");
-  if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 100) earned.push("b57");
-  if (stats.timer5sCompleted && stats.timer5sCompleted >= 50) earned.push("b58");
-  if (stats.timer10sCompleted && stats.timer10sCompleted >= 50) earned.push("b59");
+  if (stats.timerQuestionsCompleted >= 10) earned.push("b55");
+  if (stats.timerQuestionsCompleted >= 50) earned.push("b56");
+  if (stats.timerQuestionsCompleted >= 100) earned.push("b57");
+  if (stats.timer5sCompleted >= 50) earned.push("b58");
+  if (stats.timer10sCompleted >= 50) earned.push("b59");
   if (total >= 2000) earned.push("b63");
   if (stats.rubies >= 500) earned.push("b70");
   if (stats.coins >= 1000) earned.push("b71");
@@ -719,17 +714,17 @@ function checkBadges(stats) {
   if (stats.level >= 20) earned.push("b74");
   if (stats.level >= 50) earned.push("b75");
   if (stats.level >= 100) earned.push("b76");
-  if (stats.smartModeCount && stats.smartModeCount >= 100) earned.push("b77");
-  if (stats.smartModeCount && stats.smartModeCount >= 500) earned.push("b78");
-  if (stats.revisionCorrect && stats.revisionCorrect >= 50) earned.push("b79");
-  if (stats.revisionCorrect && stats.revisionCorrect >= 100) earned.push("b80");
-  if (stats.pointBoosterUsed && stats.pointBoosterUsed >= 10) earned.push("b81");
-  if (stats.coinBoosterUsed && stats.coinBoosterUsed >= 10) earned.push("b82");
-  if (stats.streakBoosterUsed && stats.streakBoosterUsed >= 10) earned.push("b83");
+  if (stats.smartModeCount >= 100) earned.push("b77");
+  if (stats.smartModeCount >= 500) earned.push("b78");
+  if (stats.revisionCorrect >= 50) earned.push("b79");
+  if (stats.revisionCorrect >= 100) earned.push("b80");
+  if (stats.pointBoosterUsed >= 10) earned.push("b81");
+  if (stats.coinBoosterUsed >= 10) earned.push("b82");
+  if (stats.streakBoosterUsed >= 10) earned.push("b83");
   if (accPct >= 80 && total >= 200 && stats.bestStreak >= 50) earned.push("b86");
   if (accPct >= 90 && total >= 500 && stats.bestStreak >= 100) earned.push("b87");
   if (total >= 1000 && stats.correct / total >= 0.7) earned.push("b88");
-  if (stats.quizHistory && stats.quizHistory.length >= 100) earned.push("b93");
+  if ((stats.quizHistory?.length || 0) >= 100) earned.push("b93");
   if (stats.level >= 15 && accPct >= 75) earned.push("b94");
   if (stats.correct >= 1000 && accPct >= 80) earned.push("b95");
   if (stats.correct >= 2000) earned.push("b96");
@@ -738,60 +733,52 @@ function checkBadges(stats) {
   if (stats.coins >= 5000 && stats.rubies >= 200) earned.push("b99");
 
   // n5-n28
-  if (stats.javedaClicks && stats.javedaClicks >= 1) earned.push("n5");
-  if (stats.javedaClicks && stats.javedaClicks >= 5) earned.push("n6");
-  if (stats.hints && stats.hints >= 300) earned.push("n7");
-  if (stats.hints && stats.hints >= 500) earned.push("n8");
-  if (stats.fastAnswers && stats.fastAnswers >= 100) earned.push("n11");
-  if (stats.sessionQuestions && stats.sessionQuestions >= 50) earned.push("n12");
-  if (stats.revisionCorrect && stats.revisionCorrect >= 50) earned.push("n15");
-  if (stats.revisionCorrect && stats.revisionCorrect >= 200) earned.push("n16");
-  if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 50) earned.push("n17");
-  if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 200) earned.push("n18");
-  if (stats.smartModeCount && stats.smartModeCount >= 100) earned.push("n19");
-  if (stats.smartModeCount && stats.smartModeCount >= 500) earned.push("n20");
+  if (stats.javedaClicks >= 1) earned.push("n5");
+  if (stats.javedaClicks >= 5) earned.push("n6");
+  // ⭐ FIX: n7/n8 use hintsTotal (purchased), not current balance
+  if (hintsTotal >= 300) earned.push("n7");
+  if (hintsTotal >= 500) earned.push("n8");
+  if (stats.fastAnswers >= 100) earned.push("n11");
+  if (stats.sessionQuestions >= 50) earned.push("n12");
+  if (stats.revisionCorrect >= 50) earned.push("n15");
+  if (stats.revisionCorrect >= 200) earned.push("n16");
+  if (stats.timerQuestionsCompleted >= 50) earned.push("n17");
+  if (stats.timerQuestionsCompleted >= 200) earned.push("n18");
+  if (stats.smartModeCount >= 100) earned.push("n19");
+  if (stats.smartModeCount >= 500) earned.push("n20");
   if (stats.coins >= 10000) earned.push("n21");
   if (stats.rubies >= 200) earned.push("n22");
-  if (stats.streakBoosterUsed && stats.streakBoosterUsed >= 10) earned.push("n23");
-  if (stats.pointBoosterUsed && stats.pointBoosterUsed >= 10) earned.push("n24");
-  if (stats.coinBoosterUsed && stats.coinBoosterUsed >= 10) earned.push("n25");
-  const allCategories = ["asset", "liability", "capital", "revenue", "expense", "drawing"];
-  let all50 = true;
-  for (const cat of allCategories) if ((typeCounts[cat] || 0) < 50) { all50 = false; break; }
+  if (stats.streakBoosterUsed >= 10) earned.push("n23");
+  if (stats.pointBoosterUsed >= 10) earned.push("n24");
+  if (stats.coinBoosterUsed >= 10) earned.push("n25");
+  const all50 = ['asset','liability','capital','revenue','expense','drawing'].every(c => (typeCounts[c] || 0) >= 50);
   if (all50) earned.push("n26");
   if (totalBadges >= 50) earned.push("n27");
   if (totalBadges >= 75) earned.push("n28");
 
-  // ============================================================
-  // ⭐ NEW BADGE CHECKS
-  // ============================================================
-  if ((stats.javedaClicks || 0) >= 30) earned.push("j30");
-  if ((stats.shared || 0) >= 10) earned.push("bf10");
+  // NEW badge checks
+  if (stats.javedaClicks >= 30) earned.push("j30");
+  if (stats.shared >= 10) earned.push("bf10");
   if (stats.correct >= 500) earned.push("ew");
   if (total >= 5000) earned.push("q5k");
-
   if (typeCounts.asset >= 100) earned.push("asg");
   if (typeCounts.liability >= 100) earned.push("lsp");
   if (typeCounts.capital >= 100) earned.push("cpg");
   if (typeCounts.revenue >= 100) earned.push("rvg");
   if (typeCounts.expense >= 100) earned.push("exg");
   if (typeCounts.drawing >= 5) earned.push("drg");
-
   if ((stats.medium5sCompleted || 0) >= 100) earned.push("m5t");
   if ((stats.medium10sCompleted || 0) >= 100) earned.push("m10t");
   if ((stats.hard5sCompleted || 0) >= 100) earned.push("h5t");
   if ((stats.hard10sCompleted || 0) >= 100) earned.push("h10t");
-
   if ((stats.autoSwitchToMedium || 0) >= 1) earned.push("swm");
   if ((stats.autoSwitchToHard || 0) >= 1) earned.push("swh");
   if (stats.reachedHardInSmart) earned.push("smc");
-
-  if ((stats.fastAnswers || 0) >= 1000) earned.push("inm");
+  if (stats.fastAnswers >= 1000) earned.push("inm");
   if ((stats.fastAnswers2s || 0) >= 10) earned.push("sht");
-  if ((stats.focusCount || 0) >= 200) earned.push("spm");
-  if ((stats.bestStreak || 0) >= 20) earned.push("pfr");
-  if ((stats.sessionQuestions || 0) >= 100) earned.push("enp");
-
+  if (stats.focusCount >= 200) earned.push("spm");
+  if (stats.bestStreak >= 20) earned.push("pfr");
+  if (stats.sessionQuestions >= 100) earned.push("enp");
   if ((stats.coinsSpent || 0) >= 200) earned.push("cns");
   if ((stats.rubiesSpent || 0) >= 200) earned.push("rbs");
   if ((stats.coinPurchaseCount || 0) >= 5) earned.push("shp");
@@ -800,7 +787,6 @@ function checkBadges(stats) {
   if ((stats.coinsSpent || 0) >= 500) earned.push("cni");
   if ((stats.rubiesSpent || 0) >= 500) earned.push("rbi");
   if ((stats.coinsSpent || 0) >= 10000 && (stats.rubiesSpent || 0) >= 5000) earned.push("bgs");
-
   if ((stats.hintPackSingle || 0) >= 50 && (stats.hintPackStarter || 0) >= 20 && (stats.hintPackPro || 0) >= 10 && (stats.hintPackMaster || 0) >= 5) earned.push("phb");
   if ((stats.coinPackPocket || 0) >= 5) earned.push("pkb");
   if ((stats.coinPackPile || 0) >= 5) earned.push("cpb");
@@ -814,20 +800,16 @@ function checkBadges(stats) {
 }
 
 // ================================================================
-// 7.5. BADGE DETAILS (all English)
+// 7.5. BADGE DETAILS
 // ================================================================
 
 function getBadgeDetails(badgeId, stats) {
   const total = stats.correct + stats.wrong;
   const acc = total > 0 ? stats.correct / total : 0;
   const accPct = Math.round(acc * 100);
-  const typeCounts = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
-  if (stats.quizHistory) {
-    for (const h of stats.quizHistory) {
-      if (h.userAnswer === h.correctAnswer && typeCounts[h.type] !== undefined) typeCounts[h.type]++;
-    }
-  }
+  const typeCounts = getCategoryCounts(stats);
   const totalBadges = (stats.earnedBadges || []).length;
+  const hintsTotal = Math.max(stats.hintsPurchased || 0, stats.hints || 0);
 
   function item(current, target, label, icon = "") {
     const pct = Math.min(100, Math.round((current / target) * 100));
@@ -848,11 +830,11 @@ function getBadgeDetails(badgeId, stats) {
     case 'n3': return { description: "Reach Top 5 in Accuracy Leaderboard.", items: [] };
     case 'n4': return { description: "Reach Top 2 in Badges Leaderboard.", items: [] };
     case 'b51': return { description: "Reach Top 10 in any Leaderboard.", items: [] };
-
     case 'n5': return { description: "Click the 'Learn Javeda' button 1 time.", items: [item(stats.javedaClicks || 0, 1, "Clicks")] };
     case 'n6': return { description: "Click the 'Learn Javeda' button 5 times.", items: [item(stats.javedaClicks || 0, 5, "Clicks")] };
-    case 'n7': return { description: "Gather 300 hints in total.", items: [item(stats.hints || 0, 300, "Hints gathered")] };
-    case 'n8': return { description: "Gather 500 hints in total.", items: [item(stats.hints || 0, 500, "Hints gathered")] };
+    // ⭐ FIX: use hintsTotal
+    case 'n7': return { description: "Purchase 300 hints in total.", items: [item(hintsTotal, 300, "Total hints purchased")] };
+    case 'n8': return { description: "Purchase 500 hints in total.", items: [item(hintsTotal, 500, "Total hints purchased")] };
     case 'n9': return { description: "Share the website with a friend (click the Share button).", items: [item(stats.shared || 0, 1, "Shares")] };
     case 'n10': return { description: "Complete 500 Timer Mode questions with 5s timer AND 500 with 10s timer.", items: [item(stats.timer5sCompleted || 0, 500, "5s Timer correct"), item(stats.timer10sCompleted || 0, 500, "10s Timer correct")] };
     case 'n11': return { description: "Answer 100 questions within 3 seconds each.", items: [item(stats.fastAnswers || 0, 100, "Fast answers")] };
@@ -871,12 +853,10 @@ function getBadgeDetails(badgeId, stats) {
     case 'n26': return { description: "Correctly answer 50 questions in each of the 6 account categories.", items: catItems(50, 50) };
     case 'n27': return { description: "Earn 50 total badges.", items: [item(totalBadges, 50, "Badges earned")] };
     case 'n28': return { description: "Earn 75 total badges.", items: [item(totalBadges, 75, "Badges earned")] };
-
     case 'h1': return { description: "Get 500 correct answers in Timer Mode.", items: [item(stats.timerQuestionsCompleted || 0, 500, "Timer correct answers")] };
     case 'h2': return { description: "Correctly answer 100 questions in each of the 6 account categories.", items: catItems(100, 100) };
     case 'h3': return { description: "Reach 3,000 total XP.", items: [item(stats.xp || 0, 3000, "XP")] };
     case 'h4': return { description: "Sign in with Google account (one time).", items: [] };
-
     case 'b3': return { description: "Answer your first Debit question correctly.", items: [] };
     case 'b4': return { description: "Answer your first Credit question correctly.", items: [] };
     case 'b5': return { description: "Get 5 correct answers.", items: [item(stats.correct, 5, "Correct answers")] };
@@ -945,35 +925,28 @@ function getBadgeDetails(badgeId, stats) {
     case 'b38': return { description: "Reach Level 10.", items: [item(stats.level, 10, "Level")] };
     case 'b39': return { description: "Get 500 correct answers.", items: [item(stats.correct, 500, "Correct answers")] };
     case 'b40': return { description: "Get 1,000 correct answers.", items: [item(stats.correct, 1000, "Correct answers")] };
-
-    // ⭐ NEW BADGE DETAILS
     case 'j30': return { description: "Click the 'Learn Javeda' button 30 times.", items: [item(stats.javedaClicks || 0, 30, "Clicks")] };
     case 'bf10': return { description: "Share the website with 10 friends (click the Share button).", items: [item(stats.shared || 0, 10, "Shares")] };
     case 'ew': return { description: "Get 500 correct answers.", items: [item(stats.correct, 500, "Correct answers")] };
     case 'q5k': return { description: "Answer 5,000 total questions.", items: [item(total, 5000, "Total questions")] };
-
     case 'asg': return { description: "Correctly answer 100 Asset questions.", items: [item(typeCounts.asset || 0, 100, "Asset correct")] };
     case 'lsp': return { description: "Correctly answer 100 Liability questions.", items: [item(typeCounts.liability || 0, 100, "Liability correct")] };
     case 'cpg': return { description: "Correctly answer 100 Capital questions.", items: [item(typeCounts.capital || 0, 100, "Capital correct")] };
     case 'rvg': return { description: "Correctly answer 100 Revenue questions.", items: [item(typeCounts.revenue || 0, 100, "Revenue correct")] };
     case 'exg': return { description: "Correctly answer 100 Expense questions.", items: [item(typeCounts.expense || 0, 100, "Expense correct")] };
     case 'drg': return { description: "Correctly answer 5 Drawing questions.", items: [item(typeCounts.drawing || 0, 5, "Drawing correct")] };
-
     case 'm5t': return { description: "Complete 100 Timer Mode questions in Medium Mode with 5-second timer.", items: [item(stats.medium5sCompleted || 0, 100, "Medium 5s correct")] };
     case 'm10t': return { description: "Complete 100 Timer Mode questions in Medium Mode with 10-second timer.", items: [item(stats.medium10sCompleted || 0, 100, "Medium 10s correct")] };
     case 'h5t': return { description: "Complete 100 Timer Mode questions in Hard Mode with 5-second timer.", items: [item(stats.hard5sCompleted || 0, 100, "Hard 5s correct")] };
     case 'h10t': return { description: "Complete 100 Timer Mode questions in Hard Mode with 10-second timer.", items: [item(stats.hard10sCompleted || 0, 100, "Hard 10s correct")] };
-
     case 'swm': return { description: "Auto-switch from Easy to Medium at least once in Smart Mode.", items: [item(stats.autoSwitchToMedium || 0, 1, "Easy → Medium switches")] };
     case 'swh': return { description: "Auto-switch from Medium to Hard at least once in Smart Mode.", items: [item(stats.autoSwitchToHard || 0, 1, "Medium → Hard switches")] };
     case 'smc': return { description: "Reach Hard Mode level in Smart Mode.", items: [] };
-
     case 'inm': return { description: "Answer 1,000 questions within 3 seconds each.", items: [item(stats.fastAnswers || 0, 1000, "Fast answers")] };
     case 'sht': return { description: "Answer 10 questions within 2 seconds each.", items: [item(stats.fastAnswers2s || 0, 10, "Fast answers (2s)")] };
     case 'spm': return { description: "Answer 200 questions in Focus Mode (timer or smart).", items: [item(stats.focusCount || 0, 200, "Focus questions")] };
     case 'pfr': return { description: "Answer 20 correct questions in a row.", items: [item(stats.bestStreak || 0, 20, "Best streak")] };
     case 'enp': return { description: "Answer 100 questions in a single session.", items: [item(stats.sessionQuestions || 0, 100, "Session questions")] };
-
     case 'cns': return { description: "Spend 200 coins in total.", items: [item(stats.coinsSpent || 0, 200, "Coins spent", "🪙")] };
     case 'rbs': return { description: "Spend 200 rubies in total.", items: [item(stats.rubiesSpent || 0, 200, "Rubies spent", "💎")] };
     case 'shp': return { description: "Purchase 5 items/boosters using Coins.", items: [item(stats.coinPurchaseCount || 0, 5, "Coin purchases")] };
@@ -982,7 +955,6 @@ function getBadgeDetails(badgeId, stats) {
     case 'cni': return { description: "Spend 500 coins in total.", items: [item(stats.coinsSpent || 0, 500, "Coins spent", "🪙")] };
     case 'rbi': return { description: "Spend 500 rubies in total.", items: [item(stats.rubiesSpent || 0, 500, "Rubies spent", "💎")] };
     case 'bgs': return { description: "Spend 10,000 coins and 5,000 rubies in total.", items: [item(stats.coinsSpent || 0, 10000, "Coins spent", "🪙"), item(stats.rubiesSpent || 0, 5000, "Rubies spent", "💎")] };
-
     case 'phb': return { description: "Buy Single Pack 50 times, Starter Pack 20 times, Pro Pack 10 times, Master Pack 5 times.", items: [
       item(stats.hintPackSingle || 0, 50, "Single Pack"),
       item(stats.hintPackStarter || 0, 20, "Starter Pack"),
@@ -996,7 +968,6 @@ function getBadgeDetails(badgeId, stats) {
     case 'cbbs': return { description: "Buy 5 Coin Boosters.", items: [item(stats.coinBoosterUsed || 0, 5, "Coin Boosters bought")] };
     case 'sts': return { description: "Use No Streak Break 5 times.", items: [item(stats.streakBoosterUsed || 0, 5, "No Streak Break used")] };
     case 'stp': return { description: "Use the streak protection 5 times.", items: [item(stats.streakProtectedCount || 0, 5, "Streak protections used")] };
-
     default: return { description: "Earn this badge by meeting specific conditions.", items: [] };
   }
 }
@@ -1037,7 +1008,7 @@ function showBadgeDetails(badgeId) {
 }
 
 // ================================================================
-// 8. STATE
+// 8. STATE (with ALL tracking fields)
 // ================================================================
 
 let state = {
@@ -1067,7 +1038,11 @@ let state = {
     javedaClicks: 0, shared: 0,
     dailyStreak: 0, lastActivityDate: null,
     sessionQuestions: 0, nightQuestions: 0, earlyQuestions: 0,
-    // ⭐ NEW tracking fields
+    // ⭐ Persistent category counters
+    categoryCorrectCounts: { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 },
+    categoryTotalCounts: { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 },
+    // ⭐ New tracking fields
+    hintsPurchased: 0,
     coinsSpent: 0, rubiesSpent: 0, maxSingleCoinSpend: 0,
     coinPurchaseCount: 0, rubyPurchaseCount: 0,
     hintPackSingle: 0, hintPackStarter: 0, hintPackPro: 0, hintPackMaster: 0,
@@ -1099,7 +1074,7 @@ function setText(id, value) { const el = document.getElementById(id); if (el) el
 // ================================================================
 
 // ================================================================
-// 11. BOOSTER SYSTEM (with purchase tracking)
+// 11. BOOSTER SYSTEM
 // ================================================================
 
 function checkBoosters() {
@@ -1140,12 +1115,12 @@ function updateBoosterStatus() {
   if (b.coinActive) html += `<span class="booster-badge active coin">🪙 1.5×C ${Math.floor(b.coinRemaining / 60)}m</span>`;
   if (b.streakActive) html += `<span class="booster-badge active streak">🛡️ ${b.streakRemaining} left</span>`;
   bar.innerHTML = html;
-  const pointStatus = document.getElementById("boosterPointStatus");
-  const coinStatus = document.getElementById("boosterCoinStatus");
-  const streakStatus = document.getElementById("boosterStreakStatus");
-  if (pointStatus) pointStatus.innerHTML = b.pointActive ? `<span class="booster-active-badge" style="background:var(--accent-3);color:#1a1a2e;">⚡ Active ${Math.floor(b.pointRemaining / 60)}m</span>` : "";
-  if (coinStatus) coinStatus.innerHTML = b.coinActive ? `<span class="booster-active-badge" style="background:#d4a017;color:#fff;">🪙 Active ${Math.floor(b.coinRemaining / 60)}m</span>` : "";
-  if (streakStatus) streakStatus.innerHTML = b.streakActive ? `<span class="booster-active-badge" style="background:var(--accent-1);color:#fff;">🛡️ ${b.streakRemaining} left</span>` : "";
+  const ps = document.getElementById("boosterPointStatus");
+  const cs = document.getElementById("boosterCoinStatus");
+  const ss = document.getElementById("boosterStreakStatus");
+  if (ps) ps.innerHTML = b.pointActive ? `<span class="booster-active-badge" style="background:var(--accent-3);color:#1a1a2e;">⚡ Active ${Math.floor(b.pointRemaining / 60)}m</span>` : "";
+  if (cs) cs.innerHTML = b.coinActive ? `<span class="booster-active-badge" style="background:#d4a017;color:#fff;">🪙 Active ${Math.floor(b.coinRemaining / 60)}m</span>` : "";
+  if (ss) ss.innerHTML = b.streakActive ? `<span class="booster-active-badge" style="background:var(--accent-1);color:#fff;">🛡️ ${b.streakRemaining} left</span>` : "";
 }
 
 function activateBooster(type, duration, costCoins, costRubies) {
@@ -1156,7 +1131,6 @@ function activateBooster(type, duration, costCoins, costRubies) {
   }
   s.coins -= costCoins;
   s.rubies -= costRubies;
-  // ⭐ Spending tracking
   s.coinsSpent = (s.coinsSpent || 0) + costCoins;
   s.rubiesSpent = (s.rubiesSpent || 0) + costRubies;
   if (costCoins > (s.maxSingleCoinSpend || 0)) s.maxSingleCoinSpend = costCoins;
@@ -1179,24 +1153,27 @@ function activateBooster(type, duration, costCoins, costRubies) {
     s.streakBoosterUsed = (s.streakBoosterUsed || 0) + 1;
     showToast("🛡️ No Streak Break Activated!", "Next 10 wrong answers won't break your streak.", "fa-rocket", "gain");
   }
-  updateHeaderStats();
-  updateDashboard();
-  updateShopUI();
-  updateBoosterStatus();
+  updateHeaderStats(); updateDashboard(); updateShopUI(); updateBoosterStatus();
   saveStats();
+  recheckBadgesAfterAction();
+  return true;
+}
 
-  // Recheck badges after purchase
+// ================================================================
+// ⭐ Helper: recheck badges after any action
+// ================================================================
+function recheckBadgesAfterAction() {
+  const s = state.stats;
   const earnedIds = checkBadges(s);
-  const prevBadges = new Set(s.earnedBadges || []);
-  const merged = [...new Set([...prevBadges, ...earnedIds])];
+  const prev = new Set(s.earnedBadges || []);
+  const merged = [...new Set([...prev, ...earnedIds])];
   s.earnedBadges = merged;
-  const newB = merged.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
+  const newB = merged.filter(id => !prev.has(id) && !state._shownBadges.has(id));
   for (const id of newB) {
     const badge = ALL_BADGES.find(b => b.id === id);
     if (badge) { state._shownBadges.add(id); setTimeout(() => showBadgeToast(badge), 300); }
   }
   updateBadges();
-  return true;
 }
 
 // ================================================================
@@ -1306,8 +1283,7 @@ function renderQuestion() {
   }
   updateDiffModeLabel(state.difficulty);
   updateModeToggles();
-  const diffBtns = document.querySelectorAll(".diff-btn");
-  diffBtns.forEach((btn) => {
+  document.querySelectorAll(".diff-btn").forEach((btn) => {
     if (state.smartMode) btn.classList.add("diff-toggle-disabled");
     else btn.classList.remove("diff-toggle-disabled");
     if (state.timerMode && btn.dataset.diff === "easy") btn.classList.add("diff-toggle-disabled");
@@ -1420,7 +1396,6 @@ function showFeedback(isCorrect, q, journal, trans) {
   if (!box) return;
   const isTimeout = state.userAnswer === "timeout";
   const isCorrectFinal = isCorrect && !isTimeout;
-  const isWrongFinal = !isCorrect || isTimeout;
   box.className = "feedback-box show " + (isCorrectFinal ? "correct" : "wrong");
   const icon = document.getElementById("fbIcon");
   if (icon) icon.className = "fas " + (isCorrectFinal ? "fa-check-circle" : isTimeout ? "fa-hourglass-end" : "fa-times-circle");
@@ -1550,7 +1525,6 @@ function generateNextQuestionSet() {
   const transaction = generateTransactionFromTemplate(templateInfo, effectiveMode);
   const journal = transaction.journal;
   const primaryAccount = transaction.primaryAccount;
-  const primarySide = transaction.primarySide;
   const primaryEntry = journal.find((j) => j.account === primaryAccount);
   if (!primaryEntry) { const fallback = journal[0]; if (fallback) { transaction.primaryAccount = fallback.account; transaction.primarySide = fallback.side; } }
   const accountName = transaction.primaryAccount;
@@ -1577,7 +1551,7 @@ function generateNextQuestionSet() {
 }
 
 // ================================================================
-// 14. ANSWER HANDLING
+// 14. ANSWER HANDLING ⭐ (with all tracking increments)
 // ================================================================
 
 async function handleAnswer(answer) {
@@ -1594,9 +1568,10 @@ async function handleAnswer(answer) {
   const boosters = getBoosters();
   const rewards = getRewards(state.difficulty, isCorrect, isRevision, isTimerMode, state.timerSec, boosters);
 
+  // ⭐ Track elapsed time for fast answers
   const elapsed = (Date.now() - state.questionStartTime) / 1000;
   if (elapsed <= 3) s.fastAnswers = (s.fastAnswers || 0) + 1;
-  if (elapsed <= 2) s.fastAnswers2s = (s.fastAnswers2s || 0) + 1; // ⭐ 2s fast answers
+  if (elapsed <= 2) s.fastAnswers2s = (s.fastAnswers2s || 0) + 1;   // ⭐ FIX: was missing
   s.sessionQuestions = (s.sessionQuestions || 0) + 1;
 
   const hour = new Date().getHours();
@@ -1615,6 +1590,15 @@ async function handleAnswer(answer) {
 
   let pointsChanged = 0, xpChanged = 0, coinsChanged = 0, rubiesChanged = 0;
   const topicType = q.accountType || "asset";
+
+  // ⭐ FIX: Ensure category counter objects exist
+  if (!s.categoryCorrectCounts) s.categoryCorrectCounts = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
+  if (!s.categoryTotalCounts) s.categoryTotalCounts = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
+
+  // ⭐ FIX: Increment persistent category counters
+  if (s.categoryTotalCounts[topicType] !== undefined) s.categoryTotalCounts[topicType]++;
+  if (isCorrect && s.categoryCorrectCounts[topicType] !== undefined) s.categoryCorrectCounts[topicType]++;
+
   if (s.topicStats && s.topicStats[topicType]) {
     s.topicStats[topicType].total++;
     if (!isCorrect) s.topicStats[topicType].wrong++;
@@ -1630,6 +1614,7 @@ async function handleAnswer(answer) {
     s.rubies = (s.rubies || 0) + (rewards.rubies || 0);
     pointsChanged = rewards.points; xpChanged = rewards.xp;
     coinsChanged = rewards.coins; rubiesChanged = rewards.rubies || 0;
+
     if (isRevision) {
       s.revisionCorrect = (s.revisionCorrect || 0) + 1;
       await deleteRevisionQuestion(state.currentRevisionDocId);
@@ -1642,9 +1627,9 @@ async function handleAnswer(answer) {
     if (coinsChanged > 0) showCoinToast(coinsChanged);
     if (rubiesChanged > 0) showRubyToast(rubiesChanged);
 
+    // ⭐ Timer Mode + difficulty-specific counters
     if (isTimerMode) {
       s.timerQuestionsCompleted = (s.timerQuestionsCompleted || 0) + 1;
-      // ⭐ Difficulty-specific timer tracking
       if (state.difficulty === "medium") {
         if (state.timerSec === 5) s.medium5sCompleted = (s.medium5sCompleted || 0) + 1;
         else if (state.timerSec === 10) s.medium10sCompleted = (s.medium10sCompleted || 0) + 1;
@@ -1659,7 +1644,7 @@ async function handleAnswer(answer) {
     s.wrong++;
     if (boosters.streakActive) {
       s.noStreakBreakRemaining--;
-      s.streakProtectedCount = (s.streakProtectedCount || 0) + 1; // ⭐ Track protection used
+      s.streakProtectedCount = (s.streakProtectedCount || 0) + 1;
       showToast("🛡️ Streak Protected!", `${s.noStreakBreakRemaining} protections left.`, "fa-shield", "gain");
       if (s.noStreakBreakRemaining <= 0) { s.noStreakBreakRemaining = 0; updateBoosterStatus(); }
     } else s.streak = 0;
@@ -1696,6 +1681,7 @@ async function handleAnswer(answer) {
     s.effectiveDifficulty = SMART_TRACKER.getEffectiveMode();
   }
 
+  // ⭐ Merge earned badges
   const earnedIds = checkBadges(s);
   const prevBadges = new Set(s.earnedBadges || []);
   const mergedBadges = [...new Set([...prevBadges, ...earnedIds])];
@@ -1748,7 +1734,7 @@ function useHint() {
 }
 
 // ================================================================
-// 16. SHOP (with spending tracking)
+// 16. SHOP ⭐ (with full tracking)
 // ================================================================
 
 function buyHint(hints, price, rubiesBonus) {
@@ -1758,13 +1744,18 @@ function buyHint(hints, price, rubiesBonus) {
   s.coins -= price;
   s.rubies = (s.rubies || 0) - (rubiesBonus || 0);
   s.hints = (s.hints || 0) + hints;
-  // ⭐ Spending tracking
+
+  // ⭐ NEW: Track TOTAL hints purchased (never decreases)
+  s.hintsPurchased = (s.hintsPurchased || 0) + hints;
+
+  // Spending tracking
   s.coinsSpent = (s.coinsSpent || 0) + price;
   s.rubiesSpent = (s.rubiesSpent || 0) + (rubiesBonus || 0);
   if (price > (s.maxSingleCoinSpend || 0)) s.maxSingleCoinSpend = price;
   if (price > 0) s.coinPurchaseCount = (s.coinPurchaseCount || 0) + 1;
   if (rubiesBonus > 0) s.rubyPurchaseCount = (s.rubyPurchaseCount || 0) + 1;
-  // ⭐ Pack-specific tracking
+
+  // Pack-specific tracking
   if (hints === 1) s.hintPackSingle = (s.hintPackSingle || 0) + 1;
   else if (hints === 10) s.hintPackStarter = (s.hintPackStarter || 0) + 1;
   else if (hints === 20) s.hintPackPro = (s.hintPackPro || 0) + 1;
@@ -1773,18 +1764,7 @@ function buyHint(hints, price, rubiesBonus) {
   updateHeaderStats(); updateDashboard(); updateShopUI(); updateHintButton();
   showToast("Hints Purchased!", `${hints} hints added${rubiesBonus ? ` (${rubiesBonus} rubies spent)` : ""}.`, "fa-coins", "hint");
   saveStats();
-
-  // Recheck badges
-  const earnedIds = checkBadges(s);
-  const prev = new Set(s.earnedBadges || []);
-  const merged = [...new Set([...prev, ...earnedIds])];
-  s.earnedBadges = merged;
-  const newB = merged.filter(id => !prev.has(id) && !state._shownBadges.has(id));
-  for (const id of newB) {
-    const badge = ALL_BADGES.find(b => b.id === id);
-    if (badge) { state._shownBadges.add(id); setTimeout(() => showBadgeToast(badge), 300); }
-  }
-  updateBadges();
+  recheckBadgesAfterAction();
 }
 
 function buyCoins(coins, rubiesCost) {
@@ -1792,10 +1772,10 @@ function buyCoins(coins, rubiesCost) {
   if (s.rubies < rubiesCost) { showToast("Not Enough Rubies", `Need ${rubiesCost} rubies. You have ${s.rubies}.`, "fa-gem", "loss"); return; }
   s.rubies -= rubiesCost;
   s.coins += coins;
-  // ⭐ Spending tracking
   s.rubiesSpent = (s.rubiesSpent || 0) + rubiesCost;
   if (rubiesCost > 0) s.rubyPurchaseCount = (s.rubyPurchaseCount || 0) + 1;
-  // ⭐ Coin pack tracking
+
+  // Coin pack tracking
   if (coins === 50) s.coinPackPocket = (s.coinPackPocket || 0) + 1;
   else if (coins === 100) s.coinPackPile = (s.coinPackPile || 0) + 1;
   else if (coins === 300) s.coinPackBag = (s.coinPackBag || 0) + 1;
@@ -1803,18 +1783,7 @@ function buyCoins(coins, rubiesCost) {
   updateHeaderStats(); updateDashboard(); updateShopUI();
   showToast("Coins Purchased!", `+${coins} coins for ${rubiesCost} rubies.`, "fa-coins", "gain");
   saveStats();
-
-  // Recheck badges
-  const earnedIds = checkBadges(s);
-  const prev = new Set(s.earnedBadges || []);
-  const merged = [...new Set([...prev, ...earnedIds])];
-  s.earnedBadges = merged;
-  const newB = merged.filter(id => !prev.has(id) && !state._shownBadges.has(id));
-  for (const id of newB) {
-    const badge = ALL_BADGES.find(b => b.id === id);
-    if (badge) { state._shownBadges.add(id); setTimeout(() => showBadgeToast(badge), 300); }
-  }
-  updateBadges();
+  recheckBadgesAfterAction();
 }
 
 function updateShopUI() {
@@ -1866,10 +1835,6 @@ function updateDashboard() {
   setText("xpProgressText", `${s.xp} / ${progress.next} XP`);
   updateShopUI();
 }
-
-// ================================================================
-// 17.5. BADGES RENDER (Topic-wise Collapsible Groups)
-// ================================================================
 
 function updateBadges() {
   const s = state.stats;
@@ -2081,11 +2046,9 @@ function renderLeaderboard() {
   }).join("");
   if (currentEmail) {
     const userRank = sorted.findIndex((u) => u.email === currentEmail) + 1;
-    if (userRank >= 1 && userRank <= 5 && auth.currentUser) {
-      if (typeof checkForRankNotifications === 'function') {
-        const encodedEmail = currentEmail.replace(/[.#$\/\[\]]/g, '_');
-        checkForRankNotifications(encodedEmail, userRank);
-      }
+    if (userRank >= 1 && userRank <= 5 && auth.currentUser && typeof checkForRankNotifications === 'function') {
+      const encodedEmail = currentEmail.replace(/[.#$\/\[\]]/g, '_');
+      checkForRankNotifications(encodedEmail, userRank);
     }
   }
   if (currentEmail) {
@@ -2135,16 +2098,9 @@ function init() {
 
   document.getElementById("loginBtn").addEventListener("click", async function () {
     const btn = this, loader = document.getElementById("loginLoader");
-    btn.style.display = "none";
-    loader.style.display = "flex";
-    try {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      await auth.signInWithPopup(provider);
-    } catch (error) {
-      showToast("Login Failed", error.message || "Please try again.", "fa-exclamation-circle", "loss");
-      btn.style.display = "flex";
-      loader.style.display = "none";
-    }
+    btn.style.display = "none"; loader.style.display = "flex";
+    try { const provider = new firebase.auth.GoogleAuthProvider(); await auth.signInWithPopup(provider); }
+    catch (error) { showToast("Login Failed", error.message || "Please try again.", "fa-exclamation-circle", "loss"); btn.style.display = "flex"; loader.style.display = "none"; }
   });
 
   document.getElementById("skipLoginBtn").addEventListener("click", function () {
@@ -2157,6 +2113,10 @@ function init() {
       if (saved) {
         const parsed = JSON.parse(saved);
         state.stats = { ...state.stats, ...parsed };
+        // ⭐ Ensure all new fields exist (migration)
+        if (!state.stats.categoryCorrectCounts) state.stats.categoryCorrectCounts = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
+        if (!state.stats.categoryTotalCounts) state.stats.categoryTotalCounts = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
+        if (state.stats.hintsPurchased === undefined) state.stats.hintsPurchased = 0;
         if (!state.stats.topicStats) state.stats.topicStats = { asset: { total: 0, wrong: 0 }, liability: { total: 0, wrong: 0 }, capital: { total: 0, wrong: 0 }, revenue: { total: 0, wrong: 0 }, expense: { total: 0, wrong: 0 }, drawing: { total: 0, wrong: 0 } };
         state.stats.level = getLevelFromXP(state.stats.xp);
         for (const id of state.stats.earnedBadges || []) state._shownBadges.add(id);
@@ -2171,44 +2131,27 @@ function init() {
     showToast("Guest Mode", "Your progress is saved locally.", "fa-user", "gain");
   });
 
-  // Share button — now increments counter (needed for Bring More Friend)
+  // ⭐ FIX: Share button now increments every time
   document.getElementById("shareBtn").addEventListener("click", function () {
     const url = window.location.href;
-
-    function awardShareBadge() {
+    function onShareSuccess() {
+      showToast("Link Copied!", "Share this link with your friends.", "fa-share-alt", "gain");
+      // ⭐ Always increment (not just first time)
       state.stats.shared = (state.stats.shared || 0) + 1;
-      const earnedIds = checkBadges(state.stats);
-      const prevBadges = new Set(state.stats.earnedBadges || []);
-      const mergedBadges = [...new Set([...prevBadges, ...earnedIds])];
-      state.stats.earnedBadges = mergedBadges;
-      const newBadges = earnedIds.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
-      for (const id of newBadges) {
-        const badge = ALL_BADGES.find(b => b.id === id);
-        if (badge) { state._shownBadges.add(id); setTimeout(() => showBadgeToast(badge), 300); }
-      }
-      for (const id of mergedBadges) state._shownBadges.add(id);
-      updateBadges();
       saveStats();
+      recheckBadgesAfterAction();
     }
-
     function fallbackCopy() {
       const textArea = document.createElement("textarea");
       textArea.value = url;
       document.body.appendChild(textArea);
       textArea.select();
-      try {
-        document.execCommand('copy');
-        showToast("Link Copied!", "Share this link with your friends.", "fa-share-alt", "gain");
-        awardShareBadge();
-      } catch (e) { showToast("Copy Failed", "Please manually copy the URL.", "fa-exclamation-circle", "loss"); }
+      try { document.execCommand('copy'); onShareSuccess(); }
+      catch (e) { showToast("Copy Failed", "Please manually copy the URL.", "fa-exclamation-circle", "loss"); }
       document.body.removeChild(textArea);
     }
-
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(url).then(() => {
-        showToast("Link Copied!", "Share this link with your friends.", "fa-share-alt", "gain");
-        awardShareBadge();
-      }).catch(fallbackCopy);
+      navigator.clipboard.writeText(url).then(onShareSuccess).catch(fallbackCopy);
     } else fallbackCopy();
   });
 
@@ -2238,21 +2181,9 @@ function init() {
   document.getElementById("learnJavedaBtn").addEventListener("click", function (e) {
     const s = state.stats;
     s.javedaClicks = (s.javedaClicks || 0) + 1;
-    try {
-      localStorage.setItem("javeda_clicks_backup", JSON.stringify({ count: s.javedaClicks, time: Date.now(), guestId: state.guestId || null, uid: auth.currentUser ? auth.currentUser.uid : null }));
-    } catch (err) {}
-    const earnedIds = checkBadges(s);
-    const prevBadges = new Set(s.earnedBadges || []);
-    const mergedBadges = [...new Set([...prevBadges, ...earnedIds])];
-    s.earnedBadges = mergedBadges;
-    const newBadges = earnedIds.filter((id) => !prevBadges.has(id) && !state._shownBadges.has(id));
-    for (const id of newBadges) {
-      const badge = ALL_BADGES.find((b) => b.id === id);
-      if (badge) { state._shownBadges.add(id); setTimeout(() => showBadgeToast(badge), 300); }
-    }
-    for (const id of mergedBadges) state._shownBadges.add(id);
-    updateBadges();
+    try { localStorage.setItem("javeda_clicks_backup", JSON.stringify({ count: s.javedaClicks, time: Date.now(), guestId: state.guestId || null, uid: auth.currentUser ? auth.currentUser.uid : null })); } catch (err) {}
     saveStats();
+    recheckBadgesAfterAction();
   });
 
   $$(".diff-btn").forEach((btn) => {
@@ -2434,16 +2365,9 @@ function init() {
   document.querySelectorAll(".shop-item .item-buy").forEach((btn) => {
     btn.addEventListener("click", function () {
       const type = this.dataset.type;
-      if (type === "hint") {
-        const hints = parseInt(this.dataset.hints);
-        const price = parseInt(this.dataset.price);
-        const rubies = parseInt(this.dataset.rubies) || 0;
-        buyHint(hints, price, rubies);
-      } else if (type === "buycoins") {
-        const coins = parseInt(this.dataset.coins);
-        const rubies = parseInt(this.dataset.rubies);
-        buyCoins(coins, rubies);
-      } else if (type === "booster") {
+      if (type === "hint") { buyHint(parseInt(this.dataset.hints), parseInt(this.dataset.price), parseInt(this.dataset.rubies) || 0); }
+      else if (type === "buycoins") { buyCoins(parseInt(this.dataset.coins), parseInt(this.dataset.rubies)); }
+      else if (type === "booster") {
         const booster = this.dataset.booster;
         const priceCoins = parseInt(this.dataset.priceCoins) || 0;
         const priceRubies = parseInt(this.dataset.priceRubies) || 0;
@@ -2498,10 +2422,7 @@ function init() {
 
   if (auth.currentUser && typeof initBell === 'function') {
     const email = auth.currentUser.email;
-    if (email) {
-      const encodedEmail = email.replace(/[.#$\/\[\]]/g, '_');
-      initBell(encodedEmail);
-    }
+    if (email) { const encodedEmail = email.replace(/[.#$\/\[\]]/g, '_'); initBell(encodedEmail); }
   }
 
   setTimeout(() => {
@@ -2514,22 +2435,16 @@ function init() {
       const sameUser = (backup.uid && currentUid && backup.uid === currentUid) || (backup.guestId && state.guestId && backup.guestId === state.guestId) || (!backup.uid && !backup.guestId);
       if (sameUser && backup.count > (state.stats.javedaClicks || 0)) {
         state.stats.javedaClicks = backup.count;
-        const earnedIds = checkBadges(state.stats);
-        const prevBadges = new Set(state.stats.earnedBadges || []);
-        state.stats.earnedBadges = [...new Set([...prevBadges, ...earnedIds])];
-        updateBadges(); saveStats();
+        saveStats();
+        recheckBadgesAfterAction();
       }
       localStorage.removeItem("javeda_clicks_backup");
     } catch (e) {}
   }, 2500);
 
-  console.log("📘 Version : 6.0.9 — 38 new badges added (Total: 137). All conditions in English.");
+  console.log("📘 Version : 7.0.0 — MAJOR FIX: Category counters, Hint purchase tracking, Share counter, Timer difficulty splits. 137 badges now track correctly.");
   console.log("✅ Developed By - Faizul Islam Riyad");
 }
-
-// ================================================================
-// MODAL CLOSE EVENTS
-// ================================================================
 
 document.addEventListener("DOMContentLoaded", function() {
   const closeBtn = document.getElementById("badgeModalClose");
