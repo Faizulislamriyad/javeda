@@ -2,7 +2,9 @@
 // 1. HELPERS
 // ================================================================
 
-function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function pickRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
 
 function getAmount(range) {
   const [min, max] = range;
@@ -32,11 +34,20 @@ function getXPProgress(xp) {
 }
 
 function getRewards(diff, correct, isRevision, timerMode, timerSec, boosters) {
-  if (isRevision) return { points: 0, xp: 0, coins: 1, rubies: 0 };
+  if (isRevision) {
+    return { points: 0, xp: 0, coins: 1, rubies: 0 };
+  }
+
   if (timerMode) {
     const timerRules = {
-      medium: { 5: { points: 14, xp: 8, coins: 3, rubies: 1 }, 10: { points: 12, xp: 6, coins: 2, rubies: 0 } },
-      hard: { 5: { points: 18, xp: 12, coins: 4, rubies: 2 }, 10: { points: 16, xp: 10, coins: 3, rubies: 0 } },
+      medium: {
+        5: { points: 14, xp: 8, coins: 3, rubies: 1 },
+        10: { points: 12, xp: 6, coins: 2, rubies: 0 },
+      },
+      hard: {
+        5: { points: 18, xp: 12, coins: 4, rubies: 2 },
+        10: { points: 16, xp: 10, coins: 3, rubies: 0 },
+      },
     };
     const key = timerSec || "5";
     const rules = timerRules[diff];
@@ -46,21 +57,40 @@ function getRewards(diff, correct, isRevision, timerMode, timerSec, boosters) {
         ? { points: r.points, xp: r.xp, coins: r.coins, rubies: r.rubies }
         : { points: -Math.floor(r.points * 0.5), xp: 0, coins: 0, rubies: 0 };
       if (correct) {
-        if (boosters && boosters.pointActive) result.points = Math.floor(result.points * 2);
-        if (boosters && boosters.coinActive) result.coins = Math.floor(result.coins * 1.5);
+        if (boosters && boosters.pointActive) {
+          result.points = Math.floor(result.points * 2);
+        }
+        if (boosters && boosters.coinActive) {
+          result.coins = Math.floor(result.coins * 1.5);
+        }
       }
       return result;
     }
     const fallback = timerRules["medium"]["5"];
     let result = correct
-      ? { points: fallback.points, xp: fallback.xp, coins: fallback.coins, rubies: fallback.rubies }
-      : { points: -Math.floor(fallback.points * 0.5), xp: 0, coins: 0, rubies: 0 };
+      ? {
+          points: fallback.points,
+          xp: fallback.xp,
+          coins: fallback.coins,
+          rubies: fallback.rubies,
+        }
+      : {
+          points: -Math.floor(fallback.points * 0.5),
+          xp: 0,
+          coins: 0,
+          rubies: 0,
+        };
     if (correct) {
-      if (boosters && boosters.pointActive) result.points = Math.floor(result.points * 2);
-      if (boosters && boosters.coinActive) result.coins = Math.floor(result.coins * 1.5);
+      if (boosters && boosters.pointActive) {
+        result.points = Math.floor(result.points * 2);
+      }
+      if (boosters && boosters.coinActive) {
+        result.coins = Math.floor(result.coins * 1.5);
+      }
     }
     return result;
   }
+
   const rules = {
     easy: { points: 4, xp: 2, coins: 1, rubies: 0, penalty: 2 },
     medium: { points: 8, xp: 4, coins: 2, rubies: 0, penalty: 4 },
@@ -71,21 +101,28 @@ function getRewards(diff, correct, isRevision, timerMode, timerSec, boosters) {
     ? { points: r.points, xp: r.xp, coins: r.coins, rubies: r.rubies || 0 }
     : { points: -r.penalty, xp: 0, coins: 0, rubies: 0 };
   if (correct) {
-    if (boosters && boosters.pointActive) result.points = Math.floor(result.points * 2);
-    if (boosters && boosters.coinActive) result.coins = Math.floor(result.coins * 1.5);
+    if (boosters && boosters.pointActive) {
+      result.points = Math.floor(result.points * 2);
+    }
+    if (boosters && boosters.coinActive) {
+      result.coins = Math.floor(result.coins * 1.5);
+    }
   }
   return result;
 }
 
 const BENGALI_PERSON_NAMES = [
   "রহিম", "করিম", "আলম", "রিয়াদ", "সুমন", "হাসান", "রনি", "তাজিম", "ফাহিম",
-  "লিমন", "জসিম", "রাফি", "শাওন", "নাঈম", "রাসেল", "সজিব", "আরিফ", "তুহিন", "শুভ", "নাবিল",
+  "লিমন", "জসিম", "রাফি", "শাওন", "নাঈম", "রাসেল", "সজিব", "আরিফ", "তুহিন",
+  "শুভ", "নাবিল",
 ];
 
-function getRandomName() { return pickRandom(BENGALI_PERSON_NAMES); }
+function getRandomName() {
+  return pickRandom(BENGALI_PERSON_NAMES);
+}
 
 // ================================================================
-// 2. ACCOUNT CLASSIFICATION
+// 2. MASTER ACCOUNT CLASSIFICATION SYSTEM
 // ================================================================
 
 const ACCOUNT_CLASSIFICATIONS = {
@@ -137,9 +174,19 @@ const ACCOUNT_CLASSIFICATIONS = {
   "Discount Allowed": { category: "expense", bengali: "বাট্টা প্রদান", rule: "increase=debit,decrease=credit" },
 };
 
-function getAccountInfo(n) { return ACCOUNT_CLASSIFICATIONS[n] || null; }
-function getBengaliName(n) { const i = getAccountInfo(n); return i ? i.bengali : n; }
-function getAccountCategory(n) { const i = getAccountInfo(n); return i ? i.category : null; }
+function getAccountInfo(accountName) {
+  return ACCOUNT_CLASSIFICATIONS[accountName] || null;
+}
+
+function getBengaliName(accountName) {
+  const info = getAccountInfo(accountName);
+  return info ? info.bengali : accountName;
+}
+
+function getAccountCategory(accountName) {
+  const info = getAccountInfo(accountName);
+  return info ? info.category : null;
+}
 
 const ACCOUNT_RULES = {
   asset: { increase: "debit", decrease: "credit", label: "Asset" },
@@ -151,7 +198,9 @@ const ACCOUNT_RULES = {
 };
 
 const BENGALI_NAMES = {};
-for (const [key, val] of Object.entries(ACCOUNT_CLASSIFICATIONS)) BENGALI_NAMES[key] = val.bengali;
+for (const [key, val] of Object.entries(ACCOUNT_CLASSIFICATIONS)) {
+  BENGALI_NAMES[key] = val.bengali;
+}
 BENGALI_NAMES["Sales"] = "বিক্রয়";
 BENGALI_NAMES["Purchases"] = "ক্রয়";
 BENGALI_NAMES["Debtor"] = "দেনাদার";
@@ -162,112 +211,158 @@ BENGALI_NAMES["Creditor"] = "পাওনাদার";
 // ================================================================
 
 const TEMPLATE_DEFINITIONS = {
-  asset_purchase: { category: "asset", difficulty: "easy",
+  asset_purchase: {
+    category: "asset", difficulty: "easy",
     patterns: ["নগদে {asset} ক্রয় করা হয়েছে", "{asset} নগদে ক্রয় করা হয়েছে"],
     assetPool: ["Computer", "Mobile", "Book", "Furniture", "Table", "Chair"],
     journal: [{ account: "{asset}", side: "debit" }, { account: "Cash", side: "credit" }],
-    primaryAccountIndex: 0, hasAmount: false, amountRange: null },
-  expense_pay: { category: "expense", difficulty: "easy",
+    primaryAccountIndex: 0, hasAmount: false, amountRange: null,
+  },
+  expense_pay: {
+    category: "expense", difficulty: "easy",
     patterns: ["নগদে {expense} পরিশোধ করা হয়েছে", "{expense} নগদে পরিশোধ"],
     expensePool: ["Electricity Bill", "Rent", "Transport", "Salary", "Insurance"],
     journal: [{ account: "{expense}", side: "debit" }, { account: "Cash", side: "credit" }],
-    primaryAccountIndex: 0, hasAmount: false, amountRange: null },
-  capital_invest: { category: "capital", difficulty: "easy",
+    primaryAccountIndex: 0, hasAmount: false, amountRange: null,
+  },
+  capital_invest: {
+    category: "capital", difficulty: "easy",
     patterns: ["মালিক নগদ বিনিয়োগ করেছেন", "মালিক ব্যবসায়ে নগদ বিনিয়োগ করেছেন"],
     journal: [{ account: "Cash", side: "debit" }, { account: "Capital", side: "credit" }],
-    primaryAccountIndex: 1, hasAmount: false, amountRange: null },
-  revenue_sale: { category: "revenue", difficulty: "easy",
+    primaryAccountIndex: 1, hasAmount: false, amountRange: null,
+  },
+  revenue_sale: {
+    category: "revenue", difficulty: "easy",
     patterns: ["নগদে {item} বিক্রয় করা হয়েছে", "{item} নগদে বিক্রয়"],
     itemPool: ["পণ্য", "মাল", "সেবা", "Book", "Pen"],
     journal: [{ account: "Cash", side: "debit" }, { account: "Sales Revenue", side: "credit" }],
-    primaryAccountIndex: 1, hasAmount: false, amountRange: null },
-  liability_pay: { category: "liability", difficulty: "easy",
+    primaryAccountIndex: 1, hasAmount: false, amountRange: null,
+  },
+  liability_pay: {
+    category: "liability", difficulty: "easy",
     patterns: ["{liability} পরিশোধ করা হয়েছে", "{liability} নগদে পরিশোধ"],
     liabilityPool: ["Creditors", "Rent Payable", "Salary Payable"],
     journal: [{ account: "{liability}", side: "debit" }, { account: "Cash", side: "credit" }],
-    primaryAccountIndex: 0, hasAmount: false, amountRange: null },
-  drawings: { category: "drawing", difficulty: "easy",
+    primaryAccountIndex: 0, hasAmount: false, amountRange: null,
+  },
+  drawings: {
+    category: "drawing", difficulty: "easy",
     patterns: ["মালিক নগদ উত্তোলন করেছেন", "মালিক ব্যক্তিগত প্রয়োজনে নগদ উত্তোলন"],
     journal: [{ account: "Drawings", side: "debit" }, { account: "Cash", side: "credit" }],
-    primaryAccountIndex: 0, hasAmount: false, amountRange: null },
-  medium_asset_purchase: { category: "asset", difficulty: "medium",
+    primaryAccountIndex: 0, hasAmount: false, amountRange: null,
+  },
+  medium_asset_purchase: {
+    category: "asset", difficulty: "medium",
     patterns: ["নগদে {amount} টাকায় {asset} ক্রয় করা হয়েছে", "{amount} টাকায় {asset} নগদে ক্রয়"],
     assetPool: ["Computer", "Mobile", "Furniture", "Equipment", "Laptop", "Table", "Chair"],
     journal: [{ account: "{asset}", side: "debit" }, { account: "Cash", side: "credit" }],
-    primaryAccountIndex: 0, hasAmount: true, amountRange: [3000, 80000] },
-  medium_expense_pay: { category: "expense", difficulty: "medium",
+    primaryAccountIndex: 0, hasAmount: true, amountRange: [3000, 80000],
+  },
+  medium_expense_pay: {
+    category: "expense", difficulty: "medium",
     patterns: ["নগদে {expense} বাবদ {amount} টাকা পরিশোধ", "{expense} বাবদ {amount} টাকা নগদে প্রদান"],
     expensePool: ["Rent", "Transport", "Advertisement", "Salary", "Insurance", "Repairs", "Internet Bill"],
     journal: [{ account: "{expense}", side: "debit" }, { account: "Cash", side: "credit" }],
-    primaryAccountIndex: 0, hasAmount: true, amountRange: [1000, 50000] },
-  medium_revenue_sale: { category: "revenue", difficulty: "medium",
+    primaryAccountIndex: 0, hasAmount: true, amountRange: [1000, 50000],
+  },
+  medium_revenue_sale: {
+    category: "revenue", difficulty: "medium",
     patterns: ["নগদে {amount} টাকায় {item} বিক্রয়", "{amount} টাকায় {item} নগদে বিক্রয়"],
     itemPool: ["পণ্য", "মাল", "সেবা", "Mobile", "Furniture", "Computer", "Book", "Table", "Chair"],
     journal: [{ account: "Cash", side: "debit" }, { account: "Sales Revenue", side: "credit" }],
-    primaryAccountIndex: 1, hasAmount: true, amountRange: [3000, 90000] },
-  medium_bank_deposit: { category: "asset", difficulty: "medium",
+    primaryAccountIndex: 1, hasAmount: true, amountRange: [3000, 90000],
+  },
+  medium_bank_deposit: {
+    category: "asset", difficulty: "medium",
     patterns: ["ব্যাংকে {amount} টাকা জমা দেওয়া হয়েছে", "{amount} টাকা ব্যাংকে জমা"],
     journal: [{ account: "Bank", side: "debit" }, { account: "Cash", side: "credit" }],
-    primaryAccountIndex: 0, hasAmount: true, amountRange: [5000, 50000] },
-  medium_bank_withdrawal: { category: "asset", difficulty: "medium",
+    primaryAccountIndex: 0, hasAmount: true, amountRange: [5000, 50000],
+  },
+  medium_bank_withdrawal: {
+    category: "asset", difficulty: "medium",
     patterns: ["ব্যাংক থেকে {amount} টাকা উত্তোলন", "{amount} টাকা ব্যাংক থেকে উত্তোলন"],
     journal: [{ account: "Cash", side: "debit" }, { account: "Bank", side: "credit" }],
-    primaryAccountIndex: 1, hasAmount: true, amountRange: [3000, 40000] },
-  medium_credit_sale: { category: "revenue", difficulty: "medium",
+    primaryAccountIndex: 1, hasAmount: true, amountRange: [3000, 40000],
+  },
+  medium_credit_sale: {
+    category: "revenue", difficulty: "medium",
     patterns: ["{name} এর নিকট {amount} টাকার {item} বিক্রয়", "{amount} টাকার {item} {name} এর নিকট বিক্রয়"],
     itemPool: ["পণ্য", "Mobile", "Computer", "Book", "Furniture", "TV", "Table"],
     journal: [{ account: "Accounts Receivable", side: "debit" }, { account: "Sales Revenue", side: "credit" }],
-    primaryAccountIndex: 1, hasAmount: true, amountRange: [10000, 90000], useName: true },
-  medium_credit_purchase: { category: "liability", difficulty: "medium",
+    primaryAccountIndex: 1, hasAmount: true, amountRange: [10000, 90000], useName: true,
+  },
+  medium_credit_purchase: {
+    category: "liability", difficulty: "medium",
     patterns: ["{name} এর নিকট হতে {amount} টাকার {item} ক্রয়", "{name} থেকে {amount} টাকায় {item} কেনা"],
     itemPool: ["মাল", "পণ্য", "পণ্যদ্রব্য", "Equipment", "Office Supplies", "Book", "Mobile"],
     journal: [{ account: "Inventory", side: "debit" }, { account: "Creditors", side: "credit" }],
-    primaryAccountIndex: 1, hasAmount: true, amountRange: [10000, 100000], useName: true },
-  medium_drawing: { category: "drawing", difficulty: "medium",
+    primaryAccountIndex: 1, hasAmount: true, amountRange: [10000, 100000], useName: true,
+  },
+  medium_drawing: {
+    category: "drawing", difficulty: "medium",
     patterns: ["মালিক {amount} টাকা উত্তোলন করেছেন", "{amount} টাকা উত্তোলন"],
     journal: [{ account: "Drawings", side: "debit" }, { account: "Cash", side: "credit" }],
-    primaryAccountIndex: 0, hasAmount: true, amountRange: [3000, 30000] },
-  medium_capital_invest: { category: "capital", difficulty: "medium",
+    primaryAccountIndex: 0, hasAmount: true, amountRange: [3000, 30000],
+  },
+  medium_capital_invest: {
+    category: "capital", difficulty: "medium",
     patterns: ["মালিক {amount} টাকা নগদ বিনিয়োগ করেছেন", "{amount} টাকা নগদ বিনিয়োগ"],
     journal: [{ account: "Cash", side: "debit" }, { account: "Capital", side: "credit" }],
-    primaryAccountIndex: 1, hasAmount: true, amountRange: [10000, 100000] },
-  depreciation: { category: "expense", difficulty: "hard",
+    primaryAccountIndex: 1, hasAmount: true, amountRange: [10000, 100000],
+  },
+  depreciation: {
+    category: "expense", difficulty: "hard",
     patterns: ["{asset} এর উপর {amount} টাকা অবচয় ধার্য", "{asset} এর অবচয় {amount} টাকা ধার্য"],
     assetPool: ["Table", "Equipment", "Computer", "Building", "Vehicle"],
     journal: [{ account: "Depreciation Expense", side: "debit" }, { account: "Accumulated Depreciation", side: "credit" }],
-    primaryAccountIndex: 0, hasAmount: true, amountRange: [2000, 30000] },
-  bad_debts: { category: "expense", difficulty: "hard",
+    primaryAccountIndex: 0, hasAmount: true, amountRange: [2000, 30000],
+  },
+  bad_debts: {
+    category: "expense", difficulty: "hard",
     patterns: ["{name} এর নিকট {amount} টাকা অনাদায়ী দেনা ধার্য", "{name} এর কাছ থেকে {amount} টাকা পাওয়া যাবে না"],
     journal: [{ account: "Bad Debts", side: "debit" }, { account: "Accounts Receivable", side: "credit" }],
-    primaryAccountIndex: 0, hasAmount: true, amountRange: [1000, 10000], useName: true },
-  prepaid_rent: { category: "asset", difficulty: "hard",
+    primaryAccountIndex: 0, hasAmount: true, amountRange: [1000, 10000], useName: true,
+  },
+  prepaid_rent: {
+    category: "asset", difficulty: "hard",
     patterns: ["অগ্রিম ভাড়া বাবদ {amount} টাকা সমন্বয়", "{amount} টাকা অগ্রিম ভাড়ার সমন্বয়"],
     journal: [{ account: "Rent", side: "debit" }, { account: "Prepaid Rent", side: "credit" }],
-    primaryAccountIndex: 0, hasAmount: true, amountRange: [5000, 40000] },
-  accrued_revenue: { category: "revenue", difficulty: "hard",
+    primaryAccountIndex: 0, hasAmount: true, amountRange: [5000, 40000],
+  },
+  accrued_revenue: {
+    category: "revenue", difficulty: "hard",
     patterns: ["অর্জিত আয় বাবদ {amount} টাকা সমন্বয়", "{amount} টাকা অর্জিত কিন্তু অপ্রাপ্ত আয়"],
     journal: [{ account: "Accounts Receivable", side: "debit" }, { account: "Accrued Revenue", side: "credit" }],
-    primaryAccountIndex: 1, hasAmount: true, amountRange: [10000, 70000] },
-  loan_received: { category: "liability", difficulty: "hard",
+    primaryAccountIndex: 1, hasAmount: true, amountRange: [10000, 70000],
+  },
+  loan_received: {
+    category: "liability", difficulty: "hard",
     patterns: ["{name} এর কাছ থেকে {amount} টাকা ঋণ গ্রহণ", "{name} থেকে {amount} টাকা ঋণ নেওয়া"],
     journal: [{ account: "Cash", side: "debit" }, { account: "Loan", side: "credit" }],
-    primaryAccountIndex: 1, hasAmount: true, amountRange: [10000, 100000], useName: true },
-  salary_payable_adj: { category: "liability", difficulty: "hard",
+    primaryAccountIndex: 1, hasAmount: true, amountRange: [10000, 100000], useName: true,
+  },
+  salary_payable_adj: {
+    category: "liability", difficulty: "hard",
     patterns: ["বকেয়া বেতন {amount} টাকা সমন্বয়", "{amount} টাকা বকেয়া বেতন হিসাবে ধার্য"],
     journal: [{ account: "Salary", side: "debit" }, { account: "Salary Payable", side: "credit" }],
-    primaryAccountIndex: 1, hasAmount: true, amountRange: [8000, 50000] },
-  interest_expense_adj: { category: "expense", difficulty: "hard",
+    primaryAccountIndex: 1, hasAmount: true, amountRange: [8000, 50000],
+  },
+  interest_expense_adj: {
+    category: "expense", difficulty: "hard",
     patterns: ["ব্যাংক ঋণের {amount} টাকা সুদ বকেয়া সমন্বয়", "{amount} টাকা সুদ খরচ বকেয়া ধার্য"],
     journal: [{ account: "Interest Expense", side: "debit" }, { account: "Interest Payable", side: "credit" }],
-    primaryAccountIndex: 0, hasAmount: true, amountRange: [2000, 15000] },
-  drawings_goods_adj: { category: "drawing", difficulty: "hard",
+    primaryAccountIndex: 0, hasAmount: true, amountRange: [2000, 15000],
+  },
+  drawings_goods_adj: {
+    category: "drawing", difficulty: "hard",
     patterns: ["মালিক {amount} টাকার পণ্য উত্তোলন করেছেন", "{amount} টাকা মূল্যের পণ্য উত্তোলন"],
     journal: [{ account: "Drawings", side: "debit" }, { account: "Inventory", side: "credit" }],
-    primaryAccountIndex: 0, hasAmount: true, amountRange: [5000, 25000] },
+    primaryAccountIndex: 0, hasAmount: true, amountRange: [5000, 25000],
+  },
 };
 
 // ================================================================
-// 4. DIFFICULTY FILTERING
+// 4. DIFFICULTY FILTERING & DIVERSITY
 // ================================================================
 
 function getAvailableTemplates(mode) {
@@ -276,7 +371,8 @@ function getAvailableTemplates(mode) {
   for (const [key, def] of allTemplates) {
     if (def.difficulty !== mode) continue;
     available.push({
-      key, def,
+      key,
+      def,
       hasAmount: mode !== "easy" ? def.hasAmount || false : false,
       amountRange: mode !== "easy" ? def.amountRange || null : null,
     });
@@ -294,28 +390,55 @@ function getCategoryWeight(category, smartBias) {
   if (recentCount >= 3) penalty = 0.2;
   else if (recentCount >= 2) penalty = 0.4;
   else if (recentCount >= 1) penalty = 0.7;
-  if (recentCategories.length > 0 && recentCategories[recentCategories.length - 1] === category) penalty *= 0.3;
+  if (
+    recentCategories.length > 0 &&
+    recentCategories[recentCategories.length - 1] === category
+  ) {
+    penalty *= 0.3;
+  }
   return Math.max(0.1, baseWeight * penalty);
 }
 
 function pickTemplateWithDiversity(mode, smartBias) {
   const available = getAvailableTemplates(mode);
   if (available.length === 0) {
-    const fallback = Object.entries(TEMPLATE_DEFINITIONS).find(([k, d]) => d.difficulty === mode);
+    const fallback = Object.entries(TEMPLATE_DEFINITIONS).find(
+      ([k, d]) => d.difficulty === mode,
+    );
     if (fallback) {
       const [key, def] = fallback;
-      return { key, def, hasAmount: mode !== "easy" ? def.hasAmount || false : false, amountRange: mode !== "easy" ? def.amountRange || null : null };
+      return {
+        key,
+        def,
+        hasAmount: mode !== "easy" ? def.hasAmount || false : false,
+        amountRange: mode !== "easy" ? def.amountRange || null : null,
+      };
     }
     const assetDef = TEMPLATE_DEFINITIONS.asset_purchase;
-    return { key: "asset_purchase", def: assetDef, hasAmount: false, amountRange: null };
+    return {
+      key: "asset_purchase",
+      def: assetDef,
+      hasAmount: false,
+      amountRange: null,
+    };
   }
-  const weighted = available.map((item) => ({ ...item, weight: getCategoryWeight(item.def.category, smartBias) }));
+  const weighted = available.map((item) => {
+    const category = item.def.category;
+    const weight = getCategoryWeight(category, smartBias);
+    return { ...item, weight };
+  });
   weighted.sort((a, b) => b.weight - a.weight);
   const topCandidates = weighted.slice(0, Math.min(5, weighted.length));
   const selected = pickRandom(topCandidates);
-  recentCategories.push(selected.def.category);
+  const category = selected.def.category;
+  recentCategories.push(category);
   if (recentCategories.length > MAX_RECENT_CATEGORIES) recentCategories.shift();
-  return { key: selected.key, def: selected.def, hasAmount: selected.hasAmount, amountRange: selected.amountRange };
+  return {
+    key: selected.key,
+    def: selected.def,
+    hasAmount: selected.hasAmount,
+    amountRange: selected.amountRange,
+  };
 }
 
 // ================================================================
@@ -329,7 +452,8 @@ function generateTransactionFromTemplate(templateInfo, mode) {
   let amount = 0;
   if (hasAmount && amountRange) amount = getAmount(amountRange);
   const pattern = pickRandom(def.patterns);
-  let asset = "", expense = "", liability = "", item = "", name = "";
+  let asset = "", expense = "", liability = "", item = "";
+  let name = "";
   const useName = def.useName || false;
   if (useName) name = getRandomName();
   if (def.assetPool) asset = pickRandom(def.assetPool);
@@ -343,7 +467,10 @@ function generateTransactionFromTemplate(templateInfo, mode) {
   if (item) desc = desc.replace(/{item}/g, getBengaliName(item) || item);
   if (name) desc = desc.replace(/{name}/g, name);
   if (hasAmount && amount) desc = desc.replace(/{amount}/g, amount.toLocaleString());
-  else { desc = desc.replace(/\s*{amount}\s*/g, " "); desc = desc.replace(/\s+/g, " "); }
+  else {
+    desc = desc.replace(/\s*{amount}\s*/g, " ");
+    desc = desc.replace(/\s+/g, " ");
+  }
   const journal = def.journal.map((entry) => {
     let acc = entry.account;
     if (acc === "{asset}" && asset) acc = asset;
@@ -351,7 +478,12 @@ function generateTransactionFromTemplate(templateInfo, mode) {
     else if (acc === "{liability}" && liability) acc = liability;
     else if (acc === "{item}" && item) acc = item;
     const info = getAccountInfo(acc);
-    return { account: acc, side: entry.side, amount: hasAmount ? amount : 0, type: info ? info.category : "asset" };
+    return {
+      account: acc,
+      side: entry.side,
+      amount: hasAmount ? amount : 0,
+      type: info ? info.category : "asset",
+    };
   });
   const primaryIdx = def.primaryAccountIndex !== undefined ? def.primaryAccountIndex : 0;
   const primaryEntry = journal[primaryIdx] || journal[0];
@@ -359,7 +491,18 @@ function generateTransactionFromTemplate(templateInfo, mode) {
   const primaryInfo = getAccountInfo(primaryAccount);
   const primaryType = primaryInfo ? primaryInfo.category : def.category;
   desc = desc.replace(/\s+/g, " ").trim();
-  return { templateId: templateInfo.key, description: desc, category: def.category, amount, hasAmount, journal, primaryAccount, primaryType, primarySide: primaryEntry.side, personName: name || null };
+  return {
+    templateId: templateInfo.key,
+    description: desc,
+    category: def.category,
+    amount: amount,
+    hasAmount: hasAmount,
+    journal: journal,
+    primaryAccount: primaryAccount,
+    primaryType: primaryType,
+    primarySide: primaryEntry.side,
+    personName: name || null,
+  };
 }
 
 // ================================================================
@@ -367,14 +510,24 @@ function generateTransactionFromTemplate(templateInfo, mode) {
 // ================================================================
 
 const SMART_TRACKER = {
-  categoryCounts: {}, consecutiveCorrect: 0, consecutiveWrong: 0,
-  baseMode: "easy", smartDifficulty: "easy", isSmartMode: false, lastModeChange: 0,
+  categoryCounts: {},
+  consecutiveCorrect: 0,
+  consecutiveWrong: 0,
+  baseMode: "easy",
+  smartDifficulty: "easy",
+  isSmartMode: false,
+  lastModeChange: 0,
   update(category, isCorrect, mode) {
     if (!this.categoryCounts[category]) this.categoryCounts[category] = { total: 0, correct: 0 };
     this.categoryCounts[category].total++;
     if (isCorrect) this.categoryCounts[category].correct++;
-    if (isCorrect) { this.consecutiveCorrect++; this.consecutiveWrong = 0; }
-    else { this.consecutiveWrong++; this.consecutiveCorrect = 0; }
+    if (isCorrect) {
+      this.consecutiveCorrect++;
+      this.consecutiveWrong = 0;
+    } else {
+      this.consecutiveWrong++;
+      this.consecutiveCorrect = 0;
+    }
     this.baseMode = mode;
     if (this.isSmartMode) this._adjustDifficulty();
   },
@@ -382,21 +535,25 @@ const SMART_TRACKER = {
     const modes = ["easy", "medium", "hard"];
     const currentIdx = modes.indexOf(this.smartDifficulty);
     if (currentIdx === -1) return;
-    const oldMode = this.smartDifficulty;
     let newMode = this.smartDifficulty;
     let changed = false;
     if (this.consecutiveCorrect >= 5) {
       const nextIdx = Math.min(currentIdx + 1, modes.length - 1);
-      if (nextIdx !== currentIdx) { newMode = modes[nextIdx]; this.consecutiveCorrect = 0; changed = true; }
+      if (nextIdx !== currentIdx) {
+        newMode = modes[nextIdx];
+        this.consecutiveCorrect = 0;
+        changed = true;
+      }
     }
     if (this.consecutiveWrong >= 3) {
       const prevIdx = Math.max(currentIdx - 1, 0);
-      if (prevIdx !== currentIdx) { newMode = modes[prevIdx]; this.consecutiveWrong = 0; changed = true; }
+      if (prevIdx !== currentIdx) {
+        newMode = modes[prevIdx];
+        this.consecutiveWrong = 0;
+        changed = true;
+      }
     }
     if (changed && newMode !== this.smartDifficulty) {
-      if (oldMode === "easy" && newMode === "medium") state.stats.autoSwitchToMedium = (state.stats.autoSwitchToMedium || 0) + 1;
-      else if (oldMode === "medium" && newMode === "hard") state.stats.autoSwitchToHard = (state.stats.autoSwitchToHard || 0) + 1;
-      if (newMode === "hard") state.stats.reachedHardInSmart = true;
       this.smartDifficulty = newMode;
       state.difficulty = newMode;
       updateDifficultyButtons(newMode);
@@ -419,8 +576,16 @@ const SMART_TRACKER = {
     for (const cat in biases) biases[cat] = (biases[cat] / sum) * 100;
     return biases;
   },
-  getEffectiveMode() { return this.isSmartMode ? this.smartDifficulty : this.baseMode; },
-  reset() { this.categoryCounts = {}; this.consecutiveCorrect = 0; this.consecutiveWrong = 0; this.smartDifficulty = this.baseMode; },
+  getEffectiveMode() {
+    if (!this.isSmartMode) return this.baseMode;
+    return this.smartDifficulty;
+  },
+  reset() {
+    this.categoryCounts = {};
+    this.consecutiveCorrect = 0;
+    this.consecutiveWrong = 0;
+    this.smartDifficulty = this.baseMode;
+  },
 };
 
 function updateDifficultyButtons(mode) {
@@ -442,53 +607,82 @@ function updateSmartBadge(mode) {
 function updateDiffModeLabel(mode) {
   const label = document.getElementById("diffModeText");
   if (!label) return;
-  const modeInfo = { easy: "সরল লেনদেন", medium: "বাস্তব লেনদেন", hard: "উন্নত লেনদেন" };
+  const modeInfo = {
+    easy: "সরল লেনদেন",
+    medium: "বাস্তব লেনদেন",
+    hard: "উন্নত লেনদেন",
+  };
   label.textContent = modeInfo[mode] || "সরল লেনদেন";
 }
 
 function showModeChangeToast(newMode) {
   const modeNames = { easy: "Easy", medium: "Medium", hard: "Hard" };
-  const modeDesc = { easy: "সরল লেনদেন", medium: "বাস্তব লেনদেন", hard: "উন্নত লেনদেন" };
-  showToast(`🔄 Smart Mode: ${modeNames[newMode]}`, `Level switched to ${modeNames[newMode]} — ${modeDesc[newMode]}`, "fa-arrow-right", "gain");
+  const modeDesc = {
+    easy: "সরল লেনদেন",
+    medium: "বাস্তব লেনদেন",
+    hard: "উন্নত লেনদেন",
+  };
+  showToast(
+    `🔄 Smart Mode: ${modeNames[newMode]}`,
+    `Level switched to ${modeNames[newMode]} — ${modeDesc[newMode]}`,
+    "fa-arrow-right",
+    "gain",
+  );
 }
 
 // ================================================================
-// 7. BADGES (TOTAL 137)
+// 7. BADGES (TOTAL 100)
 // ================================================================
 
 const ALL_BADGES = [
+  // Leaderboard (n1-n4)
   { id: "n1", icon: "👑", name: "Leaderboard XP King" },
   { id: "n2", icon: "🏅", name: "Leaderboard Points Pro" },
   { id: "n3", icon: "🎯", name: "Leaderboard Accuracy Ace" },
   { id: "n4", icon: "🏆", name: "Leaderboard Badge Collector" },
+  // Javeda / Learn (n5-n6)
   { id: "n5", icon: "📚", name: "Javeda Explorer" },
   { id: "n6", icon: "📖", name: "Learner" },
+  // Hints (n7-n8)
   { id: "n7", icon: "💡", name: "Hint Hoarder" },
   { id: "n8", icon: "💡", name: "Hint Master" },
+  // New: Bring a Friend (n9) and Rapid Thinker (n10)
   { id: "n9", icon: "🤝", name: "Bring a Friend" },
   { id: "n10", icon: "⚡", name: "Rapid Thinker" },
+  // Speed & Marathon (n11-n12)
   { id: "n11", icon: "⚡", name: "Quick Learner" },
   { id: "n12", icon: "🏃", name: "Marathon Runner" },
+  // NEW: h3 (Experienced), h4 (Associate), h1 (Timed Warrior), h2 (Balanced Accountant)
   { id: "h3", icon: "🎯", name: "Experienced" },
   { id: "h4", icon: "🤝", name: "Associate" },
+  // Revision (n15-n16)
   { id: "n15", icon: "🔄", name: "Revision King" },
   { id: "n16", icon: "🔄", name: "Revision Master" },
+  // Timer (n17-n18)
   { id: "n17", icon: "⏱️", name: "Timer Survivor" },
   { id: "n18", icon: "⏱️", name: "Timer Legend" },
+  // Smart (n19-n20)
   { id: "n19", icon: "🧠", name: "Smart Learner" },
   { id: "n20", icon: "🧠", name: "Smart Guru" },
+  // Wealth (n21-n22)
   { id: "n21", icon: "💰", name: "Coin Millionaire" },
   { id: "n22", icon: "💎", name: "Ruby Baron" },
-  { id: "n23", icon: "🛡️", name: "Streak Guardian" },
+  // Boosters (n23-n25)
+  { id: "n23", icon: "🛡️", name: "Streak Protector" },
   { id: "n24", icon: "⚡", name: "Point Booster Fan" },
   { id: "n25", icon: "🪙", name: "Coin Booster Fan" },
+  // Accountant (n26-n28)
   { id: "n26", icon: "📊", name: "Accountant Pro" },
   { id: "n27", icon: "🏅", name: "Ultimate Journal Master" },
   { id: "n28", icon: "👑", name: "Journal Legend" },
+  // NEW: h1 (Timed Warrior) replaces b17
   { id: "h1", icon: "⚔️", name: "Timed Warrior" },
+  // NEW: h2 (Balanced Accountant) replaces b34
   { id: "h2", icon: "⚖️", name: "Balanced Accountant" },
+  // Debit/Credit starters (b3-b4)
   { id: "b3", icon: "💳", name: "Debit Starter" },
   { id: "b4", icon: "💳", name: "Credit Starter" },
+  // Progression (b5, b7-b11, b35-b37, b63)
   { id: "b5", icon: "🔥", name: "Warmed Up" },
   { id: "b7", icon: "📓", name: "Journal Rookie" },
   { id: "b8", icon: "🗺️", name: "Accounting Explorer" },
@@ -499,22 +693,26 @@ const ALL_BADGES = [
   { id: "b36", icon: "🥈", name: "500 Questions" },
   { id: "b37", icon: "🥇", name: "1000 Questions" },
   { id: "b63", icon: "📚", name: "2000 Questions" },
+  // Accuracy (b13-b14, b42-b43)
   { id: "b13", icon: "🧠", name: "Sharp Mind" },
   { id: "b14", icon: "🎯", name: "Precision Player" },
   { id: "b42", icon: "🧠", name: "Financial Brain" },
   { id: "b43", icon: "🔍", name: "Error Hunter" },
+  // Streak (b16, b18-b22)
   { id: "b16", icon: "💎", name: "Flawless Brain" },
   { id: "b18", icon: "🔥", name: "Streak 5x" },
   { id: "b19", icon: "🔥", name: "Streak 10x" },
   { id: "b20", icon: "🔥", name: "Streak 25x" },
   { id: "b21", icon: "🔥", name: "Streak 50x" },
   { id: "b22", icon: "👑", name: "Streak King" },
+  // Category Experts (b23-b28)
   { id: "b23", icon: "🏦", name: "Asset Expert" },
   { id: "b24", icon: "📉", name: "Liability Genius" },
   { id: "b25", icon: "💰", name: "Capital Controller" },
   { id: "b26", icon: "📈", name: "Revenue Master" },
   { id: "b27", icon: "💸", name: "Expense Specialist" },
   { id: "b28", icon: "✏️", name: "Drawing Handler" },
+  // Other (b29-b33, b44, b46, b86-b88, b93-b99)
   { id: "b29", icon: "🔧", name: "Rule Breaker" },
   { id: "b30", icon: "⚖️", name: "Balance Thinker" },
   { id: "b31", icon: "⚡", name: "Fast Decision" },
@@ -526,145 +724,182 @@ const ALL_BADGES = [
   { id: "b87", icon: "⭐", name: "5-Star Performer" },
   { id: "b88", icon: "🎖️", name: "Dedicated Scholar" },
   { id: "b93", icon: "🤝", name: "Collaborator" },
-  { id: "b94", icon: "🎓", name: "Skilled Learner" },
+  { id: "b94", icon: "🎓", name: "Scholar" },
   { id: "b95", icon: "📈", name: "Rising Star" },
   { id: "b96", icon: "🌟", name: "Shining Star" },
   { id: "b97", icon: "✨", name: "Legendary" },
   { id: "b98", icon: "👑", name: "Royal Accountant" },
   { id: "b99", icon: "💼", name: "Finance Pro" },
+  // Timer specific (b55-b59)
   { id: "b55", icon: "⏱️", name: "Timer Novice" },
   { id: "b56", icon: "⏱️", name: "Timer Adept" },
   { id: "b57", icon: "⏱️", name: "Timer Master" },
   { id: "b58", icon: "⏱️", name: "Speed Demon (5s)" },
   { id: "b59", icon: "⏱️", name: "Quick Thinker (10s)" },
+  // Coin/Ruby Tycoon (b70-b73)
   { id: "b70", icon: "💎", name: "Ruby Tycoon (500)" },
   { id: "b71", icon: "🪙", name: "Coin Collector (1000)" },
   { id: "b72", icon: "🪙", name: "Coin Hoarder (5000)" },
   { id: "b73", icon: "🪙", name: "Coin Tycoon (10000)" },
+  // Ultimate (b50, b51)
   { id: "b50", icon: "👑", name: "Ultimate Accountant" },
   { id: "b51", icon: "🏆", name: "Top 10 Leaderboard" },
+  // Level (b74-b76)
   { id: "b74", icon: "⬆️", name: "Level 20" },
   { id: "b75", icon: "⬆️", name: "Level 50" },
   { id: "b76", icon: "⬆️", name: "Level 100" },
+  // Smart usage (b77-b78)
   { id: "b77", icon: "🧠", name: "Smart User (100)" },
   { id: "b78", icon: "🧠", name: "Smart Master (500)" },
+  // Revision correct (b79-b80)
   { id: "b79", icon: "🔄", name: "Revise 50" },
   { id: "b80", icon: "🔄", name: "Revise 100" },
+  // Booster usage (b81-b83)
   { id: "b81", icon: "⚡", name: "Point Booster x10" },
   { id: "b82", icon: "🪙", name: "Coin Booster x10" },
   { id: "b83", icon: "🛡️", name: "Streak Protector x10" },
+  // Additional
   { id: "b38", icon: "🏆", name: "Accounting Pro" },
   { id: "b39", icon: "🏆", name: "Debit-Credit Champ" },
   { id: "b40", icon: "👼", name: "Journal God" },
-  // NEW (38)
-  { id: "j30", icon: "🎓", name: "Scholar" },
-  { id: "bf10", icon: "👥", name: "Bring More Friend" },
-  { id: "ew", icon: "✨", name: "Entry Wizard" },
-  { id: "q5k", icon: "🏆", name: "5000 Questions" },
-  { id: "asg", icon: "🏦", name: "Asset Genius" },
-  { id: "lsp", icon: "📉", name: "Liability Specialist" },
-  { id: "cpg", icon: "💰", name: "Capital Genius" },
-  { id: "rvg", icon: "📈", name: "Revenue Genius" },
-  { id: "exg", icon: "💸", name: "Expense Genius" },
-  { id: "drg", icon: "✏️", name: "Drawing Genius" },
-  { id: "m5t", icon: "⏱️", name: "Mid Speedster" },
-  { id: "m10t", icon: "⏱️", name: "Mid Timer" },
-  { id: "h5t", icon: "⚡", name: "Hard Speedster" },
-  { id: "h10t", icon: "⏱️", name: "Hard Timer" },
-  { id: "swm", icon: "🧠", name: "Smart Switcher" },
-  { id: "swh", icon: "🚀", name: "Pro Switcher" },
-  { id: "smc", icon: "👑", name: "Smart Champ" },
-  { id: "inm", icon: "⚡", name: "Instant Mind" },
-  { id: "sht", icon: "🎯", name: "Sharp Thinker" },
-  { id: "spm", icon: "🏃", name: "Speed Master" },
-  { id: "pfr", icon: "💯", name: "Perfect Runner" },
-  { id: "enp", icon: "🏅", name: "Endurance Pro" },
-  { id: "cns", icon: "🪙", name: "Coin Spender" },
-  { id: "rbs", icon: "💎", name: "Ruby Spender" },
-  { id: "shp", icon: "🛒", name: "Smart Shopper" },
-  { id: "rsh", icon: "🛍️", name: "Ruby Shopper" },
-  { id: "pwr", icon: "💪", name: "Power Buyer" },
-  { id: "cni", icon: "🪙", name: "Coin Investor" },
-  { id: "rbi", icon: "💎", name: "Ruby Investor" },
-  { id: "bgs", icon: "💸", name: "Big Spender" },
-  { id: "phb", icon: "🎁", name: "Perfect Hint Buyer" },
-  { id: "pkb", icon: "👝", name: "Pocket Buyer" },
-  { id: "cpb", icon: "🪙", name: "Coin Piler" },
-  { id: "ccb", icon: "💰", name: "Coin Bag Buyer" },
-  { id: "bst", icon: "⚡", name: "Booster Buyer" },
-  { id: "cbbs", icon: "🪙", name: "Coin Booster Buyer" },
-  { id: "sts", icon: "🛡️", name: "Streak Saver" },
-  { id: "stp", icon: "🛡️", name: "Streak Protector" },
 ];
+
+// ================================================================
+// BADGE GROUPS (Topic-wise categorization for collapsible UI)
+// ================================================================
 
 const BADGE_GROUPS = [
-  { id: "leaderboard", name: "Leaderboard", icon: "🏆", badgeIds: ["n1", "n2", "n3", "n4", "b51"] },
-  { id: "learning", name: "Learning & Sharing", icon: "📚", badgeIds: ["n5", "n6", "j30", "n9", "bf10"] },
-  { id: "milestones", name: "Question Milestones", icon: "📝", badgeIds: ["b33", "b5", "b7", "b8", "b9", "b10", "b11", "ew", "b35", "b36", "b37", "b63", "q5k", "b93", "enp"] },
-  { id: "streaks", name: "Streaks", icon: "🔥", badgeIds: ["b18", "b19", "b16", "b20", "b21", "b22", "pfr"] },
-  { id: "accuracy", name: "Accuracy", icon: "🎯", badgeIds: ["b13", "b14", "b42", "b43", "b30"] },
-  { id: "category", name: "Category Experts", icon: "💼", badgeIds: ["b23", "b24", "b25", "b26", "b27", "b28", "asg", "lsp", "cpg", "rvg", "exg", "drg"] },
-  { id: "timer", name: "Timer Mode", icon: "⏱️", badgeIds: ["b55", "b56", "b57", "b58", "b59", "n17", "n18", "n10", "h1", "m5t", "m10t", "h5t", "h10t"] },
-  { id: "smart", name: "Smart Mode", icon: "🧠", badgeIds: ["b46", "n19", "b77", "n20", "b78", "swm", "swh", "smc"] },
-  { id: "revision", name: "Revision", icon: "🔄", badgeIds: ["n15", "b79", "b80", "n16"] },
-  { id: "speed", name: "Speed & Focus", icon: "⚡", badgeIds: ["b31", "b32", "n11", "b44", "n12", "inm", "sht", "spm"] },
-  { id: "wealth", name: "Wealth", icon: "💰", badgeIds: ["b71", "b72", "b73", "n21", "b70", "n22", "b99"] },
-  { id: "boosters", name: "Boosters", icon: "🚀", badgeIds: ["n23", "b83", "n24", "b81", "n25", "b82"] },
-  { id: "spending", name: "Spending & Shopping", icon: "🛒", badgeIds: ["cns", "rbs", "shp", "rsh", "pwr", "cni", "rbi", "bgs"] },
-  { id: "shop-purchases", name: "Shop Purchases", icon: "🎁", badgeIds: ["phb", "pkb", "cpb", "ccb", "bst", "cbbs", "sts", "stp"] },
-  { id: "levels", name: "Levels & XP", icon: "📈", badgeIds: ["h3", "b38", "b74", "b75", "b76"] },
-  { id: "hints", name: "Hints", icon: "💡", badgeIds: ["n7", "n8"] },
-  { id: "mastery", name: "Mastery & Elite", icon: "👑", badgeIds: ["b3", "b4", "h4", "b29", "b39", "b40", "b50", "h2", "b86", "b87", "b88", "b94", "b95", "b96", "b97", "b98", "n26", "n27", "n28"] },
+  {
+    id: "leaderboard",
+    name: "Leaderboard",
+    icon: "🏆",
+    badgeIds: ["n1", "n2", "n3", "n4", "b51"],
+  },
+  {
+    id: "learning",
+    name: "Learning & Sharing",
+    icon: "📚",
+    badgeIds: ["n5", "n6", "n9"],
+  },
+  {
+    id: "milestones",
+    name: "Question Milestones",
+    icon: "📝",
+    badgeIds: ["b33", "b5", "b7", "b8", "b9", "b10", "b11", "b35", "b36", "b37", "b63", "b93"],
+  },
+  {
+    id: "streaks",
+    name: "Streaks",
+    icon: "🔥",
+    badgeIds: ["b18", "b19", "b16", "b20", "b21", "b22"],
+  },
+  {
+    id: "accuracy",
+    name: "Accuracy",
+    icon: "🎯",
+    badgeIds: ["b13", "b14", "b42", "b43", "b30"],
+  },
+  {
+    id: "category",
+    name: "Category Experts",
+    icon: "💼",
+    badgeIds: ["b23", "b24", "b25", "b26", "b27", "b28"],
+  },
+  {
+    id: "timer",
+    name: "Timer Mode",
+    icon: "⏱️",
+    badgeIds: ["b55", "b56", "b57", "b58", "b59", "n17", "n18", "n10", "h1"],
+  },
+  {
+    id: "smart",
+    name: "Smart Mode",
+    icon: "🧠",
+    badgeIds: ["b46", "n19", "b77", "n20", "b78"],
+  },
+  {
+    id: "revision",
+    name: "Revision",
+    icon: "🔄",
+    badgeIds: ["n15", "b79", "b80", "n16"],
+  },
+  {
+    id: "speed",
+    name: "Speed & Focus",
+    icon: "⚡",
+    badgeIds: ["b31", "b32", "n11", "b44", "n12"],
+  },
+  {
+    id: "wealth",
+    name: "Wealth (Coins & Rubies)",
+    icon: "💰",
+    badgeIds: ["b71", "b72", "b73", "n21", "b70", "n22", "b99"],
+  },
+  {
+    id: "boosters",
+    name: "Boosters",
+    icon: "🚀",
+    badgeIds: ["n23", "b83", "n24", "b81", "n25", "b82"],
+  },
+  {
+    id: "levels",
+    name: "Levels & XP",
+    icon: "📈",
+    badgeIds: ["h3", "b38", "b74", "b75", "b76"],
+  },
+  {
+    id: "hints",
+    name: "Hints",
+    icon: "💡",
+    badgeIds: ["n7", "n8"],
+  },
+  {
+    id: "mastery",
+    name: "Mastery & Elite",
+    icon: "👑",
+    badgeIds: [
+      "b3", "b4", "h4", "b29", "b39", "b40", "b50", "h2",
+      "b86", "b87", "b88", "b94", "b95", "b96", "b97", "b98",
+      "n26", "n27", "n28",
+    ],
+  },
 ];
-
-// ================================================================
-// ⭐⭐⭐ CRITICAL FIX: Helper — get category counts (max of both sources)
-// ================================================================
-function getCategoryCounts(stats) {
-  const result = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
-  // Source A: persistent counter (preferred)
-  if (stats.categoryCorrectCounts) {
-    for (const cat in result) {
-      result[cat] = Math.max(result[cat], stats.categoryCorrectCounts[cat] || 0);
-    }
-  }
-  // Source B: quizHistory fallback (last 200 entries)
-  if (Array.isArray(stats.quizHistory)) {
-    const hist = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
-    for (const h of stats.quizHistory) {
-      if (h.userAnswer === h.correctAnswer && hist[h.type] !== undefined) hist[h.type]++;
-    }
-    for (const cat in result) result[cat] = Math.max(result[cat], hist[cat]);
-  }
-  return result;
-}
 
 function checkBadges(stats) {
   const earned = [];
   const total = stats.correct + stats.wrong;
   const acc = total > 0 ? stats.correct / total : 0;
   const accPct = Math.round(acc * 100);
-  const typeCounts = getCategoryCounts(stats);
+  const typeCounts = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
+  if (stats.quizHistory) {
+    for (const h of stats.quizHistory) {
+      if (h.userAnswer === h.correctAnswer) {
+        if (typeCounts[h.type] !== undefined) typeCounts[h.type]++;
+      }
+    }
+  }
   const totalBadges = (stats.earnedBadges || []).length;
   const isLoggedIn = auth.currentUser !== null;
-  // ⭐ FIX: Use hintsPurchased instead of current balance
-  const hintsTotal = Math.max(stats.hintsPurchased || 0, stats.hints || 0);
 
-  // h1-h4
-  if (stats.timerQuestionsCompleted >= 500) earned.push("h1");
+  // ----- NEW BADGES (h1, h2, h3, h4) -----
+  if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 500) earned.push("h1");
   let all100 = true;
-  for (const cat of ['asset','liability','capital','revenue','expense','drawing']) if ((typeCounts[cat] || 0) < 100) { all100 = false; break; }
+  for (const cat of ['asset','liability','capital','revenue','expense','drawing']) {
+    if ((typeCounts[cat] || 0) < 100) { all100 = false; break; }
+  }
   if (all100) earned.push("h2");
   if (stats.xp >= 3000) earned.push("h3");
   if (isLoggedIn) earned.push("h4");
 
-  // n9 / n10
-  if (stats.shared >= 1) earned.push("n9");
+  // ----- NEW n9: Bring a Friend -----
+  if (stats.shared && stats.shared >= 1) earned.push("n9");
+
+  // ----- NEW n10: Rapid Thinker -----
   if ((stats.timer5sCompleted || 0) >= 500 && (stats.timer10sCompleted || 0) >= 500) earned.push("n10");
 
-  // Existing badges
-  if (stats.correct >= 1 && stats.quizHistory?.some(h => h.correctAnswer === "debit" && h.userAnswer === "debit")) earned.push("b3");
-  if (stats.correct >= 1 && stats.quizHistory?.some(h => h.correctAnswer === "credit" && h.userAnswer === "credit")) earned.push("b4");
+  // ----- Existing badges -----
+  if (stats.correct >= 1 && stats.quizHistory && stats.quizHistory.some(h => h.correctAnswer === "debit" && h.userAnswer === "debit")) earned.push("b3");
+  if (stats.correct >= 1 && stats.quizHistory && stats.quizHistory.some(h => h.correctAnswer === "credit" && h.userAnswer === "credit")) earned.push("b4");
   if (stats.correct >= 5) earned.push("b5");
   if (stats.correct >= 10) earned.push("b7");
   if (stats.correct >= 25) earned.push("b8");
@@ -685,10 +920,10 @@ function checkBadges(stats) {
   if (typeCounts.revenue >= 10) earned.push("b26");
   if (typeCounts.expense >= 10) earned.push("b27");
   if (typeCounts.drawing >= 5) earned.push("b28");
-  if (stats.ruleBreakerCount >= 1) earned.push("b29");
+  if (stats.ruleBreakerCount && stats.ruleBreakerCount >= 1) earned.push("b29");
   if (stats.correct >= 15) earned.push("b30");
-  if (stats.fastAnswers >= 1) earned.push("b31");
-  if (stats.fastAnswers >= 10) earned.push("b32");
+  if (stats.fastAnswers && stats.fastAnswers >= 1) earned.push("b31");
+  if (stats.fastAnswers && stats.fastAnswers >= 10) earned.push("b32");
   if (stats.correct >= 1) earned.push("b33");
   if (total >= 100) earned.push("b35");
   if (total >= 500) earned.push("b36");
@@ -698,14 +933,14 @@ function checkBadges(stats) {
   if (stats.correct >= 1000) earned.push("b40");
   if (accPct >= 95 && total >= 100) earned.push("b42");
   if (stats.wrong > 0 && stats.wrong / total < 0.1 && total >= 20) earned.push("b43");
-  if (stats.focusCount >= 20) earned.push("b44");
-  if (stats.smartModeCount >= 50) earned.push("b46");
+  if (stats.focusCount && stats.focusCount >= 20) earned.push("b44");
+  if (stats.smartModeCount && stats.smartModeCount >= 50) earned.push("b46");
   if (stats.correct >= 5000) earned.push("b50");
-  if (stats.timerQuestionsCompleted >= 10) earned.push("b55");
-  if (stats.timerQuestionsCompleted >= 50) earned.push("b56");
-  if (stats.timerQuestionsCompleted >= 100) earned.push("b57");
-  if (stats.timer5sCompleted >= 50) earned.push("b58");
-  if (stats.timer10sCompleted >= 50) earned.push("b59");
+  if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 10) earned.push("b55");
+  if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 50) earned.push("b56");
+  if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 100) earned.push("b57");
+  if (stats.timer5sCompleted && stats.timer5sCompleted >= 50) earned.push("b58");
+  if (stats.timer10sCompleted && stats.timer10sCompleted >= 50) earned.push("b59");
   if (total >= 2000) earned.push("b63");
   if (stats.rubies >= 500) earned.push("b70");
   if (stats.coins >= 1000) earned.push("b71");
@@ -714,17 +949,17 @@ function checkBadges(stats) {
   if (stats.level >= 20) earned.push("b74");
   if (stats.level >= 50) earned.push("b75");
   if (stats.level >= 100) earned.push("b76");
-  if (stats.smartModeCount >= 100) earned.push("b77");
-  if (stats.smartModeCount >= 500) earned.push("b78");
-  if (stats.revisionCorrect >= 50) earned.push("b79");
-  if (stats.revisionCorrect >= 100) earned.push("b80");
-  if (stats.pointBoosterUsed >= 10) earned.push("b81");
-  if (stats.coinBoosterUsed >= 10) earned.push("b82");
-  if (stats.streakBoosterUsed >= 10) earned.push("b83");
+  if (stats.smartModeCount && stats.smartModeCount >= 100) earned.push("b77");
+  if (stats.smartModeCount && stats.smartModeCount >= 500) earned.push("b78");
+  if (stats.revisionCorrect && stats.revisionCorrect >= 50) earned.push("b79");
+  if (stats.revisionCorrect && stats.revisionCorrect >= 100) earned.push("b80");
+  if (stats.pointBoosterUsed && stats.pointBoosterUsed >= 10) earned.push("b81");
+  if (stats.coinBoosterUsed && stats.coinBoosterUsed >= 10) earned.push("b82");
+  if (stats.streakBoosterUsed && stats.streakBoosterUsed >= 10) earned.push("b83");
   if (accPct >= 80 && total >= 200 && stats.bestStreak >= 50) earned.push("b86");
   if (accPct >= 90 && total >= 500 && stats.bestStreak >= 100) earned.push("b87");
   if (total >= 1000 && stats.correct / total >= 0.7) earned.push("b88");
-  if ((stats.quizHistory?.length || 0) >= 100) earned.push("b93");
+  if (stats.quizHistory && stats.quizHistory.length >= 100) earned.push("b93");
   if (stats.level >= 15 && accPct >= 75) earned.push("b94");
   if (stats.correct >= 1000 && accPct >= 80) earned.push("b95");
   if (stats.correct >= 2000) earned.push("b96");
@@ -732,111 +967,83 @@ function checkBadges(stats) {
   if (stats.correct >= 5000) earned.push("b98");
   if (stats.coins >= 5000 && stats.rubies >= 200) earned.push("b99");
 
-  // n5-n28
-  if (stats.javedaClicks >= 1) earned.push("n5");
-  if (stats.javedaClicks >= 5) earned.push("n6");
-  // ⭐ FIX: n7/n8 use hintsTotal (purchased), not current balance
-  if (hintsTotal >= 300) earned.push("n7");
-  if (hintsTotal >= 500) earned.push("n8");
-  if (stats.fastAnswers >= 100) earned.push("n11");
-  if (stats.sessionQuestions >= 50) earned.push("n12");
-  if (stats.revisionCorrect >= 50) earned.push("n15");
-  if (stats.revisionCorrect >= 200) earned.push("n16");
-  if (stats.timerQuestionsCompleted >= 50) earned.push("n17");
-  if (stats.timerQuestionsCompleted >= 200) earned.push("n18");
-  if (stats.smartModeCount >= 100) earned.push("n19");
-  if (stats.smartModeCount >= 500) earned.push("n20");
+  // n5-n28 badges
+  if (stats.javedaClicks && stats.javedaClicks >= 1) earned.push("n5");
+  if (stats.javedaClicks && stats.javedaClicks >= 5) earned.push("n6");
+  if (stats.hints && stats.hints >= 300) earned.push("n7");
+  if (stats.hints && stats.hints >= 500) earned.push("n8");
+  if (stats.fastAnswers && stats.fastAnswers >= 100) earned.push("n11");
+  if (stats.sessionQuestions && stats.sessionQuestions >= 50) earned.push("n12");
+  if (stats.revisionCorrect && stats.revisionCorrect >= 50) earned.push("n15");
+  if (stats.revisionCorrect && stats.revisionCorrect >= 200) earned.push("n16");
+  if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 50) earned.push("n17");
+  if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 200) earned.push("n18");
+  if (stats.smartModeCount && stats.smartModeCount >= 100) earned.push("n19");
+  if (stats.smartModeCount && stats.smartModeCount >= 500) earned.push("n20");
   if (stats.coins >= 10000) earned.push("n21");
   if (stats.rubies >= 200) earned.push("n22");
-  if (stats.streakBoosterUsed >= 10) earned.push("n23");
-  if (stats.pointBoosterUsed >= 10) earned.push("n24");
-  if (stats.coinBoosterUsed >= 10) earned.push("n25");
-  const all50 = ['asset','liability','capital','revenue','expense','drawing'].every(c => (typeCounts[c] || 0) >= 50);
+  if (stats.streakBoosterUsed && stats.streakBoosterUsed >= 10) earned.push("n23");
+  if (stats.pointBoosterUsed && stats.pointBoosterUsed >= 10) earned.push("n24");
+  if (stats.coinBoosterUsed && stats.coinBoosterUsed >= 10) earned.push("n25");
+  const allCategories = ["asset", "liability", "capital", "revenue", "expense", "drawing"];
+  let all50 = true;
+  for (const cat of allCategories) {
+    if ((typeCounts[cat] || 0) < 50) { all50 = false; break; }
+  }
   if (all50) earned.push("n26");
   if (totalBadges >= 50) earned.push("n27");
   if (totalBadges >= 75) earned.push("n28");
-
-  // NEW badge checks
-  if (stats.javedaClicks >= 30) earned.push("j30");
-  if (stats.shared >= 10) earned.push("bf10");
-  if (stats.correct >= 500) earned.push("ew");
-  if (total >= 5000) earned.push("q5k");
-  if (typeCounts.asset >= 100) earned.push("asg");
-  if (typeCounts.liability >= 100) earned.push("lsp");
-  if (typeCounts.capital >= 100) earned.push("cpg");
-  if (typeCounts.revenue >= 100) earned.push("rvg");
-  if (typeCounts.expense >= 100) earned.push("exg");
-  if (typeCounts.drawing >= 5) earned.push("drg");
-  if ((stats.medium5sCompleted || 0) >= 100) earned.push("m5t");
-  if ((stats.medium10sCompleted || 0) >= 100) earned.push("m10t");
-  if ((stats.hard5sCompleted || 0) >= 100) earned.push("h5t");
-  if ((stats.hard10sCompleted || 0) >= 100) earned.push("h10t");
-  if ((stats.autoSwitchToMedium || 0) >= 1) earned.push("swm");
-  if ((stats.autoSwitchToHard || 0) >= 1) earned.push("swh");
-  if (stats.reachedHardInSmart) earned.push("smc");
-  if (stats.fastAnswers >= 1000) earned.push("inm");
-  if ((stats.fastAnswers2s || 0) >= 10) earned.push("sht");
-  if (stats.focusCount >= 200) earned.push("spm");
-  if (stats.bestStreak >= 20) earned.push("pfr");
-  if (stats.sessionQuestions >= 100) earned.push("enp");
-  if ((stats.coinsSpent || 0) >= 200) earned.push("cns");
-  if ((stats.rubiesSpent || 0) >= 200) earned.push("rbs");
-  if ((stats.coinPurchaseCount || 0) >= 5) earned.push("shp");
-  if ((stats.rubyPurchaseCount || 0) >= 5) earned.push("rsh");
-  if ((stats.maxSingleCoinSpend || 0) >= 100) earned.push("pwr");
-  if ((stats.coinsSpent || 0) >= 500) earned.push("cni");
-  if ((stats.rubiesSpent || 0) >= 500) earned.push("rbi");
-  if ((stats.coinsSpent || 0) >= 10000 && (stats.rubiesSpent || 0) >= 5000) earned.push("bgs");
-  if ((stats.hintPackSingle || 0) >= 50 && (stats.hintPackStarter || 0) >= 20 && (stats.hintPackPro || 0) >= 10 && (stats.hintPackMaster || 0) >= 5) earned.push("phb");
-  if ((stats.coinPackPocket || 0) >= 5) earned.push("pkb");
-  if ((stats.coinPackPile || 0) >= 5) earned.push("cpb");
-  if ((stats.coinPackBag || 0) >= 5) earned.push("ccb");
-  if ((stats.pointBoosterUsed || 0) >= 5) earned.push("bst");
-  if ((stats.coinBoosterUsed || 0) >= 5) earned.push("cbbs");
-  if ((stats.streakBoosterUsed || 0) >= 5) earned.push("sts");
-  if ((stats.streakProtectedCount || 0) >= 5) earned.push("stp");
 
   return [...new Set(earned)];
 }
 
 // ================================================================
-// 7.5. BADGE DETAILS
+// 7.5. BADGE DETAILS & PROGRESS
 // ================================================================
 
 function getBadgeDetails(badgeId, stats) {
   const total = stats.correct + stats.wrong;
   const acc = total > 0 ? stats.correct / total : 0;
   const accPct = Math.round(acc * 100);
-  const typeCounts = getCategoryCounts(stats);
+
+  const typeCounts = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
+  if (stats.quizHistory) {
+    for (const h of stats.quizHistory) {
+      if (h.userAnswer === h.correctAnswer) {
+        if (typeCounts[h.type] !== undefined) typeCounts[h.type]++;
+      }
+    }
+  }
   const totalBadges = (stats.earnedBadges || []).length;
-  const hintsTotal = Math.max(stats.hintsPurchased || 0, stats.hints || 0);
 
   function item(current, target, label, icon = "") {
     const pct = Math.min(100, Math.round((current / target) * 100));
     return { current, target, pct, label, icon };
   }
-  function catItems(target, cap) {
-    const arr = [];
-    for (const cat of ['asset','liability','capital','revenue','expense','drawing']) {
-      const count = typeCounts[cat] || 0;
-      arr.push(item(Math.min(cap || target, count), target, cat.charAt(0).toUpperCase() + cat.slice(1)));
-    }
-    return arr;
-  }
 
   switch (badgeId) {
-    case 'n1': return { description: "Reach Top 3 in XP Leaderboard.", items: [] };
-    case 'n2': return { description: "Reach Top 3 in Points Leaderboard.", items: [] };
-    case 'n3': return { description: "Reach Top 5 in Accuracy Leaderboard.", items: [] };
-    case 'n4': return { description: "Reach Top 2 in Badges Leaderboard.", items: [] };
-    case 'b51': return { description: "Reach Top 10 in any Leaderboard.", items: [] };
+    // Leaderboard — Updated descriptions with correct conditions
+    case 'n1':
+      return { description: "XP Leaderboard এ Top 3 এ পৌঁছান।", items: [] };
+    case 'n2':
+      return { description: "Points Leaderboard এ Top 3 এ পৌঁছান।", items: [] };
+    case 'n3':
+      return { description: "Accuracy Leaderboard এ Top 5 এ পৌঁছান।", items: [] };
+    case 'n4':
+      return { description: "Badges Leaderboard এ Top 2 এ পৌঁছান।", items: [] };
+    case 'b51':
+      return { description: "যেকোনো Leaderboard এ Top 10 এ পৌঁছান।", items: [] };
+
+    // Single condition
     case 'n5': return { description: "Click the 'Learn Javeda' button 1 time.", items: [item(stats.javedaClicks || 0, 1, "Clicks")] };
     case 'n6': return { description: "Click the 'Learn Javeda' button 5 times.", items: [item(stats.javedaClicks || 0, 5, "Clicks")] };
-    // ⭐ FIX: use hintsTotal
-    case 'n7': return { description: "Purchase 300 hints in total.", items: [item(hintsTotal, 300, "Total hints purchased")] };
-    case 'n8': return { description: "Purchase 500 hints in total.", items: [item(hintsTotal, 500, "Total hints purchased")] };
-    case 'n9': return { description: "Share the website with a friend (click the Share button).", items: [item(stats.shared || 0, 1, "Shares")] };
-    case 'n10': return { description: "Complete 500 Timer Mode questions with 5s timer AND 500 with 10s timer.", items: [item(stats.timer5sCompleted || 0, 500, "5s Timer correct"), item(stats.timer10sCompleted || 0, 500, "10s Timer correct")] };
+    case 'n7': return { description: "Gather 300 hints in total.", items: [item(stats.hints || 0, 300, "Hints gathered")] };
+    case 'n8': return { description: "Gather 500 hints in total.", items: [item(stats.hints || 0, 500, "Hints gathered")] };
+    case 'n9': return { description: "Share the website with a friend (click the Share button).", items: [] };
+    case 'n10': return { description: "Complete 500 Timer Mode questions with 5-second timer AND 500 with 10-second timer.", items: [
+        item(stats.timer5sCompleted || 0, 500, "5s Timer correct"),
+        item(stats.timer10sCompleted || 0, 500, "10s Timer correct")
+      ] };
     case 'n11': return { description: "Answer 100 questions within 3 seconds each.", items: [item(stats.fastAnswers || 0, 100, "Fast answers")] };
     case 'n12': return { description: "Answer 50 questions in a single session.", items: [item(stats.sessionQuestions || 0, 50, "Session questions")] };
     case 'n15': return { description: "Correctly answer 50 revision questions.", items: [item(stats.revisionCorrect || 0, 50, "Revision correct")] };
@@ -850,13 +1057,31 @@ function getBadgeDetails(badgeId, stats) {
     case 'n23': return { description: "Use the Streak Protector booster 10 times.", items: [item(stats.streakBoosterUsed || 0, 10, "Streak Protector used")] };
     case 'n24': return { description: "Use the Point Booster 10 times.", items: [item(stats.pointBoosterUsed || 0, 10, "Point Booster used")] };
     case 'n25': return { description: "Use the Coin Booster 10 times.", items: [item(stats.coinBoosterUsed || 0, 10, "Coin Booster used")] };
-    case 'n26': return { description: "Correctly answer 50 questions in each of the 6 account categories.", items: catItems(50, 50) };
+    case 'n26': {
+      const catItems = [];
+      for (const cat of ['asset','liability','capital','revenue','expense','drawing']) {
+        const count = typeCounts[cat] || 0;
+        catItems.push(item(Math.min(50, count), 50, cat.charAt(0).toUpperCase() + cat.slice(1)));
+      }
+      return { description: "Correctly answer 50 questions in each of the 6 account categories.", items: catItems };
+    }
     case 'n27': return { description: "Earn 50 total badges.", items: [item(totalBadges, 50, "Badges earned")] };
     case 'n28': return { description: "Earn 75 total badges.", items: [item(totalBadges, 75, "Badges earned")] };
+
+    // NEW BADGES
     case 'h1': return { description: "Get 500 correct answers in Timer Mode.", items: [item(stats.timerQuestionsCompleted || 0, 500, "Timer correct answers")] };
-    case 'h2': return { description: "Correctly answer 100 questions in each of the 6 account categories.", items: catItems(100, 100) };
+    case 'h2': {
+      const catItems = [];
+      for (const cat of ['asset','liability','capital','revenue','expense','drawing']) {
+        const count = typeCounts[cat] || 0;
+        catItems.push(item(Math.min(100, count), 100, cat.charAt(0).toUpperCase() + cat.slice(1)));
+      }
+      return { description: "Correctly answer 100 questions in each of the 6 account categories.", items: catItems };
+    }
     case 'h3': return { description: "Reach 3,000 total XP.", items: [item(stats.xp || 0, 3000, "XP")] };
     case 'h4': return { description: "Sign in with Google account (one time).", items: [] };
+
+    // Debit/Credit starters
     case 'b3': return { description: "Answer your first Debit question correctly.", items: [] };
     case 'b4': return { description: "Answer your first Credit question correctly.", items: [] };
     case 'b5': return { description: "Get 5 correct answers.", items: [item(stats.correct, 5, "Correct answers")] };
@@ -872,7 +1097,10 @@ function getBadgeDetails(badgeId, stats) {
     case 'b13': return { description: "Achieve 80%+ accuracy with at least 10 questions.", items: total >= 10 ? [item(accPct, 80, "Accuracy %")] : [] };
     case 'b14': return { description: "Achieve 90%+ accuracy with at least 20 questions.", items: total >= 20 ? [item(accPct, 90, "Accuracy %")] : [] };
     case 'b42': return { description: "Achieve 95%+ accuracy with at least 100 questions.", items: total >= 100 ? [item(accPct, 95, "Accuracy %")] : [] };
-    case 'b43': { const wp = total > 0 ? Math.round((stats.wrong / total) * 100) : 0; return { description: "Keep wrong answers below 10% (min 20 questions).", items: total >= 20 ? [item(Math.max(0, 100 - wp), 90, "Correctness %")] : [] }; }
+    case 'b43': {
+      const wrongPct = total > 0 ? Math.round((stats.wrong / total) * 100) : 0;
+      return { description: "Keep wrong answers below 10% of total questions (min 20 questions).", items: total >= 20 ? [item(Math.max(0, 100 - wrongPct), 90, "Correctness %")] : [] };
+    }
     case 'b16': return { description: "Achieve a streak of 20 correct answers.", items: [item(stats.bestStreak, 20, "Best streak")] };
     case 'b18': return { description: "Achieve a streak of 5 correct answers.", items: [item(stats.bestStreak, 5, "Best streak")] };
     case 'b19': return { description: "Achieve a streak of 10 correct answers.", items: [item(stats.bestStreak, 10, "Best streak")] };
@@ -885,28 +1113,48 @@ function getBadgeDetails(badgeId, stats) {
     case 'b26': return { description: "Correctly answer 10 Revenue questions.", items: [item(typeCounts.revenue || 0, 10, "Revenue correct")] };
     case 'b27': return { description: "Correctly answer 10 Expense questions.", items: [item(typeCounts.expense || 0, 10, "Expense correct")] };
     case 'b28': return { description: "Correctly answer 5 Drawing questions.", items: [item(typeCounts.drawing || 0, 5, "Drawing correct")] };
-    case 'b29': return { description: "Get at least 1 'Rule Breaker'.", items: [] };
+    case 'b29': return { description: "Get at least 1 'Rule Breaker' (correct after previously wrong on same rule).", items: [] };
     case 'b30': return { description: "Get 15 correct answers.", items: [item(stats.correct, 15, "Correct answers")] };
     case 'b31': return { description: "Answer your first question within 3 seconds.", items: [] };
     case 'b32': return { description: "Answer 10 questions within 3 seconds each.", items: [item(stats.fastAnswers || 0, 10, "Fast answers")] };
     case 'b33': return { description: "Get your first correct answer.", items: [] };
-    case 'b44': return { description: "Answer 20 questions in Focus Mode.", items: [item(stats.focusCount || 0, 20, "Focus questions")] };
+    case 'b44': return { description: "Answer 20 questions in Focus Mode (timer or smart).", items: [item(stats.focusCount || 0, 20, "Focus questions")] };
     case 'b46': return { description: "Answer 50 questions in Smart Mode.", items: [item(stats.smartModeCount || 0, 50, "Smart questions")] };
-    case 'b86': return { description: "Achieve 80% accuracy, 200 total questions, and streak 50.", items: [item(accPct, 80, "Accuracy %"), item(total, 200, "Total"), item(stats.bestStreak, 50, "Best streak")] };
-    case 'b87': return { description: "Achieve 90% accuracy, 500 total questions, and streak 100.", items: [item(accPct, 90, "Accuracy %"), item(total, 500, "Total"), item(stats.bestStreak, 100, "Best streak")] };
-    case 'b88': return { description: "Answer 1,000 questions with 70%+ accuracy.", items: [item(total, 1000, "Total"), item(accPct, 70, "Accuracy %")] };
+    case 'b86': return { description: "Achieve 80% accuracy, 200 total questions, and streak 50.", items: [
+        item(accPct, 80, "Accuracy %"),
+        item(total, 200, "Total questions"),
+        item(stats.bestStreak, 50, "Best streak")
+      ] };
+    case 'b87': return { description: "Achieve 90% accuracy, 500 total questions, and streak 100.", items: [
+        item(accPct, 90, "Accuracy %"),
+        item(total, 500, "Total questions"),
+        item(stats.bestStreak, 100, "Best streak")
+      ] };
+    case 'b88': return { description: "Answer 1,000 questions with 70%+ accuracy.", items: [
+        item(total, 1000, "Total questions"),
+        item(accPct, 70, "Accuracy %")
+      ] };
     case 'b93': return { description: "Answer 100 total questions.", items: [item(total, 100, "Total questions")] };
-    case 'b94': return { description: "Reach Level 15 with 75%+ accuracy.", items: [item(stats.level, 15, "Level"), item(accPct, 75, "Accuracy %")] };
-    case 'b95': return { description: "Get 1,000 correct answers with 80%+ accuracy.", items: [item(stats.correct, 1000, "Correct"), item(accPct, 80, "Accuracy %")] };
+    case 'b94': return { description: "Reach Level 15 with 75%+ accuracy.", items: [
+        item(stats.level, 15, "Level"),
+        item(accPct, 75, "Accuracy %")
+      ] };
+    case 'b95': return { description: "Get 1,000 correct answers with 80%+ accuracy.", items: [
+        item(stats.correct, 1000, "Correct answers"),
+        item(accPct, 80, "Accuracy %")
+      ] };
     case 'b96': return { description: "Get 2,000 correct answers.", items: [item(stats.correct, 2000, "Correct answers")] };
     case 'b97': return { description: "Answer 5,000 total questions.", items: [item(total, 5000, "Total questions")] };
     case 'b98': return { description: "Get 5,000 correct answers.", items: [item(stats.correct, 5000, "Correct answers")] };
-    case 'b99': return { description: "Collect 5,000 coins and 200 rubies.", items: [item(stats.coins || 0, 5000, "Coins", "🪙"), item(stats.rubies || 0, 200, "Rubies", "💎")] };
+    case 'b99': return { description: "Collect 5,000 coins and 200 rubies.", items: [
+        item(stats.coins || 0, 5000, "Coins", "🪙"),
+        item(stats.rubies || 0, 200, "Rubies", "💎")
+      ] };
     case 'b55': return { description: "Complete 10 Timer Mode questions.", items: [item(stats.timerQuestionsCompleted || 0, 10, "Timer questions")] };
     case 'b56': return { description: "Complete 50 Timer Mode questions.", items: [item(stats.timerQuestionsCompleted || 0, 50, "Timer questions")] };
     case 'b57': return { description: "Complete 100 Timer Mode questions.", items: [item(stats.timerQuestionsCompleted || 0, 100, "Timer questions")] };
-    case 'b58': return { description: "Complete 50 Timer Mode questions with 5s timer.", items: [item(stats.timer5sCompleted || 0, 50, "5s Timer questions")] };
-    case 'b59': return { description: "Complete 50 Timer Mode questions with 10s timer.", items: [item(stats.timer10sCompleted || 0, 50, "10s Timer questions")] };
+    case 'b58': return { description: "Complete 50 Timer Mode questions with 5-second timer.", items: [item(stats.timer5sCompleted || 0, 50, "5s Timer questions")] };
+    case 'b59': return { description: "Complete 50 Timer Mode questions with 10-second timer.", items: [item(stats.timer10sCompleted || 0, 50, "10s Timer questions")] };
     case 'b70': return { description: "Collect 500 rubies.", items: [item(stats.rubies || 0, 500, "Rubies", "💎")] };
     case 'b71': return { description: "Collect 1,000 coins.", items: [item(stats.coins || 0, 1000, "Coins", "🪙")] };
     case 'b72': return { description: "Collect 5,000 coins.", items: [item(stats.coins || 0, 5000, "Coins", "🪙")] };
@@ -925,49 +1173,6 @@ function getBadgeDetails(badgeId, stats) {
     case 'b38': return { description: "Reach Level 10.", items: [item(stats.level, 10, "Level")] };
     case 'b39': return { description: "Get 500 correct answers.", items: [item(stats.correct, 500, "Correct answers")] };
     case 'b40': return { description: "Get 1,000 correct answers.", items: [item(stats.correct, 1000, "Correct answers")] };
-    case 'j30': return { description: "Click the 'Learn Javeda' button 30 times.", items: [item(stats.javedaClicks || 0, 30, "Clicks")] };
-    case 'bf10': return { description: "Share the website with 10 friends (click the Share button).", items: [item(stats.shared || 0, 10, "Shares")] };
-    case 'ew': return { description: "Get 500 correct answers.", items: [item(stats.correct, 500, "Correct answers")] };
-    case 'q5k': return { description: "Answer 5,000 total questions.", items: [item(total, 5000, "Total questions")] };
-    case 'asg': return { description: "Correctly answer 100 Asset questions.", items: [item(typeCounts.asset || 0, 100, "Asset correct")] };
-    case 'lsp': return { description: "Correctly answer 100 Liability questions.", items: [item(typeCounts.liability || 0, 100, "Liability correct")] };
-    case 'cpg': return { description: "Correctly answer 100 Capital questions.", items: [item(typeCounts.capital || 0, 100, "Capital correct")] };
-    case 'rvg': return { description: "Correctly answer 100 Revenue questions.", items: [item(typeCounts.revenue || 0, 100, "Revenue correct")] };
-    case 'exg': return { description: "Correctly answer 100 Expense questions.", items: [item(typeCounts.expense || 0, 100, "Expense correct")] };
-    case 'drg': return { description: "Correctly answer 5 Drawing questions.", items: [item(typeCounts.drawing || 0, 5, "Drawing correct")] };
-    case 'm5t': return { description: "Complete 100 Timer Mode questions in Medium Mode with 5-second timer.", items: [item(stats.medium5sCompleted || 0, 100, "Medium 5s correct")] };
-    case 'm10t': return { description: "Complete 100 Timer Mode questions in Medium Mode with 10-second timer.", items: [item(stats.medium10sCompleted || 0, 100, "Medium 10s correct")] };
-    case 'h5t': return { description: "Complete 100 Timer Mode questions in Hard Mode with 5-second timer.", items: [item(stats.hard5sCompleted || 0, 100, "Hard 5s correct")] };
-    case 'h10t': return { description: "Complete 100 Timer Mode questions in Hard Mode with 10-second timer.", items: [item(stats.hard10sCompleted || 0, 100, "Hard 10s correct")] };
-    case 'swm': return { description: "Auto-switch from Easy to Medium at least once in Smart Mode.", items: [item(stats.autoSwitchToMedium || 0, 1, "Easy → Medium switches")] };
-    case 'swh': return { description: "Auto-switch from Medium to Hard at least once in Smart Mode.", items: [item(stats.autoSwitchToHard || 0, 1, "Medium → Hard switches")] };
-    case 'smc': return { description: "Reach Hard Mode level in Smart Mode.", items: [] };
-    case 'inm': return { description: "Answer 1,000 questions within 3 seconds each.", items: [item(stats.fastAnswers || 0, 1000, "Fast answers")] };
-    case 'sht': return { description: "Answer 10 questions within 2 seconds each.", items: [item(stats.fastAnswers2s || 0, 10, "Fast answers (2s)")] };
-    case 'spm': return { description: "Answer 200 questions in Focus Mode (timer or smart).", items: [item(stats.focusCount || 0, 200, "Focus questions")] };
-    case 'pfr': return { description: "Answer 20 correct questions in a row.", items: [item(stats.bestStreak || 0, 20, "Best streak")] };
-    case 'enp': return { description: "Answer 100 questions in a single session.", items: [item(stats.sessionQuestions || 0, 100, "Session questions")] };
-    case 'cns': return { description: "Spend 200 coins in total.", items: [item(stats.coinsSpent || 0, 200, "Coins spent", "🪙")] };
-    case 'rbs': return { description: "Spend 200 rubies in total.", items: [item(stats.rubiesSpent || 0, 200, "Rubies spent", "💎")] };
-    case 'shp': return { description: "Purchase 5 items/boosters using Coins.", items: [item(stats.coinPurchaseCount || 0, 5, "Coin purchases")] };
-    case 'rsh': return { description: "Purchase 5 items/boosters using Rubies.", items: [item(stats.rubyPurchaseCount || 0, 5, "Ruby purchases")] };
-    case 'pwr': return { description: "Spend 100+ Coins in one single purchase.", items: [item(stats.maxSingleCoinSpend || 0, 100, "Max single spend", "🪙")] };
-    case 'cni': return { description: "Spend 500 coins in total.", items: [item(stats.coinsSpent || 0, 500, "Coins spent", "🪙")] };
-    case 'rbi': return { description: "Spend 500 rubies in total.", items: [item(stats.rubiesSpent || 0, 500, "Rubies spent", "💎")] };
-    case 'bgs': return { description: "Spend 10,000 coins and 5,000 rubies in total.", items: [item(stats.coinsSpent || 0, 10000, "Coins spent", "🪙"), item(stats.rubiesSpent || 0, 5000, "Rubies spent", "💎")] };
-    case 'phb': return { description: "Buy Single Pack 50 times, Starter Pack 20 times, Pro Pack 10 times, Master Pack 5 times.", items: [
-      item(stats.hintPackSingle || 0, 50, "Single Pack"),
-      item(stats.hintPackStarter || 0, 20, "Starter Pack"),
-      item(stats.hintPackPro || 0, 10, "Pro Pack"),
-      item(stats.hintPackMaster || 0, 5, "Master Pack"),
-    ] };
-    case 'pkb': return { description: "Buy 5 Pocket of Coin packs.", items: [item(stats.coinPackPocket || 0, 5, "Pocket of Coin packs")] };
-    case 'cpb': return { description: "Buy 5 Pile of Coin packs.", items: [item(stats.coinPackPile || 0, 5, "Pile of Coin packs")] };
-    case 'ccb': return { description: "Buy 5 Bag of Coin packs.", items: [item(stats.coinPackBag || 0, 5, "Bag of Coin packs")] };
-    case 'bst': return { description: "Buy 5 Point Boosters.", items: [item(stats.pointBoosterUsed || 0, 5, "Point Boosters bought")] };
-    case 'cbbs': return { description: "Buy 5 Coin Boosters.", items: [item(stats.coinBoosterUsed || 0, 5, "Coin Boosters bought")] };
-    case 'sts': return { description: "Use No Streak Break 5 times.", items: [item(stats.streakBoosterUsed || 0, 5, "No Streak Break used")] };
-    case 'stp': return { description: "Use the streak protection 5 times.", items: [item(stats.streakProtectedCount || 0, 5, "Streak protections used")] };
     default: return { description: "Earn this badge by meeting specific conditions.", items: [] };
   }
 }
@@ -975,13 +1180,17 @@ function getBadgeDetails(badgeId, stats) {
 function showBadgeDetails(badgeId) {
   const badge = ALL_BADGES.find(b => b.id === badgeId);
   if (!badge) return;
+
   const s = state.stats;
   const data = getBadgeDetails(badgeId, s);
+
   document.getElementById("badgeModalIcon").textContent = badge.icon;
   document.getElementById("badgeModalTitle").textContent = badge.name;
   document.getElementById("badgeModalDesc").textContent = data.description;
+
   const container = document.getElementById("badgeProgressContainer");
   container.innerHTML = "";
+
   if (data.items.length === 0) {
     container.innerHTML = `<p style="text-align:center;color:var(--text-muted);font-size:14px;padding:8px 0;">Check your stats to earn this badge.</p>`;
   } else {
@@ -989,6 +1198,7 @@ function showBadgeDetails(badgeId) {
       const pct = Math.min(100, item.pct);
       const isComplete = item.current >= item.target;
       const color = isComplete ? "var(--accent-2)" : "var(--gradient-1)";
+
       const div = document.createElement("div");
       div.style.marginBottom = "12px";
       div.innerHTML = `
@@ -1004,20 +1214,31 @@ function showBadgeDetails(badgeId) {
       container.appendChild(div);
     });
   }
+
   document.getElementById("badgeModal").classList.add("show");
 }
 
 // ================================================================
-// 8. STATE (with ALL tracking fields)
+// 8. STATE
 // ================================================================
 
 let state = {
-  currentQuestion: null, currentTransaction: null, currentJournal: null,
-  answered: false, sessionCorrect: 0, sessionWrong: 0,
-  difficulty: "easy", smartMode: false, revisionMode: false,
-  revisionQueue: [], autoTimer: null, countdown: 5,
-  questionIndex: 0, questionList: [],
-  isRevisionQuestion: false, currentRevisionDocId: null,
+  currentQuestion: null,
+  currentTransaction: null,
+  currentJournal: null,
+  answered: false,
+  sessionCorrect: 0,
+  sessionWrong: 0,
+  difficulty: "easy",
+  smartMode: false,
+  revisionMode: false,
+  revisionQueue: [],
+  autoTimer: null,
+  countdown: 5,
+  questionIndex: 0,
+  questionList: [],
+  isRevisionQuestion: false,
+  currentRevisionDocId: null,
   stats: {
     totalQuestions: 0, correct: 0, wrong: 0, streak: 0, bestStreak: 0,
     xp: 0, points: 0, coins: 0, rubies: 0, hints: 0, level: 1,
@@ -1028,9 +1249,12 @@ let state = {
     coinBoosterActive: false, coinBoosterExpiry: 0,
     noStreakBreakRemaining: 0,
     topicStats: {
-      asset: { total: 0, wrong: 0 }, liability: { total: 0, wrong: 0 },
-      capital: { total: 0, wrong: 0 }, revenue: { total: 0, wrong: 0 },
-      expense: { total: 0, wrong: 0 }, drawing: { total: 0, wrong: 0 },
+      asset: { total: 0, wrong: 0 },
+      liability: { total: 0, wrong: 0 },
+      capital: { total: 0, wrong: 0 },
+      revenue: { total: 0, wrong: 0 },
+      expense: { total: 0, wrong: 0 },
+      drawing: { total: 0, wrong: 0 },
     },
     timerQuestionsCompleted: 0, timer5sCompleted: 0, timer10sCompleted: 0,
     revisionCorrect: 0,
@@ -1038,20 +1262,6 @@ let state = {
     javedaClicks: 0, shared: 0,
     dailyStreak: 0, lastActivityDate: null,
     sessionQuestions: 0, nightQuestions: 0, earlyQuestions: 0,
-    // ⭐ Persistent category counters
-    categoryCorrectCounts: { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 },
-    categoryTotalCounts: { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 },
-    // ⭐ New tracking fields
-    hintsPurchased: 0,
-    coinsSpent: 0, rubiesSpent: 0, maxSingleCoinSpend: 0,
-    coinPurchaseCount: 0, rubyPurchaseCount: 0,
-    hintPackSingle: 0, hintPackStarter: 0, hintPackPro: 0, hintPackMaster: 0,
-    coinPackPocket: 0, coinPackPile: 0, coinPackBag: 0,
-    streakProtectedCount: 0,
-    autoSwitchToMedium: 0, autoSwitchToHard: 0, reachedHardInSmart: false,
-    fastAnswers2s: 0,
-    medium5sCompleted: 0, medium10sCompleted: 0,
-    hard5sCompleted: 0, hard10sCompleted: 0,
   },
   unsubUser: null, unsubLeaderboard: null,
   isGuest: false, guestId: null,
@@ -1067,7 +1277,11 @@ let state = {
 
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => document.querySelectorAll(sel);
-function setText(id, value) { const el = document.getElementById(id); if (el) el.textContent = value; }
+
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
 
 // ================================================================
 // 10. HEART SYSTEM REMOVED
@@ -1081,12 +1295,14 @@ function checkBoosters() {
   const s = state.stats;
   const now = Date.now();
   if (s.pointBoosterActive && s.pointBoosterExpiry < now) {
-    s.pointBoosterActive = false; s.pointBoosterExpiry = 0;
+    s.pointBoosterActive = false;
+    s.pointBoosterExpiry = 0;
     showToast("⏰ Point Booster Expired", "2× points boost is over.", "fa-clock", "gain");
     updateBoosterStatus();
   }
   if (s.coinBoosterActive && s.coinBoosterExpiry < now) {
-    s.coinBoosterActive = false; s.coinBoosterExpiry = 0;
+    s.coinBoosterActive = false;
+    s.coinBoosterExpiry = 0;
     showToast("⏰ Coin Booster Expired", "1.5× coins boost is over.", "fa-clock", "gain");
     updateBoosterStatus();
   }
@@ -1115,12 +1331,19 @@ function updateBoosterStatus() {
   if (b.coinActive) html += `<span class="booster-badge active coin">🪙 1.5×C ${Math.floor(b.coinRemaining / 60)}m</span>`;
   if (b.streakActive) html += `<span class="booster-badge active streak">🛡️ ${b.streakRemaining} left</span>`;
   bar.innerHTML = html;
-  const ps = document.getElementById("boosterPointStatus");
-  const cs = document.getElementById("boosterCoinStatus");
-  const ss = document.getElementById("boosterStreakStatus");
-  if (ps) ps.innerHTML = b.pointActive ? `<span class="booster-active-badge" style="background:var(--accent-3);color:#1a1a2e;">⚡ Active ${Math.floor(b.pointRemaining / 60)}m</span>` : "";
-  if (cs) cs.innerHTML = b.coinActive ? `<span class="booster-active-badge" style="background:#d4a017;color:#fff;">🪙 Active ${Math.floor(b.coinRemaining / 60)}m</span>` : "";
-  if (ss) ss.innerHTML = b.streakActive ? `<span class="booster-active-badge" style="background:var(--accent-1);color:#fff;">🛡️ ${b.streakRemaining} left</span>` : "";
+
+  const pointStatus = document.getElementById("boosterPointStatus");
+  const coinStatus = document.getElementById("boosterCoinStatus");
+  const streakStatus = document.getElementById("boosterStreakStatus");
+  if (pointStatus) {
+    pointStatus.innerHTML = b.pointActive ? `<span class="booster-active-badge" style="background:var(--accent-3);color:#1a1a2e;">⚡ Active ${Math.floor(b.pointRemaining / 60)}m</span>` : "";
+  }
+  if (coinStatus) {
+    coinStatus.innerHTML = b.coinActive ? `<span class="booster-active-badge" style="background:#d4a017;color:#fff;">🪙 Active ${Math.floor(b.coinRemaining / 60)}m</span>` : "";
+  }
+  if (streakStatus) {
+    streakStatus.innerHTML = b.streakActive ? `<span class="booster-active-badge" style="background:var(--accent-1);color:#fff;">🛡️ ${b.streakRemaining} left</span>` : "";
+  }
 }
 
 function activateBooster(type, duration, costCoins, costRubies) {
@@ -1131,12 +1354,6 @@ function activateBooster(type, duration, costCoins, costRubies) {
   }
   s.coins -= costCoins;
   s.rubies -= costRubies;
-  s.coinsSpent = (s.coinsSpent || 0) + costCoins;
-  s.rubiesSpent = (s.rubiesSpent || 0) + costRubies;
-  if (costCoins > (s.maxSingleCoinSpend || 0)) s.maxSingleCoinSpend = costCoins;
-  if (costCoins > 0) s.coinPurchaseCount = (s.coinPurchaseCount || 0) + 1;
-  if (costRubies > 0) s.rubyPurchaseCount = (s.rubyPurchaseCount || 0) + 1;
-
   const now = Date.now();
   if (type === "point") {
     s.pointBoosterActive = true;
@@ -1153,27 +1370,12 @@ function activateBooster(type, duration, costCoins, costRubies) {
     s.streakBoosterUsed = (s.streakBoosterUsed || 0) + 1;
     showToast("🛡️ No Streak Break Activated!", "Next 10 wrong answers won't break your streak.", "fa-rocket", "gain");
   }
-  updateHeaderStats(); updateDashboard(); updateShopUI(); updateBoosterStatus();
+  updateHeaderStats();
+  updateDashboard();
+  updateShopUI();
+  updateBoosterStatus();
   saveStats();
-  recheckBadgesAfterAction();
   return true;
-}
-
-// ================================================================
-// ⭐ Helper: recheck badges after any action
-// ================================================================
-function recheckBadgesAfterAction() {
-  const s = state.stats;
-  const earnedIds = checkBadges(s);
-  const prev = new Set(s.earnedBadges || []);
-  const merged = [...new Set([...prev, ...earnedIds])];
-  s.earnedBadges = merged;
-  const newB = merged.filter(id => !prev.has(id) && !state._shownBadges.has(id));
-  for (const id of newB) {
-    const badge = ALL_BADGES.find(b => b.id === id);
-    if (badge) { state._shownBadges.add(id); setTimeout(() => showBadgeToast(badge), 300); }
-  }
-  updateBadges();
 }
 
 // ================================================================
@@ -1186,7 +1388,8 @@ function updateHeaderStats() {
   setText("hCoins", s.coins);
   setText("hXp", s.xp);
   setText("hPoints", s.points);
-  setText("hLevel", getLevelFromXP(s.xp));
+  const level = getLevelFromXP(s.xp);
+  setText("hLevel", level);
   setText("hStreak", s.streak);
   const avatar = document.getElementById("userAvatar");
   const nameDisplay = document.getElementById("userNameDisplay");
@@ -1234,41 +1437,65 @@ function renderQuestion() {
   const q = state.currentQuestion;
   const transactionDisplay = document.getElementById("transactionDisplay");
   const accountName = document.getElementById("accountName");
+
   if (!q) {
     if (transactionDisplay) transactionDisplay.textContent = "Loading...";
     if (accountName) accountName.textContent = "—";
     $$(".quiz-opt").forEach((b) => (b.disabled = true));
-    const fb = document.getElementById("feedbackBox"); if (fb) fb.classList.remove("show");
-    const autoNext = document.getElementById("autoNextIndicator"); if (autoNext) autoNext.classList.remove("show");
-    const nextBtn = document.getElementById("nextBtnFallback"); if (nextBtn) nextBtn.classList.remove("show");
+    const fb = document.getElementById("feedbackBox");
+    if (fb) fb.classList.remove("show");
+    const autoNext = document.getElementById("autoNextIndicator");
+    if (autoNext) autoNext.classList.remove("show");
+    const nextBtn = document.getElementById("nextBtnFallback");
+    if (nextBtn) nextBtn.classList.remove("show");
     updateHintButton();
     return;
   }
+
   const trans = state.currentTransaction;
   let displayText = trans ? trans.description : "";
   if (transactionDisplay) transactionDisplay.innerHTML = `"${displayText}"`;
+
   const accountForQuestion = trans.primaryAccount || q.accountName;
   const bnName = getBengaliName(accountForQuestion) || accountForQuestion;
   if (accountName) accountName.textContent = bnName + " হিসাব";
-  $$(".quiz-opt").forEach((b) => { b.disabled = false; b.className = "quiz-opt " + b.dataset.answer; });
-  const fb = document.getElementById("feedbackBox"); if (fb) fb.classList.remove("show");
-  const autoNext = document.getElementById("autoNextIndicator"); if (autoNext) autoNext.classList.remove("show");
-  const nextBtn = document.getElementById("nextBtnFallback"); if (nextBtn) nextBtn.classList.remove("show");
-  state.answered = false; state.countdown = 5;
+
+  $$(".quiz-opt").forEach((b) => {
+    b.disabled = false;
+    b.className = "quiz-opt " + b.dataset.answer;
+  });
+  const fb = document.getElementById("feedbackBox");
+  if (fb) fb.classList.remove("show");
+  const autoNext = document.getElementById("autoNextIndicator");
+  if (autoNext) autoNext.classList.remove("show");
+  const nextBtn = document.getElementById("nextBtnFallback");
+  if (nextBtn) nextBtn.classList.remove("show");
+  state.answered = false;
+  state.countdown = 5;
   state.questionStartTime = Date.now();
-  state.hintUsedForQuestion = false; state.advancePending = false;
+  state.hintUsedForQuestion = false;
+  state.advancePending = false;
+
   if (state.timerMode && state.difficulty !== "easy") {
     const timerDisplay = document.getElementById("timerDisplay");
     const timerCountdown = document.getElementById("timerCountdown");
-    if (timerDisplay) { timerDisplay.classList.add("show"); timerDisplay.classList.remove("warning"); }
-    if (timerCountdown) timerCountdown.textContent = state.timerSec;
+    if (timerDisplay) {
+      timerDisplay.classList.add("show");
+      timerDisplay.classList.remove("warning");
+    }
+    if (timerCountdown) {
+      timerCountdown.textContent = state.timerSec;
+    }
     state.timerRemaining = state.timerSec;
     startTimer();
   } else {
-    const timerDisplay = document.getElementById("timerDisplay"); if (timerDisplay) timerDisplay.classList.remove("show");
+    const timerDisplay = document.getElementById("timerDisplay");
+    if (timerDisplay) timerDisplay.classList.remove("show");
     stopTimer();
   }
+
   updateHintButton();
+
   const indicator = document.getElementById("smartLevelIndicator");
   if (indicator) {
     if (state.smartMode) {
@@ -1281,24 +1508,40 @@ function renderQuestion() {
       document.getElementById("smartDiffBadge").style.display = "none";
     }
   }
+
   updateDiffModeLabel(state.difficulty);
   updateModeToggles();
-  document.querySelectorAll(".diff-btn").forEach((btn) => {
-    if (state.smartMode) btn.classList.add("diff-toggle-disabled");
-    else btn.classList.remove("diff-toggle-disabled");
-    if (state.timerMode && btn.dataset.diff === "easy") btn.classList.add("diff-toggle-disabled");
-    else if (state.timerMode) btn.classList.remove("diff-toggle-disabled");
+
+  const diffBtns = document.querySelectorAll(".diff-btn");
+  diffBtns.forEach((btn) => {
+    if (state.smartMode) {
+      btn.classList.add("diff-toggle-disabled");
+    } else {
+      btn.classList.remove("diff-toggle-disabled");
+    }
+    if (state.timerMode && btn.dataset.diff === "easy") {
+      btn.classList.add("diff-toggle-disabled");
+    } else if (state.timerMode) {
+      btn.classList.remove("diff-toggle-disabled");
+    }
   });
+
   const timerBadge = document.getElementById("timerBadge");
   if (timerBadge) {
     if (state.timerMode && state.difficulty !== "easy") {
       timerBadge.style.display = "inline-block";
       timerBadge.textContent = `⏱ ${state.timerSec}s`;
       timerBadge.className = "timer-badge ruby";
-    } else timerBadge.style.display = "none";
+    } else {
+      timerBadge.style.display = "none";
+    }
   }
+
   updateQuizProgress();
-  if (state.autoTimer) { clearInterval(state.autoTimer); state.autoTimer = null; }
+  if (state.autoTimer) {
+    clearInterval(state.autoTimer);
+    state.autoTimer = null;
+  }
 }
 
 function updateModeToggles() {
@@ -1306,27 +1549,103 @@ function updateModeToggles() {
   const revToggle = document.getElementById("revisionToggle");
   const timerToggle = document.getElementById("timerToggle");
   const hintBtn = document.getElementById("hintBtn");
+
   if (state.smartMode) {
-    revToggle.classList.add("disabled-mode"); timerToggle.classList.add("disabled-mode");
-    if (state.revisionMode) { state.revisionMode = false; revToggle.classList.remove("active"); const dot = revToggle.querySelector(".toggle-dot"); if (dot) dot.style.background = "var(--text-muted)"; state.revisionQueue = []; state.isRevisionQuestion = false; state.currentRevisionDocId = null; }
-    if (state.timerMode) { state.timerMode = false; timerToggle.classList.remove("active"); const dot = timerToggle.querySelector(".toggle-dot"); if (dot) dot.style.background = "var(--text-muted)"; document.getElementById("timerOptions").classList.remove("show"); document.getElementById("timerBadge").style.display = "none"; stopTimer(); document.querySelectorAll(".diff-btn").forEach((b) => b.classList.remove("diff-toggle-disabled")); }
-    smartToggle.classList.remove("disabled-mode"); updateHintButton();
-  } else smartToggle.classList.remove("disabled-mode");
+    revToggle.classList.add("disabled-mode");
+    timerToggle.classList.add("disabled-mode");
+    if (state.revisionMode) {
+      state.revisionMode = false;
+      revToggle.classList.remove("active");
+      const dot = revToggle.querySelector(".toggle-dot");
+      if (dot) dot.style.background = "var(--text-muted)";
+      state.revisionQueue = [];
+      state.isRevisionQuestion = false;
+      state.currentRevisionDocId = null;
+    }
+    if (state.timerMode) {
+      state.timerMode = false;
+      timerToggle.classList.remove("active");
+      const dot = timerToggle.querySelector(".toggle-dot");
+      if (dot) dot.style.background = "var(--text-muted)";
+      document.getElementById("timerOptions").classList.remove("show");
+      document.getElementById("timerBadge").style.display = "none";
+      stopTimer();
+      document.querySelectorAll(".diff-btn").forEach((b) => b.classList.remove("diff-toggle-disabled"));
+    }
+    smartToggle.classList.remove("disabled-mode");
+    updateHintButton();
+  } else {
+    smartToggle.classList.remove("disabled-mode");
+  }
+
   if (state.revisionMode) {
-    smartToggle.classList.add("disabled-mode"); timerToggle.classList.add("disabled-mode");
-    if (state.smartMode) { state.smartMode = false; smartToggle.classList.remove("active"); const dot = smartToggle.querySelector(".toggle-dot"); if (dot) dot.style.background = "var(--text-muted)"; SMART_TRACKER.isSmartMode = false; document.getElementById("smartDiffBadge").style.display = "none"; document.getElementById("smartLevelIndicator").style.display = "none"; document.querySelectorAll(".diff-btn").forEach((b) => b.classList.remove("diff-toggle-disabled")); }
-    if (state.timerMode) { state.timerMode = false; timerToggle.classList.remove("active"); const dot = timerToggle.querySelector(".toggle-dot"); if (dot) dot.style.background = "var(--text-muted)"; document.getElementById("timerOptions").classList.remove("show"); document.getElementById("timerBadge").style.display = "none"; stopTimer(); document.querySelectorAll(".diff-btn").forEach((b) => b.classList.remove("diff-toggle-disabled")); }
-    revToggle.classList.remove("disabled-mode"); if (hintBtn) hintBtn.disabled = true;
-  } else { revToggle.classList.remove("disabled-mode"); if (!state.timerMode) updateHintButton(); }
+    smartToggle.classList.add("disabled-mode");
+    timerToggle.classList.add("disabled-mode");
+    if (state.smartMode) {
+      state.smartMode = false;
+      smartToggle.classList.remove("active");
+      const dot = smartToggle.querySelector(".toggle-dot");
+      if (dot) dot.style.background = "var(--text-muted)";
+      SMART_TRACKER.isSmartMode = false;
+      document.getElementById("smartDiffBadge").style.display = "none";
+      document.getElementById("smartLevelIndicator").style.display = "none";
+      document.querySelectorAll(".diff-btn").forEach((b) => b.classList.remove("diff-toggle-disabled"));
+    }
+    if (state.timerMode) {
+      state.timerMode = false;
+      timerToggle.classList.remove("active");
+      const dot = timerToggle.querySelector(".toggle-dot");
+      if (dot) dot.style.background = "var(--text-muted)";
+      document.getElementById("timerOptions").classList.remove("show");
+      document.getElementById("timerBadge").style.display = "none";
+      stopTimer();
+      document.querySelectorAll(".diff-btn").forEach((b) => b.classList.remove("diff-toggle-disabled"));
+    }
+    revToggle.classList.remove("disabled-mode");
+    if (hintBtn) hintBtn.disabled = true;
+  } else {
+    revToggle.classList.remove("disabled-mode");
+    if (!state.timerMode) updateHintButton();
+  }
+
   if (state.timerMode) {
-    smartToggle.classList.add("disabled-mode"); revToggle.classList.add("disabled-mode");
-    if (state.smartMode) { state.smartMode = false; smartToggle.classList.remove("active"); const dot = smartToggle.querySelector(".toggle-dot"); if (dot) dot.style.background = "var(--text-muted)"; SMART_TRACKER.isSmartMode = false; document.getElementById("smartDiffBadge").style.display = "none"; document.getElementById("smartLevelIndicator").style.display = "none"; document.querySelectorAll(".diff-btn").forEach((b) => b.classList.remove("diff-toggle-disabled")); }
-    if (state.revisionMode) { state.revisionMode = false; revToggle.classList.remove("active"); const dot = revToggle.querySelector(".toggle-dot"); if (dot) dot.style.background = "var(--text-muted)"; state.revisionQueue = []; state.isRevisionQuestion = false; state.currentRevisionDocId = null; }
-    timerToggle.classList.remove("disabled-mode"); if (hintBtn) hintBtn.disabled = true;
-  } else { timerToggle.classList.remove("disabled-mode"); if (!state.revisionMode) updateHintButton(); }
+    smartToggle.classList.add("disabled-mode");
+    revToggle.classList.add("disabled-mode");
+    if (state.smartMode) {
+      state.smartMode = false;
+      smartToggle.classList.remove("active");
+      const dot = smartToggle.querySelector(".toggle-dot");
+      if (dot) dot.style.background = "var(--text-muted)";
+      SMART_TRACKER.isSmartMode = false;
+      document.getElementById("smartDiffBadge").style.display = "none";
+      document.getElementById("smartLevelIndicator").style.display = "none";
+      document.querySelectorAll(".diff-btn").forEach((b) => b.classList.remove("diff-toggle-disabled"));
+    }
+    if (state.revisionMode) {
+      state.revisionMode = false;
+      revToggle.classList.remove("active");
+      const dot = revToggle.querySelector(".toggle-dot");
+      if (dot) dot.style.background = "var(--text-muted)";
+      state.revisionQueue = [];
+      state.isRevisionQuestion = false;
+      state.currentRevisionDocId = null;
+    }
+    timerToggle.classList.remove("disabled-mode");
+    if (hintBtn) hintBtn.disabled = true;
+  } else {
+    timerToggle.classList.remove("disabled-mode");
+    if (!state.revisionMode) updateHintButton();
+  }
+
   document.querySelectorAll(".mode-toggle").forEach((t) => {
     const dot = t.querySelector(".toggle-dot");
-    if (dot) { if (t.classList.contains("active")) dot.style.background = "var(--accent-1)"; else dot.style.background = "var(--text-muted)"; }
+    if (dot) {
+      if (t.classList.contains("active")) {
+        dot.style.background = "var(--accent-1)";
+      } else {
+        dot.style.background = "var(--text-muted)";
+      }
+    }
   });
 }
 
@@ -1337,78 +1656,144 @@ function startTimer() {
   state.timerRemaining = state.timerSec;
   const timerCountdown = document.getElementById("timerCountdown");
   const timerDisplay = document.getElementById("timerDisplay");
+
   state.timerInterval = setInterval(() => {
     state.timerRemaining -= 0.5;
-    if (timerCountdown) timerCountdown.textContent = Math.ceil(state.timerRemaining);
-    if (timerDisplay && state.timerRemaining <= 2) timerDisplay.classList.add("warning");
-    else if (timerDisplay) timerDisplay.classList.remove("warning");
+    if (timerCountdown) {
+      timerCountdown.textContent = Math.ceil(state.timerRemaining);
+    }
+    if (timerDisplay && state.timerRemaining <= 2) {
+      timerDisplay.classList.add("warning");
+    } else if (timerDisplay) {
+      timerDisplay.classList.remove("warning");
+    }
     if (state.timerRemaining <= 0) {
       stopTimer();
-      if (!state.answered) { if (timerDisplay) timerDisplay.classList.remove("show"); handleTimerTimeout(); }
+      if (!state.answered) {
+        if (timerDisplay) timerDisplay.classList.remove("show");
+        handleTimerTimeout();
+      }
     }
   }, 500);
 }
 
 function stopTimer() {
-  if (state.timerInterval) { clearInterval(state.timerInterval); state.timerInterval = null; }
+  if (state.timerInterval) {
+    clearInterval(state.timerInterval);
+    state.timerInterval = null;
+  }
   state.timerActive = false;
   const timerDisplay = document.getElementById("timerDisplay");
-  if (timerDisplay) timerDisplay.classList.remove("warning");
+  if (timerDisplay) {
+    timerDisplay.classList.remove("warning");
+  }
 }
 
 function handleTimerTimeout() {
   if (state.answered) return;
   state.answered = true;
   state.userAnswer = "timeout";
+
   const q = state.currentQuestion;
   const s = state.stats;
-  const TIMEOUT_PENALTIES = { medium: { 5: -4, 10: -3 }, hard: { 5: -5, 10: -4 } };
+
+  const TIMEOUT_PENALTIES = {
+    medium: { 5: -4, 10: -3 },
+    hard: { 5: -5, 10: -4 },
+  };
   const timeoutPenalty = TIMEOUT_PENALTIES[state.difficulty]?.[state.timerSec] || -2;
+  
   s.points = Math.max(0, s.points + timeoutPenalty);
+
   const boosters = getBoosters();
   s.wrong++;
+  
   if (boosters.streakActive) {
     s.noStreakBreakRemaining--;
-    s.streakProtectedCount = (s.streakProtectedCount || 0) + 1;
     showToast("🛡️ Streak Protected!", `${s.noStreakBreakRemaining} protections left.`, "fa-shield", "gain");
-    if (s.noStreakBreakRemaining <= 0) { s.noStreakBreakRemaining = 0; updateBoosterStatus(); }
-  } else s.streak = 0;
+    if (s.noStreakBreakRemaining <= 0) {
+      s.noStreakBreakRemaining = 0;
+      updateBoosterStatus();
+    }
+  } else {
+    s.streak = 0;
+  }
+
   const key = `${q.accountType}.${q.effect}`;
   s.weakRules[key] = (s.weakRules[key] || 0) + 1;
-  if (s.topicStats && s.topicStats[q.accountType]) { s.topicStats[q.accountType].total++; s.topicStats[q.accountType].wrong++; }
+  if (s.topicStats && s.topicStats[q.accountType]) {
+    s.topicStats[q.accountType].total++;
+    s.topicStats[q.accountType].wrong++;
+  }
+
   s.totalQuestions++;
-  s.quizHistory.push({ type: q.accountType, effect: q.effect, account: q.accountName, userAnswer: "timeout", correctAnswer: q.correctAnswer, ruleKey: key, timestamp: Date.now() });
+  s.quizHistory.push({
+    type: q.accountType, effect: q.effect, account: q.accountName,
+    userAnswer: "timeout", correctAnswer: q.correctAnswer,
+    ruleKey: `${q.accountType}.${q.effect}`, timestamp: Date.now(),
+  });
   if (s.quizHistory.length > 200) s.quizHistory.shift();
+
   const total = s.correct + s.wrong;
   const acc = total > 0 ? Math.round((s.correct / total) * 100) : 0;
   s.accuracyHistory.push(acc);
   if (s.accuracyHistory.length > 7) s.accuracyHistory.shift();
-  showToast("⏱ Time's Up!", `${timeoutPenalty} pts (time loss penalty)`, "fa-hourglass-end", "loss");
+
+  showToast(
+    "⏱ Time's Up!",
+    `${timeoutPenalty} pts (time loss penalty)`,
+    "fa-hourglass-end",
+    "loss"
+  );
+
   state.userAnswer = "timeout";
   showFeedback(false, q, state.currentJournal, state.currentTransaction);
-  updateHeaderStats(); updateQuizProgress(); updateDashboard(); updateBadges(); updateWeakTopics(); saveStats();
+
+  updateHeaderStats();
+  updateQuizProgress();
+  updateDashboard();
+  updateBadges();
+  updateWeakTopics();
+  saveStats();
+
   if (state.autoTimer) clearTimeout(state.autoTimer);
-  state.autoTimer = setTimeout(() => { state.autoTimer = null; advanceQuestion(); }, 1500);
+  state.autoTimer = setTimeout(() => {
+    state.autoTimer = null;
+    advanceQuestion();
+  }, 1500);
 }
 
 function showFeedback(isCorrect, q, journal, trans) {
   const box = document.getElementById("feedbackBox");
   if (!box) return;
+
   const isTimeout = state.userAnswer === "timeout";
   const isCorrectFinal = isCorrect && !isTimeout;
+  const isWrongFinal = !isCorrect || isTimeout;
+
   box.className = "feedback-box show " + (isCorrectFinal ? "correct" : "wrong");
+
   const icon = document.getElementById("fbIcon");
   if (icon) icon.className = "fas " + (isCorrectFinal ? "fa-check-circle" : isTimeout ? "fa-hourglass-end" : "fa-times-circle");
+
   const resultEl = document.getElementById("fbResult");
   if (resultEl) {
-    if (isTimeout) { resultEl.textContent = "⏱ Time's Up!"; resultEl.className = "fb-result wrong-text"; }
-    else { resultEl.textContent = isCorrectFinal ? "Correct!" : "Wrong!"; resultEl.className = "fb-result " + (isCorrectFinal ? "correct-text" : "wrong-text"); }
+    if (isTimeout) {
+      resultEl.textContent = "⏱ Time's Up!";
+      resultEl.className = "fb-result wrong-text";
+    } else {
+      resultEl.textContent = isCorrectFinal ? "Correct!" : "Wrong!";
+      resultEl.className = "fb-result " + (isCorrectFinal ? "correct-text" : "wrong-text");
+    }
   }
+
   const accountForQuestion = trans.primaryAccount || q.accountName;
   const entry = journal.find((j) => j.account === accountForQuestion);
+
   let explanation = "", ruleText = "";
   const detailEl = document.getElementById("fbDetail");
   const ruleBox = document.getElementById("fbRuleBox");
+
   if (entry) {
     const info = getAccountInfo(entry.account);
     const category = info ? info.category : "Account";
@@ -1418,45 +1803,83 @@ function showFeedback(isCorrect, q, journal, trans) {
     const bnName = getBengaliName(entry.account) || entry.account;
     const amtStr = trans && trans.amount && trans.hasAmount ? ` ${trans.amount.toLocaleString()} টাকা` : "";
     const correctAns = q.correctAnswer === "debit" ? "Debit" : "Credit";
-    if (isTimeout) explanation = `সময় শেষ! সঠিক উত্তর ছিল <strong>${correctAns}</strong>।\n${bnName}${amtStr} একটি ${label}। ${label} ${side} হয়েছে, তাই ${bnName} হিসাব ${sideLabel} হবে।`;
-    else if (!isCorrectFinal) explanation = `সঠিক উত্তর ছিল <strong>${correctAns}</strong>।\n${bnName}${amtStr} একটি ${label}। ${label} ${side} হয়েছে, তাই ${bnName} হিসাব ${sideLabel} হবে।`;
-    else explanation = `${bnName}${amtStr} একটি ${label}। ${label} ${side} হয়েছে, তাই ${bnName} হিসাব ${sideLabel} হবে।`;
+
+    if (isTimeout) {
+      explanation = `সময় শেষ! সঠিক উত্তর ছিল <strong>${correctAns}</strong>।\n${bnName}${amtStr} একটি ${label}। ${label} ${side} হয়েছে, তাই ${bnName} হিসাব ${sideLabel} হবে।`;
+    } else if (!isCorrectFinal) {
+      explanation = `সঠিক উত্তর ছিল <strong>${correctAns}</strong>।\n${bnName}${amtStr} একটি ${label}। ${label} ${side} হয়েছে, তাই ${bnName} হিসাব ${sideLabel} হবে।`;
+    } else {
+      explanation = `${bnName}${amtStr} একটি ${label}। ${label} ${side} হয়েছে, তাই ${bnName} হিসাব ${sideLabel} হবে।`;
+    }
     ruleText = `${label} ${side} = ${sideLabel}`;
   } else {
     const correctAns = q.correctAnswer === "debit" ? "Debit" : "Credit";
-    if (isTimeout) explanation = `সময় শেষ! সঠিক উত্তর ছিল <strong>${correctAns}</strong>।\n${q.explanation || "Review the accounting rules."}`;
-    else explanation = isCorrectFinal ? q.explanation || "সঠিক উত্তর!" : `সঠিক উত্তর ছিল <strong>${correctAns}</strong>।\n${q.explanation || "Review the accounting rules."}`;
+    if (isTimeout) {
+      explanation = `সময় শেষ! সঠিক উত্তর ছিল <strong>${correctAns}</strong>।\n${q.explanation || "Review the accounting rules."}`;
+    } else {
+      explanation = isCorrectFinal ? q.explanation || "সঠিক উত্তর!" : `সঠিক উত্তর ছিল <strong>${correctAns}</strong>।\n${q.explanation || "Review the accounting rules."}`;
+    }
     ruleText = q.ruleText || "Check the rule.";
   }
+
   if (detailEl) detailEl.innerHTML = explanation;
   if (ruleBox) ruleBox.innerHTML = `<strong>Rule:</strong> ${ruleText}`;
+
   $$(".quiz-opt").forEach((b) => {
     b.disabled = true;
-    if (b.dataset.answer === q.correctAnswer) b.classList.add("show-correct");
-    if (b.dataset.answer === q.correctAnswer && isCorrectFinal) b.classList.add("correct");
-    if (b.dataset.answer !== q.correctAnswer && !isCorrectFinal && b.dataset.answer === state.userAnswer) b.classList.add("wrong");
-    if (b.dataset.answer === q.correctAnswer && !isCorrectFinal) b.classList.add("show-correct");
-    if (isTimeout && b.dataset.answer === q.correctAnswer) b.classList.add("show-correct");
+    if (b.dataset.answer === q.correctAnswer) {
+      b.classList.add("show-correct");
+    }
+    if (b.dataset.answer === q.correctAnswer && isCorrectFinal) {
+      b.classList.add("correct");
+    }
+    if (b.dataset.answer !== q.correctAnswer && !isCorrectFinal && b.dataset.answer === state.userAnswer) {
+      b.classList.add("wrong");
+    }
+    if (b.dataset.answer === q.correctAnswer && !isCorrectFinal) {
+      b.classList.add("show-correct");
+    }
+    if (isTimeout && b.dataset.answer === q.correctAnswer) {
+      b.classList.add("show-correct");
+    }
   });
+
   updateHintButton();
-  if (state.autoTimer) { clearTimeout(state.autoTimer); state.autoTimer = null; }
+
+  if (state.autoTimer) {
+    clearTimeout(state.autoTimer);
+    state.autoTimer = null;
+  }
+
   if (isCorrectFinal) {
-    state.autoTimer = setTimeout(() => { state.autoTimer = null; advanceQuestion(); }, 500);
-    const autoNext = document.getElementById("autoNextIndicator"); if (autoNext) autoNext.classList.remove("show");
-    const nextBtn = document.getElementById("nextBtnFallback"); if (nextBtn) nextBtn.classList.remove("show");
+    state.autoTimer = setTimeout(() => {
+      state.autoTimer = null;
+      advanceQuestion();
+    }, 500);
+    const autoNext = document.getElementById("autoNextIndicator");
+    if (autoNext) autoNext.classList.remove("show");
+    const nextBtn = document.getElementById("nextBtnFallback");
+    if (nextBtn) nextBtn.classList.remove("show");
   } else {
     state.countdown = 5;
-    const countdownEl = document.getElementById("countdownNum"); if (countdownEl) countdownEl.textContent = "5";
-    const autoNext = document.getElementById("autoNextIndicator"); if (autoNext) autoNext.classList.add("show");
-    const nextBtn = document.getElementById("nextBtnFallback"); if (nextBtn) nextBtn.classList.remove("show");
+    const countdownEl = document.getElementById("countdownNum");
+    if (countdownEl) countdownEl.textContent = "5";
+    const autoNext = document.getElementById("autoNextIndicator");
+    if (autoNext) autoNext.classList.add("show");
+    const nextBtn = document.getElementById("nextBtnFallback");
+    if (nextBtn) nextBtn.classList.remove("show");
+
     state.autoTimer = setInterval(() => {
       state.countdown -= 0.5;
       if (state.countdown <= 0) {
-        clearInterval(state.autoTimer); state.autoTimer = null;
+        clearInterval(state.autoTimer);
+        state.autoTimer = null;
         if (countdownEl) countdownEl.textContent = "0";
         if (autoNext) autoNext.classList.remove("show");
         advanceQuestion();
-      } else { if (countdownEl) countdownEl.textContent = Math.ceil(state.countdown); }
+      } else {
+        if (countdownEl) countdownEl.textContent = Math.ceil(state.countdown);
+      }
     }, 500);
   }
 }
@@ -1465,12 +1888,16 @@ function advanceQuestion() {
   if (state.advancePending) return;
   state.advancePending = true;
   stopTimer();
+
   state.questionIndex++;
   if (state.questionIndex < state.questionList.length) {
     state.currentQuestion = state.questionList[state.questionIndex];
     state.advancePending = false;
     renderQuestion();
-  } else { state.advancePending = false; generateNextQuestionSet(); }
+  } else {
+    state.advancePending = false;
+    generateNextQuestionSet();
+  }
 }
 
 // ================================================================
@@ -1479,7 +1906,9 @@ function advanceQuestion() {
 
 function generateNextQuestionSet() {
   stopTimer();
+
   const mode = state.difficulty;
+
   if (state.revisionMode) {
     if (state.revisionQueue.length > 0) {
       const revData = state.revisionQueue.shift();
@@ -1487,30 +1916,55 @@ function generateNextQuestionSet() {
       const qData = revData.question;
       const transData = revData.transaction;
       const journalData = revData.journal || [];
+
       let transaction = {
         description: transData.display || transData.description || "Transaction",
-        amount: transData.amount || 0, hasAmount: transData.amount > 0,
-        journal: journalData, category: qData.accountType || "asset",
+        amount: transData.amount || 0,
+        hasAmount: transData.amount > 0,
+        journal: journalData,
+        category: qData.accountType || "asset",
         primaryAccount: qData.accountName || (journalData[0] ? journalData[0].account : ""),
       };
-      const question = { accountName: qData.accountName, accountType: qData.accountType, effect: qData.effect || "increase", correctAnswer: qData.correctAnswer, explanation: qData.explanation, ruleText: qData.ruleText, _revisionDocId: docId };
-      state.currentQuestion = question; state.currentTransaction = transaction;
-      state.currentJournal = journalData; state.isRevisionQuestion = true;
+
+      const question = {
+        accountName: qData.accountName,
+        accountType: qData.accountType,
+        effect: qData.effect || "increase",
+        correctAnswer: qData.correctAnswer,
+        explanation: qData.explanation,
+        ruleText: qData.ruleText,
+        _revisionDocId: docId,
+      };
+
+      state.currentQuestion = question;
+      state.currentTransaction = transaction;
+      state.currentJournal = journalData;
+      state.isRevisionQuestion = true;
       state.currentRevisionDocId = docId;
       updateRevisionBadges();
       renderQuestion();
       return;
     } else {
-      state.revisionMode = false; state.isRevisionQuestion = false; state.currentRevisionDocId = null;
+      state.revisionMode = false;
+      state.isRevisionQuestion = false;
+      state.currentRevisionDocId = null;
       const revToggle = document.getElementById("revisionToggle");
-      if (revToggle) { revToggle.classList.remove("active"); const dot = revToggle.querySelector(".toggle-dot"); if (dot) dot.style.background = "var(--text-muted)"; }
+      if (revToggle) {
+        revToggle.classList.remove("active");
+        const dot = revToggle.querySelector(".toggle-dot");
+        if (dot) dot.style.background = "var(--text-muted)";
+      }
       showToast("Revision Complete", "All revision questions answered!", "fa-check-circle", "gain");
       updateRevisionBadges();
     }
   }
-  state.isRevisionQuestion = false; state.currentRevisionDocId = null;
+
+  state.isRevisionQuestion = false;
+  state.currentRevisionDocId = null;
+
   let smartBias = null;
   let effectiveMode = mode;
+
   if (state.smartMode) {
     smartBias = SMART_TRACKER.getBiases();
     effectiveMode = SMART_TRACKER.getEffectiveMode();
@@ -1521,29 +1975,56 @@ function generateNextQuestionSet() {
     updateSmartBadge(effectiveMode);
     state.difficulty = effectiveMode;
   }
+
   const templateInfo = pickTemplateWithDiversity(effectiveMode, smartBias);
   const transaction = generateTransactionFromTemplate(templateInfo, effectiveMode);
+
   const journal = transaction.journal;
   const primaryAccount = transaction.primaryAccount;
+  const primarySide = transaction.primarySide;
+
   const primaryEntry = journal.find((j) => j.account === primaryAccount);
-  if (!primaryEntry) { const fallback = journal[0]; if (fallback) { transaction.primaryAccount = fallback.account; transaction.primarySide = fallback.side; } }
+  if (!primaryEntry) {
+    const fallback = journal[0];
+    if (fallback) {
+      transaction.primaryAccount = fallback.account;
+      transaction.primarySide = fallback.side;
+    }
+  }
+
   const accountName = transaction.primaryAccount;
   const info = getAccountInfo(accountName);
   const categoryType = info ? info.category : "asset";
+
   const isDebit = transaction.primarySide === "debit";
   let effect;
-  if (categoryType === "asset" || categoryType === "expense" || categoryType === "drawing") effect = isDebit ? "increase" : "decrease";
-  else if (categoryType === "liability" || categoryType === "capital" || categoryType === "revenue") effect = isDebit ? "decrease" : "increase";
-  else effect = isDebit ? "increase" : "decrease";
+  if (categoryType === "asset" || categoryType === "expense" || categoryType === "drawing") {
+    effect = isDebit ? "increase" : "decrease";
+  } else if (categoryType === "liability" || categoryType === "capital" || categoryType === "revenue") {
+    effect = isDebit ? "decrease" : "increase";
+  } else {
+    effect = isDebit ? "increase" : "decrease";
+  }
+
   const rule = ACCOUNT_RULES[categoryType];
   const correctAnswer = rule ? rule[effect] : "debit";
   const answerLabel = correctAnswer === "debit" ? "Debit" : "Credit";
+
   const bnName = getBengaliName(accountName) || accountName;
   const label = rule ? rule.label : "Account";
   const effectLabel = effect === "increase" ? "increases" : "decreases";
   const explanation = `"${bnName}" is an ${label}. When ${label} ${effectLabel}, it is ${answerLabel}.`;
   const ruleText = `${label} ${effectLabel} = ${answerLabel}`;
-  const question = { accountName, accountType: categoryType, effect, correctAnswer, explanation, ruleText };
+
+  const question = {
+    accountName: accountName,
+    accountType: categoryType,
+    effect: effect,
+    correctAnswer: correctAnswer,
+    explanation: explanation,
+    ruleText: ruleText,
+  };
+
   state.currentQuestion = question;
   state.currentTransaction = transaction;
   state.currentJournal = journal;
@@ -1551,57 +2032,71 @@ function generateNextQuestionSet() {
 }
 
 // ================================================================
-// 14. ANSWER HANDLING ⭐ (with all tracking increments)
+// 14. ANSWER HANDLING  (✅ Merge badges instead of replace)
 // ================================================================
 
 async function handleAnswer(answer) {
   if (state.answered || !state.currentQuestion) return;
   state.answered = true;
   state.userAnswer = answer;
+
   stopTimer();
-  const timerDisplay = document.getElementById("timerDisplay"); if (timerDisplay) timerDisplay.classList.remove("show");
+  const timerDisplay = document.getElementById("timerDisplay");
+  if (timerDisplay) timerDisplay.classList.remove("show");
+
   const q = state.currentQuestion;
   const s = state.stats;
   const isCorrect = answer === q.correctAnswer;
   const isRevision = state.isRevisionQuestion && state.currentRevisionDocId;
   const isTimerMode = state.timerMode && state.difficulty !== "easy";
-  const boosters = getBoosters();
-  const rewards = getRewards(state.difficulty, isCorrect, isRevision, isTimerMode, state.timerSec, boosters);
 
-  // ⭐ Track elapsed time for fast answers
+  const boosters = getBoosters();
+
+  const rewards = getRewards(
+    state.difficulty,
+    isCorrect,
+    isRevision,
+    isTimerMode,
+    state.timerSec,
+    boosters
+  );
+
   const elapsed = (Date.now() - state.questionStartTime) / 1000;
   if (elapsed <= 3) s.fastAnswers = (s.fastAnswers || 0) + 1;
-  if (elapsed <= 2) s.fastAnswers2s = (s.fastAnswers2s || 0) + 1;   // ⭐ FIX: was missing
   s.sessionQuestions = (s.sessionQuestions || 0) + 1;
 
   const hour = new Date().getHours();
-  if (hour >= 0 && hour < 6) s.nightQuestions = (s.nightQuestions || 0) + 1;
-  if (hour >= 6 && hour < 9) s.earlyQuestions = (s.earlyQuestions || 0) + 1;
+  if (hour >= 0 && hour < 6) {
+    s.nightQuestions = (s.nightQuestions || 0) + 1;
+  }
+  if (hour >= 6 && hour < 9) {
+    s.earlyQuestions = (s.earlyQuestions || 0) + 1;
+  }
 
   const today = new Date().toDateString();
   if (s.lastActivityDate !== today) {
     if (s.lastActivityDate) {
-      const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-      if (s.lastActivityDate === yesterday.toDateString()) s.dailyStreak = (s.dailyStreak || 0) + 1;
-      else s.dailyStreak = 1;
-    } else s.dailyStreak = 1;
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      if (s.lastActivityDate === yesterday.toDateString()) {
+        s.dailyStreak = (s.dailyStreak || 0) + 1;
+      } else {
+        s.dailyStreak = 1;
+      }
+    } else {
+      s.dailyStreak = 1;
+    }
     s.lastActivityDate = today;
   }
 
   let pointsChanged = 0, xpChanged = 0, coinsChanged = 0, rubiesChanged = 0;
+
   const topicType = q.accountType || "asset";
-
-  // ⭐ FIX: Ensure category counter objects exist
-  if (!s.categoryCorrectCounts) s.categoryCorrectCounts = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
-  if (!s.categoryTotalCounts) s.categoryTotalCounts = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
-
-  // ⭐ FIX: Increment persistent category counters
-  if (s.categoryTotalCounts[topicType] !== undefined) s.categoryTotalCounts[topicType]++;
-  if (isCorrect && s.categoryCorrectCounts[topicType] !== undefined) s.categoryCorrectCounts[topicType]++;
-
   if (s.topicStats && s.topicStats[topicType]) {
     s.topicStats[topicType].total++;
-    if (!isCorrect) s.topicStats[topicType].wrong++;
+    if (!isCorrect) {
+      s.topicStats[topicType].wrong++;
+    }
   }
 
   if (isCorrect) {
@@ -1612,8 +2107,10 @@ async function handleAnswer(answer) {
     s.xp += rewards.xp;
     s.coins += rewards.coins;
     s.rubies = (s.rubies || 0) + (rewards.rubies || 0);
-    pointsChanged = rewards.points; xpChanged = rewards.xp;
-    coinsChanged = rewards.coins; rubiesChanged = rewards.rubies || 0;
+    pointsChanged = rewards.points;
+    xpChanged = rewards.xp;
+    coinsChanged = rewards.coins;
+    rubiesChanged = rewards.rubies || 0;
 
     if (isRevision) {
       s.revisionCorrect = (s.revisionCorrect || 0) + 1;
@@ -1627,27 +2124,26 @@ async function handleAnswer(answer) {
     if (coinsChanged > 0) showCoinToast(coinsChanged);
     if (rubiesChanged > 0) showRubyToast(rubiesChanged);
 
-    // ⭐ Timer Mode + difficulty-specific counters
     if (isTimerMode) {
       s.timerQuestionsCompleted = (s.timerQuestionsCompleted || 0) + 1;
-      if (state.difficulty === "medium") {
-        if (state.timerSec === 5) s.medium5sCompleted = (s.medium5sCompleted || 0) + 1;
-        else if (state.timerSec === 10) s.medium10sCompleted = (s.medium10sCompleted || 0) + 1;
-      } else if (state.difficulty === "hard") {
-        if (state.timerSec === 5) s.hard5sCompleted = (s.hard5sCompleted || 0) + 1;
-        else if (state.timerSec === 10) s.hard10sCompleted = (s.hard10sCompleted || 0) + 1;
+      if (state.timerSec === 5) {
+        s.timer5sCompleted = (s.timer5sCompleted || 0) + 1;
+      } else if (state.timerSec === 10) {
+        s.timer10sCompleted = (s.timer10sCompleted || 0) + 1;
       }
-      if (state.timerSec === 5) s.timer5sCompleted = (s.timer5sCompleted || 0) + 1;
-      else if (state.timerSec === 10) s.timer10sCompleted = (s.timer10sCompleted || 0) + 1;
     }
   } else {
     s.wrong++;
     if (boosters.streakActive) {
       s.noStreakBreakRemaining--;
-      s.streakProtectedCount = (s.streakProtectedCount || 0) + 1;
       showToast("🛡️ Streak Protected!", `${s.noStreakBreakRemaining} protections left.`, "fa-shield", "gain");
-      if (s.noStreakBreakRemaining <= 0) { s.noStreakBreakRemaining = 0; updateBoosterStatus(); }
-    } else s.streak = 0;
+      if (s.noStreakBreakRemaining <= 0) {
+        s.noStreakBreakRemaining = 0;
+        updateBoosterStatus();
+      }
+    } else {
+      s.streak = 0;
+    }
     const penalty = Math.abs(rewards.points) || 2;
     s.points = Math.max(0, s.points - Math.floor(penalty * 0.5));
     pointsChanged = -Math.floor(penalty * 0.5);
@@ -1665,9 +2161,15 @@ async function handleAnswer(answer) {
   const newLevel = getLevelFromXP(s.xp);
   const oldLevel = s.level || 1;
   s.level = newLevel;
-  if (newLevel > oldLevel) setTimeout(() => showToast("Level Up!", `You are now Level ${newLevel}`, "fa-trophy", "gain"), 300);
+  if (newLevel > oldLevel) {
+    setTimeout(() => showToast("Level Up!", `You are now Level ${newLevel}`, "fa-trophy", "gain"), 300);
+  }
 
-  s.quizHistory.push({ type: q.accountType, effect: q.effect, account: q.accountName, userAnswer: answer, correctAnswer: q.correctAnswer, ruleKey: `${q.accountType}.${q.effect}`, timestamp: Date.now() });
+  s.quizHistory.push({
+    type: q.accountType, effect: q.effect, account: q.accountName,
+    userAnswer: answer, correctAnswer: q.correctAnswer,
+    ruleKey: `${q.accountType}.${q.effect}`, timestamp: Date.now(),
+  });
   if (s.quizHistory.length > 200) s.quizHistory.shift();
 
   const total = s.correct + s.wrong;
@@ -1681,20 +2183,28 @@ async function handleAnswer(answer) {
     s.effectiveDifficulty = SMART_TRACKER.getEffectiveMode();
   }
 
-  // ⭐ Merge earned badges
+  // ✅ Merge earned badges with previous ones (never lose Leaderboard / Bring-a-Friend / etc.)
   const earnedIds = checkBadges(s);
   const prevBadges = new Set(s.earnedBadges || []);
   const mergedBadges = [...new Set([...prevBadges, ...earnedIds])];
   s.earnedBadges = mergedBadges;
+
   const newBadges = mergedBadges.filter((id) => !prevBadges.has(id) && !state._shownBadges.has(id));
   for (const id of newBadges) {
     const badge = ALL_BADGES.find((b) => b.id === id);
-    if (badge) { state._shownBadges.add(id); setTimeout(() => showBadgeToast(badge), 400); }
+    if (badge) {
+      state._shownBadges.add(id);
+      setTimeout(() => showBadgeToast(badge), 400);
+    }
   }
-  for (const id of mergedBadges) state._shownBadges.add(id);
+  for (const id of mergedBadges) {
+    state._shownBadges.add(id);
+  }
 
   s.focusCount = (s.focusCount || 0) + 1;
+
   saveStats();
+
   updateHeaderStats();
   updateQuizProgress();
 
@@ -1710,9 +2220,17 @@ async function handleAnswer(answer) {
   const desc = descParts.length > 0 ? descParts.join(" · ") : isCorrect ? "Good job!" : "Keep practicing!";
   showToast(toastTitle, desc, toastIcon, toastType);
 
-  if (isRevision && isCorrect) { state.isRevisionQuestion = false; state.currentRevisionDocId = null; }
+  if (isRevision && isCorrect) {
+    state.isRevisionQuestion = false;
+    state.currentRevisionDocId = null;
+  }
+
   showFeedback(isCorrect, q, state.currentJournal, state.currentTransaction);
-  updateDashboard(); updateBadges(); updateWeakTopics(); updateBoosterStatus();
+  updateDashboard();
+  updateBadges();
+  updateWeakTopics();
+  updateBoosterStatus();
+
   renderLeaderboard();
 }
 
@@ -1721,12 +2239,24 @@ async function handleAnswer(answer) {
 // ================================================================
 
 function useHint() {
-  if (state.answered || !state.currentQuestion) { showToast("Hint Not Available", "Answer the current question first.", "fa-exclamation-circle", "loss"); return; }
-  if (state.revisionMode || state.timerMode) { showToast("Hint Disabled", "Hints are not available in Revision or Timer Mode.", "fa-exclamation-circle", "loss"); return; }
-  if (state.stats.hints <= 0) { showToast("No Hints", "You have no hints. Buy more in the Shop!", "fa-exclamation-circle", "loss"); return; }
+  if (state.answered || !state.currentQuestion) {
+    showToast("Hint Not Available", "Answer the current question first.", "fa-exclamation-circle", "loss");
+    return;
+  }
+  if (state.revisionMode || state.timerMode) {
+    showToast("Hint Disabled", "Hints are not available in Revision or Timer Mode.", "fa-exclamation-circle", "loss");
+    return;
+  }
+  if (state.stats.hints <= 0) {
+    showToast("No Hints", "You have no hints. Buy more in the Shop!", "fa-exclamation-circle", "loss");
+    return;
+  }
   state.stats.hints--;
   state.hintUsedForQuestion = true;
-  updateHeaderStats(); updateDashboard(); updateHintButton();
+  updateHeaderStats();
+  updateDashboard();
+  updateHintButton();
+
   const q = state.currentQuestion;
   const ruleText = q.ruleText || "Check the rule.";
   showToast("Hint Revealed", `Rule: ${ruleText}`, "fa-lightbulb", "hint");
@@ -1734,56 +2264,43 @@ function useHint() {
 }
 
 // ================================================================
-// 16. SHOP ⭐ (with full tracking)
+// 16. SHOP
 // ================================================================
 
 function buyHint(hints, price, rubiesBonus) {
   const s = state.stats;
-  if (s.coins < price) { showToast("Not Enough Coins", `Need ${price} coins. You have ${s.coins}.`, "fa-coins", "loss"); return; }
-  if (s.rubies < (rubiesBonus || 0)) { showToast("Not Enough Rubies", `Need ${rubiesBonus} rubies. You have ${s.rubies}.`, "fa-gem", "loss"); return; }
+  if (s.coins < price) {
+    showToast("Not Enough Coins", `Need ${price} coins. You have ${s.coins}.`, "fa-coins", "loss");
+    return;
+  }
+  if (s.rubies < (rubiesBonus || 0)) {
+    showToast("Not Enough Rubies", `Need ${rubiesBonus} rubies. You have ${s.rubies}.`, "fa-gem", "loss");
+    return;
+  }
   s.coins -= price;
   s.rubies = (s.rubies || 0) - (rubiesBonus || 0);
   s.hints = (s.hints || 0) + hints;
-
-  // ⭐ NEW: Track TOTAL hints purchased (never decreases)
-  s.hintsPurchased = (s.hintsPurchased || 0) + hints;
-
-  // Spending tracking
-  s.coinsSpent = (s.coinsSpent || 0) + price;
-  s.rubiesSpent = (s.rubiesSpent || 0) + (rubiesBonus || 0);
-  if (price > (s.maxSingleCoinSpend || 0)) s.maxSingleCoinSpend = price;
-  if (price > 0) s.coinPurchaseCount = (s.coinPurchaseCount || 0) + 1;
-  if (rubiesBonus > 0) s.rubyPurchaseCount = (s.rubyPurchaseCount || 0) + 1;
-
-  // Pack-specific tracking
-  if (hints === 1) s.hintPackSingle = (s.hintPackSingle || 0) + 1;
-  else if (hints === 10) s.hintPackStarter = (s.hintPackStarter || 0) + 1;
-  else if (hints === 20) s.hintPackPro = (s.hintPackPro || 0) + 1;
-  else if (hints === 50) s.hintPackMaster = (s.hintPackMaster || 0) + 1;
-
-  updateHeaderStats(); updateDashboard(); updateShopUI(); updateHintButton();
+  updateHeaderStats();
+  updateDashboard();
+  updateShopUI();
+  updateHintButton();
   showToast("Hints Purchased!", `${hints} hints added${rubiesBonus ? ` (${rubiesBonus} rubies spent)` : ""}.`, "fa-coins", "hint");
   saveStats();
-  recheckBadgesAfterAction();
 }
 
 function buyCoins(coins, rubiesCost) {
   const s = state.stats;
-  if (s.rubies < rubiesCost) { showToast("Not Enough Rubies", `Need ${rubiesCost} rubies. You have ${s.rubies}.`, "fa-gem", "loss"); return; }
+  if (s.rubies < rubiesCost) {
+    showToast("Not Enough Rubies", `Need ${rubiesCost} rubies. You have ${s.rubies}.`, "fa-gem", "loss");
+    return;
+  }
   s.rubies -= rubiesCost;
   s.coins += coins;
-  s.rubiesSpent = (s.rubiesSpent || 0) + rubiesCost;
-  if (rubiesCost > 0) s.rubyPurchaseCount = (s.rubyPurchaseCount || 0) + 1;
-
-  // Coin pack tracking
-  if (coins === 50) s.coinPackPocket = (s.coinPackPocket || 0) + 1;
-  else if (coins === 100) s.coinPackPile = (s.coinPackPile || 0) + 1;
-  else if (coins === 300) s.coinPackBag = (s.coinPackBag || 0) + 1;
-
-  updateHeaderStats(); updateDashboard(); updateShopUI();
+  updateHeaderStats();
+  updateDashboard();
+  updateShopUI();
   showToast("Coins Purchased!", `+${coins} coins for ${rubiesCost} rubies.`, "fa-coins", "gain");
   saveStats();
-  recheckBadgesAfterAction();
 }
 
 function updateShopUI() {
@@ -1826,37 +2343,64 @@ function updateDashboard() {
   setText("dHearts", 0);
   setText("dPoints", s.points);
   setText("dXp", s.xp);
-  setText("dLevel", getLevelFromXP(s.xp));
+  const level = getLevelFromXP(s.xp);
+  setText("dLevel", level);
   setText("dStreak", s.streak);
   setText("dHints", s.hints || 0);
+
   const progress = getXPProgress(s.xp);
   const pct = Math.min(100, progress.progress * 100);
-  const fill = document.getElementById("xpBarFill"); if (fill) fill.style.width = pct + "%";
+  const fill = document.getElementById("xpBarFill");
+  if (fill) fill.style.width = pct + "%";
   setText("xpProgressText", `${s.xp} / ${progress.next} XP`);
+
   updateShopUI();
 }
+
+// ================================================================
+// 17.5. BADGES RENDER (Topic-wise Collapsible Groups)
+// ================================================================
 
 function updateBadges() {
   const s = state.stats;
   const earnedIds = s.earnedBadges || [];
   const grid = document.getElementById("badgesGrid");
   if (!grid) return;
+
+  // Restore expanded state from localStorage
   let expandedGroups = new Set();
   try {
     const stored = localStorage.getItem("badge_expanded_groups");
-    if (stored) expandedGroups = new Set(JSON.parse(stored));
-    else expandedGroups = new Set(["leaderboard", "milestones"]);
-  } catch (e) { expandedGroups = new Set(["leaderboard", "milestones"]); }
+    if (stored) {
+      expandedGroups = new Set(JSON.parse(stored));
+    } else {
+      // Default expanded: first two groups
+      expandedGroups = new Set(["leaderboard", "milestones"]);
+    }
+  } catch (e) {
+    expandedGroups = new Set(["leaderboard", "milestones"]);
+  }
+
   grid.innerHTML = "";
+  let totalUnlocked = 0;
+
   for (const group of BADGE_GROUPS) {
-    const groupBadges = group.badgeIds.map((id) => ALL_BADGES.find((b) => b.id === id)).filter(Boolean);
+    // Resolve badge objects for this group
+    const groupBadges = group.badgeIds
+      .map((id) => ALL_BADGES.find((b) => b.id === id))
+      .filter(Boolean);
     if (groupBadges.length === 0) continue;
+
     const groupEarned = groupBadges.filter((b) => earnedIds.includes(b.id)).length;
+    totalUnlocked += groupEarned;
     const isExpanded = expandedGroups.has(group.id);
     const isComplete = groupEarned === groupBadges.length;
+
     const groupEl = document.createElement("div");
     groupEl.className = "badge-group" + (isExpanded ? " expanded" : "");
     groupEl.dataset.groupId = group.id;
+
+    // ----- Group Header -----
     const header = document.createElement("button");
     header.type = "button";
     header.className = "badge-group-header";
@@ -1870,26 +2414,48 @@ function updateBadges() {
       const nowExpanded = !expandedGroups.has(group.id);
       if (nowExpanded) expandedGroups.add(group.id);
       else expandedGroups.delete(group.id);
-      try { localStorage.setItem("badge_expanded_groups", JSON.stringify([...expandedGroups])); } catch (e) {}
+      try {
+        localStorage.setItem(
+          "badge_expanded_groups",
+          JSON.stringify([...expandedGroups]),
+        );
+      } catch (e) {}
       groupEl.classList.toggle("expanded", nowExpanded);
     });
     groupEl.appendChild(header);
+
+    // ----- Group Body -----
     const body = document.createElement("div");
     body.className = "badge-group-body";
+
     const inner = document.createElement("div");
     inner.className = "badge-group-inner";
+
     for (const badge of groupBadges) {
       const unlocked = earnedIds.includes(badge.id);
       const item = document.createElement("div");
       item.className = "badge-item" + (unlocked ? "" : " locked");
-      item.innerHTML = `<div class="b-icon ${unlocked ? "unlocked" : "locked"}">${badge.icon}</div><div class="b-info"><div class="b-name">${badge.name}</div></div>`;
-      item.addEventListener("click", (function (bid) { return function () { showBadgeDetails(bid); }; })(badge.id));
+      item.innerHTML = `
+        <div class="b-icon ${unlocked ? "unlocked" : "locked"}">${badge.icon}</div>
+        <div class="b-info"><div class="b-name">${badge.name}</div></div>
+      `;
+      item.addEventListener(
+        "click",
+        (function (bid) {
+          return function () {
+            showBadgeDetails(bid);
+          };
+        })(badge.id),
+      );
       inner.appendChild(item);
     }
+
     body.appendChild(inner);
     groupEl.appendChild(body);
     grid.appendChild(groupEl);
   }
+
+  // Count total unlocked across all badges
   const unlockedCount = ALL_BADGES.filter((b) => earnedIds.includes(b.id)).length;
   setText("badgeCount", `${unlockedCount} / ${ALL_BADGES.length}`);
 }
@@ -1898,8 +2464,10 @@ function updateWeakTopics() {
   const s = state.stats;
   const container = document.getElementById("weakTopics");
   if (!container) return;
+
   const topicLabels = { asset: "Asset", liability: "Liability", capital: "Capital", revenue: "Revenue", expense: "Expense", drawing: "Drawing" };
   const topicEmojis = { asset: "🏦", liability: "📉", capital: "💰", revenue: "📈", expense: "💸", drawing: "✏️" };
+
   const topics = s.topicStats || {};
   const entries = Object.entries(topics)
     .filter(([key, data]) => data.total > 0)
@@ -1908,17 +2476,25 @@ function updateWeakTopics() {
       return { key, label: topicLabels[key] || key, emoji: topicEmojis[key] || "📊", total: data.total, wrong: data.wrong, pct };
     })
     .sort((a, b) => b.pct - a.pct);
+
   if (entries.length === 0) {
     container.innerHTML = '<div style="padding:8px 0;color:var(--accent-2);"><i class="fas fa-check-circle"></i> No weak topics yet. Keep going!</div>';
     return;
   }
+
   container.innerHTML = entries.map((entry) => {
     const pct = entry.pct;
     let cls = "low";
     if (pct > 60) cls = "high";
     else if (pct > 30) cls = "medium";
     const barPct = Math.min(100, pct);
-    return `<div class="weak-topic-item"><span class="topic-name">${entry.emoji} ${entry.label}</span><div class="topic-bar-wrap"><div class="topic-bar-fill ${cls}" style="width:${barPct}%;"></div></div><span class="topic-pct ${cls}">${pct}%</span></div>`;
+    return `<div class="weak-topic-item">
+                    <span class="topic-name">${entry.emoji} ${entry.label}</span>
+                    <div class="topic-bar-wrap">
+                        <div class="topic-bar-fill ${cls}" style="width:${barPct}%;"></div>
+                    </div>
+                    <span class="topic-pct ${cls}">${pct}%</span>
+                </div>`;
   }).join("");
 }
 
@@ -1930,12 +2506,24 @@ async function updateRevisionBadges() {
   const count = await getRevisionCount();
   const badgeEl = document.getElementById("revCountBadge");
   const toggleBadge = document.getElementById("revToggleCount");
-  if (badgeEl) { badgeEl.textContent = count; badgeEl.className = "rev-count" + (count === 0 ? " zero" : ""); }
-  if (toggleBadge) { toggleBadge.textContent = count; toggleBadge.className = "rev-count" + (count === 0 ? " zero" : ""); }
+  if (badgeEl) {
+    badgeEl.textContent = count;
+    badgeEl.className = "rev-count" + (count === 0 ? " zero" : "");
+  }
+  if (toggleBadge) {
+    toggleBadge.textContent = count;
+    toggleBadge.className = "rev-count" + (count === 0 ? " zero" : "");
+  }
   if (count === 0 && state.revisionMode) {
-    state.revisionMode = false; state.isRevisionQuestion = false; state.currentRevisionDocId = null;
+    state.revisionMode = false;
+    state.isRevisionQuestion = false;
+    state.currentRevisionDocId = null;
     const revToggle = document.getElementById("revisionToggle");
-    if (revToggle) { revToggle.classList.remove("active"); const dot = revToggle.querySelector(".toggle-dot"); if (dot) dot.style.background = "var(--text-muted)"; }
+    if (revToggle) {
+      revToggle.classList.remove("active");
+      const dot = revToggle.querySelector(".toggle-dot");
+      if (dot) dot.style.background = "var(--text-muted)";
+    }
     state.revisionQueue = [];
     showToast("Revision Mode Off", "No revision questions left.", "fa-info-circle", "gain");
   }
@@ -1980,13 +2568,19 @@ async function loadRevisionQueue() {
         qData.ruleText = qData.ruleText || "Review the rule.";
       }
       state.revisionQueue.push({
-        docId: doc.id, question: qData, transaction: transData, journal: journalData,
+        docId: doc.id,
+        question: qData,
+        transaction: transData,
+        journal: journalData,
         displayText: doc.displayText || "Transaction",
         accountDisplay: doc.accountDisplay || qData.accountName,
       });
     }
     return state.revisionQueue.length;
-  } catch (e) { state.revisionQueue = []; return 0; }
+  } catch (e) {
+    state.revisionQueue = [];
+    return 0;
+  }
 }
 
 // ================================================================
@@ -1997,32 +2591,66 @@ function renderLeaderboard() {
   const tbody = document.getElementById("lbBody");
   const empty = document.getElementById("lbEmpty");
   if (!tbody || !empty) return;
+
   if (state.isGuest) {
     tbody.innerHTML = "";
     empty.style.display = "block";
-    empty.innerHTML = `<i class="fas fa-lock" style="font-size:48px;color:var(--accent-1);"></i><h3>Log in to View the Leaderboard</h3><p>Sign in with Google to see rankings and compete with others.</p>`;
+    empty.innerHTML = `
+            <i class="fas fa-lock" style="font-size:48px;color:var(--accent-1);"></i>
+            <h3>Log in to View the Leaderboard</h3>
+            <p>Sign in with Google to see rankings and compete with others.</p>
+        `;
     return;
   }
+
   const currentEmail = auth.currentUser ? auth.currentUser.email : null;
+
   let filtered = leaderboardData.filter((u) => !isGuestUid(u.id) && u.email);
   let sorted = [...filtered];
   if (leaderboardSortKey === "xp") sorted.sort((a, b) => b.xp - a.xp);
   else if (leaderboardSortKey === "points") sorted.sort((a, b) => b.points - a.points);
   else if (leaderboardSortKey === "accuracy") sorted.sort((a, b) => b.accuracy - a.accuracy);
   else if (leaderboardSortKey === "badges") sorted.sort((a, b) => (b.badges || 0) - (a.badges || 0));
-  const seen = new Set(); const unique = [];
-  for (const u of sorted) if (!seen.has(u.email)) { seen.add(u.email); unique.push(u); }
+
+  const seen = new Set();
+  const unique = [];
+  for (const u of sorted) {
+    if (!seen.has(u.email)) {
+      seen.add(u.email);
+      unique.push(u);
+    }
+  }
   sorted = unique;
+
   if (currentEmail) {
     const userIdx = sorted.findIndex((u) => u.email === currentEmail);
     if (userIdx !== -1) {
       const total = state.stats.correct + state.stats.wrong;
       const acc = total > 0 ? Math.round((state.stats.correct / total) * 100) : 0;
-      sorted[userIdx] = { ...sorted[userIdx], xp: state.stats.xp || 0, points: state.stats.points || 0, accuracy: acc, badges: (state.stats.earnedBadges || []).length, email: sorted[userIdx].email, name: sorted[userIdx].name, photoURL: sorted[userIdx].photoURL, isUser: true };
+      sorted[userIdx] = {
+        ...sorted[userIdx],
+        xp: state.stats.xp || 0,
+        points: state.stats.points || 0,
+        accuracy: acc,
+        badges: (state.stats.earnedBadges || []).length,
+        email: sorted[userIdx].email,
+        name: sorted[userIdx].name,
+        photoURL: sorted[userIdx].photoURL,
+        isUser: true,
+      };
     } else {
       const total = state.stats.correct + state.stats.wrong;
       const acc = total > 0 ? Math.round((state.stats.correct / total) * 100) : 0;
-      const userObj = { email: currentEmail, name: auth.currentUser ? auth.currentUser.displayName || "User" : "User", photoURL: auth.currentUser ? auth.currentUser.photoURL || "" : "", xp: state.stats.xp || 0, points: state.stats.points || 0, accuracy: acc, badges: (state.stats.earnedBadges || []).length, isUser: true };
+      const userObj = {
+        email: currentEmail,
+        name: auth.currentUser ? auth.currentUser.displayName || "User" : "User",
+        photoURL: auth.currentUser ? auth.currentUser.photoURL || "" : "",
+        xp: state.stats.xp || 0,
+        points: state.stats.points || 0,
+        accuracy: acc,
+        badges: (state.stats.earnedBadges || []).length,
+        isUser: true,
+      };
       if (state.stats.totalQuestions > 0 || state.stats.xp > 0) {
         sorted.push(userObj);
         if (leaderboardSortKey === "xp") sorted.sort((a, b) => b.xp - a.xp);
@@ -2032,44 +2660,86 @@ function renderLeaderboard() {
       }
     }
   }
-  if (sorted.length === 0) { if (empty) empty.style.display = "block"; tbody.innerHTML = ""; return; }
+
+  if (sorted.length === 0) {
+    if (empty) empty.style.display = "block";
+    tbody.innerHTML = "";
+    return;
+  }
   if (empty) empty.style.display = "none";
+
   tbody.innerHTML = sorted.map((e, i) => {
     const rank = i + 1;
     let rc = "lb-rank";
-    if (rank === 1) rc += " gold"; else if (rank === 2) rc += " silver"; else if (rank === 3) rc += " bronze";
+    if (rank === 1) rc += " gold";
+    else if (rank === 2) rc += " silver";
+    else if (rank === 3) rc += " bronze";
+
     const isUser = e.email === currentEmail;
     const rowClass = isUser ? ' class="lb-user-row"' : "";
+
     const avatar = e.photoURL ? `<img src="${e.photoURL}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-right:6px;" />` : "";
+
     const displayName = isUser ? (auth.currentUser ? auth.currentUser.displayName || "User" : "User") : e.name;
-    return `<tr${rowClass}><td><span class="${rc}">#${rank}</span></td><td>${avatar}${displayName} ${isUser ? '<i class="fas fa-star" style="color:var(--accent-3);font-size:12px;margin-left:4px;"></i>' : ""}</td><td>${e.xp}</td><td>${e.points}</td><td>${e.accuracy}%</td><td>${e.badges || 0}</td></tr>`;
+
+    return `<tr${rowClass}>
+                    <td><span class="${rc}">#${rank}</span></td>
+                    <td>${avatar}${displayName} ${isUser ? '<i class="fas fa-star" style="color:var(--accent-3);font-size:12px;margin-left:4px;"></i>' : ""}</td>
+                    <td>${e.xp}</td>
+                    <td>${e.points}</td>
+                    <td>${e.accuracy}%</td>
+                    <td>${e.badges || 0}</td>
+                </tr>`;
   }).join("");
+
+  // ===== RANK CHECK FOR BELL NOTIFICATIONS =====
   if (currentEmail) {
     const userRank = sorted.findIndex((u) => u.email === currentEmail) + 1;
-    if (userRank >= 1 && userRank <= 5 && auth.currentUser && typeof checkForRankNotifications === 'function') {
-      const encodedEmail = currentEmail.replace(/[.#$\/\[\]]/g, '_');
-      checkForRankNotifications(encodedEmail, userRank);
+    if (userRank >= 1 && userRank <= 5 && auth.currentUser) {
+      if (typeof checkForRankNotifications === 'function') {
+        const encodedEmail = currentEmail.replace(/[.#$\/\[\]]/g, '_');
+        checkForRankNotifications(encodedEmail, userRank);
+      }
     }
   }
+
+  // ===== LEADERBOARD BADGE CHECK =====
+  // Different rank thresholds per leaderboard type
   if (currentEmail) {
     const s = state.stats;
     const prevBadges = new Set(s.earnedBadges || []);
     let newBadges = [];
+
     const userRank = sorted.findIndex((e) => e.email === currentEmail) + 1;
+
+    // 👑 XP King → XP Leaderboard এ Top 3
     if (leaderboardSortKey === "xp" && userRank > 0 && userRank <= 3) newBadges.push("n1");
+
+    // 🏅 Points Pro → Points Leaderboard এ Top 3
     if (leaderboardSortKey === "points" && userRank > 0 && userRank <= 3) newBadges.push("n2");
+
+    // 🎯 Accuracy Ace → Accuracy Leaderboard এ Top 5
     if (leaderboardSortKey === "accuracy" && userRank > 0 && userRank <= 5) newBadges.push("n3");
+
+    // 🏆 Badge Collector → Badges Leaderboard এ Top 2
     if (leaderboardSortKey === "badges" && userRank > 0 && userRank <= 2) newBadges.push("n4");
+
+    // 🎖️ Top 10 Leaderboard
     if (userRank > 0 && userRank <= 10) newBadges.push("b51");
+
     newBadges = newBadges.filter((id) => !prevBadges.has(id) && !state._shownBadges.has(id));
+
     if (newBadges.length > 0) {
       s.earnedBadges = [...new Set([...prevBadges, ...newBadges])];
       for (const id of newBadges) {
         state._shownBadges.add(id);
         const badge = ALL_BADGES.find((b) => b.id === id);
-        if (badge) setTimeout(() => showBadgeToast(badge), 300);
+        if (badge) {
+          setTimeout(() => showBadgeToast(badge), 300);
+        }
       }
-      saveStats(); updateBadges();
+      saveStats();
+      updateBadges();
     }
   }
 }
@@ -2082,9 +2752,17 @@ function navigateTo(section) {
   $$(".section-panel").forEach((el) => el.classList.remove("active"));
   const target = document.getElementById("section-" + section);
   if (target) target.classList.add("active");
-  $$(".nav-tab").forEach((el) => el.classList.toggle("active", el.dataset.section === section));
-  if (section === "dashboard") { updateDashboard(); updateBadges(); updateWeakTopics(); }
-  if (section === "shop") updateShopUI();
+  $$(".nav-tab").forEach((el) => {
+    el.classList.toggle("active", el.dataset.section === section);
+  });
+  if (section === "dashboard") {
+    updateDashboard();
+    updateBadges();
+    updateWeakTopics();
+  }
+  if (section === "shop") {
+    updateShopUI();
+  }
   if (section === "revision") loadRevisionList();
   if (section === "leaderboard") renderLeaderboard();
 }
@@ -2098,61 +2776,125 @@ function init() {
 
   document.getElementById("loginBtn").addEventListener("click", async function () {
     const btn = this, loader = document.getElementById("loginLoader");
-    btn.style.display = "none"; loader.style.display = "flex";
-    try { const provider = new firebase.auth.GoogleAuthProvider(); await auth.signInWithPopup(provider); }
-    catch (error) { showToast("Login Failed", error.message || "Please try again.", "fa-exclamation-circle", "loss"); btn.style.display = "flex"; loader.style.display = "none"; }
+    btn.style.display = "none";
+    loader.style.display = "flex";
+    try {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      await auth.signInWithPopup(provider);
+    } catch (error) {
+      showToast("Login Failed", error.message || "Please try again.", "fa-exclamation-circle", "loss");
+      btn.style.display = "flex";
+      loader.style.display = "none";
+    }
   });
 
   document.getElementById("skipLoginBtn").addEventListener("click", function () {
     let guestId = localStorage.getItem("guest_id");
-    if (!guestId) { guestId = "guest_" + Date.now() + "_" + Math.random().toString(36).substr(2, 6); localStorage.setItem("guest_id", guestId); }
-    state.isGuest = true; state.guestId = guestId; state.statsLoaded = true;
+    if (!guestId) {
+      guestId = "guest_" + Date.now() + "_" + Math.random().toString(36).substr(2, 6);
+      localStorage.setItem("guest_id", guestId);
+    }
+    state.isGuest = true;
+    state.guestId = guestId;
+    state.statsLoaded = true;
     hideLogin();
     try {
       const saved = localStorage.getItem("guest_stats_" + guestId);
       if (saved) {
         const parsed = JSON.parse(saved);
         state.stats = { ...state.stats, ...parsed };
-        // ⭐ Ensure all new fields exist (migration)
-        if (!state.stats.categoryCorrectCounts) state.stats.categoryCorrectCounts = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
-        if (!state.stats.categoryTotalCounts) state.stats.categoryTotalCounts = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
-        if (state.stats.hintsPurchased === undefined) state.stats.hintsPurchased = 0;
-        if (!state.stats.topicStats) state.stats.topicStats = { asset: { total: 0, wrong: 0 }, liability: { total: 0, wrong: 0 }, capital: { total: 0, wrong: 0 }, revenue: { total: 0, wrong: 0 }, expense: { total: 0, wrong: 0 }, drawing: { total: 0, wrong: 0 } };
+        if (!state.stats.topicStats) {
+          state.stats.topicStats = {
+            asset: { total: 0, wrong: 0 },
+            liability: { total: 0, wrong: 0 },
+            capital: { total: 0, wrong: 0 },
+            revenue: { total: 0, wrong: 0 },
+            expense: { total: 0, wrong: 0 },
+            drawing: { total: 0, wrong: 0 },
+          };
+        }
         state.stats.level = getLevelFromXP(state.stats.xp);
-        for (const id of state.stats.earnedBadges || []) state._shownBadges.add(id);
+        for (const id of state.stats.earnedBadges || []) {
+          state._shownBadges.add(id);
+        }
+        state.stats.javedaClicks = state.stats.javedaClicks || 0;
+        state.stats.shared = state.stats.shared || 0;
+        state.stats.dailyStreak = state.stats.dailyStreak || 0;
+        state.stats.lastActivityDate = state.stats.lastActivityDate || null;
+        state.stats.sessionQuestions = state.stats.sessionQuestions || 0;
+        state.stats.nightQuestions = state.stats.nightQuestions || 0;
+        state.stats.earlyQuestions = state.stats.earlyQuestions || 0;
       }
     } catch (e) {}
-    updateHeaderStats(); updateDashboard(); updateBadges(); updateWeakTopics();
-    updateQuizProgress(); updateShopUI(); updateHintButton();
-    setupLeaderboardListener(); loadRevisionList(); generateNextQuestionSet();
-    const avatar = document.getElementById("userAvatar"); const nameDisplay = document.getElementById("userNameDisplay");
+    updateHeaderStats();
+    updateDashboard();
+    updateBadges();
+    updateWeakTopics();
+    updateQuizProgress();
+    updateShopUI();
+    updateHintButton();
+    setupLeaderboardListener();
+    loadRevisionList();
+    generateNextQuestionSet();
+    const avatar = document.getElementById("userAvatar");
+    const nameDisplay = document.getElementById("userNameDisplay");
     if (avatar) avatar.src = "https://ui-avatars.com/api/?name=Guest&background=5b4bd5&color=fff&size=36";
     if (nameDisplay) nameDisplay.textContent = "Guest";
     showToast("Guest Mode", "Your progress is saved locally.", "fa-user", "gain");
   });
 
-  // ⭐ FIX: Share button now increments every time
+  // Share button — copy link, award "Bring a Friend" and always save
   document.getElementById("shareBtn").addEventListener("click", function () {
     const url = window.location.href;
-    function onShareSuccess() {
-      showToast("Link Copied!", "Share this link with your friends.", "fa-share-alt", "gain");
-      // ⭐ Always increment (not just first time)
-      state.stats.shared = (state.stats.shared || 0) + 1;
-      saveStats();
-      recheckBadgesAfterAction();
+
+    function awardShareBadge() {
+      if (!state.stats.shared) {
+        state.stats.shared = 1;
+        const earnedIds = checkBadges(state.stats);
+        const prevBadges = new Set(state.stats.earnedBadges || []);
+        const mergedBadges = [...new Set([...prevBadges, ...earnedIds])];
+        state.stats.earnedBadges = mergedBadges;
+
+        const newBadges = earnedIds.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
+        for (const id of newBadges) {
+          const badge = ALL_BADGES.find(b => b.id === id);
+          if (badge) {
+            state._shownBadges.add(id);
+            setTimeout(() => showBadgeToast(badge), 300);
+          }
+        }
+        for (const id of mergedBadges) state._shownBadges.add(id);
+
+        updateBadges();
+        saveStats(); // Always save
+      } else {
+        showToast("Already Shared", "You already earned the Bring a Friend badge.", "fa-check-circle", "gain");
+      }
     }
+
     function fallbackCopy() {
       const textArea = document.createElement("textarea");
       textArea.value = url;
       document.body.appendChild(textArea);
       textArea.select();
-      try { document.execCommand('copy'); onShareSuccess(); }
-      catch (e) { showToast("Copy Failed", "Please manually copy the URL.", "fa-exclamation-circle", "loss"); }
+      try {
+        document.execCommand('copy');
+        showToast("Link Copied!", "Share this link with your friends.", "fa-share-alt", "gain");
+        awardShareBadge();
+      } catch (e) {
+        showToast("Copy Failed", "Please manually copy the URL.", "fa-exclamation-circle", "loss");
+      }
       document.body.removeChild(textArea);
     }
+
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(url).then(onShareSuccess).catch(fallbackCopy);
-    } else fallbackCopy();
+      navigator.clipboard.writeText(url).then(() => {
+        showToast("Link Copied!", "Share this link with your friends.", "fa-share-alt", "gain");
+        awardShareBadge();
+      }).catch(fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
   });
 
   const userInfo = document.getElementById("userInfo");
@@ -2164,40 +2906,86 @@ function init() {
     });
   }
   document.addEventListener("click", function () {
-    const dropdown = document.getElementById("userDropdown"); if (dropdown) dropdown.classList.remove("show");
-    const notifDropdown = document.getElementById("notificationDropdown"); if (notifDropdown) notifDropdown.style.display = "none";
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown) dropdown.classList.remove("show");
+    const notifDropdown = document.getElementById("notificationDropdown");
+    if (notifDropdown) notifDropdown.style.display = "none";
   });
 
   document.getElementById("logoutBtn").addEventListener("click", async function () {
     try {
       await auth.signOut();
-      const dropdown = document.getElementById("userDropdown"); if (dropdown) dropdown.classList.remove("show");
+      const dropdown = document.getElementById("userDropdown");
+      if (dropdown) dropdown.classList.remove("show");
       state.isGuest = false;
       localStorage.removeItem("guest_id");
       showToast("Signed Out", "You have been signed out.", "fa-sign-out-alt", "gain");
-    } catch (e) { console.error("Logout error:", e); }
+    } catch (e) {
+      console.error("Logout error:", e);
+    }
   });
 
+  // Javeda button — always save + localStorage backup (survives page navigation)
   document.getElementById("learnJavedaBtn").addEventListener("click", function (e) {
     const s = state.stats;
     s.javedaClicks = (s.javedaClicks || 0) + 1;
-    try { localStorage.setItem("javeda_clicks_backup", JSON.stringify({ count: s.javedaClicks, time: Date.now(), guestId: state.guestId || null, uid: auth.currentUser ? auth.currentUser.uid : null })); } catch (err) {}
-    saveStats();
-    recheckBadgesAfterAction();
+
+    // Backup to localStorage synchronously BEFORE navigation happens
+    try {
+      localStorage.setItem("javeda_clicks_backup", JSON.stringify({
+        count: s.javedaClicks,
+        time: Date.now(),
+        guestId: state.guestId || null,
+        uid: auth.currentUser ? auth.currentUser.uid : null
+      }));
+    } catch (err) {}
+
+    const earnedIds = checkBadges(s);
+    const prevBadges = new Set(s.earnedBadges || []);
+    const mergedBadges = [...new Set([...prevBadges, ...earnedIds])];
+    s.earnedBadges = mergedBadges;
+
+    const newBadges = earnedIds.filter((id) => !prevBadges.has(id) && !state._shownBadges.has(id));
+    for (const id of newBadges) {
+      const badge = ALL_BADGES.find((b) => b.id === id);
+      if (badge) {
+        state._shownBadges.add(id);
+        setTimeout(() => showBadgeToast(badge), 300);
+      }
+    }
+    for (const id of mergedBadges) {
+      state._shownBadges.add(id);
+    }
+
+    updateBadges();
+    saveStats(); // ✅ Always call — even if no new badge
   });
 
   $$(".diff-btn").forEach((btn) => {
     btn.addEventListener("click", function () {
-      if (state.smartMode) { showToast("Smart Mode Active", "Difficulty is auto-adjusted in Smart Mode.", "fa-brain", "gain"); return; }
-      if (state.timerMode && this.dataset.diff === "easy") { showToast("Timer Mode", "Timer Mode only supports Medium and Hard.", "fa-hourglass-half", "gain"); return; }
+      if (state.smartMode) {
+        showToast("Smart Mode Active", "Difficulty is auto-adjusted in Smart Mode.", "fa-brain", "gain");
+        return;
+      }
+      if (state.timerMode && this.dataset.diff === "easy") {
+        showToast("Timer Mode", "Timer Mode only supports Medium and Hard.", "fa-hourglass-half", "gain");
+        return;
+      }
       $$(".diff-btn").forEach((b) => b.classList.remove("active"));
       this.classList.add("active");
       state.difficulty = this.dataset.diff;
       SMART_TRACKER.baseMode = state.difficulty;
       SMART_TRACKER.smartDifficulty = state.difficulty;
-      if (state.smartMode) { SMART_TRACKER.reset(); SMART_TRACKER.baseMode = state.difficulty; SMART_TRACKER.smartDifficulty = state.difficulty; }
+      if (state.smartMode) {
+        SMART_TRACKER.reset();
+        SMART_TRACKER.baseMode = state.difficulty;
+        SMART_TRACKER.smartDifficulty = state.difficulty;
+      }
       if (state.revisionMode) loadRevisionQueue();
-      if (state.autoTimer) { clearInterval(state.autoTimer); state.autoTimer = null; }
+      if (state.autoTimer) {
+        clearInterval(state.autoTimer);
+        state.autoTimer = null;
+      }
       updateDiffModeLabel(state.difficulty);
       generateNextQuestionSet();
     });
@@ -2213,34 +3001,55 @@ function init() {
   document.getElementById("hintBtn").addEventListener("click", useHint);
 
   document.getElementById("nextBtnFallback").addEventListener("click", function () {
-    if (state.autoTimer) { clearInterval(state.autoTimer); state.autoTimer = null; }
+    if (state.autoTimer) {
+      clearInterval(state.autoTimer);
+      state.autoTimer = null;
+    }
     this.classList.remove("show");
-    const autoNext = document.getElementById("autoNextIndicator"); if (autoNext) autoNext.classList.remove("show");
+    const autoNext = document.getElementById("autoNextIndicator");
+    if (autoNext) autoNext.classList.remove("show");
     advanceQuestion();
   });
 
   $$(".nav-tab").forEach((tab) => {
-    tab.addEventListener("click", function () { navigateTo(this.dataset.section); });
+    tab.addEventListener("click", function () {
+      navigateTo(this.dataset.section);
+    });
   });
 
   document.getElementById("smartToggle").addEventListener("click", function () {
     if (state.revisionMode) {
       state.revisionMode = false;
       const revToggle = document.getElementById("revisionToggle");
-      if (revToggle) { revToggle.classList.remove("active"); const dot = revToggle.querySelector(".toggle-dot"); if (dot) dot.style.background = "var(--text-muted)"; }
-      state.revisionQueue = []; state.isRevisionQuestion = false; state.currentRevisionDocId = null;
+      if (revToggle) {
+        revToggle.classList.remove("active");
+        const dot = revToggle.querySelector(".toggle-dot");
+        if (dot) dot.style.background = "var(--text-muted)";
+      }
+      state.revisionQueue = [];
+      state.isRevisionQuestion = false;
+      state.currentRevisionDocId = null;
     }
     if (state.timerMode) {
       state.timerMode = false;
       const timerToggle = document.getElementById("timerToggle");
-      if (timerToggle) { timerToggle.classList.remove("active"); const dot = timerToggle.querySelector(".toggle-dot"); if (dot) dot.style.background = "var(--text-muted)"; }
-      document.getElementById("timerOptions").classList.remove("show"); document.getElementById("timerBadge").style.display = "none"; stopTimer();
+      if (timerToggle) {
+        timerToggle.classList.remove("active");
+        const dot = timerToggle.querySelector(".toggle-dot");
+        if (dot) dot.style.background = "var(--text-muted)";
+      }
+      document.getElementById("timerOptions").classList.remove("show");
+      document.getElementById("timerBadge").style.display = "none";
+      stopTimer();
       document.querySelectorAll(".diff-btn").forEach((b) => b.classList.remove("diff-toggle-disabled"));
     }
+
     state.smartMode = !state.smartMode;
     this.classList.toggle("active");
-    const dot = this.querySelector(".toggle-dot"); if (dot) dot.style.background = state.smartMode ? "var(--accent-1)" : "var(--text-muted)";
+    const dot = this.querySelector(".toggle-dot");
+    if (dot) dot.style.background = state.smartMode ? "var(--accent-1)" : "var(--text-muted)";
     SMART_TRACKER.isSmartMode = state.smartMode;
+
     if (state.smartMode) {
       SMART_TRACKER.baseMode = state.difficulty;
       SMART_TRACKER.smartDifficulty = state.difficulty;
@@ -2248,22 +3057,31 @@ function init() {
       if (state.stats.effectiveDifficulty) SMART_TRACKER.smartDifficulty = state.stats.effectiveDifficulty;
       state.stats.smartModeCount = (state.stats.smartModeCount || 0) + 1;
       showToast("Smart Mode On", "Adaptive learning activated. Difficulty auto-adjusts based on performance.", "fa-brain", "gain");
-      const indicator = document.getElementById("smartLevelIndicator"); if (indicator) indicator.style.display = "inline-block";
-      document.querySelectorAll(".diff-btn").forEach((b) => b.classList.add("diff-toggle-disabled"));
+      const indicator = document.getElementById("smartLevelIndicator");
+      if (indicator) indicator.style.display = "inline-block";
+      const diffBtns = document.querySelectorAll(".diff-btn");
+      diffBtns.forEach((b) => b.classList.add("diff-toggle-disabled"));
       const eff = SMART_TRACKER.getEffectiveMode();
-      updateDifficultyButtons(eff); updateSmartBadge(eff); updateDiffModeLabel(eff);
+      updateDifficultyButtons(eff);
+      updateSmartBadge(eff);
+      updateDiffModeLabel(eff);
     } else {
       SMART_TRACKER.reset();
       SMART_TRACKER.baseMode = state.difficulty;
       SMART_TRACKER.smartDifficulty = state.difficulty;
-      const indicator = document.getElementById("smartLevelIndicator"); if (indicator) indicator.style.display = "none";
+      const indicator = document.getElementById("smartLevelIndicator");
+      if (indicator) indicator.style.display = "none";
       document.getElementById("smartDiffBadge").style.display = "none";
       showToast("Smart Mode Off", "Switched to manual difficulty control.", "fa-brain", "gain");
-      document.querySelectorAll(".diff-btn").forEach((b) => b.classList.remove("diff-toggle-disabled"));
+      const diffBtns = document.querySelectorAll(".diff-btn");
+      diffBtns.forEach((b) => b.classList.remove("diff-toggle-disabled"));
       updateDiffModeLabel(state.difficulty);
     }
     updateModeToggles();
-    if (state.autoTimer) { clearInterval(state.autoTimer); state.autoTimer = null; }
+    if (state.autoTimer) {
+      clearInterval(state.autoTimer);
+      state.autoTimer = null;
+    }
     generateNextQuestionSet();
   });
 
@@ -2271,7 +3089,11 @@ function init() {
     if (state.smartMode) {
       state.smartMode = false;
       const smartToggle = document.getElementById("smartToggle");
-      if (smartToggle) { smartToggle.classList.remove("active"); const dot = smartToggle.querySelector(".toggle-dot"); if (dot) dot.style.background = "var(--text-muted)"; }
+      if (smartToggle) {
+        smartToggle.classList.remove("active");
+        const dot = smartToggle.querySelector(".toggle-dot");
+        if (dot) dot.style.background = "var(--text-muted)";
+      }
       SMART_TRACKER.isSmartMode = false;
       document.getElementById("smartDiffBadge").style.display = "none";
       document.getElementById("smartLevelIndicator").style.display = "none";
@@ -2280,23 +3102,47 @@ function init() {
     if (state.timerMode) {
       state.timerMode = false;
       const timerToggle = document.getElementById("timerToggle");
-      if (timerToggle) { timerToggle.classList.remove("active"); const dot = timerToggle.querySelector(".toggle-dot"); if (dot) dot.style.background = "var(--text-muted)"; }
-      document.getElementById("timerOptions").classList.remove("show"); document.getElementById("timerBadge").style.display = "none"; stopTimer();
+      if (timerToggle) {
+        timerToggle.classList.remove("active");
+        const dot = timerToggle.querySelector(".toggle-dot");
+        if (dot) dot.style.background = "var(--text-muted)";
+      }
+      document.getElementById("timerOptions").classList.remove("show");
+      document.getElementById("timerBadge").style.display = "none";
+      stopTimer();
       document.querySelectorAll(".diff-btn").forEach((b) => b.classList.remove("diff-toggle-disabled"));
     }
+
     const count = await getRevisionCount();
-    if (count === 0) { showToast("No Revision", "No wrong answers to revise.", "fa-info-circle", "gain"); return; }
+    if (count === 0) {
+      showToast("No Revision", "No wrong answers to revise.", "fa-info-circle", "gain");
+      return;
+    }
     state.revisionMode = !state.revisionMode;
     this.classList.toggle("active");
     const dot = this.querySelector(".toggle-dot");
     if (dot) dot.style.background = state.revisionMode ? "var(--accent-1)" : "var(--text-muted)";
     if (state.revisionMode) {
       await loadRevisionQueue();
-      if (state.revisionQueue.length === 0) { state.revisionMode = false; this.classList.remove("active"); if (dot) dot.style.background = "var(--text-muted)"; showToast("No Revision", "No revision questions available.", "fa-info-circle", "gain"); return; }
+      if (state.revisionQueue.length === 0) {
+        state.revisionMode = false;
+        this.classList.remove("active");
+        if (dot) dot.style.background = "var(--text-muted)";
+        showToast("No Revision", "No revision questions available.", "fa-info-circle", "gain");
+        return;
+      }
       showToast("Revision Mode On", `${state.revisionQueue.length} questions to revise.`, "fa-rotate-left", "gain");
-    } else { state.revisionQueue = []; state.isRevisionQuestion = false; state.currentRevisionDocId = null; showToast("Revision Mode Off", "Switched to regular mode.", "fa-info-circle", "gain"); }
+    } else {
+      state.revisionQueue = [];
+      state.isRevisionQuestion = false;
+      state.currentRevisionDocId = null;
+      showToast("Revision Mode Off", "Switched to regular mode.", "fa-info-circle", "gain");
+    }
     updateModeToggles();
-    if (state.autoTimer) { clearInterval(state.autoTimer); state.autoTimer = null; }
+    if (state.autoTimer) {
+      clearInterval(state.autoTimer);
+      state.autoTimer = null;
+    }
     generateNextQuestionSet();
   });
 
@@ -2304,7 +3150,11 @@ function init() {
     if (state.smartMode) {
       state.smartMode = false;
       const smartToggle = document.getElementById("smartToggle");
-      if (smartToggle) { smartToggle.classList.remove("active"); const dot = smartToggle.querySelector(".toggle-dot"); if (dot) dot.style.background = "var(--text-muted)"; }
+      if (smartToggle) {
+        smartToggle.classList.remove("active");
+        const dot = smartToggle.querySelector(".toggle-dot");
+        if (dot) dot.style.background = "var(--text-muted)";
+      }
       SMART_TRACKER.isSmartMode = false;
       document.getElementById("smartDiffBadge").style.display = "none";
       document.getElementById("smartLevelIndicator").style.display = "none";
@@ -2313,51 +3163,89 @@ function init() {
     if (state.revisionMode) {
       state.revisionMode = false;
       const revToggle = document.getElementById("revisionToggle");
-      if (revToggle) { revToggle.classList.remove("active"); const dot = revToggle.querySelector(".toggle-dot"); if (dot) dot.style.background = "var(--text-muted)"; }
-      state.revisionQueue = []; state.isRevisionQuestion = false; state.currentRevisionDocId = null;
+      if (revToggle) {
+        revToggle.classList.remove("active");
+        const dot = revToggle.querySelector(".toggle-dot");
+        if (dot) dot.style.background = "var(--text-muted)";
+      }
+      state.revisionQueue = [];
+      state.isRevisionQuestion = false;
+      state.currentRevisionDocId = null;
     }
+
     if (state.difficulty === "easy" && !state.timerMode) {
       showToast("Timer Mode", "Timer Mode requires Medium or Hard difficulty. Switching to Medium.", "fa-hourglass-half", "gain");
       state.difficulty = "medium";
       $$(".diff-btn").forEach((b) => b.classList.remove("active"));
       document.querySelector(".diff-btn.medium").classList.add("active");
-      SMART_TRACKER.baseMode = "medium"; SMART_TRACKER.smartDifficulty = "medium";
+      SMART_TRACKER.baseMode = "medium";
+      SMART_TRACKER.smartDifficulty = "medium";
       updateDiffModeLabel("medium");
     }
+
     state.timerMode = !state.timerMode;
     this.classList.toggle("active");
     const dot = this.querySelector(".toggle-dot");
     if (dot) dot.style.background = state.timerMode ? "var(--accent-1)" : "var(--text-muted)";
+
     if (state.timerMode) {
       document.getElementById("timerOptions").classList.add("show");
       showToast("Timer Mode On", `⏱ ${state.timerSec}s per question. Medium & Hard only.`, "fa-hourglass-half", "gain");
-      document.querySelectorAll(".diff-btn").forEach((b) => { if (b.dataset.diff === "easy") b.classList.add("diff-toggle-disabled"); else b.classList.remove("diff-toggle-disabled"); });
+      document.querySelectorAll(".diff-btn").forEach((b) => {
+        if (b.dataset.diff === "easy") {
+          b.classList.add("diff-toggle-disabled");
+        } else {
+          b.classList.remove("diff-toggle-disabled");
+        }
+      });
       const activeDiff = document.querySelector(".diff-btn.active");
-      if (activeDiff && activeDiff.dataset.diff === "easy") document.querySelector(".diff-btn.medium").click();
+      if (activeDiff && activeDiff.dataset.diff === "easy") {
+        document.querySelector(".diff-btn.medium").click();
+      }
       const timerBadge = document.getElementById("timerBadge");
-      if (timerBadge) { timerBadge.style.display = "inline-block"; timerBadge.textContent = `⏱ ${state.timerSec}s`; timerBadge.className = "timer-badge ruby"; }
+      if (timerBadge) {
+        timerBadge.style.display = "inline-block";
+        timerBadge.textContent = `⏱ ${state.timerSec}s`;
+        timerBadge.className = "timer-badge ruby";
+      }
       generateNextQuestionSet();
     } else {
       document.getElementById("timerOptions").classList.remove("show");
-      document.querySelectorAll(".diff-btn").forEach((b) => { b.classList.remove("diff-toggle-disabled"); if (state.smartMode) b.classList.add("diff-toggle-disabled"); });
-      const timerBadge = document.getElementById("timerBadge"); if (timerBadge) timerBadge.style.display = "none";
+      document.querySelectorAll(".diff-btn").forEach((b) => {
+        b.classList.remove("diff-toggle-disabled");
+        if (state.smartMode) b.classList.add("diff-toggle-disabled");
+      });
+      const timerBadge = document.getElementById("timerBadge");
+      if (timerBadge) timerBadge.style.display = "none";
       stopTimer();
       showToast("Timer Mode Off", "Timer disabled.", "fa-hourglass-half", "gain");
       generateNextQuestionSet();
     }
     updateModeToggles();
-    if (state.autoTimer) { clearInterval(state.autoTimer); state.autoTimer = null; }
+    if (state.autoTimer) {
+      clearInterval(state.autoTimer);
+      state.autoTimer = null;
+    }
   });
 
   document.querySelectorAll(".timer-opt").forEach((btn) => {
     btn.addEventListener("click", function () {
-      if (!state.timerMode) { showToast("Timer Mode Off", "Enable Timer Mode first.", "fa-hourglass-half", "gain"); return; }
+      if (!state.timerMode) {
+        showToast("Timer Mode Off", "Enable Timer Mode first.", "fa-hourglass-half", "gain");
+        return;
+      }
       document.querySelectorAll(".timer-opt").forEach((b) => b.classList.remove("active"));
       this.classList.add("active");
       state.timerSec = parseInt(this.dataset.timer);
-      const timerBadge = document.getElementById("timerBadge"); if (timerBadge) timerBadge.textContent = `⏱ ${state.timerSec}s`;
+      const timerBadge = document.getElementById("timerBadge");
+      if (timerBadge) {
+        timerBadge.textContent = `⏱ ${state.timerSec}s`;
+      }
       showToast("Timer Set", `${state.timerSec} seconds per question.`, "fa-clock", "gain");
-      if (state.autoTimer) { clearInterval(state.autoTimer); state.autoTimer = null; }
+      if (state.autoTimer) {
+        clearInterval(state.autoTimer);
+        state.autoTimer = null;
+      }
       generateNextQuestionSet();
     });
   });
@@ -2365,9 +3253,16 @@ function init() {
   document.querySelectorAll(".shop-item .item-buy").forEach((btn) => {
     btn.addEventListener("click", function () {
       const type = this.dataset.type;
-      if (type === "hint") { buyHint(parseInt(this.dataset.hints), parseInt(this.dataset.price), parseInt(this.dataset.rubies) || 0); }
-      else if (type === "buycoins") { buyCoins(parseInt(this.dataset.coins), parseInt(this.dataset.rubies)); }
-      else if (type === "booster") {
+      if (type === "hint") {
+        const hints = parseInt(this.dataset.hints);
+        const price = parseInt(this.dataset.price);
+        const rubies = parseInt(this.dataset.rubies) || 0;
+        buyHint(hints, price, rubies);
+      } else if (type === "buycoins") {
+        const coins = parseInt(this.dataset.coins);
+        const rubies = parseInt(this.dataset.rubies);
+        buyCoins(coins, rubies);
+      } else if (type === "booster") {
         const booster = this.dataset.booster;
         const priceCoins = parseInt(this.dataset.priceCoins) || 0;
         const priceRubies = parseInt(this.dataset.priceRubies) || 0;
@@ -2382,24 +3277,38 @@ function init() {
 
   document.getElementById("revisionModeBtn").addEventListener("click", async function () {
     const count = await getRevisionCount();
-    if (count === 0) { showToast("No Revision", "No wrong answers to revise.", "fa-info-circle", "gain"); return; }
-    if (!state.revisionMode) document.getElementById("revisionToggle").click();
-    else {
+    if (count === 0) {
+      showToast("No Revision", "No wrong answers to revise.", "fa-info-circle", "gain");
+      return;
+    }
+    if (!state.revisionMode) {
+      document.getElementById("revisionToggle").click();
+    } else {
       await loadRevisionQueue();
       if (state.revisionQueue.length === 0) {
         state.revisionMode = false;
         const revToggle = document.getElementById("revisionToggle");
-        if (revToggle) { revToggle.classList.remove("active"); const dot = revToggle.querySelector(".toggle-dot"); if (dot) dot.style.background = "var(--text-muted)"; }
+        if (revToggle) {
+          revToggle.classList.remove("active");
+          const dot = revToggle.querySelector(".toggle-dot");
+          if (dot) dot.style.background = "var(--text-muted)";
+        }
         showToast("No Revision", "No revision questions available.", "fa-info-circle", "gain");
-      } else showToast("Revision Reloaded", `${state.revisionQueue.length} questions to revise.`, "fa-rotate-left", "gain");
-      if (state.autoTimer) { clearInterval(state.autoTimer); state.autoTimer = null; }
+      } else {
+        showToast("Revision Reloaded", `${state.revisionQueue.length} questions to revise.`, "fa-rotate-left", "gain");
+      }
+      if (state.autoTimer) {
+        clearInterval(state.autoTimer);
+        state.autoTimer = null;
+      }
       generateNextQuestionSet();
     }
     navigateTo("quiz");
   });
 
   document.getElementById("refreshRevisionBtn").addEventListener("click", function () {
-    loadRevisionList(); updateRevisionBadges();
+    loadRevisionList();
+    updateRevisionBadges();
     showToast("Refreshed", "Revision list updated.", "fa-sync", "gain");
   });
 
@@ -2412,45 +3321,104 @@ function init() {
     });
   });
 
+  if (state.smartMode) {
+    const smartToggle = document.getElementById("smartToggle");
+    if (smartToggle) {
+      smartToggle.classList.add("active");
+      const dot = smartToggle.querySelector(".toggle-dot");
+      if (dot) dot.style.background = "var(--accent-1)";
+    }
+    SMART_TRACKER.isSmartMode = true;
+    SMART_TRACKER.baseMode = state.difficulty;
+    SMART_TRACKER.smartDifficulty = state.difficulty;
+    const indicator = document.getElementById("smartLevelIndicator");
+    if (indicator) indicator.style.display = "inline-block";
+    const diffBtns = document.querySelectorAll(".diff-btn");
+    diffBtns.forEach((b) => b.classList.add("diff-toggle-disabled"));
+    updateSmartBadge(state.difficulty);
+  }
+
   if (!state.stats.topicStats) {
-    state.stats.topicStats = { asset: { total: 0, wrong: 0 }, liability: { total: 0, wrong: 0 }, capital: { total: 0, wrong: 0 }, revenue: { total: 0, wrong: 0 }, expense: { total: 0, wrong: 0 }, drawing: { total: 0, wrong: 0 } };
+    state.stats.topicStats = {
+      asset: { total: 0, wrong: 0 },
+      liability: { total: 0, wrong: 0 },
+      capital: { total: 0, wrong: 0 },
+      revenue: { total: 0, wrong: 0 },
+      expense: { total: 0, wrong: 0 },
+      drawing: { total: 0, wrong: 0 },
+    };
   }
 
   updateDiffModeLabel(state.difficulty);
   updateModeToggles();
   updateBoosterStatus();
 
+  // ===== INIT BELL NOTIFICATIONS =====
   if (auth.currentUser && typeof initBell === 'function') {
     const email = auth.currentUser.email;
-    if (email) { const encodedEmail = email.replace(/[.#$\/\[\]]/g, '_'); initBell(encodedEmail); }
+    if (email) {
+      const encodedEmail = email.replace(/[.#$\/\[\]]/g, '_');
+      initBell(encodedEmail);
+    }
   }
 
+  // Restore javedaClicks from backup if navigation cut off the async save
   setTimeout(() => {
     try {
       const raw = localStorage.getItem("javeda_clicks_backup");
       if (!raw) return;
       const backup = JSON.parse(raw);
-      if (Date.now() - backup.time > 5 * 60 * 1000) { localStorage.removeItem("javeda_clicks_backup"); return; }
+
+      // Ignore if older than 5 minutes
+      if (Date.now() - backup.time > 5 * 60 * 1000) {
+        localStorage.removeItem("javeda_clicks_backup");
+        return;
+      }
+
+      // Only restore if it belongs to this user
       const currentUid = auth.currentUser ? auth.currentUser.uid : null;
-      const sameUser = (backup.uid && currentUid && backup.uid === currentUid) || (backup.guestId && state.guestId && backup.guestId === state.guestId) || (!backup.uid && !backup.guestId);
+      const sameUser =
+        (backup.uid && currentUid && backup.uid === currentUid) ||
+        (backup.guestId && state.guestId && backup.guestId === state.guestId) ||
+        (!backup.uid && !backup.guestId);
+
       if (sameUser && backup.count > (state.stats.javedaClicks || 0)) {
         state.stats.javedaClicks = backup.count;
+        const earnedIds = checkBadges(state.stats);
+        const prevBadges = new Set(state.stats.earnedBadges || []);
+        state.stats.earnedBadges = [...new Set([...prevBadges, ...earnedIds])];
+        updateBadges();
         saveStats();
-        recheckBadgesAfterAction();
       }
       localStorage.removeItem("javeda_clicks_backup");
     } catch (e) {}
   }, 2500);
 
-  console.log("📘 Version : 7.0.0 — MAJOR FIX: Category counters, Hint purchase tracking, Share counter, Timer difficulty splits. 137 badges now track correctly.");
+  console.log("📘 Version : 6.0.8 — Topic-wise collapsible badge groups added.");
   console.log("✅ Developed By - Faizul Islam Riyad");
 }
+
+// ================================================================
+// MODAL CLOSE EVENTS
+// ================================================================
 
 document.addEventListener("DOMContentLoaded", function() {
   const closeBtn = document.getElementById("badgeModalClose");
   const modal = document.getElementById("badgeModal");
-  if (closeBtn) closeBtn.addEventListener("click", function() { modal.classList.remove("show"); });
-  if (modal) modal.addEventListener("click", function(e) { if (e.target === this) this.classList.remove("show"); });
+  if (closeBtn) {
+    closeBtn.addEventListener("click", function() {
+      modal.classList.remove("show");
+    });
+  }
+  if (modal) {
+    modal.addEventListener("click", function(e) {
+      if (e.target === this) {
+        this.classList.remove("show");
+      }
+    });
+  }
 });
 
 document.addEventListener("DOMContentLoaded", init);
+
+// ei code er pore new badge add kora hoiche and line kome gese..
