@@ -631,7 +631,7 @@ function showModeChangeToast(newMode) {
 }
 
 // ================================================================
-// 7. BADGES (TOTAL 100) — UPDATED
+// 7. BADGES (TOTAL 100)
 // ================================================================
 
 const ALL_BADGES = [
@@ -698,7 +698,7 @@ const ALL_BADGES = [
   { id: "b14", icon: "🎯", name: "Precision Player" },
   { id: "b42", icon: "🧠", name: "Financial Brain" },
   { id: "b43", icon: "🔍", name: "Error Hunter" },
-  // Streak (b16, b18-b22) — b17 removed
+  // Streak (b16, b18-b22)
   { id: "b16", icon: "💎", name: "Flawless Brain" },
   { id: "b18", icon: "🔥", name: "Streak 5x" },
   { id: "b19", icon: "🔥", name: "Streak 10x" },
@@ -712,7 +712,7 @@ const ALL_BADGES = [
   { id: "b26", icon: "📈", name: "Revenue Master" },
   { id: "b27", icon: "💸", name: "Expense Specialist" },
   { id: "b28", icon: "✏️", name: "Drawing Handler" },
-  // Other (b29-b34, b44, b46, b86-b88, b93-b99) — b34 removed
+  // Other (b29-b33, b44, b46, b86-b88, b93-b99)
   { id: "b29", icon: "🔧", name: "Rule Breaker" },
   { id: "b30", icon: "⚖️", name: "Balance Thinker" },
   { id: "b31", icon: "⚡", name: "Fast Decision" },
@@ -866,7 +866,7 @@ function checkBadges(stats) {
   if (stats.correct >= 5000) earned.push("b98");
   if (stats.coins >= 5000 && stats.rubies >= 200) earned.push("b99");
 
-  // n5-n28 badges (excluding n9, n10 which are handled above)
+  // n5-n28 badges
   if (stats.javedaClicks && stats.javedaClicks >= 1) earned.push("n5");
   if (stats.javedaClicks && stats.javedaClicks >= 5) earned.push("n6");
   if (stats.hints && stats.hints >= 300) earned.push("n7");
@@ -921,9 +921,17 @@ function getBadgeDetails(badgeId, stats) {
   }
 
   switch (badgeId) {
-    // Leaderboard - not trackable
-    case 'n1': case 'n2': case 'n3': case 'n4': case 'b51':
-      return { description: "Reach Top position on Leaderboard.", items: [] };
+    // Leaderboard — Updated descriptions with correct conditions
+    case 'n1':
+      return { description: "XP Leaderboard এ Top 3 এ পৌঁছান।", items: [] };
+    case 'n2':
+      return { description: "Points Leaderboard এ Top 3 এ পৌঁছান।", items: [] };
+    case 'n3':
+      return { description: "Accuracy Leaderboard এ Top 5 এ পৌঁছান।", items: [] };
+    case 'n4':
+      return { description: "Badges Leaderboard এ Top 2 এ পৌঁছান।", items: [] };
+    case 'b51':
+      return { description: "যেকোনো Leaderboard এ Top 10 এ পৌঁছান।", items: [] };
 
     // Single condition
     case 'n5': return { description: "Click the 'Learn Javeda' button 1 time.", items: [item(stats.javedaClicks || 0, 1, "Clicks")] };
@@ -1923,7 +1931,7 @@ function generateNextQuestionSet() {
 }
 
 // ================================================================
-// 14. ANSWER HANDLING
+// 14. ANSWER HANDLING  (✅ FIX #1: Merge badges instead of replace)
 // ================================================================
 
 async function handleAnswer(answer) {
@@ -2074,10 +2082,13 @@ async function handleAnswer(answer) {
     s.effectiveDifficulty = SMART_TRACKER.getEffectiveMode();
   }
 
+  // ✅ FIX #1: Merge earned badges with previous ones (never lose Leaderboard / Bring-a-Friend / etc.)
   const earnedIds = checkBadges(s);
-  s.earnedBadges = earnedIds;
+  const prevBadges = new Set(s.earnedBadges || []);
+  const mergedBadges = [...new Set([...prevBadges, ...earnedIds])];
+  s.earnedBadges = mergedBadges;
 
-  const newBadges = earnedIds.filter((id) => !state._shownBadges.has(id));
+  const newBadges = mergedBadges.filter((id) => !prevBadges.has(id) && !state._shownBadges.has(id));
   for (const id of newBadges) {
     const badge = ALL_BADGES.find((b) => b.id === id);
     if (badge) {
@@ -2085,7 +2096,7 @@ async function handleAnswer(answer) {
       setTimeout(() => showBadgeToast(badge), 400);
     }
   }
-  for (const id of earnedIds) {
+  for (const id of mergedBadges) {
     state._shownBadges.add(id);
   }
 
@@ -2395,7 +2406,7 @@ async function loadRevisionQueue() {
 }
 
 // ================================================================
-// 19. LEADERBOARD
+// 19. LEADERBOARD  (✅ FIX #4: Correct rank conditions per leaderboard)
 // ================================================================
 
 function renderLeaderboard() {
@@ -2503,7 +2514,7 @@ function renderLeaderboard() {
                 </tr>`;
   }).join("");
 
-  // ===== RANK CHECK FOR BELL NOTIFICATIONS (FIXED: use encoded email) =====
+  // ===== RANK CHECK FOR BELL NOTIFICATIONS =====
   if (currentEmail) {
     const userRank = sorted.findIndex((u) => u.email === currentEmail) + 1;
     if (userRank >= 1 && userRank <= 5 && auth.currentUser) {
@@ -2515,24 +2526,33 @@ function renderLeaderboard() {
   }
 
   // ===== LEADERBOARD BADGE CHECK =====
+  // ✅ FIX #4: Different rank thresholds per leaderboard type
   if (currentEmail) {
     const s = state.stats;
     const prevBadges = new Set(s.earnedBadges || []);
     let newBadges = [];
 
     const userRank = sorted.findIndex((e) => e.email === currentEmail) + 1;
-    if (userRank > 0 && userRank <= 3) {
-      if (leaderboardSortKey === "xp") newBadges.push("n1");
-      else if (leaderboardSortKey === "points") newBadges.push("n2");
-      else if (leaderboardSortKey === "accuracy") newBadges.push("n3");
-      else if (leaderboardSortKey === "badges") newBadges.push("n4");
-    }
+
+    // 👑 XP King → XP Leaderboard এ Top 3
+    if (leaderboardSortKey === "xp" && userRank > 0 && userRank <= 3) newBadges.push("n1");
+
+    // 🏅 Points Pro → Points Leaderboard এ Top 3
+    if (leaderboardSortKey === "points" && userRank > 0 && userRank <= 3) newBadges.push("n2");
+
+    // 🎯 Accuracy Ace → Accuracy Leaderboard এ Top 5
+    if (leaderboardSortKey === "accuracy" && userRank > 0 && userRank <= 5) newBadges.push("n3");
+
+    // 🏆 Badge Collector → Badges Leaderboard এ Top 2
+    if (leaderboardSortKey === "badges" && userRank > 0 && userRank <= 2) newBadges.push("n4");
+
+    // 🎖️ Top 10 Leaderboard
     if (userRank > 0 && userRank <= 10) newBadges.push("b51");
 
     newBadges = newBadges.filter((id) => !prevBadges.has(id) && !state._shownBadges.has(id));
 
     if (newBadges.length > 0) {
-      s.earnedBadges = [...prevBadges, ...newBadges];
+      s.earnedBadges = [...new Set([...prevBadges, ...newBadges])];
       for (const id of newBadges) {
         state._shownBadges.add(id);
         const badge = ALL_BADGES.find((b) => b.id === id);
@@ -2645,68 +2665,36 @@ function init() {
     showToast("Guest Mode", "Your progress is saved locally.", "fa-user", "gain");
   });
 
-  // Share button: copy link and award "Bring a Friend" badge
+  // ✅ FIX #2: Share button — copy link, award "Bring a Friend" and always save
   document.getElementById("shareBtn").addEventListener("click", function () {
     const url = window.location.href;
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(url).then(() => {
-        showToast("Link Copied!", "Share this link with your friends.", "fa-share-alt", "gain");
-        if (!state.stats.shared) {
-          state.stats.shared = 1;
-          const earnedIds = checkBadges(state.stats);
-          const prevBadges = new Set(state.stats.earnedBadges || []);
-          const newBadges = earnedIds.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
-          if (newBadges.length > 0) {
-            state.stats.earnedBadges = [...prevBadges, ...newBadges];
-            for (const id of newBadges) {
-              const badge = ALL_BADGES.find(b => b.id === id);
-              if (badge && !state._shownBadges.has(id)) {
-                state._shownBadges.add(id);
-                setTimeout(() => showBadgeToast(badge), 300);
-              }
-            }
-            updateBadges();
-            saveStats();
+
+    function awardShareBadge() {
+      if (!state.stats.shared) {
+        state.stats.shared = 1;
+        const earnedIds = checkBadges(state.stats);
+        const prevBadges = new Set(state.stats.earnedBadges || []);
+        const mergedBadges = [...new Set([...prevBadges, ...earnedIds])];
+        state.stats.earnedBadges = mergedBadges;
+
+        const newBadges = earnedIds.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
+        for (const id of newBadges) {
+          const badge = ALL_BADGES.find(b => b.id === id);
+          if (badge) {
+            state._shownBadges.add(id);
+            setTimeout(() => showBadgeToast(badge), 300);
           }
-        } else {
-          showToast("Already Shared", "You already earned the Bring a Friend badge.", "fa-check-circle", "gain");
         }
-      }).catch(() => {
-        // Fallback: prompt to copy
-        const textArea = document.createElement("textarea");
-        textArea.value = url;
-        document.body.appendChild(textArea);
-        textArea.select();
-        try {
-          document.execCommand('copy');
-          showToast("Link Copied!", "Share this link with your friends.", "fa-share-alt", "gain");
-          if (!state.stats.shared) {
-            state.stats.shared = 1;
-            const earnedIds = checkBadges(state.stats);
-            const prevBadges = new Set(state.stats.earnedBadges || []);
-            const newBadges = earnedIds.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
-            if (newBadges.length > 0) {
-              state.stats.earnedBadges = [...prevBadges, ...newBadges];
-              for (const id of newBadges) {
-                const badge = ALL_BADGES.find(b => b.id === id);
-                if (badge && !state._shownBadges.has(id)) {
-                  state._shownBadges.add(id);
-                  setTimeout(() => showBadgeToast(badge), 300);
-                }
-              }
-              updateBadges();
-              saveStats();
-            }
-          } else {
-            showToast("Already Shared", "You already earned the Bring a Friend badge.", "fa-check-circle", "gain");
-          }
-        } catch (e) {
-          showToast("Copy Failed", "Please manually copy the URL.", "fa-exclamation-circle", "loss");
-        }
-        document.body.removeChild(textArea);
-      });
-    } else {
-      // Fallback for older browsers
+        for (const id of mergedBadges) state._shownBadges.add(id);
+
+        updateBadges();
+        saveStats(); // Always save
+      } else {
+        showToast("Already Shared", "You already earned the Bring a Friend badge.", "fa-check-circle", "gain");
+      }
+    }
+
+    function fallbackCopy() {
       const textArea = document.createElement("textarea");
       textArea.value = url;
       document.body.appendChild(textArea);
@@ -2714,30 +2702,20 @@ function init() {
       try {
         document.execCommand('copy');
         showToast("Link Copied!", "Share this link with your friends.", "fa-share-alt", "gain");
-        if (!state.stats.shared) {
-          state.stats.shared = 1;
-          const earnedIds = checkBadges(state.stats);
-          const prevBadges = new Set(state.stats.earnedBadges || []);
-          const newBadges = earnedIds.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
-          if (newBadges.length > 0) {
-            state.stats.earnedBadges = [...prevBadges, ...newBadges];
-            for (const id of newBadges) {
-              const badge = ALL_BADGES.find(b => b.id === id);
-              if (badge && !state._shownBadges.has(id)) {
-                state._shownBadges.add(id);
-                setTimeout(() => showBadgeToast(badge), 300);
-              }
-            }
-            updateBadges();
-            saveStats();
-          }
-        } else {
-          showToast("Already Shared", "You already earned the Bring a Friend badge.", "fa-check-circle", "gain");
-        }
+        awardShareBadge();
       } catch (e) {
         showToast("Copy Failed", "Please manually copy the URL.", "fa-exclamation-circle", "loss");
       }
       document.body.removeChild(textArea);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(() => {
+        showToast("Link Copied!", "Share this link with your friends.", "fa-share-alt", "gain");
+        awardShareBadge();
+      }).catch(fallbackCopy);
+    } else {
+      fallbackCopy();
     }
   });
 
@@ -2769,24 +2747,40 @@ function init() {
     }
   });
 
+  // ✅ FIX #3: Javeda button — always save + localStorage backup (survives page navigation)
   document.getElementById("learnJavedaBtn").addEventListener("click", function (e) {
     const s = state.stats;
     s.javedaClicks = (s.javedaClicks || 0) + 1;
+
+    // Backup to localStorage synchronously BEFORE navigation happens
+    try {
+      localStorage.setItem("javeda_clicks_backup", JSON.stringify({
+        count: s.javedaClicks,
+        time: Date.now(),
+        guestId: state.guestId || null,
+        uid: auth.currentUser ? auth.currentUser.uid : null
+      }));
+    } catch (err) {}
+
     const earnedIds = checkBadges(s);
     const prevBadges = new Set(s.earnedBadges || []);
-    const newBadges = earnedIds.filter((id) => !prevBadges.has(id));
-    if (newBadges.length > 0) {
-      s.earnedBadges = [...prevBadges, ...newBadges];
-      for (const id of newBadges) {
-        const badge = ALL_BADGES.find((b) => b.id === id);
-        if (badge && !state._shownBadges.has(id)) {
-          state._shownBadges.add(id);
-          setTimeout(() => showBadgeToast(badge), 300);
-        }
+    const mergedBadges = [...new Set([...prevBadges, ...earnedIds])];
+    s.earnedBadges = mergedBadges;
+
+    const newBadges = earnedIds.filter((id) => !prevBadges.has(id) && !state._shownBadges.has(id));
+    for (const id of newBadges) {
+      const badge = ALL_BADGES.find((b) => b.id === id);
+      if (badge) {
+        state._shownBadges.add(id);
+        setTimeout(() => showBadgeToast(badge), 300);
       }
-      updateBadges();
-      saveStats();
     }
+    for (const id of mergedBadges) {
+      state._shownBadges.add(id);
+    }
+
+    updateBadges();
+    saveStats(); // ✅ Always call — even if no new badge
   });
 
   $$(".diff-btn").forEach((btn) => {
@@ -3181,7 +3175,7 @@ function init() {
   updateModeToggles();
   updateBoosterStatus();
 
-  // ===== INIT BELL NOTIFICATIONS (FIXED: use encoded email) =====
+  // ===== INIT BELL NOTIFICATIONS =====
   if (auth.currentUser && typeof initBell === 'function') {
     const email = auth.currentUser.email;
     if (email) {
@@ -3190,7 +3184,39 @@ function init() {
     }
   }
 
-  console.log("📘 Version : 6.0.6 - Bell notification system added. Leaderboard rank notifications (Top 1-5). Fixed badge tracking issues.");
+  // ✅ FIX #3b: Restore javedaClicks from backup if navigation cut off the async save
+  setTimeout(() => {
+    try {
+      const raw = localStorage.getItem("javeda_clicks_backup");
+      if (!raw) return;
+      const backup = JSON.parse(raw);
+
+      // Ignore if older than 5 minutes
+      if (Date.now() - backup.time > 5 * 60 * 1000) {
+        localStorage.removeItem("javeda_clicks_backup");
+        return;
+      }
+
+      // Only restore if it belongs to this user
+      const currentUid = auth.currentUser ? auth.currentUser.uid : null;
+      const sameUser =
+        (backup.uid && currentUid && backup.uid === currentUid) ||
+        (backup.guestId && state.guestId && backup.guestId === state.guestId) ||
+        (!backup.uid && !backup.guestId);
+
+      if (sameUser && backup.count > (state.stats.javedaClicks || 0)) {
+        state.stats.javedaClicks = backup.count;
+        const earnedIds = checkBadges(state.stats);
+        const prevBadges = new Set(state.stats.earnedBadges || []);
+        state.stats.earnedBadges = [...new Set([...prevBadges, ...earnedIds])];
+        updateBadges();
+        saveStats();
+      }
+      localStorage.removeItem("javeda_clicks_backup");
+    } catch (e) {}
+  }, 2500);
+
+  console.log("📘 Version : 6.0.7 — Badge persistence fixes (n1-n4 leaderboard, n5-n6 Learner, n9 Bring a Friend).");
   console.log("✅ Developed By - Faizul Islam Riyad");
 }
 
