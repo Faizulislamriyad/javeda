@@ -122,6 +122,111 @@ function getRandomName() {
 }
 
 // ================================================================
+// ✅ FIX: Ensure all new stat fields exist after load
+// ================================================================
+
+function ensureNewStatsFields() {
+  const s = state.stats;
+  const defaults = {
+    timerMedium5Completed: 0, timerMedium10Completed: 0,
+    timerHard5Completed: 0, timerHard10Completed: 0,
+    smartSwitchEasyToMedium: 0, smartSwitchMediumToHard: 0,
+    smartReachedHard: false, fast2s: 0, focusModeCount: 0,
+    totalCoinsSpent: 0, totalRubiesSpent: 0,
+    coinPurchaseCount: 0, rubyPurchaseCount: 0, maxSingleCoinSpend: 0,
+    hintPackSingleBought: 0, hintPackStarterBought: 0,
+    hintPackProBought: 0, hintPackMasterBought: 0,
+    coinPackPocketBought: 0, coinPackPileBought: 0, coinPackBagBought: 0,
+    pointBoosterBought: 0, coinBoosterBought: 0, streakBoosterBought: 0,
+    streakProtectionUsed: 0,
+    javedaClicks: 0, shared: 0,
+    dailyStreak: 0, lastActivityDate: null,
+    sessionQuestions: 0, nightQuestions: 0, earlyQuestions: 0,
+    fastAnswers: 0, ruleBreakerCount: 0, focusCount: 0, smartModeCount: 0,
+    timerQuestionsCompleted: 0, timer5sCompleted: 0, timer10sCompleted: 0,
+    revisionCorrect: 0,
+    pointBoosterUsed: 0, coinBoosterUsed: 0, streakBoosterUsed: 0,
+    points: 0, coins: 0, rubies: 0, hints: 0, xp: 0,
+    correct: 0, wrong: 0, streak: 0, bestStreak: 0, totalQuestions: 0,
+    noStreakBreakRemaining: 0,
+  };
+  for (const k in defaults) {
+    if (s[k] === undefined || s[k] === null) s[k] = defaults[k];
+  }
+  if (!Array.isArray(s.earnedBadges)) s.earnedBadges = [];
+  if (!Array.isArray(s.quizHistory)) s.quizHistory = [];
+  if (!Array.isArray(s.accuracyHistory)) s.accuracyHistory = [];
+  if (!s.weakRules || typeof s.weakRules !== "object") s.weakRules = {};
+  if (!s.smartCategoryData || typeof s.smartCategoryData !== "object") s.smartCategoryData = {};
+  if (!s.topicStats) {
+    s.topicStats = {
+      asset: { total: 0, wrong: 0 }, liability: { total: 0, wrong: 0 },
+      capital: { total: 0, wrong: 0 }, revenue: { total: 0, wrong: 0 },
+      expense: { total: 0, wrong: 0 }, drawing: { total: 0, wrong: 0 },
+    };
+  } else {
+    for (const cat of ["asset", "liability", "capital", "revenue", "expense", "drawing"]) {
+      if (!s.topicStats[cat]) s.topicStats[cat] = { total: 0, wrong: 0 };
+      if (typeof s.topicStats[cat].total !== "number") s.topicStats[cat].total = 0;
+      if (typeof s.topicStats[cat].wrong !== "number") s.topicStats[cat].wrong = 0;
+    }
+  }
+  if (!s.level || s.level < 1) s.level = getLevelFromXP(s.xp || 0);
+}
+
+// ✅ FIX: Wait for firebase.js to load stats
+function waitForStatsLoaded(maxWaitMs) {
+  return new Promise((resolve) => {
+    const start = Date.now();
+    const check = () => {
+      if (state.statsLoaded || Date.now() - start > maxWaitMs) {
+        resolve();
+      } else {
+        setTimeout(check, 200);
+      }
+    };
+    check();
+  });
+}
+
+// ✅ FIX: Safely recheck all badges on current state.stats
+function recheckAllBadges(showToasts) {
+  try {
+    ensureNewStatsFields();
+    const s = state.stats;
+    for (const id of s.earnedBadges || []) state._shownBadges.add(id);
+
+    const earnedIds = checkBadges(s);
+    const prev = new Set(s.earnedBadges || []);
+    const merged = [...new Set([...prev, ...earnedIds])];
+    const newlyEarned = merged.filter((id) => !prev.has(id));
+
+    s.earnedBadges = merged;
+    for (const id of merged) state._shownBadges.add(id);
+
+    if (showToasts && newlyEarned.length > 0) {
+      for (const id of newlyEarned) {
+        const badge = ALL_BADGES.find((b) => b.id === id);
+        if (badge) setTimeout(() => showBadgeToast(badge), 600);
+      }
+    }
+
+    updateBadges();
+    updateHeaderStats();
+    updateDashboard();
+
+    if (newlyEarned.length > 0) {
+      saveStats();
+      return true;
+    }
+    return false;
+  } catch (e) {
+    console.error("recheckAllBadges error:", e);
+    return false;
+  }
+}
+
+// ================================================================
 // 2. MASTER ACCOUNT CLASSIFICATION SYSTEM
 // ================================================================
 
@@ -556,7 +661,6 @@ const SMART_TRACKER = {
     if (changed && newMode !== this.smartDifficulty) {
       const oldMode = this.smartDifficulty;
 
-      // ===== NEW: Smart switch tracking for x15, x16, x17 =====
       if (oldMode === "easy" && newMode === "medium") {
         state.stats.smartSwitchEasyToMedium = (state.stats.smartSwitchEasyToMedium || 0) + 1;
       }
@@ -644,57 +748,42 @@ function showModeChangeToast(newMode) {
 }
 
 // ================================================================
-// 7. BADGES (TOTAL 100 + NEW x-series)
+// 7. BADGES
 // ================================================================
 
 const ALL_BADGES = [
-  // Leaderboard (n1-n4)
   { id: "n1", icon: "👑", name: "Leaderboard XP King" },
   { id: "n2", icon: "🏅", name: "Leaderboard Points Pro" },
   { id: "n3", icon: "🎯", name: "Leaderboard Accuracy Ace" },
   { id: "n4", icon: "🏆", name: "Leaderboard Badge Collector" },
-  // Javeda / Learn (n5-n6)
   { id: "n5", icon: "📚", name: "Javeda Explorer" },
   { id: "n6", icon: "📖", name: "Learner" },
-  // Hints (n7-n8)
   { id: "n7", icon: "💡", name: "Hint Hoarder" },
   { id: "n8", icon: "💡", name: "Hint Master" },
-  // Bring a Friend (n9) and Rapid Thinker (n10)
   { id: "n9", icon: "🤝", name: "Bring a Friend" },
   { id: "n10", icon: "⚡", name: "Rapid Thinker" },
-  // Speed & Marathon (n11-n12)
   { id: "n11", icon: "⚡", name: "Quick Learner" },
   { id: "n12", icon: "🏃", name: "Marathon Runner" },
-  // Experienced / Associate
   { id: "h3", icon: "🎯", name: "Experienced" },
   { id: "h4", icon: "🤝", name: "Associate" },
-  // Revision (n15-n16)
   { id: "n15", icon: "🔄", name: "Revision King" },
   { id: "n16", icon: "🔄", name: "Revision Master" },
-  // Timer (n17-n18)
   { id: "n17", icon: "⏱️", name: "Timer Survivor" },
   { id: "n18", icon: "⏱️", name: "Timer Legend" },
-  // Smart (n19-n20)
   { id: "n19", icon: "🧠", name: "Smart Learner" },
   { id: "n20", icon: "🧠", name: "Smart Guru" },
-  // Wealth (n21-n22)
   { id: "n21", icon: "💰", name: "Coin Millionaire" },
   { id: "n22", icon: "💎", name: "Ruby Baron" },
-  // Boosters (n23-n25)
   { id: "n23", icon: "🛡️", name: "Streak Protector" },
   { id: "n24", icon: "⚡", name: "Point Booster Fan" },
   { id: "n25", icon: "🪙", name: "Coin Booster Fan" },
-  // Accountant (n26-n28)
   { id: "n26", icon: "📊", name: "Accountant Pro" },
   { id: "n27", icon: "🏅", name: "Ultimate Journal Master" },
   { id: "n28", icon: "👑", name: "Journal Legend" },
-  // Timed Warrior / Balanced Accountant
   { id: "h1", icon: "⚔️", name: "Timed Warrior" },
   { id: "h2", icon: "⚖️", name: "Balanced Accountant" },
-  // Debit/Credit starters (b3-b4)
   { id: "b3", icon: "💳", name: "Debit Starter" },
   { id: "b4", icon: "💳", name: "Credit Starter" },
-  // Progression (b5, b7-b11, b35-b37, b63)
   { id: "b5", icon: "🔥", name: "Warmed Up" },
   { id: "b7", icon: "📓", name: "Journal Rookie" },
   { id: "b8", icon: "🗺️", name: "Accounting Explorer" },
@@ -705,26 +794,22 @@ const ALL_BADGES = [
   { id: "b36", icon: "🥈", name: "500 Questions" },
   { id: "b37", icon: "🥇", name: "1000 Questions" },
   { id: "b63", icon: "📚", name: "2000 Questions" },
-  // Accuracy (b13-b14, b42-b43)
   { id: "b13", icon: "🧠", name: "Sharp Mind" },
   { id: "b14", icon: "🎯", name: "Precision Player" },
   { id: "b42", icon: "🧠", name: "Financial Brain" },
   { id: "b43", icon: "🔍", name: "Error Hunter" },
-  // Streak (b16, b18-b22)
   { id: "b16", icon: "💎", name: "Flawless Brain" },
   { id: "b18", icon: "🔥", name: "Streak 5x" },
   { id: "b19", icon: "🔥", name: "Streak 10x" },
   { id: "b20", icon: "🔥", name: "Streak 25x" },
   { id: "b21", icon: "🔥", name: "Streak 50x" },
   { id: "b22", icon: "👑", name: "Streak King" },
-  // Category Experts (b23-b28)
   { id: "b23", icon: "🏦", name: "Asset Expert" },
   { id: "b24", icon: "📉", name: "Liability Genius" },
   { id: "b25", icon: "💰", name: "Capital Controller" },
   { id: "b26", icon: "📈", name: "Revenue Master" },
   { id: "b27", icon: "💸", name: "Expense Specialist" },
   { id: "b28", icon: "✏️", name: "Drawing Handler" },
-  // Other (b29-b33, b44, b46, b86-b88, b93-b99)
   { id: "b29", icon: "🔧", name: "Rule Breaker" },
   { id: "b30", icon: "⚖️", name: "Balance Thinker" },
   { id: "b31", icon: "⚡", name: "Fast Decision" },
@@ -742,40 +827,32 @@ const ALL_BADGES = [
   { id: "b97", icon: "✨", name: "Legendary" },
   { id: "b98", icon: "👑", name: "Royal Accountant" },
   { id: "b99", icon: "💼", name: "Finance Pro" },
-  // Timer specific (b55-b59)
   { id: "b55", icon: "⏱️", name: "Timer Novice" },
   { id: "b56", icon: "⏱️", name: "Timer Adept" },
   { id: "b57", icon: "⏱️", name: "Timer Master" },
   { id: "b58", icon: "⏱️", name: "Speed Demon (5s)" },
   { id: "b59", icon: "⏱️", name: "Quick Thinker (10s)" },
-  // Coin/Ruby Tycoon (b70-b73)
   { id: "b70", icon: "💎", name: "Ruby Tycoon (500)" },
   { id: "b71", icon: "🪙", name: "Coin Collector (1000)" },
   { id: "b72", icon: "🪙", name: "Coin Hoarder (5000)" },
   { id: "b73", icon: "🪙", name: "Coin Tycoon (10000)" },
-  // Ultimate (b50, b51)
   { id: "b50", icon: "👑", name: "Ultimate Accountant" },
   { id: "b51", icon: "🏆", name: "Top 10 Leaderboard" },
-  // Level (b74-b76)
   { id: "b74", icon: "⬆️", name: "Level 20" },
   { id: "b75", icon: "⬆️", name: "Level 50" },
   { id: "b76", icon: "⬆️", name: "Level 100" },
-  // Smart usage (b77-b78)
   { id: "b77", icon: "🧠", name: "Smart User (100)" },
   { id: "b78", icon: "🧠", name: "Smart Master (500)" },
-  // Revision correct (b79-b80)
   { id: "b79", icon: "🔄", name: "Revise 50" },
   { id: "b80", icon: "🔄", name: "Revise 100" },
-  // Booster usage (b81-b83)
   { id: "b81", icon: "⚡", name: "Point Booster x10" },
   { id: "b82", icon: "🪙", name: "Coin Booster x10" },
   { id: "b83", icon: "🛡️", name: "Streak Protector x10" },
-  // Additional
   { id: "b38", icon: "🏆", name: "Accounting Pro" },
   { id: "b39", icon: "🏆", name: "Debit-Credit Champ" },
   { id: "b40", icon: "👼", name: "Journal God" },
 
-  // ========== NEW BADGES (x-series) ==========
+  // x-series
   { id: "x1", icon: "📚", name: "Scholar" },
   { id: "x2", icon: "🤝", name: "Bring More Friend" },
   { id: "x3", icon: "🧙", name: "Entry Wizard" },
@@ -817,122 +894,34 @@ const ALL_BADGES = [
 ];
 
 // ================================================================
-// BADGE GROUPS (Topic-wise categorization for collapsible UI)
+// BADGE GROUPS
 // ================================================================
 
 const BADGE_GROUPS = [
-  {
-    id: "leaderboard",
-    name: "Leaderboard",
-    icon: "🏆",
-    badgeIds: ["n1", "n2", "n3", "n4", "b51"],
-  },
-  {
-    id: "learning",
-    name: "Learning & Sharing",
-    icon: "📚",
-    badgeIds: ["n5", "n6", "n9", "x1", "x2"],
-  },
-  {
-    id: "milestones",
-    name: "Question Milestones",
-    icon: "📝",
-    badgeIds: ["b33", "b5", "b7", "b8", "b9", "b10", "b11", "b35", "b36", "b37", "b63", "b93", "x3", "x4"],
-  },
-  {
-    id: "streaks",
-    name: "Streaks",
-    icon: "🔥",
-    badgeIds: ["b18", "b19", "b16", "b20", "b21", "b22", "x21"],
-  },
-  {
-    id: "accuracy",
-    name: "Accuracy",
-    icon: "🎯",
-    badgeIds: ["b13", "b14", "b42", "b43", "b30"],
-  },
-  {
-    id: "category",
-    name: "Category Experts",
-    icon: "💼",
-    badgeIds: ["b23", "b24", "b25", "b26", "b27", "b28", "x5", "x6", "x7", "x8", "x9", "x10"],
-  },
-  {
-    id: "timer",
-    name: "Timer Mode",
-    icon: "⏱️",
-    badgeIds: ["b55", "b56", "b57", "b58", "b59", "n17", "n18", "n10", "h1", "x11", "x12", "x13", "x14"],
-  },
-  {
-    id: "smart",
-    name: "Smart Mode",
-    icon: "🧠",
-    badgeIds: ["b46", "n19", "b77", "n20", "b78", "x15", "x16", "x17"],
-  },
-  {
-    id: "revision",
-    name: "Revision",
-    icon: "🔄",
-    badgeIds: ["n15", "b79", "b80", "n16"],
-  },
-  {
-    id: "speed",
-    name: "Speed & Focus",
-    icon: "⚡",
-    badgeIds: ["b31", "b32", "n11", "b44", "n12", "x18", "x19", "x20", "x22"],
-  },
-  {
-    id: "wealth",
-    name: "Wealth (Coins & Rubies)",
-    icon: "💰",
-    badgeIds: ["b71", "b72", "b73", "n21", "b70", "n22", "b99"],
-  },
-  {
-    id: "boosters",
-    name: "Boosters",
-    icon: "🚀",
-    badgeIds: ["n23", "b83", "n24", "b81", "n25", "b82"],
-  },
-  {
-    id: "levels",
-    name: "Levels & XP",
-    icon: "📈",
-    badgeIds: ["h3", "b38", "b74", "b75", "b76"],
-  },
-  {
-    id: "hints",
-    name: "Hints",
-    icon: "💡",
-    badgeIds: ["n7", "n8"],
-  },
-  {
-    id: "mastery",
-    name: "Mastery & Elite",
-    icon: "👑",
-    badgeIds: [
-      "b3", "b4", "h4", "b29", "b39", "b40", "b50", "h2",
-      "b86", "b87", "b88", "b94", "b95", "b96", "b97", "b98",
-      "n26", "n27", "n28",
-    ],
-  },
-  {
-    id: "shopping",
-    name: "Shopping & Boosters",
-    icon: "🛒",
-    badgeIds: [
-      "x23", "x24", "x25", "x26", "x27", "x28", "x29", "x30",
-      "x31", "x32", "x33", "x34", "x35", "x36", "x37", "x38",
-    ],
-  },
+  { id: "leaderboard", name: "Leaderboard", icon: "🏆", badgeIds: ["n1", "n2", "n3", "n4", "b51"] },
+  { id: "learning", name: "Learning & Sharing", icon: "📚", badgeIds: ["n5", "n6", "n9", "x1", "x2"] },
+  { id: "milestones", name: "Question Milestones", icon: "📝", badgeIds: ["b33", "b5", "b7", "b8", "b9", "b10", "b11", "b35", "b36", "b37", "b63", "b93", "x3", "x4"] },
+  { id: "streaks", name: "Streaks", icon: "🔥", badgeIds: ["b18", "b19", "b16", "b20", "b21", "b22", "x21"] },
+  { id: "accuracy", name: "Accuracy", icon: "🎯", badgeIds: ["b13", "b14", "b42", "b43", "b30"] },
+  { id: "category", name: "Category Experts", icon: "💼", badgeIds: ["b23", "b24", "b25", "b26", "b27", "b28", "x5", "x6", "x7", "x8", "x9", "x10"] },
+  { id: "timer", name: "Timer Mode", icon: "⏱️", badgeIds: ["b55", "b56", "b57", "b58", "b59", "n17", "n18", "n10", "h1", "x11", "x12", "x13", "x14"] },
+  { id: "smart", name: "Smart Mode", icon: "🧠", badgeIds: ["b46", "n19", "b77", "n20", "b78", "x15", "x16", "x17"] },
+  { id: "revision", name: "Revision", icon: "🔄", badgeIds: ["n15", "b79", "b80", "n16"] },
+  { id: "speed", name: "Speed & Focus", icon: "⚡", badgeIds: ["b31", "b32", "n11", "b44", "n12", "x18", "x19", "x20", "x22"] },
+  { id: "wealth", name: "Wealth (Coins & Rubies)", icon: "💰", badgeIds: ["b71", "b72", "b73", "n21", "b70", "n22", "b99"] },
+  { id: "boosters", name: "Boosters", icon: "🚀", badgeIds: ["n23", "b83", "n24", "b81", "n25", "b82"] },
+  { id: "levels", name: "Levels & XP", icon: "📈", badgeIds: ["h3", "b38", "b74", "b75", "b76"] },
+  { id: "hints", name: "Hints", icon: "💡", badgeIds: ["n7", "n8"] },
+  { id: "mastery", name: "Mastery & Elite", icon: "👑", badgeIds: ["b3", "b4", "h4", "b29", "b39", "b40", "b50", "h2", "b86", "b87", "b88", "b94", "b95", "b96", "b97", "b98", "n26", "n27", "n28"] },
+  { id: "shopping", name: "Shopping & Boosters", icon: "🛒", badgeIds: ["x23", "x24", "x25", "x26", "x27", "x28", "x29", "x30", "x31", "x32", "x33", "x34", "x35", "x36", "x37", "x38"] },
 ];
 
 function checkBadges(stats) {
   const earned = [];
-  const total = stats.correct + stats.wrong;
+  const total = (stats.correct || 0) + (stats.wrong || 0);
   const acc = total > 0 ? stats.correct / total : 0;
   const accPct = Math.round(acc * 100);
 
-  // typeCounts (from quizHistory) — kept for existing badges b23-b28 etc.
   const typeCounts = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
   if (stats.quizHistory) {
     for (const h of stats.quizHistory) {
@@ -942,7 +931,6 @@ function checkBadges(stats) {
     }
   }
 
-  // typeCountsAll (from topicStats) — used for new x badges (100+ thresholds)
   const typeCountsAll = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
   if (stats.topicStats) {
     for (const cat of Object.keys(typeCountsAll)) {
@@ -954,7 +942,7 @@ function checkBadges(stats) {
   const totalBadges = (stats.earnedBadges || []).length;
   const isLoggedIn = auth.currentUser !== null;
 
-  // ----- NEW BADGES (h1, h2, h3, h4) -----
+  // h badges
   if (stats.timerQuestionsCompleted && stats.timerQuestionsCompleted >= 500) earned.push("h1");
   let all100 = true;
   for (const cat of ['asset','liability','capital','revenue','expense','drawing']) {
@@ -964,13 +952,11 @@ function checkBadges(stats) {
   if (stats.xp >= 3000) earned.push("h3");
   if (isLoggedIn) earned.push("h4");
 
-  // ----- n9: Bring a Friend -----
+  // n9, n10
   if (stats.shared && stats.shared >= 1) earned.push("n9");
-
-  // ----- n10: Rapid Thinker -----
   if ((stats.timer5sCompleted || 0) >= 500 && (stats.timer10sCompleted || 0) >= 500) earned.push("n10");
 
-  // ----- Existing badges -----
+  // Existing badges
   if (stats.correct >= 1 && stats.quizHistory && stats.quizHistory.some(h => h.correctAnswer === "debit" && h.userAnswer === "debit")) earned.push("b3");
   if (stats.correct >= 1 && stats.quizHistory && stats.quizHistory.some(h => h.correctAnswer === "credit" && h.userAnswer === "credit")) earned.push("b4");
   if (stats.correct >= 5) earned.push("b5");
@@ -1040,7 +1026,7 @@ function checkBadges(stats) {
   if (stats.correct >= 5000) earned.push("b98");
   if (stats.coins >= 5000 && stats.rubies >= 200) earned.push("b99");
 
-  // n5-n28 badges
+  // n-series
   if (stats.javedaClicks && stats.javedaClicks >= 1) earned.push("n5");
   if (stats.javedaClicks && stats.javedaClicks >= 5) earned.push("n6");
   if (stats.hints && stats.hints >= 300) earned.push("n7");
@@ -1067,34 +1053,29 @@ function checkBadges(stats) {
   if (totalBadges >= 50) earned.push("n27");
   if (totalBadges >= 75) earned.push("n28");
 
-  // ========== NEW x-series badges ==========
+  // x-series
   if ((stats.javedaClicks || 0) >= 30) earned.push("x1");
   if ((stats.shared || 0) >= 10) earned.push("x2");
   if (stats.correct >= 500) earned.push("x3");
   if (total >= 5000) earned.push("x4");
-
   if (typeCountsAll.asset >= 100) earned.push("x5");
   if (typeCountsAll.liability >= 100) earned.push("x6");
   if (typeCountsAll.capital >= 100) earned.push("x7");
   if (typeCountsAll.revenue >= 100) earned.push("x8");
   if (typeCountsAll.expense >= 100) earned.push("x9");
   if (typeCountsAll.drawing >= 5) earned.push("x10");
-
   if ((stats.timerMedium5Completed || 0) >= 100) earned.push("x11");
   if ((stats.timerMedium10Completed || 0) >= 100) earned.push("x12");
   if ((stats.timerHard5Completed || 0) >= 100) earned.push("x13");
   if ((stats.timerHard10Completed || 0) >= 100) earned.push("x14");
-
   if ((stats.smartSwitchEasyToMedium || 0) >= 1) earned.push("x15");
   if ((stats.smartSwitchMediumToHard || 0) >= 1) earned.push("x16");
   if (stats.smartReachedHard) earned.push("x17");
-
   if ((stats.fastAnswers || 0) >= 1000) earned.push("x18");
   if ((stats.fast2s || 0) >= 10) earned.push("x19");
   if ((stats.focusModeCount || 0) >= 200) earned.push("x20");
   if (stats.bestStreak >= 20) earned.push("x21");
   if ((stats.sessionQuestions || 0) >= 100) earned.push("x22");
-
   if ((stats.totalCoinsSpent || 0) >= 200) earned.push("x23");
   if ((stats.totalRubiesSpent || 0) >= 200) earned.push("x24");
   if ((stats.coinPurchaseCount || 0) >= 5) earned.push("x25");
@@ -1103,14 +1084,12 @@ function checkBadges(stats) {
   if ((stats.totalCoinsSpent || 0) >= 500) earned.push("x28");
   if ((stats.totalRubiesSpent || 0) >= 500) earned.push("x29");
   if ((stats.totalCoinsSpent || 0) >= 10000 && (stats.totalRubiesSpent || 0) >= 5000) earned.push("x30");
-
   if (
     (stats.hintPackSingleBought || 0) >= 50 &&
     (stats.hintPackStarterBought || 0) >= 20 &&
     (stats.hintPackProBought || 0) >= 10 &&
     (stats.hintPackMasterBought || 0) >= 5
   ) earned.push("x31");
-
   if ((stats.coinPackPocketBought || 0) >= 5) earned.push("x32");
   if ((stats.coinPackPileBought || 0) >= 5) earned.push("x33");
   if ((stats.coinPackBagBought || 0) >= 5) earned.push("x34");
@@ -1127,7 +1106,7 @@ function checkBadges(stats) {
 // ================================================================
 
 function getBadgeDetails(badgeId, stats) {
-  const total = stats.correct + stats.wrong;
+  const total = (stats.correct || 0) + (stats.wrong || 0);
   const acc = total > 0 ? stats.correct / total : 0;
   const accPct = Math.round(acc * 100);
 
@@ -1139,7 +1118,6 @@ function getBadgeDetails(badgeId, stats) {
       }
     }
   }
-
   const typeCountsAll = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
   if (stats.topicStats) {
     for (const cat of Object.keys(typeCountsAll)) {
@@ -1147,7 +1125,6 @@ function getBadgeDetails(badgeId, stats) {
       typeCountsAll[cat] = Math.max(0, (t.total || 0) - (t.wrong || 0));
     }
   }
-
   const totalBadges = (stats.earnedBadges || []).length;
 
   function item(current, target, label, icon = "") {
@@ -1156,14 +1133,11 @@ function getBadgeDetails(badgeId, stats) {
   }
 
   switch (badgeId) {
-    // Leaderboard
     case 'n1': return { description: "XP Leaderboard এ Top 3 এ পৌঁছান।", items: [] };
     case 'n2': return { description: "Points Leaderboard এ Top 3 এ পৌঁছান।", items: [] };
     case 'n3': return { description: "Accuracy Leaderboard এ Top 5 এ পৌঁছান।", items: [] };
     case 'n4': return { description: "Badges Leaderboard এ Top 2 এ পৌঁছান।", items: [] };
     case 'b51': return { description: "যেকোনো Leaderboard এ Top 10 এ পৌঁছান।", items: [] };
-
-    // Single condition
     case 'n5': return { description: "Click the 'Learn Javeda' button 1 time.", items: [item(stats.javedaClicks || 0, 1, "Clicks")] };
     case 'n6': return { description: "Click the 'Learn Javeda' button 5 times.", items: [item(stats.javedaClicks || 0, 5, "Clicks")] };
     case 'n7': return { description: "Gather 300 hints in total.", items: [item(stats.hints || 0, 300, "Hints gathered")] };
@@ -1196,8 +1170,6 @@ function getBadgeDetails(badgeId, stats) {
     }
     case 'n27': return { description: "Earn 50 total badges.", items: [item(totalBadges, 50, "Badges earned")] };
     case 'n28': return { description: "Earn 75 total badges.", items: [item(totalBadges, 75, "Badges earned")] };
-
-    // NEW h badges
     case 'h1': return { description: "Get 500 correct answers in Timer Mode.", items: [item(stats.timerQuestionsCompleted || 0, 500, "Timer correct answers")] };
     case 'h2': {
       const catItems = [];
@@ -1209,8 +1181,6 @@ function getBadgeDetails(badgeId, stats) {
     }
     case 'h3': return { description: "Reach 3,000 total XP.", items: [item(stats.xp || 0, 3000, "XP")] };
     case 'h4': return { description: "Sign in with Google account (one time).", items: [] };
-
-    // Debit/Credit starters
     case 'b3': return { description: "Answer your first Debit question correctly.", items: [] };
     case 'b4': return { description: "Answer your first Credit question correctly.", items: [] };
     case 'b5': return { description: "Get 5 correct answers.", items: [item(stats.correct, 5, "Correct answers")] };
@@ -1250,35 +1220,19 @@ function getBadgeDetails(badgeId, stats) {
     case 'b44': return { description: "Answer 20 questions in Focus Mode (timer or smart).", items: [item(stats.focusCount || 0, 20, "Focus questions")] };
     case 'b46': return { description: "Answer 50 questions in Smart Mode.", items: [item(stats.smartModeCount || 0, 50, "Smart questions")] };
     case 'b86': return { description: "Achieve 80% accuracy, 200 total questions, and streak 50.", items: [
-        item(accPct, 80, "Accuracy %"),
-        item(total, 200, "Total questions"),
-        item(stats.bestStreak, 50, "Best streak")
+        item(accPct, 80, "Accuracy %"), item(total, 200, "Total questions"), item(stats.bestStreak, 50, "Best streak")
       ] };
     case 'b87': return { description: "Achieve 90% accuracy, 500 total questions, and streak 100.", items: [
-        item(accPct, 90, "Accuracy %"),
-        item(total, 500, "Total questions"),
-        item(stats.bestStreak, 100, "Best streak")
+        item(accPct, 90, "Accuracy %"), item(total, 500, "Total questions"), item(stats.bestStreak, 100, "Best streak")
       ] };
-    case 'b88': return { description: "Answer 1,000 questions with 70%+ accuracy.", items: [
-        item(total, 1000, "Total questions"),
-        item(accPct, 70, "Accuracy %")
-      ] };
+    case 'b88': return { description: "Answer 1,000 questions with 70%+ accuracy.", items: [item(total, 1000, "Total questions"), item(accPct, 70, "Accuracy %")] };
     case 'b93': return { description: "Answer 100 total questions.", items: [item(total, 100, "Total questions")] };
-    case 'b94': return { description: "Reach Level 15 with 75%+ accuracy.", items: [
-        item(stats.level, 15, "Level"),
-        item(accPct, 75, "Accuracy %")
-      ] };
-    case 'b95': return { description: "Get 1,000 correct answers with 80%+ accuracy.", items: [
-        item(stats.correct, 1000, "Correct answers"),
-        item(accPct, 80, "Accuracy %")
-      ] };
+    case 'b94': return { description: "Reach Level 15 with 75%+ accuracy.", items: [item(stats.level, 15, "Level"), item(accPct, 75, "Accuracy %")] };
+    case 'b95': return { description: "Get 1,000 correct answers with 80%+ accuracy.", items: [item(stats.correct, 1000, "Correct answers"), item(accPct, 80, "Accuracy %")] };
     case 'b96': return { description: "Get 2,000 correct answers.", items: [item(stats.correct, 2000, "Correct answers")] };
     case 'b97': return { description: "Answer 5,000 total questions.", items: [item(total, 5000, "Total questions")] };
     case 'b98': return { description: "Get 5,000 correct answers.", items: [item(stats.correct, 5000, "Correct answers")] };
-    case 'b99': return { description: "Collect 5,000 coins and 200 rubies.", items: [
-        item(stats.coins || 0, 5000, "Coins", "🪙"),
-        item(stats.rubies || 0, 200, "Rubies", "💎")
-      ] };
+    case 'b99': return { description: "Collect 5,000 coins and 200 rubies.", items: [item(stats.coins || 0, 5000, "Coins", "🪙"), item(stats.rubies || 0, 200, "Rubies", "💎")] };
     case 'b55': return { description: "Complete 10 Timer Mode questions.", items: [item(stats.timerQuestionsCompleted || 0, 10, "Timer questions")] };
     case 'b56': return { description: "Complete 50 Timer Mode questions.", items: [item(stats.timerQuestionsCompleted || 0, 50, "Timer questions")] };
     case 'b57': return { description: "Complete 100 Timer Mode questions.", items: [item(stats.timerQuestionsCompleted || 0, 100, "Timer questions")] };
@@ -1303,34 +1257,28 @@ function getBadgeDetails(badgeId, stats) {
     case 'b39': return { description: "Get 500 correct answers.", items: [item(stats.correct, 500, "Correct answers")] };
     case 'b40': return { description: "Get 1,000 correct answers.", items: [item(stats.correct, 1000, "Correct answers")] };
 
-    // ========== NEW x-series badge details (English only) ==========
     case 'x1': return { description: "Click the 'Learn Javeda' button 30 times.", items: [item(stats.javedaClicks || 0, 30, "Clicks")] };
     case 'x2': return { description: "Share the website 10 times using the Share button.", items: [item(stats.shared || 0, 10, "Shares")] };
     case 'x3': return { description: "Get 500 correct answers.", items: [item(stats.correct, 500, "Correct answers")] };
     case 'x4': return { description: "Answer 5,000 total questions.", items: [item(total, 5000, "Total questions")] };
-
     case 'x5': return { description: "Correctly answer 100 Asset questions.", items: [item(typeCountsAll.asset, 100, "Asset correct")] };
     case 'x6': return { description: "Correctly answer 100 Liability questions.", items: [item(typeCountsAll.liability, 100, "Liability correct")] };
     case 'x7': return { description: "Correctly answer 100 Capital questions.", items: [item(typeCountsAll.capital, 100, "Capital correct")] };
     case 'x8': return { description: "Correctly answer 100 Revenue questions.", items: [item(typeCountsAll.revenue, 100, "Revenue correct")] };
     case 'x9': return { description: "Correctly answer 100 Expense questions.", items: [item(typeCountsAll.expense, 100, "Expense correct")] };
     case 'x10': return { description: "Correctly answer 5 Drawing questions.", items: [item(typeCountsAll.drawing, 5, "Drawing correct")] };
-
     case 'x11': return { description: "Complete 100 Medium Timer questions with 5-second timer.", items: [item(stats.timerMedium5Completed || 0, 100, "Medium 5s")] };
     case 'x12': return { description: "Complete 100 Medium Timer questions with 10-second timer.", items: [item(stats.timerMedium10Completed || 0, 100, "Medium 10s")] };
     case 'x13': return { description: "Complete 100 Hard Timer questions with 5-second timer.", items: [item(stats.timerHard5Completed || 0, 100, "Hard 5s")] };
     case 'x14': return { description: "Complete 100 Hard Timer questions with 10-second timer.", items: [item(stats.timerHard10Completed || 0, 100, "Hard 10s")] };
-
     case 'x15': return { description: "Auto switch from Easy to Medium in Smart Mode.", items: [item(stats.smartSwitchEasyToMedium || 0, 1, "Easy → Medium")] };
     case 'x16': return { description: "Auto switch from Medium to Hard in Smart Mode.", items: [item(stats.smartSwitchMediumToHard || 0, 1, "Medium → Hard")] };
     case 'x17': return { description: "Reach Hard level in Smart Mode.", items: [] };
-
     case 'x18': return { description: "Answer 1,000 questions within 3 seconds each.", items: [item(stats.fastAnswers || 0, 1000, "Fast answers")] };
     case 'x19': return { description: "Answer 10 questions within 2 seconds each.", items: [item(stats.fast2s || 0, 10, "2s answers")] };
     case 'x20': return { description: "Answer 200 questions in Focus Mode (Timer or Smart).", items: [item(stats.focusModeCount || 0, 200, "Focus questions")] };
     case 'x21': return { description: "Answer 20 correct questions in a row.", items: [item(stats.bestStreak, 20, "Best streak")] };
     case 'x22': return { description: "Answer 100 questions in a single session.", items: [item(stats.sessionQuestions || 0, 100, "Session questions")] };
-
     case 'x23': return { description: "Spend a total of 200 coins.", items: [item(stats.totalCoinsSpent || 0, 200, "Coins spent", "🪙")] };
     case 'x24': return { description: "Spend a total of 200 rubies.", items: [item(stats.totalRubiesSpent || 0, 200, "Rubies spent", "💎")] };
     case 'x25': return { description: "Purchase 5 items/boosters using Coins.", items: [item(stats.coinPurchaseCount || 0, 5, "Coin purchases")] };
@@ -1432,12 +1380,9 @@ let state = {
     coinBoosterActive: false, coinBoosterExpiry: 0,
     noStreakBreakRemaining: 0,
     topicStats: {
-      asset: { total: 0, wrong: 0 },
-      liability: { total: 0, wrong: 0 },
-      capital: { total: 0, wrong: 0 },
-      revenue: { total: 0, wrong: 0 },
-      expense: { total: 0, wrong: 0 },
-      drawing: { total: 0, wrong: 0 },
+      asset: { total: 0, wrong: 0 }, liability: { total: 0, wrong: 0 },
+      capital: { total: 0, wrong: 0 }, revenue: { total: 0, wrong: 0 },
+      expense: { total: 0, wrong: 0 }, drawing: { total: 0, wrong: 0 },
     },
     timerQuestionsCompleted: 0, timer5sCompleted: 0, timer10sCompleted: 0,
     revisionCorrect: 0,
@@ -1445,32 +1390,16 @@ let state = {
     javedaClicks: 0, shared: 0,
     dailyStreak: 0, lastActivityDate: null,
     sessionQuestions: 0, nightQuestions: 0, earlyQuestions: 0,
-
-    // ===== NEW counters for x-series badges =====
-    timerMedium5Completed: 0,
-    timerMedium10Completed: 0,
-    timerHard5Completed: 0,
-    timerHard10Completed: 0,
-    smartSwitchEasyToMedium: 0,
-    smartSwitchMediumToHard: 0,
-    smartReachedHard: false,
-    fast2s: 0,
-    focusModeCount: 0,
-    totalCoinsSpent: 0,
-    totalRubiesSpent: 0,
-    coinPurchaseCount: 0,
-    rubyPurchaseCount: 0,
-    maxSingleCoinSpend: 0,
-    hintPackSingleBought: 0,
-    hintPackStarterBought: 0,
-    hintPackProBought: 0,
-    hintPackMasterBought: 0,
-    coinPackPocketBought: 0,
-    coinPackPileBought: 0,
-    coinPackBagBought: 0,
-    pointBoosterBought: 0,
-    coinBoosterBought: 0,
-    streakBoosterBought: 0,
+    timerMedium5Completed: 0, timerMedium10Completed: 0,
+    timerHard5Completed: 0, timerHard10Completed: 0,
+    smartSwitchEasyToMedium: 0, smartSwitchMediumToHard: 0,
+    smartReachedHard: false, fast2s: 0, focusModeCount: 0,
+    totalCoinsSpent: 0, totalRubiesSpent: 0,
+    coinPurchaseCount: 0, rubyPurchaseCount: 0, maxSingleCoinSpend: 0,
+    hintPackSingleBought: 0, hintPackStarterBought: 0,
+    hintPackProBought: 0, hintPackMasterBought: 0,
+    coinPackPocketBought: 0, coinPackPileBought: 0, coinPackBagBought: 0,
+    pointBoosterBought: 0, coinBoosterBought: 0, streakBoosterBought: 0,
     streakProtectionUsed: 0,
   },
   unsubUser: null, unsubLeaderboard: null,
@@ -1492,10 +1421,6 @@ function setText(id, value) {
   const el = document.getElementById(id);
   if (el) el.textContent = value;
 }
-
-// ================================================================
-// 10. HEART SYSTEM REMOVED
-// ================================================================
 
 // ================================================================
 // 11. BOOSTER SYSTEM
@@ -1565,7 +1490,6 @@ function activateBooster(type, duration, costCoins, costRubies) {
   s.coins -= costCoins;
   s.rubies -= costRubies;
 
-  // ===== NEW: track purchases & spending for x-series badges =====
   s.totalCoinsSpent = (s.totalCoinsSpent || 0) + costCoins;
   s.totalRubiesSpent = (s.totalRubiesSpent || 0) + costRubies;
   if (costCoins > 0) {
@@ -1600,11 +1524,12 @@ function activateBooster(type, duration, costCoins, costRubies) {
   updateShopUI();
   updateBoosterStatus();
 
-  // Check for new badges right after purchase
+  // ✅ FIX: Merge badges & save — using fresh reference
   const earnedIds = checkBadges(s);
   const prevBadges = new Set(s.earnedBadges || []);
-  s.earnedBadges = [...new Set([...prevBadges, ...earnedIds])];
-  const newBadges = earnedIds.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
+  const mergedBadges = [...new Set([...prevBadges, ...earnedIds])];
+  s.earnedBadges = mergedBadges;
+  const newBadges = mergedBadges.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
   for (const id of newBadges) {
     const badge = ALL_BADGES.find(b => b.id === id);
     if (badge) {
@@ -1612,7 +1537,7 @@ function activateBooster(type, duration, costCoins, costRubies) {
       setTimeout(() => showBadgeToast(badge), 600);
     }
   }
-  for (const id of s.earnedBadges) state._shownBadges.add(id);
+  for (const id of mergedBadges) state._shownBadges.add(id);
   updateBadges();
 
   saveStats();
@@ -1724,9 +1649,7 @@ function renderQuestion() {
       timerDisplay.classList.add("show");
       timerDisplay.classList.remove("warning");
     }
-    if (timerCountdown) {
-      timerCountdown.textContent = state.timerSec;
-    }
+    if (timerCountdown) timerCountdown.textContent = state.timerSec;
     state.timerRemaining = state.timerSec;
     startTimer();
   } else {
@@ -1900,9 +1823,7 @@ function startTimer() {
 
   state.timerInterval = setInterval(() => {
     state.timerRemaining -= 0.5;
-    if (timerCountdown) {
-      timerCountdown.textContent = Math.ceil(state.timerRemaining);
-    }
+    if (timerCountdown) timerCountdown.textContent = Math.ceil(state.timerRemaining);
     if (timerDisplay && state.timerRemaining <= 2) {
       timerDisplay.classList.add("warning");
     } else if (timerDisplay) {
@@ -1925,9 +1846,7 @@ function stopTimer() {
   }
   state.timerActive = false;
   const timerDisplay = document.getElementById("timerDisplay");
-  if (timerDisplay) {
-    timerDisplay.classList.remove("warning");
-  }
+  if (timerDisplay) timerDisplay.classList.remove("warning");
 }
 
 function handleTimerTimeout() {
@@ -1938,20 +1857,16 @@ function handleTimerTimeout() {
   const q = state.currentQuestion;
   const s = state.stats;
 
-  const TIMEOUT_PENALTIES = {
-    medium: { 5: -4, 10: -3 },
-    hard: { 5: -5, 10: -4 },
-  };
+  const TIMEOUT_PENALTIES = { medium: { 5: -4, 10: -3 }, hard: { 5: -5, 10: -4 } };
   const timeoutPenalty = TIMEOUT_PENALTIES[state.difficulty]?.[state.timerSec] || -2;
-  
+
   s.points = Math.max(0, s.points + timeoutPenalty);
 
   const boosters = getBoosters();
   s.wrong++;
-  
+
   if (boosters.streakActive) {
     s.noStreakBreakRemaining--;
-    // ===== NEW: streak protection used counter =====
     s.streakProtectionUsed = (s.streakProtectionUsed || 0) + 1;
     showToast("🛡️ Streak Protected!", `${s.noStreakBreakRemaining} protections left.`, "fa-shield", "gain");
     if (s.noStreakBreakRemaining <= 0) {
@@ -1982,15 +1897,16 @@ function handleTimerTimeout() {
   s.accuracyHistory.push(acc);
   if (s.accuracyHistory.length > 7) s.accuracyHistory.shift();
 
-  showToast(
-    "⏱ Time's Up!",
-    `${timeoutPenalty} pts (time loss penalty)`,
-    "fa-hourglass-end",
-    "loss"
-  );
+  showToast("⏱ Time's Up!", `${timeoutPenalty} pts (time loss penalty)`, "fa-hourglass-end", "loss");
 
   state.userAnswer = "timeout";
   showFeedback(false, q, state.currentJournal, state.currentTransaction);
+
+  // ✅ Merge badges
+  const earnedIds = checkBadges(s);
+  const prevBadges = new Set(s.earnedBadges || []);
+  s.earnedBadges = [...new Set([...prevBadges, ...earnedIds])];
+  for (const id of s.earnedBadges) state._shownBadges.add(id);
 
   updateHeaderStats();
   updateQuizProgress();
@@ -2012,7 +1928,6 @@ function showFeedback(isCorrect, q, journal, trans) {
 
   const isTimeout = state.userAnswer === "timeout";
   const isCorrectFinal = isCorrect && !isTimeout;
-  const isWrongFinal = !isCorrect || isTimeout;
 
   box.className = "feedback-box show " + (isCorrectFinal ? "correct" : "wrong");
 
@@ -2070,21 +1985,10 @@ function showFeedback(isCorrect, q, journal, trans) {
 
   $$(".quiz-opt").forEach((b) => {
     b.disabled = true;
-    if (b.dataset.answer === q.correctAnswer) {
-      b.classList.add("show-correct");
-    }
-    if (b.dataset.answer === q.correctAnswer && isCorrectFinal) {
-      b.classList.add("correct");
-    }
-    if (b.dataset.answer !== q.correctAnswer && !isCorrectFinal && b.dataset.answer === state.userAnswer) {
-      b.classList.add("wrong");
-    }
-    if (b.dataset.answer === q.correctAnswer && !isCorrectFinal) {
-      b.classList.add("show-correct");
-    }
-    if (isTimeout && b.dataset.answer === q.correctAnswer) {
-      b.classList.add("show-correct");
-    }
+    if (b.dataset.answer === q.correctAnswer) b.classList.add("show-correct");
+    if (b.dataset.answer === q.correctAnswer && isCorrectFinal) b.classList.add("correct");
+    if (b.dataset.answer !== q.correctAnswer && !isCorrectFinal && b.dataset.answer === state.userAnswer) b.classList.add("wrong");
+    if (isTimeout && b.dataset.answer === q.correctAnswer) b.classList.add("show-correct");
   });
 
   updateHintButton();
@@ -2275,7 +2179,7 @@ function generateNextQuestionSet() {
 }
 
 // ================================================================
-// 14. ANSWER HANDLING
+// 14. ANSWER HANDLING — ✅ FIXED (awaits upfront, then mutate)
 // ================================================================
 
 async function handleAnswer(answer) {
@@ -2287,42 +2191,50 @@ async function handleAnswer(answer) {
   const timerDisplay = document.getElementById("timerDisplay");
   if (timerDisplay) timerDisplay.classList.remove("show");
 
+  // ✅ STEP 1: Capture everything we need BEFORE any awaits
   const q = state.currentQuestion;
-  const s = state.stats;
   const isCorrect = answer === q.correctAnswer;
-  const isRevision = state.isRevisionQuestion && state.currentRevisionDocId;
+  const isRevision = !!(state.isRevisionQuestion && state.currentRevisionDocId);
   const isTimerMode = state.timerMode && state.difficulty !== "easy";
-
   const boosters = getBoosters();
+  const rewards = getRewards(state.difficulty, isCorrect, isRevision, isTimerMode, state.timerSec, boosters);
 
-  const rewards = getRewards(
-    state.difficulty,
-    isCorrect,
-    isRevision,
-    isTimerMode,
-    state.timerSec,
-    boosters
-  );
+  // Capture transaction/journal/doc for revision ops before awaits
+  const txSnapshot = state.currentTransaction;
+  const journalSnapshot = state.currentJournal;
+  const revisionDocId = state.currentRevisionDocId;
 
   const elapsed = (Date.now() - state.questionStartTime) / 1000;
-  if (elapsed <= 3) s.fastAnswers = (s.fastAnswers || 0) + 1;
-  // ===== NEW: fast2s counter for x19 =====
-  if (elapsed <= 2) s.fast2s = (s.fast2s || 0) + 1;
-  // ===== NEW: focus mode counter for x20 =====
-  if (isTimerMode || state.smartMode) {
-    s.focusModeCount = (s.focusModeCount || 0) + 1;
+  const hour = new Date().getHours();
+  const today = new Date().toDateString();
+
+  // ✅ STEP 2: Do all AWAITS first — before any state.stats mutation
+  try {
+    if (isCorrect && isRevision && revisionDocId) {
+      await deleteRevisionQuestion(revisionDocId);
+    }
+    if (!isCorrect && !state.isRevisionQuestion && !isTimerMode) {
+      await saveRevisionQuestion(q, txSnapshot, journalSnapshot);
+    }
+    await updateRevisionBadges();
+  } catch (e) {
+    console.error("Revision op error:", e);
   }
+
+  // ✅ STEP 3: After awaits, capture a FRESH, STABLE reference to state.stats
+  // No more awaits after this point, so this reference won't be invalidated.
+  const s = state.stats;
+  ensureNewStatsFields();
+
+  // ✅ STEP 4: Apply all mutations on the fresh reference
+  if (elapsed <= 3) s.fastAnswers = (s.fastAnswers || 0) + 1;
+  if (elapsed <= 2) s.fast2s = (s.fast2s || 0) + 1;
+  if (isTimerMode || state.smartMode) s.focusModeCount = (s.focusModeCount || 0) + 1;
   s.sessionQuestions = (s.sessionQuestions || 0) + 1;
 
-  const hour = new Date().getHours();
-  if (hour >= 0 && hour < 6) {
-    s.nightQuestions = (s.nightQuestions || 0) + 1;
-  }
-  if (hour >= 6 && hour < 9) {
-    s.earlyQuestions = (s.earlyQuestions || 0) + 1;
-  }
+  if (hour >= 0 && hour < 6) s.nightQuestions = (s.nightQuestions || 0) + 1;
+  if (hour >= 6 && hour < 9) s.earlyQuestions = (s.earlyQuestions || 0) + 1;
 
-  const today = new Date().toDateString();
   if (s.lastActivityDate !== today) {
     if (s.lastActivityDate) {
       const yesterday = new Date();
@@ -2343,9 +2255,7 @@ async function handleAnswer(answer) {
   const topicType = q.accountType || "asset";
   if (s.topicStats && s.topicStats[topicType]) {
     s.topicStats[topicType].total++;
-    if (!isCorrect) {
-      s.topicStats[topicType].wrong++;
-    }
+    if (!isCorrect) s.topicStats[topicType].wrong++;
   }
 
   if (isCorrect) {
@@ -2363,8 +2273,6 @@ async function handleAnswer(answer) {
 
     if (isRevision) {
       s.revisionCorrect = (s.revisionCorrect || 0) + 1;
-      await deleteRevisionQuestion(state.currentRevisionDocId);
-      await updateRevisionBadges();
     }
     if (s.quizHistory && s.quizHistory.length > 0) {
       const last = s.quizHistory[s.quizHistory.length - 1];
@@ -2377,27 +2285,18 @@ async function handleAnswer(answer) {
       s.timerQuestionsCompleted = (s.timerQuestionsCompleted || 0) + 1;
       if (state.timerSec === 5) {
         s.timer5sCompleted = (s.timer5sCompleted || 0) + 1;
-        // ===== NEW: track medium/hard 5s =====
-        if (state.difficulty === "medium") {
-          s.timerMedium5Completed = (s.timerMedium5Completed || 0) + 1;
-        } else if (state.difficulty === "hard") {
-          s.timerHard5Completed = (s.timerHard5Completed || 0) + 1;
-        }
+        if (state.difficulty === "medium") s.timerMedium5Completed = (s.timerMedium5Completed || 0) + 1;
+        else if (state.difficulty === "hard") s.timerHard5Completed = (s.timerHard5Completed || 0) + 1;
       } else if (state.timerSec === 10) {
         s.timer10sCompleted = (s.timer10sCompleted || 0) + 1;
-        // ===== NEW: track medium/hard 10s =====
-        if (state.difficulty === "medium") {
-          s.timerMedium10Completed = (s.timerMedium10Completed || 0) + 1;
-        } else if (state.difficulty === "hard") {
-          s.timerHard10Completed = (s.timerHard10Completed || 0) + 1;
-        }
+        if (state.difficulty === "medium") s.timerMedium10Completed = (s.timerMedium10Completed || 0) + 1;
+        else if (state.difficulty === "hard") s.timerHard10Completed = (s.timerHard10Completed || 0) + 1;
       }
     }
   } else {
     s.wrong++;
     if (boosters.streakActive) {
       s.noStreakBreakRemaining--;
-      // ===== NEW: streak protection used counter =====
       s.streakProtectionUsed = (s.streakProtectionUsed || 0) + 1;
       showToast("🛡️ Streak Protected!", `${s.noStreakBreakRemaining} protections left.`, "fa-shield", "gain");
       if (s.noStreakBreakRemaining <= 0) {
@@ -2412,10 +2311,6 @@ async function handleAnswer(answer) {
     pointsChanged = -Math.floor(penalty * 0.5);
     const key = `${q.accountType}.${q.effect}`;
     s.weakRules[key] = (s.weakRules[key] || 0) + 1;
-    if (!state.isRevisionQuestion && !isTimerMode) {
-      await saveRevisionQuestion(q, state.currentTransaction, state.currentJournal);
-      await updateRevisionBadges();
-    }
   }
 
   s.totalQuestions++;
@@ -2446,11 +2341,12 @@ async function handleAnswer(answer) {
     s.effectiveDifficulty = SMART_TRACKER.getEffectiveMode();
   }
 
-  // ✅ Merge earned badges with previous ones
-  const earnedIds = checkBadges(s);
-  const prevBadges = new Set(s.earnedBadges || []);
+  // ✅ STEP 5: Badge merge — on the SAME fresh reference `s` (=== state.stats)
+  const currentStats = state.stats;
+  const earnedIds = checkBadges(currentStats);
+  const prevBadges = new Set(currentStats.earnedBadges || []);
   const mergedBadges = [...new Set([...prevBadges, ...earnedIds])];
-  s.earnedBadges = mergedBadges;
+  currentStats.earnedBadges = mergedBadges;
 
   const newBadges = mergedBadges.filter((id) => !prevBadges.has(id) && !state._shownBadges.has(id));
   for (const id of newBadges) {
@@ -2460,9 +2356,7 @@ async function handleAnswer(answer) {
       setTimeout(() => showBadgeToast(badge), 400);
     }
   }
-  for (const id of mergedBadges) {
-    state._shownBadges.add(id);
-  }
+  for (const id of mergedBadges) state._shownBadges.add(id);
 
   s.focusCount = (s.focusCount || 0) + 1;
 
@@ -2544,7 +2438,6 @@ function buyHint(hints, price, rubiesBonus) {
   s.rubies = (s.rubies || 0) - (rubiesBonus || 0);
   s.hints = (s.hints || 0) + hints;
 
-  // ===== NEW: track spending & pack purchases for x-series badges =====
   s.totalCoinsSpent = (s.totalCoinsSpent || 0) + price;
   s.totalRubiesSpent = (s.totalRubiesSpent || 0) + (rubiesBonus || 0);
   if (price > 0) {
@@ -2554,7 +2447,6 @@ function buyHint(hints, price, rubiesBonus) {
   if ((rubiesBonus || 0) > 0) {
     s.rubyPurchaseCount = (s.rubyPurchaseCount || 0) + 1;
   }
-  // Pack type detection based on hints amount
   if (hints === 1) s.hintPackSingleBought = (s.hintPackSingleBought || 0) + 1;
   else if (hints === 10) s.hintPackStarterBought = (s.hintPackStarterBought || 0) + 1;
   else if (hints === 20) s.hintPackProBought = (s.hintPackProBought || 0) + 1;
@@ -2565,6 +2457,7 @@ function buyHint(hints, price, rubiesBonus) {
   updateShopUI();
   updateHintButton();
 
+  // ✅ Badge check
   const earnedIds = checkBadges(s);
   const prevBadges = new Set(s.earnedBadges || []);
   s.earnedBadges = [...new Set([...prevBadges, ...earnedIds])];
@@ -2592,7 +2485,6 @@ function buyCoins(coins, rubiesCost) {
   s.rubies -= rubiesCost;
   s.coins += coins;
 
-  // ===== NEW: track spending & coin pack purchases for x-series badges =====
   s.totalRubiesSpent = (s.totalRubiesSpent || 0) + rubiesCost;
   s.rubyPurchaseCount = (s.rubyPurchaseCount || 0) + 1;
   if (coins === 50) s.coinPackPocketBought = (s.coinPackPocketBought || 0) + 1;
@@ -2676,7 +2568,7 @@ function updateDashboard() {
 }
 
 // ================================================================
-// 17.5. BADGES RENDER (Topic-wise Collapsible Groups)
+// 17.5. BADGES RENDER
 // ================================================================
 
 function updateBadges() {
@@ -2688,26 +2580,19 @@ function updateBadges() {
   let expandedGroups = new Set();
   try {
     const stored = localStorage.getItem("badge_expanded_groups");
-    if (stored) {
-      expandedGroups = new Set(JSON.parse(stored));
-    } else {
-      expandedGroups = new Set(["leaderboard", "milestones"]);
-    }
+    if (stored) expandedGroups = new Set(JSON.parse(stored));
+    else expandedGroups = new Set(["leaderboard", "milestones"]);
   } catch (e) {
     expandedGroups = new Set(["leaderboard", "milestones"]);
   }
 
   grid.innerHTML = "";
-  let totalUnlocked = 0;
 
   for (const group of BADGE_GROUPS) {
-    const groupBadges = group.badgeIds
-      .map((id) => ALL_BADGES.find((b) => b.id === id))
-      .filter(Boolean);
+    const groupBadges = group.badgeIds.map((id) => ALL_BADGES.find((b) => b.id === id)).filter(Boolean);
     if (groupBadges.length === 0) continue;
 
     const groupEarned = groupBadges.filter((b) => earnedIds.includes(b.id)).length;
-    totalUnlocked += groupEarned;
     const isExpanded = expandedGroups.has(group.id);
     const isComplete = groupEarned === groupBadges.length;
 
@@ -2729,10 +2614,7 @@ function updateBadges() {
       if (nowExpanded) expandedGroups.add(group.id);
       else expandedGroups.delete(group.id);
       try {
-        localStorage.setItem(
-          "badge_expanded_groups",
-          JSON.stringify([...expandedGroups]),
-        );
+        localStorage.setItem("badge_expanded_groups", JSON.stringify([...expandedGroups]));
       } catch (e) {}
       groupEl.classList.toggle("expanded", nowExpanded);
     });
@@ -2752,14 +2634,7 @@ function updateBadges() {
         <div class="b-icon ${unlocked ? "unlocked" : "locked"}">${badge.icon}</div>
         <div class="b-info"><div class="b-name">${badge.name}</div></div>
       `;
-      item.addEventListener(
-        "click",
-        (function (bid) {
-          return function () {
-            showBadgeDetails(bid);
-          };
-        })(badge.id),
-      );
+      item.addEventListener("click", ((bid) => () => showBadgeDetails(bid))(badge.id));
       inner.appendChild(item);
     }
 
@@ -2989,9 +2864,7 @@ function renderLeaderboard() {
 
     const isUser = e.email === currentEmail;
     const rowClass = isUser ? ' class="lb-user-row"' : "";
-
     const avatar = e.photoURL ? `<img src="${e.photoURL}" style="width:24px;height:24px;border-radius:50%;vertical-align:middle;margin-right:6px;" />` : "";
-
     const displayName = isUser ? (auth.currentUser ? auth.currentUser.displayName || "User" : "User") : e.name;
 
     return `<tr${rowClass}>
@@ -3034,9 +2907,7 @@ function renderLeaderboard() {
       for (const id of newBadges) {
         state._shownBadges.add(id);
         const badge = ALL_BADGES.find((b) => b.id === id);
-        if (badge) {
-          setTimeout(() => showBadgeToast(badge), 300);
-        }
+        if (badge) setTimeout(() => showBadgeToast(badge), 300);
       }
       saveStats();
       updateBadges();
@@ -3060,19 +2931,35 @@ function navigateTo(section) {
     updateBadges();
     updateWeakTopics();
   }
-  if (section === "shop") {
-    updateShopUI();
-  }
+  if (section === "shop") updateShopUI();
   if (section === "revision") loadRevisionList();
   if (section === "leaderboard") renderLeaderboard();
 }
 
 // ================================================================
-// 21. INIT
+// 21. INIT — ✅ FIX: Login-এ badge recheck listener
 // ================================================================
 
 function init() {
   auth.onAuthStateChanged(handleAuthState);
+
+  // ✅ FIX: After login / auth change, normalize stats & recheck badges
+  auth.onAuthStateChanged(async function (user) {
+    if (!user) return;
+    try {
+      await waitForStatsLoaded(10000);
+      // Extra safety delay to let firebase.js finish merging stats
+      await new Promise((r) => setTimeout(r, 800));
+      ensureNewStatsFields();
+      // Re-populate shown badges from loaded stats
+      for (const id of state.stats.earnedBadges || []) state._shownBadges.add(id);
+      // Recheck all badge conditions on freshly-loaded stats
+      const newlyEarned = recheckAllBadges(true);
+      console.log("[Badge Recheck] Done. Newly earned:", newlyEarned);
+    } catch (e) {
+      console.error("Login badge recheck error:", e);
+    }
+  });
 
   document.getElementById("loginBtn").addEventListener("click", async function () {
     const btn = this, loader = document.getElementById("loginLoader");
@@ -3103,29 +2990,12 @@ function init() {
       if (saved) {
         const parsed = JSON.parse(saved);
         state.stats = { ...state.stats, ...parsed };
-        if (!state.stats.topicStats) {
-          state.stats.topicStats = {
-            asset: { total: 0, wrong: 0 },
-            liability: { total: 0, wrong: 0 },
-            capital: { total: 0, wrong: 0 },
-            revenue: { total: 0, wrong: 0 },
-            expense: { total: 0, wrong: 0 },
-            drawing: { total: 0, wrong: 0 },
-          };
-        }
-        state.stats.level = getLevelFromXP(state.stats.xp);
-        for (const id of state.stats.earnedBadges || []) {
-          state._shownBadges.add(id);
-        }
-        state.stats.javedaClicks = state.stats.javedaClicks || 0;
-        state.stats.shared = state.stats.shared || 0;
-        state.stats.dailyStreak = state.stats.dailyStreak || 0;
-        state.stats.lastActivityDate = state.stats.lastActivityDate || null;
-        state.stats.sessionQuestions = state.stats.sessionQuestions || 0;
-        state.stats.nightQuestions = state.stats.nightQuestions || 0;
-        state.stats.earlyQuestions = state.stats.earlyQuestions || 0;
       }
     } catch (e) {}
+    // ✅ Normalize after guest load
+    ensureNewStatsFields();
+    state.stats.level = getLevelFromXP(state.stats.xp);
+    for (const id of state.stats.earnedBadges || []) state._shownBadges.add(id);
     updateHeaderStats();
     updateDashboard();
     updateBadges();
@@ -3143,14 +3013,12 @@ function init() {
     showToast("Guest Mode", "Your progress is saved locally.", "fa-user", "gain");
   });
 
-  // Share button — increments shared count each click
+  // Share button
   document.getElementById("shareBtn").addEventListener("click", function () {
     const url = window.location.href;
 
     function awardShareBadge() {
-      // ===== NEW: always increment shared count for x2 =====
       state.stats.shared = (state.stats.shared || 0) + 1;
-
       const earnedIds = checkBadges(state.stats);
       const prevBadges = new Set(state.stats.earnedBadges || []);
       const mergedBadges = [...new Set([...prevBadges, ...earnedIds])];
@@ -3165,7 +3033,6 @@ function init() {
         }
       }
       for (const id of mergedBadges) state._shownBadges.add(id);
-
       updateBadges();
       saveStats();
     }
@@ -3223,7 +3090,6 @@ function init() {
     }
   });
 
-  // Javeda button — always save + localStorage backup
   document.getElementById("learnJavedaBtn").addEventListener("click", function (e) {
     const s = state.stats;
     s.javedaClicks = (s.javedaClicks || 0) + 1;
@@ -3250,10 +3116,7 @@ function init() {
         setTimeout(() => showBadgeToast(badge), 300);
       }
     }
-    for (const id of mergedBadges) {
-      state._shownBadges.add(id);
-    }
-
+    for (const id of mergedBadges) state._shownBadges.add(id);
     updateBadges();
     saveStats();
   });
@@ -3489,11 +3352,8 @@ function init() {
       document.getElementById("timerOptions").classList.add("show");
       showToast("Timer Mode On", `⏱ ${state.timerSec}s per question. Medium & Hard only.`, "fa-hourglass-half", "gain");
       document.querySelectorAll(".diff-btn").forEach((b) => {
-        if (b.dataset.diff === "easy") {
-          b.classList.add("diff-toggle-disabled");
-        } else {
-          b.classList.remove("diff-toggle-disabled");
-        }
+        if (b.dataset.diff === "easy") b.classList.add("diff-toggle-disabled");
+        else b.classList.remove("diff-toggle-disabled");
       });
       const activeDiff = document.querySelector(".diff-btn.active");
       if (activeDiff && activeDiff.dataset.diff === "easy") {
@@ -3535,9 +3395,7 @@ function init() {
       this.classList.add("active");
       state.timerSec = parseInt(this.dataset.timer);
       const timerBadge = document.getElementById("timerBadge");
-      if (timerBadge) {
-        timerBadge.textContent = `⏱ ${state.timerSec}s`;
-      }
+      if (timerBadge) timerBadge.textContent = `⏱ ${state.timerSec}s`;
       showToast("Timer Set", `${state.timerSec} seconds per question.`, "fa-clock", "gain");
       if (state.autoTimer) {
         clearInterval(state.autoTimer);
@@ -3630,21 +3488,11 @@ function init() {
     SMART_TRACKER.smartDifficulty = state.difficulty;
     const indicator = document.getElementById("smartLevelIndicator");
     if (indicator) indicator.style.display = "inline-block";
-    const diffBtns = document.querySelectorAll(".diff-btn");
-    diffBtns.forEach((b) => b.classList.add("diff-toggle-disabled"));
+    document.querySelectorAll(".diff-btn").forEach((b) => b.classList.add("diff-toggle-disabled"));
     updateSmartBadge(state.difficulty);
   }
 
-  if (!state.stats.topicStats) {
-    state.stats.topicStats = {
-      asset: { total: 0, wrong: 0 },
-      liability: { total: 0, wrong: 0 },
-      capital: { total: 0, wrong: 0 },
-      revenue: { total: 0, wrong: 0 },
-      expense: { total: 0, wrong: 0 },
-      drawing: { total: 0, wrong: 0 },
-    };
-  }
+  ensureNewStatsFields();
 
   updateDiffModeLabel(state.difficulty);
   updateModeToggles();
@@ -3663,12 +3511,10 @@ function init() {
       const raw = localStorage.getItem("javeda_clicks_backup");
       if (!raw) return;
       const backup = JSON.parse(raw);
-
       if (Date.now() - backup.time > 5 * 60 * 1000) {
         localStorage.removeItem("javeda_clicks_backup");
         return;
       }
-
       const currentUid = auth.currentUser ? auth.currentUser.uid : null;
       const sameUser =
         (backup.uid && currentUid && backup.uid === currentUid) ||
@@ -3687,7 +3533,7 @@ function init() {
     } catch (e) {}
   }, 2500);
 
-  console.log("📘 Version : 6.1.0 — x-series (38 new) badges added.");
+  console.log("📘 Version : 6.1.2 — Badge tracking bug fixed (login path)");
   console.log("✅ Developed By - Faizul Islam Riyad");
 }
 
@@ -3695,19 +3541,17 @@ function init() {
 // MODAL CLOSE EVENTS
 // ================================================================
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   const closeBtn = document.getElementById("badgeModalClose");
   const modal = document.getElementById("badgeModal");
   if (closeBtn) {
-    closeBtn.addEventListener("click", function() {
+    closeBtn.addEventListener("click", function () {
       modal.classList.remove("show");
     });
   }
   if (modal) {
-    modal.addEventListener("click", function(e) {
-      if (e.target === this) {
-        this.classList.remove("show");
-      }
+    modal.addEventListener("click", function (e) {
+      if (e.target === this) this.classList.remove("show");
     });
   }
 });
