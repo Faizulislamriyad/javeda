@@ -112,7 +112,7 @@ function getRewards(diff, correct, isRevision, timerMode, timerSec, boosters) {
 }
 
 const BENGALI_PERSON_NAMES = [
-  "রহিম", "করিম", "আলম", "রিয়াদ", "সুমন", "হাসান", "রনি", "তাজিম", "ফাহিম",
+  "রহিম", "করিম", "আলম", "রিয়াদ", "সুমন", "হাসান", "রনি", "তাজিম", "ফাহিম",
   "লিমন", "জসিম", "রাফি", "শাওন", "নাঈম", "রাসেল", "সজিব", "আরিফ", "তুহিন",
   "শুভ", "নাবিল",
 ];
@@ -134,40 +134,40 @@ const ACCOUNT_CLASSIFICATIONS = {
   Equipment: { category: "asset", bengali: "যন্ত্রপাতি", rule: "increase=debit,decrease=credit" },
   Computer: { category: "asset", bengali: "কম্পিউটার", rule: "increase=debit,decrease=credit" },
   "Office Supplies": { category: "asset", bengali: "অফিস সরঞ্জাম", rule: "increase=debit,decrease=credit" },
-  "Prepaid Rent": { category: "asset", bengali: "অগ্রিম ভাড়া", rule: "increase=debit,decrease=credit" },
+  "Prepaid Rent": { category: "asset", bengali: "অগ্রিম ভাড়া", rule: "increase=debit,decrease=credit" },
   "Prepaid Insurance": { category: "asset", bengali: "অগ্রিম বিমা খরচ", rule: "increase=debit,decrease=credit" },
   "Prepaid Expense": { category: "asset", bengali: "অগ্রিম খরচ", rule: "increase=debit,decrease=credit" },
-  "Accumulated Depreciation": { category: "asset", bengali: "সঞ্চিত অবচয়", rule: "increase=credit,decrease=debit" },
+  "Accumulated Depreciation": { category: "asset", bengali: "সঞ্চিত অবচয়", rule: "increase=credit,decrease=debit" },
   Building: { category: "asset", bengali: "ভবন", rule: "increase=debit,decrease=credit" },
   Land: { category: "asset", bengali: "জমি", rule: "increase=debit,decrease=credit" },
   Creditors: { category: "liability", bengali: "পাওনাদার", rule: "increase=credit,decrease=debit" },
   "Bank Loan": { category: "liability", bengali: "ব্যাংক ঋণ", rule: "increase=credit,decrease=debit" },
-  "Salary Payable": { category: "liability", bengali: "বকেয়া বেতন", rule: "increase=credit,decrease=debit" },
-  "Rent Payable": { category: "liability", bengali: "বকেয়া ভাড়া", rule: "increase=credit,decrease=debit" },
-  "Interest Payable": { category: "liability", bengali: "প্রদেয় সুদ", rule: "increase=credit,decrease=debit" },
+  "Salary Payable": { category: "liability", bengali: "বকেয়া বেতন", rule: "increase=credit,decrease=debit" },
+  "Rent Payable": { category: "liability", bengali: "বকেয়া ভাড়া", rule: "increase=credit,decrease=debit" },
+  "Interest Payable": { category: "liability", bengali: "প্রদেয় সুদ", rule: "increase=credit,decrease=debit" },
   Loan: { category: "liability", bengali: "ঋণ", rule: "increase=credit,decrease=debit" },
   Debentures: { category: "liability", bengali: "ঋণপত্র", rule: "increase=credit,decrease=debit" },
   Capital: { category: "capital", bengali: "মূলধন", rule: "increase=credit,decrease=debit" },
   Drawings: { category: "drawing", bengali: "উত্তোলন", rule: "increase=debit,decrease=credit" },
-  "Sales Revenue": { category: "revenue", bengali: "বিক্রয়", rule: "increase=credit,decrease=debit" },
-  "Service Revenue": { category: "revenue", bengali: "সেবা আয়", rule: "increase=credit,decrease=debit" },
-  "Commission Revenue": { category: "revenue", bengali: "কমিশন আয়", rule: "increase=credit,decrease=debit" },
-  "Rent Revenue": { category: "revenue", bengali: "ভাড়া আয়", rule: "increase=credit,decrease=debit" },
+  "Sales Revenue": { category: "revenue", bengali: "বিক্রয়", rule: "increase=credit,decrease=debit" },
+  "Service Revenue": { category: "revenue", bengali: "সেবা আয়", rule: "increase=credit,decrease=debit" },
+  "Commission Revenue": { category: "revenue", bengali: "কমিশন আয়", rule: "increase=credit,decrease=debit" },
+  "Rent Revenue": { category: "revenue", bengali: "ভাড়া আয়", rule: "increase=credit,decrease=debit" },
   "Interest Revenue": { category: "revenue", bengali: "সুদ প্রাপ্তি", rule: "increase=credit,decrease=debit" },
-  "Discount Received": { category: "revenue", bengali: "বাট্টা পাওয়া", rule: "increase=credit,decrease=debit" },
-  "Accrued Revenue": { category: "revenue", bengali: "অর্জিত আয়", rule: "increase=credit,decrease=debit" },
+  "Discount Received": { category: "revenue", bengali: "বাট্টা পাওয়া", rule: "increase=credit,decrease=debit" },
+  "Accrued Revenue": { category: "revenue", bengali: "অর্জিত আয়", rule: "increase=credit,decrease=debit" },
   Salary: { category: "expense", bengali: "বেতন", rule: "increase=debit,decrease=credit" },
-  Rent: { category: "expense", bengali: "ভাড়া", rule: "increase=debit,decrease=credit" },
+  Rent: { category: "expense", bengali: "ভাড়া", rule: "increase=debit,decrease=credit" },
   Advertisement: { category: "expense", bengali: "বিজ্ঞাপন খরচ", rule: "increase=debit,decrease=credit" },
   Insurance: { category: "expense", bengali: "বীমা খরচ", rule: "increase=debit,decrease=credit" },
   Transport: { category: "expense", bengali: "পরিবহন খরচ", rule: "increase=debit,decrease=credit" },
   "Office Expenses": { category: "expense", bengali: "অফিস খরচ", rule: "increase=debit,decrease=credit" },
   "Electricity Bill": { category: "expense", bengali: "বিদ্যুৎ বিল", rule: "increase=debit,decrease=credit" },
-  "Depreciation Expense": { category: "expense", bengali: "অবচয় খরচ", rule: "increase=debit,decrease=credit" },
+  "Depreciation Expense": { category: "expense", bengali: "অবচয় খরচ", rule: "increase=debit,decrease=credit" },
   "Bad Debts": { category: "expense", bengali: "কুঋণ", rule: "increase=debit,decrease=credit" },
   "Bank Charges": { category: "expense", bengali: "ব্যাংক চার্জ", rule: "increase=debit,decrease=credit" },
   "Interest Expense": { category: "expense", bengali: "সুদ খরচ", rule: "increase=debit,decrease=credit" },
-  "Income Tax": { category: "expense", bengali: "আয়কর", rule: "increase=debit,decrease=credit" },
+  "Income Tax": { category: "expense", bengali: "আয়কর", rule: "increase=debit,decrease=credit" },
   Donation: { category: "expense", bengali: "দান খরচ", rule: "increase=debit,decrease=credit" },
   "Commission Expense": { category: "expense", bengali: "কমিশন খরচ", rule: "increase=debit,decrease=credit" },
   Repairs: { category: "expense", bengali: "মেরামত খরচ", rule: "increase=debit,decrease=credit" },
@@ -201,8 +201,8 @@ const BENGALI_NAMES = {};
 for (const [key, val] of Object.entries(ACCOUNT_CLASSIFICATIONS)) {
   BENGALI_NAMES[key] = val.bengali;
 }
-BENGALI_NAMES["Sales"] = "বিক্রয়";
-BENGALI_NAMES["Purchases"] = "ক্রয়";
+BENGALI_NAMES["Sales"] = "বিক্রয়";
+BENGALI_NAMES["Purchases"] = "ক্রয়";
 BENGALI_NAMES["Debtor"] = "দেনাদার";
 BENGALI_NAMES["Creditor"] = "পাওনাদার";
 
@@ -213,47 +213,47 @@ BENGALI_NAMES["Creditor"] = "পাওনাদার";
 const TEMPLATE_DEFINITIONS = {
   asset_purchase: {
     category: "asset", difficulty: "easy",
-    patterns: ["নগদে {asset} ক্রয় করা হয়েছে", "{asset} নগদে ক্রয় করা হয়েছে"],
+    patterns: ["নগদে {asset} ক্রয় করা হয়েছে", "{asset} নগদে ক্রয় করা হয়েছে"],
     assetPool: ["Computer", "Mobile", "Book", "Furniture", "Table", "Chair"],
     journal: [{ account: "{asset}", side: "debit" }, { account: "Cash", side: "credit" }],
     primaryAccountIndex: 0, hasAmount: false, amountRange: null,
   },
   expense_pay: {
     category: "expense", difficulty: "easy",
-    patterns: ["নগদে {expense} পরিশোধ করা হয়েছে", "{expense} নগদে পরিশোধ"],
+    patterns: ["নগদে {expense} পরিশোধ করা হয়েছে", "{expense} নগদে পরিশোধ"],
     expensePool: ["Electricity Bill", "Rent", "Transport", "Salary", "Insurance"],
     journal: [{ account: "{expense}", side: "debit" }, { account: "Cash", side: "credit" }],
     primaryAccountIndex: 0, hasAmount: false, amountRange: null,
   },
   capital_invest: {
     category: "capital", difficulty: "easy",
-    patterns: ["মালিক নগদ বিনিয়োগ করেছেন", "মালিক ব্যবসায়ে নগদ বিনিয়োগ করেছেন"],
+    patterns: ["মালিক নগদ বিনিয়োগ করেছেন", "মালিক ব্যবসায়ে নগদ বিনিয়োগ করেছেন"],
     journal: [{ account: "Cash", side: "debit" }, { account: "Capital", side: "credit" }],
     primaryAccountIndex: 1, hasAmount: false, amountRange: null,
   },
   revenue_sale: {
     category: "revenue", difficulty: "easy",
-    patterns: ["নগদে {item} বিক্রয় করা হয়েছে", "{item} নগদে বিক্রয়"],
+    patterns: ["নগদে {item} বিক্রয় করা হয়েছে", "{item} নগদে বিক্রয়"],
     itemPool: ["পণ্য", "মাল", "সেবা", "Book", "Pen"],
     journal: [{ account: "Cash", side: "debit" }, { account: "Sales Revenue", side: "credit" }],
     primaryAccountIndex: 1, hasAmount: false, amountRange: null,
   },
   liability_pay: {
     category: "liability", difficulty: "easy",
-    patterns: ["{liability} পরিশোধ করা হয়েছে", "{liability} নগদে পরিশোধ"],
+    patterns: ["{liability} পরিশোধ করা হয়েছে", "{liability} নগদে পরিশোধ"],
     liabilityPool: ["Creditors", "Rent Payable", "Salary Payable"],
     journal: [{ account: "{liability}", side: "debit" }, { account: "Cash", side: "credit" }],
     primaryAccountIndex: 0, hasAmount: false, amountRange: null,
   },
   drawings: {
     category: "drawing", difficulty: "easy",
-    patterns: ["মালিক নগদ উত্তোলন করেছেন", "মালিক ব্যক্তিগত প্রয়োজনে নগদ উত্তোলন"],
+    patterns: ["মালিক নগদ উত্তোলন করেছেন", "মালিক ব্যক্তিগত প্রয়োজনে নগদ উত্তোলন"],
     journal: [{ account: "Drawings", side: "debit" }, { account: "Cash", side: "credit" }],
     primaryAccountIndex: 0, hasAmount: false, amountRange: null,
   },
   medium_asset_purchase: {
     category: "asset", difficulty: "medium",
-    patterns: ["নগদে {amount} টাকায় {asset} ক্রয় করা হয়েছে", "{amount} টাকায় {asset} নগদে ক্রয়"],
+    patterns: ["নগদে {amount} টাকায় {asset} ক্রয় করা হয়েছে", "{amount} টাকায় {asset} নগদে ক্রয়"],
     assetPool: ["Computer", "Mobile", "Furniture", "Equipment", "Laptop", "Table", "Chair"],
     journal: [{ account: "{asset}", side: "debit" }, { account: "Cash", side: "credit" }],
     primaryAccountIndex: 0, hasAmount: true, amountRange: [3000, 80000],
@@ -267,14 +267,14 @@ const TEMPLATE_DEFINITIONS = {
   },
   medium_revenue_sale: {
     category: "revenue", difficulty: "medium",
-    patterns: ["নগদে {amount} টাকায় {item} বিক্রয়", "{amount} টাকায় {item} নগদে বিক্রয়"],
+    patterns: ["নগদে {amount} টাকায় {item} বিক্রয়", "{amount} টাকায় {item} নগদে বিক্রয়"],
     itemPool: ["পণ্য", "মাল", "সেবা", "Mobile", "Furniture", "Computer", "Book", "Table", "Chair"],
     journal: [{ account: "Cash", side: "debit" }, { account: "Sales Revenue", side: "credit" }],
     primaryAccountIndex: 1, hasAmount: true, amountRange: [3000, 90000],
   },
   medium_bank_deposit: {
     category: "asset", difficulty: "medium",
-    patterns: ["ব্যাংকে {amount} টাকা জমা দেওয়া হয়েছে", "{amount} টাকা ব্যাংকে জমা"],
+    patterns: ["ব্যাংকে {amount} টাকা জমা দেওয়া হয়েছে", "{amount} টাকা ব্যাংকে জমা"],
     journal: [{ account: "Bank", side: "debit" }, { account: "Cash", side: "credit" }],
     primaryAccountIndex: 0, hasAmount: true, amountRange: [5000, 50000],
   },
@@ -286,14 +286,14 @@ const TEMPLATE_DEFINITIONS = {
   },
   medium_credit_sale: {
     category: "revenue", difficulty: "medium",
-    patterns: ["{name} এর নিকট {amount} টাকার {item} বিক্রয়", "{amount} টাকার {item} {name} এর নিকট বিক্রয়"],
+    patterns: ["{name} এর নিকট {amount} টাকার {item} বিক্রয়", "{amount} টাকার {item} {name} এর নিকট বিক্রয়"],
     itemPool: ["পণ্য", "Mobile", "Computer", "Book", "Furniture", "TV", "Table"],
     journal: [{ account: "Accounts Receivable", side: "debit" }, { account: "Sales Revenue", side: "credit" }],
     primaryAccountIndex: 1, hasAmount: true, amountRange: [10000, 90000], useName: true,
   },
   medium_credit_purchase: {
     category: "liability", difficulty: "medium",
-    patterns: ["{name} এর নিকট হতে {amount} টাকার {item} ক্রয়", "{name} থেকে {amount} টাকায় {item} কেনা"],
+    patterns: ["{name} এর নিকট হতে {amount} টাকার {item} ক্রয়", "{name} থেকে {amount} টাকায় {item} কেনা"],
     itemPool: ["মাল", "পণ্য", "পণ্যদ্রব্য", "Equipment", "Office Supplies", "Book", "Mobile"],
     journal: [{ account: "Inventory", side: "debit" }, { account: "Creditors", side: "credit" }],
     primaryAccountIndex: 1, hasAmount: true, amountRange: [10000, 100000], useName: true,
@@ -306,50 +306,50 @@ const TEMPLATE_DEFINITIONS = {
   },
   medium_capital_invest: {
     category: "capital", difficulty: "medium",
-    patterns: ["মালিক {amount} টাকা নগদ বিনিয়োগ করেছেন", "{amount} টাকা নগদ বিনিয়োগ"],
+    patterns: ["মালিক {amount} টাকা নগদ বিনিয়োগ করেছেন", "{amount} টাকা নগদ বিনিয়োগ"],
     journal: [{ account: "Cash", side: "debit" }, { account: "Capital", side: "credit" }],
     primaryAccountIndex: 1, hasAmount: true, amountRange: [10000, 100000],
   },
   depreciation: {
     category: "expense", difficulty: "hard",
-    patterns: ["{asset} এর উপর {amount} টাকা অবচয় ধার্য", "{asset} এর অবচয় {amount} টাকা ধার্য"],
+    patterns: ["{asset} এর উপর {amount} টাকা অবচয় ধার্য", "{asset} এর অবচয় {amount} টাকা ধার্য"],
     assetPool: ["Table", "Equipment", "Computer", "Building", "Vehicle"],
     journal: [{ account: "Depreciation Expense", side: "debit" }, { account: "Accumulated Depreciation", side: "credit" }],
     primaryAccountIndex: 0, hasAmount: true, amountRange: [2000, 30000],
   },
   bad_debts: {
     category: "expense", difficulty: "hard",
-    patterns: ["{name} এর নিকট {amount} টাকা অনাদায়ী দেনা ধার্য", "{name} এর কাছ থেকে {amount} টাকা পাওয়া যাবে না"],
+    patterns: ["{name} এর নিকট {amount} টাকা অনাদায়ী দেনা ধার্য", "{name} এর কাছ থেকে {amount} টাকা পাওয়া যাবে না"],
     journal: [{ account: "Bad Debts", side: "debit" }, { account: "Accounts Receivable", side: "credit" }],
     primaryAccountIndex: 0, hasAmount: true, amountRange: [1000, 10000], useName: true,
   },
   prepaid_rent: {
     category: "asset", difficulty: "hard",
-    patterns: ["অগ্রিম ভাড়া বাবদ {amount} টাকা সমন্বয়", "{amount} টাকা অগ্রিম ভাড়ার সমন্বয়"],
+    patterns: ["অগ্রিম ভাড়া বাবদ {amount} টাকা সমন্বয়", "{amount} টাকা অগ্রিম ভাড়ার সমন্বয়"],
     journal: [{ account: "Rent", side: "debit" }, { account: "Prepaid Rent", side: "credit" }],
     primaryAccountIndex: 0, hasAmount: true, amountRange: [5000, 40000],
   },
   accrued_revenue: {
     category: "revenue", difficulty: "hard",
-    patterns: ["অর্জিত আয় বাবদ {amount} টাকা সমন্বয়", "{amount} টাকা অর্জিত কিন্তু অপ্রাপ্ত আয়"],
+    patterns: ["অর্জিত আয় বাবদ {amount} টাকা সমন্বয়", "{amount} টাকা অর্জিত কিন্তু অপ্রাপ্ত আয়"],
     journal: [{ account: "Accounts Receivable", side: "debit" }, { account: "Accrued Revenue", side: "credit" }],
     primaryAccountIndex: 1, hasAmount: true, amountRange: [10000, 70000],
   },
   loan_received: {
     category: "liability", difficulty: "hard",
-    patterns: ["{name} এর কাছ থেকে {amount} টাকা ঋণ গ্রহণ", "{name} থেকে {amount} টাকা ঋণ নেওয়া"],
+    patterns: ["{name} এর কাছ থেকে {amount} টাকা ঋণ গ্রহণ", "{name} থেকে {amount} টাকা ঋণ নেওয়া"],
     journal: [{ account: "Cash", side: "debit" }, { account: "Loan", side: "credit" }],
     primaryAccountIndex: 1, hasAmount: true, amountRange: [10000, 100000], useName: true,
   },
   salary_payable_adj: {
     category: "liability", difficulty: "hard",
-    patterns: ["বকেয়া বেতন {amount} টাকা সমন্বয়", "{amount} টাকা বকেয়া বেতন হিসাবে ধার্য"],
+    patterns: ["বকেয়া বেতন {amount} টাকা সমন্বয়", "{amount} টাকা বকেয়া বেতন হিসাবে ধার্য"],
     journal: [{ account: "Salary", side: "debit" }, { account: "Salary Payable", side: "credit" }],
     primaryAccountIndex: 1, hasAmount: true, amountRange: [8000, 50000],
   },
   interest_expense_adj: {
     category: "expense", difficulty: "hard",
-    patterns: ["ব্যাংক ঋণের {amount} টাকা সুদ বকেয়া সমন্বয়", "{amount} টাকা সুদ খরচ বকেয়া ধার্য"],
+    patterns: ["ব্যাংক ঋণের {amount} টাকা সুদ বকেয়া সমন্বয়", "{amount} টাকা সুদ খরচ বকেয়া ধার্য"],
     journal: [{ account: "Interest Expense", side: "debit" }, { account: "Interest Payable", side: "credit" }],
     primaryAccountIndex: 0, hasAmount: true, amountRange: [2000, 15000],
   },
@@ -554,6 +554,19 @@ const SMART_TRACKER = {
       }
     }
     if (changed && newMode !== this.smartDifficulty) {
+      const oldMode = this.smartDifficulty;
+
+      // ===== NEW: Smart switch tracking for x15, x16, x17 =====
+      if (oldMode === "easy" && newMode === "medium") {
+        state.stats.smartSwitchEasyToMedium = (state.stats.smartSwitchEasyToMedium || 0) + 1;
+      }
+      if (oldMode === "medium" && newMode === "hard") {
+        state.stats.smartSwitchMediumToHard = (state.stats.smartSwitchMediumToHard || 0) + 1;
+      }
+      if (newMode === "hard") {
+        state.stats.smartReachedHard = true;
+      }
+
       this.smartDifficulty = newMode;
       state.difficulty = newMode;
       updateDifficultyButtons(newMode);
@@ -631,7 +644,7 @@ function showModeChangeToast(newMode) {
 }
 
 // ================================================================
-// 7. BADGES (TOTAL 100)
+// 7. BADGES (TOTAL 100 + NEW x-series)
 // ================================================================
 
 const ALL_BADGES = [
@@ -646,13 +659,13 @@ const ALL_BADGES = [
   // Hints (n7-n8)
   { id: "n7", icon: "💡", name: "Hint Hoarder" },
   { id: "n8", icon: "💡", name: "Hint Master" },
-  // New: Bring a Friend (n9) and Rapid Thinker (n10)
+  // Bring a Friend (n9) and Rapid Thinker (n10)
   { id: "n9", icon: "🤝", name: "Bring a Friend" },
   { id: "n10", icon: "⚡", name: "Rapid Thinker" },
   // Speed & Marathon (n11-n12)
   { id: "n11", icon: "⚡", name: "Quick Learner" },
   { id: "n12", icon: "🏃", name: "Marathon Runner" },
-  // NEW: h3 (Experienced), h4 (Associate), h1 (Timed Warrior), h2 (Balanced Accountant)
+  // Experienced / Associate
   { id: "h3", icon: "🎯", name: "Experienced" },
   { id: "h4", icon: "🤝", name: "Associate" },
   // Revision (n15-n16)
@@ -675,9 +688,8 @@ const ALL_BADGES = [
   { id: "n26", icon: "📊", name: "Accountant Pro" },
   { id: "n27", icon: "🏅", name: "Ultimate Journal Master" },
   { id: "n28", icon: "👑", name: "Journal Legend" },
-  // NEW: h1 (Timed Warrior) replaces b17
+  // Timed Warrior / Balanced Accountant
   { id: "h1", icon: "⚔️", name: "Timed Warrior" },
-  // NEW: h2 (Balanced Accountant) replaces b34
   { id: "h2", icon: "⚖️", name: "Balanced Accountant" },
   // Debit/Credit starters (b3-b4)
   { id: "b3", icon: "💳", name: "Debit Starter" },
@@ -762,6 +774,46 @@ const ALL_BADGES = [
   { id: "b38", icon: "🏆", name: "Accounting Pro" },
   { id: "b39", icon: "🏆", name: "Debit-Credit Champ" },
   { id: "b40", icon: "👼", name: "Journal God" },
+
+  // ========== NEW BADGES (x-series) ==========
+  { id: "x1", icon: "📚", name: "Scholar" },
+  { id: "x2", icon: "🤝", name: "Bring More Friend" },
+  { id: "x3", icon: "🧙", name: "Entry Wizard" },
+  { id: "x4", icon: "📚", name: "5000 Questions" },
+  { id: "x5", icon: "🏦", name: "Asset Genius" },
+  { id: "x6", icon: "📉", name: "Liability Specialist" },
+  { id: "x7", icon: "💰", name: "Capital Genius" },
+  { id: "x8", icon: "📈", name: "Revenue Genius" },
+  { id: "x9", icon: "💸", name: "Expense Genius" },
+  { id: "x10", icon: "✏️", name: "Drawing Genius" },
+  { id: "x11", icon: "⏱️", name: "Mid Speedster" },
+  { id: "x12", icon: "⏱️", name: "Mid Timer" },
+  { id: "x13", icon: "⏱️", name: "Hard Speedster" },
+  { id: "x14", icon: "⏱️", name: "Hard Timer" },
+  { id: "x15", icon: "🧠", name: "Smart Switcher" },
+  { id: "x16", icon: "🧠", name: "Pro Switcher" },
+  { id: "x17", icon: "🧠", name: "Smart Champ" },
+  { id: "x18", icon: "⚡", name: "Instant Mind" },
+  { id: "x19", icon: "⚡", name: "Sharp Thinker" },
+  { id: "x20", icon: "🏃", name: "Speed Master" },
+  { id: "x21", icon: "🔥", name: "Perfect Runner" },
+  { id: "x22", icon: "🏃", name: "Endurance Pro" },
+  { id: "x23", icon: "🪙", name: "Coin Spender" },
+  { id: "x24", icon: "💎", name: "Ruby Spender" },
+  { id: "x25", icon: "🛒", name: "Smart Shopper" },
+  { id: "x26", icon: "💎", name: "Ruby Shopper" },
+  { id: "x27", icon: "💳", name: "Power Buyer" },
+  { id: "x28", icon: "🪙", name: "Coin Investor" },
+  { id: "x29", icon: "💎", name: "Ruby Investor" },
+  { id: "x30", icon: "💰", name: "Big Spender" },
+  { id: "x31", icon: "💡", name: "Perfect Hint Buyer" },
+  { id: "x32", icon: "🪙", name: "Pocket Buyer" },
+  { id: "x33", icon: "🪙", name: "Coin Piler" },
+  { id: "x34", icon: "🪙", name: "Coin Collector (Bag)" },
+  { id: "x35", icon: "🚀", name: "Booster Buyer" },
+  { id: "x36", icon: "🪙", name: "Coin Booster Buyer" },
+  { id: "x37", icon: "🛡️", name: "Streak Saver" },
+  { id: "x38", icon: "🛡️", name: "Streak Protection" },
 ];
 
 // ================================================================
@@ -779,19 +831,19 @@ const BADGE_GROUPS = [
     id: "learning",
     name: "Learning & Sharing",
     icon: "📚",
-    badgeIds: ["n5", "n6", "n9"],
+    badgeIds: ["n5", "n6", "n9", "x1", "x2"],
   },
   {
     id: "milestones",
     name: "Question Milestones",
     icon: "📝",
-    badgeIds: ["b33", "b5", "b7", "b8", "b9", "b10", "b11", "b35", "b36", "b37", "b63", "b93"],
+    badgeIds: ["b33", "b5", "b7", "b8", "b9", "b10", "b11", "b35", "b36", "b37", "b63", "b93", "x3", "x4"],
   },
   {
     id: "streaks",
     name: "Streaks",
     icon: "🔥",
-    badgeIds: ["b18", "b19", "b16", "b20", "b21", "b22"],
+    badgeIds: ["b18", "b19", "b16", "b20", "b21", "b22", "x21"],
   },
   {
     id: "accuracy",
@@ -803,19 +855,19 @@ const BADGE_GROUPS = [
     id: "category",
     name: "Category Experts",
     icon: "💼",
-    badgeIds: ["b23", "b24", "b25", "b26", "b27", "b28"],
+    badgeIds: ["b23", "b24", "b25", "b26", "b27", "b28", "x5", "x6", "x7", "x8", "x9", "x10"],
   },
   {
     id: "timer",
     name: "Timer Mode",
     icon: "⏱️",
-    badgeIds: ["b55", "b56", "b57", "b58", "b59", "n17", "n18", "n10", "h1"],
+    badgeIds: ["b55", "b56", "b57", "b58", "b59", "n17", "n18", "n10", "h1", "x11", "x12", "x13", "x14"],
   },
   {
     id: "smart",
     name: "Smart Mode",
     icon: "🧠",
-    badgeIds: ["b46", "n19", "b77", "n20", "b78"],
+    badgeIds: ["b46", "n19", "b77", "n20", "b78", "x15", "x16", "x17"],
   },
   {
     id: "revision",
@@ -827,7 +879,7 @@ const BADGE_GROUPS = [
     id: "speed",
     name: "Speed & Focus",
     icon: "⚡",
-    badgeIds: ["b31", "b32", "n11", "b44", "n12"],
+    badgeIds: ["b31", "b32", "n11", "b44", "n12", "x18", "x19", "x20", "x22"],
   },
   {
     id: "wealth",
@@ -863,6 +915,15 @@ const BADGE_GROUPS = [
       "n26", "n27", "n28",
     ],
   },
+  {
+    id: "shopping",
+    name: "Shopping & Boosters",
+    icon: "🛒",
+    badgeIds: [
+      "x23", "x24", "x25", "x26", "x27", "x28", "x29", "x30",
+      "x31", "x32", "x33", "x34", "x35", "x36", "x37", "x38",
+    ],
+  },
 ];
 
 function checkBadges(stats) {
@@ -870,6 +931,8 @@ function checkBadges(stats) {
   const total = stats.correct + stats.wrong;
   const acc = total > 0 ? stats.correct / total : 0;
   const accPct = Math.round(acc * 100);
+
+  // typeCounts (from quizHistory) — kept for existing badges b23-b28 etc.
   const typeCounts = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
   if (stats.quizHistory) {
     for (const h of stats.quizHistory) {
@@ -878,6 +941,16 @@ function checkBadges(stats) {
       }
     }
   }
+
+  // typeCountsAll (from topicStats) — used for new x badges (100+ thresholds)
+  const typeCountsAll = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
+  if (stats.topicStats) {
+    for (const cat of Object.keys(typeCountsAll)) {
+      const t = stats.topicStats[cat] || { total: 0, wrong: 0 };
+      typeCountsAll[cat] = Math.max(0, (t.total || 0) - (t.wrong || 0));
+    }
+  }
+
   const totalBadges = (stats.earnedBadges || []).length;
   const isLoggedIn = auth.currentUser !== null;
 
@@ -891,10 +964,10 @@ function checkBadges(stats) {
   if (stats.xp >= 3000) earned.push("h3");
   if (isLoggedIn) earned.push("h4");
 
-  // ----- NEW n9: Bring a Friend -----
+  // ----- n9: Bring a Friend -----
   if (stats.shared && stats.shared >= 1) earned.push("n9");
 
-  // ----- NEW n10: Rapid Thinker -----
+  // ----- n10: Rapid Thinker -----
   if ((stats.timer5sCompleted || 0) >= 500 && (stats.timer10sCompleted || 0) >= 500) earned.push("n10");
 
   // ----- Existing badges -----
@@ -994,6 +1067,58 @@ function checkBadges(stats) {
   if (totalBadges >= 50) earned.push("n27");
   if (totalBadges >= 75) earned.push("n28");
 
+  // ========== NEW x-series badges ==========
+  if ((stats.javedaClicks || 0) >= 30) earned.push("x1");
+  if ((stats.shared || 0) >= 10) earned.push("x2");
+  if (stats.correct >= 500) earned.push("x3");
+  if (total >= 5000) earned.push("x4");
+
+  if (typeCountsAll.asset >= 100) earned.push("x5");
+  if (typeCountsAll.liability >= 100) earned.push("x6");
+  if (typeCountsAll.capital >= 100) earned.push("x7");
+  if (typeCountsAll.revenue >= 100) earned.push("x8");
+  if (typeCountsAll.expense >= 100) earned.push("x9");
+  if (typeCountsAll.drawing >= 5) earned.push("x10");
+
+  if ((stats.timerMedium5Completed || 0) >= 100) earned.push("x11");
+  if ((stats.timerMedium10Completed || 0) >= 100) earned.push("x12");
+  if ((stats.timerHard5Completed || 0) >= 100) earned.push("x13");
+  if ((stats.timerHard10Completed || 0) >= 100) earned.push("x14");
+
+  if ((stats.smartSwitchEasyToMedium || 0) >= 1) earned.push("x15");
+  if ((stats.smartSwitchMediumToHard || 0) >= 1) earned.push("x16");
+  if (stats.smartReachedHard) earned.push("x17");
+
+  if ((stats.fastAnswers || 0) >= 1000) earned.push("x18");
+  if ((stats.fast2s || 0) >= 10) earned.push("x19");
+  if ((stats.focusModeCount || 0) >= 200) earned.push("x20");
+  if (stats.bestStreak >= 20) earned.push("x21");
+  if ((stats.sessionQuestions || 0) >= 100) earned.push("x22");
+
+  if ((stats.totalCoinsSpent || 0) >= 200) earned.push("x23");
+  if ((stats.totalRubiesSpent || 0) >= 200) earned.push("x24");
+  if ((stats.coinPurchaseCount || 0) >= 5) earned.push("x25");
+  if ((stats.rubyPurchaseCount || 0) >= 5) earned.push("x26");
+  if ((stats.maxSingleCoinSpend || 0) >= 100) earned.push("x27");
+  if ((stats.totalCoinsSpent || 0) >= 500) earned.push("x28");
+  if ((stats.totalRubiesSpent || 0) >= 500) earned.push("x29");
+  if ((stats.totalCoinsSpent || 0) >= 10000 && (stats.totalRubiesSpent || 0) >= 5000) earned.push("x30");
+
+  if (
+    (stats.hintPackSingleBought || 0) >= 50 &&
+    (stats.hintPackStarterBought || 0) >= 20 &&
+    (stats.hintPackProBought || 0) >= 10 &&
+    (stats.hintPackMasterBought || 0) >= 5
+  ) earned.push("x31");
+
+  if ((stats.coinPackPocketBought || 0) >= 5) earned.push("x32");
+  if ((stats.coinPackPileBought || 0) >= 5) earned.push("x33");
+  if ((stats.coinPackBagBought || 0) >= 5) earned.push("x34");
+  if ((stats.pointBoosterBought || 0) >= 5) earned.push("x35");
+  if ((stats.coinBoosterBought || 0) >= 5) earned.push("x36");
+  if ((stats.streakBoosterUsed || 0) >= 5) earned.push("x37");
+  if ((stats.streakProtectionUsed || 0) >= 5) earned.push("x38");
+
   return [...new Set(earned)];
 }
 
@@ -1014,6 +1139,15 @@ function getBadgeDetails(badgeId, stats) {
       }
     }
   }
+
+  const typeCountsAll = { asset: 0, liability: 0, capital: 0, revenue: 0, expense: 0, drawing: 0 };
+  if (stats.topicStats) {
+    for (const cat of Object.keys(typeCountsAll)) {
+      const t = stats.topicStats[cat] || { total: 0, wrong: 0 };
+      typeCountsAll[cat] = Math.max(0, (t.total || 0) - (t.wrong || 0));
+    }
+  }
+
   const totalBadges = (stats.earnedBadges || []).length;
 
   function item(current, target, label, icon = "") {
@@ -1022,17 +1156,12 @@ function getBadgeDetails(badgeId, stats) {
   }
 
   switch (badgeId) {
-    // Leaderboard — Updated descriptions with correct conditions
-    case 'n1':
-      return { description: "XP Leaderboard এ Top 3 এ পৌঁছান।", items: [] };
-    case 'n2':
-      return { description: "Points Leaderboard এ Top 3 এ পৌঁছান।", items: [] };
-    case 'n3':
-      return { description: "Accuracy Leaderboard এ Top 5 এ পৌঁছান।", items: [] };
-    case 'n4':
-      return { description: "Badges Leaderboard এ Top 2 এ পৌঁছান।", items: [] };
-    case 'b51':
-      return { description: "যেকোনো Leaderboard এ Top 10 এ পৌঁছান।", items: [] };
+    // Leaderboard
+    case 'n1': return { description: "XP Leaderboard এ Top 3 এ পৌঁছান।", items: [] };
+    case 'n2': return { description: "Points Leaderboard এ Top 3 এ পৌঁছান।", items: [] };
+    case 'n3': return { description: "Accuracy Leaderboard এ Top 5 এ পৌঁছান।", items: [] };
+    case 'n4': return { description: "Badges Leaderboard এ Top 2 এ পৌঁছান।", items: [] };
+    case 'b51': return { description: "যেকোনো Leaderboard এ Top 10 এ পৌঁছান।", items: [] };
 
     // Single condition
     case 'n5': return { description: "Click the 'Learn Javeda' button 1 time.", items: [item(stats.javedaClicks || 0, 1, "Clicks")] };
@@ -1068,7 +1197,7 @@ function getBadgeDetails(badgeId, stats) {
     case 'n27': return { description: "Earn 50 total badges.", items: [item(totalBadges, 50, "Badges earned")] };
     case 'n28': return { description: "Earn 75 total badges.", items: [item(totalBadges, 75, "Badges earned")] };
 
-    // NEW BADGES
+    // NEW h badges
     case 'h1': return { description: "Get 500 correct answers in Timer Mode.", items: [item(stats.timerQuestionsCompleted || 0, 500, "Timer correct answers")] };
     case 'h2': {
       const catItems = [];
@@ -1173,6 +1302,60 @@ function getBadgeDetails(badgeId, stats) {
     case 'b38': return { description: "Reach Level 10.", items: [item(stats.level, 10, "Level")] };
     case 'b39': return { description: "Get 500 correct answers.", items: [item(stats.correct, 500, "Correct answers")] };
     case 'b40': return { description: "Get 1,000 correct answers.", items: [item(stats.correct, 1000, "Correct answers")] };
+
+    // ========== NEW x-series badge details (English only) ==========
+    case 'x1': return { description: "Click the 'Learn Javeda' button 30 times.", items: [item(stats.javedaClicks || 0, 30, "Clicks")] };
+    case 'x2': return { description: "Share the website 10 times using the Share button.", items: [item(stats.shared || 0, 10, "Shares")] };
+    case 'x3': return { description: "Get 500 correct answers.", items: [item(stats.correct, 500, "Correct answers")] };
+    case 'x4': return { description: "Answer 5,000 total questions.", items: [item(total, 5000, "Total questions")] };
+
+    case 'x5': return { description: "Correctly answer 100 Asset questions.", items: [item(typeCountsAll.asset, 100, "Asset correct")] };
+    case 'x6': return { description: "Correctly answer 100 Liability questions.", items: [item(typeCountsAll.liability, 100, "Liability correct")] };
+    case 'x7': return { description: "Correctly answer 100 Capital questions.", items: [item(typeCountsAll.capital, 100, "Capital correct")] };
+    case 'x8': return { description: "Correctly answer 100 Revenue questions.", items: [item(typeCountsAll.revenue, 100, "Revenue correct")] };
+    case 'x9': return { description: "Correctly answer 100 Expense questions.", items: [item(typeCountsAll.expense, 100, "Expense correct")] };
+    case 'x10': return { description: "Correctly answer 5 Drawing questions.", items: [item(typeCountsAll.drawing, 5, "Drawing correct")] };
+
+    case 'x11': return { description: "Complete 100 Medium Timer questions with 5-second timer.", items: [item(stats.timerMedium5Completed || 0, 100, "Medium 5s")] };
+    case 'x12': return { description: "Complete 100 Medium Timer questions with 10-second timer.", items: [item(stats.timerMedium10Completed || 0, 100, "Medium 10s")] };
+    case 'x13': return { description: "Complete 100 Hard Timer questions with 5-second timer.", items: [item(stats.timerHard5Completed || 0, 100, "Hard 5s")] };
+    case 'x14': return { description: "Complete 100 Hard Timer questions with 10-second timer.", items: [item(stats.timerHard10Completed || 0, 100, "Hard 10s")] };
+
+    case 'x15': return { description: "Auto switch from Easy to Medium in Smart Mode.", items: [item(stats.smartSwitchEasyToMedium || 0, 1, "Easy → Medium")] };
+    case 'x16': return { description: "Auto switch from Medium to Hard in Smart Mode.", items: [item(stats.smartSwitchMediumToHard || 0, 1, "Medium → Hard")] };
+    case 'x17': return { description: "Reach Hard level in Smart Mode.", items: [] };
+
+    case 'x18': return { description: "Answer 1,000 questions within 3 seconds each.", items: [item(stats.fastAnswers || 0, 1000, "Fast answers")] };
+    case 'x19': return { description: "Answer 10 questions within 2 seconds each.", items: [item(stats.fast2s || 0, 10, "2s answers")] };
+    case 'x20': return { description: "Answer 200 questions in Focus Mode (Timer or Smart).", items: [item(stats.focusModeCount || 0, 200, "Focus questions")] };
+    case 'x21': return { description: "Answer 20 correct questions in a row.", items: [item(stats.bestStreak, 20, "Best streak")] };
+    case 'x22': return { description: "Answer 100 questions in a single session.", items: [item(stats.sessionQuestions || 0, 100, "Session questions")] };
+
+    case 'x23': return { description: "Spend a total of 200 coins.", items: [item(stats.totalCoinsSpent || 0, 200, "Coins spent", "🪙")] };
+    case 'x24': return { description: "Spend a total of 200 rubies.", items: [item(stats.totalRubiesSpent || 0, 200, "Rubies spent", "💎")] };
+    case 'x25': return { description: "Purchase 5 items/boosters using Coins.", items: [item(stats.coinPurchaseCount || 0, 5, "Coin purchases")] };
+    case 'x26': return { description: "Purchase 5 items/boosters using Rubies.", items: [item(stats.rubyPurchaseCount || 0, 5, "Ruby purchases")] };
+    case 'x27': return { description: "Spend 100+ coins in one purchase.", items: [item(stats.maxSingleCoinSpend || 0, 100, "Max single coin spend")] };
+    case 'x28': return { description: "Spend a total of 500 coins.", items: [item(stats.totalCoinsSpent || 0, 500, "Coins spent", "🪙")] };
+    case 'x29': return { description: "Spend a total of 500 rubies.", items: [item(stats.totalRubiesSpent || 0, 500, "Rubies spent", "💎")] };
+    case 'x30': return { description: "Spend a total of 10,000 coins AND 5,000 rubies.", items: [
+        item(stats.totalCoinsSpent || 0, 10000, "Coins spent", "🪙"),
+        item(stats.totalRubiesSpent || 0, 5000, "Rubies spent", "💎")
+      ] };
+    case 'x31': return { description: "Buy Single Pack 50 times, Starter Pack 20 times, Pro Pack 10 times, Master Pack 5 times.", items: [
+        item(stats.hintPackSingleBought || 0, 50, "Single Pack"),
+        item(stats.hintPackStarterBought || 0, 20, "Starter Pack"),
+        item(stats.hintPackProBought || 0, 10, "Pro Pack"),
+        item(stats.hintPackMasterBought || 0, 5, "Master Pack")
+      ] };
+    case 'x32': return { description: "Buy Pocket of Coin pack 5 times.", items: [item(stats.coinPackPocketBought || 0, 5, "Pocket of Coin")] };
+    case 'x33': return { description: "Buy Pile of Coin pack 5 times.", items: [item(stats.coinPackPileBought || 0, 5, "Pile of Coin")] };
+    case 'x34': return { description: "Buy Bag of Coin pack 5 times.", items: [item(stats.coinPackBagBought || 0, 5, "Bag of Coin")] };
+    case 'x35': return { description: "Buy 5 Point Boosters.", items: [item(stats.pointBoosterBought || 0, 5, "Point Boosters")] };
+    case 'x36': return { description: "Buy 5 Coin Boosters.", items: [item(stats.coinBoosterBought || 0, 5, "Coin Boosters")] };
+    case 'x37': return { description: "Use No Streak Break 5 times.", items: [item(stats.streakBoosterUsed || 0, 5, "No Streak Break used")] };
+    case 'x38': return { description: "Get streak protection 5 times.", items: [item(stats.streakProtectionUsed || 0, 5, "Protection used")] };
+
     default: return { description: "Earn this badge by meeting specific conditions.", items: [] };
   }
 }
@@ -1262,6 +1445,33 @@ let state = {
     javedaClicks: 0, shared: 0,
     dailyStreak: 0, lastActivityDate: null,
     sessionQuestions: 0, nightQuestions: 0, earlyQuestions: 0,
+
+    // ===== NEW counters for x-series badges =====
+    timerMedium5Completed: 0,
+    timerMedium10Completed: 0,
+    timerHard5Completed: 0,
+    timerHard10Completed: 0,
+    smartSwitchEasyToMedium: 0,
+    smartSwitchMediumToHard: 0,
+    smartReachedHard: false,
+    fast2s: 0,
+    focusModeCount: 0,
+    totalCoinsSpent: 0,
+    totalRubiesSpent: 0,
+    coinPurchaseCount: 0,
+    rubyPurchaseCount: 0,
+    maxSingleCoinSpend: 0,
+    hintPackSingleBought: 0,
+    hintPackStarterBought: 0,
+    hintPackProBought: 0,
+    hintPackMasterBought: 0,
+    coinPackPocketBought: 0,
+    coinPackPileBought: 0,
+    coinPackBagBought: 0,
+    pointBoosterBought: 0,
+    coinBoosterBought: 0,
+    streakBoosterBought: 0,
+    streakProtectionUsed: 0,
   },
   unsubUser: null, unsubLeaderboard: null,
   isGuest: false, guestId: null,
@@ -1354,26 +1564,57 @@ function activateBooster(type, duration, costCoins, costRubies) {
   }
   s.coins -= costCoins;
   s.rubies -= costRubies;
+
+  // ===== NEW: track purchases & spending for x-series badges =====
+  s.totalCoinsSpent = (s.totalCoinsSpent || 0) + costCoins;
+  s.totalRubiesSpent = (s.totalRubiesSpent || 0) + costRubies;
+  if (costCoins > 0) {
+    s.coinPurchaseCount = (s.coinPurchaseCount || 0) + 1;
+    s.maxSingleCoinSpend = Math.max(s.maxSingleCoinSpend || 0, costCoins);
+  }
+  if (costRubies > 0) {
+    s.rubyPurchaseCount = (s.rubyPurchaseCount || 0) + 1;
+  }
+
   const now = Date.now();
   if (type === "point") {
     s.pointBoosterActive = true;
     s.pointBoosterExpiry = now + duration * 1000;
     s.pointBoosterUsed = (s.pointBoosterUsed || 0) + 1;
+    s.pointBoosterBought = (s.pointBoosterBought || 0) + 1;
     showToast("⚡ Point Booster Activated!", "2× points for 10 minutes.", "fa-rocket", "gain");
   } else if (type === "coin") {
     s.coinBoosterActive = true;
     s.coinBoosterExpiry = now + duration * 1000;
     s.coinBoosterUsed = (s.coinBoosterUsed || 0) + 1;
+    s.coinBoosterBought = (s.coinBoosterBought || 0) + 1;
     showToast("🪙 Coin Booster Activated!", "1.5× coins for 5 minutes.", "fa-rocket", "gain");
   } else if (type === "streak") {
     s.noStreakBreakRemaining = 10;
     s.streakBoosterUsed = (s.streakBoosterUsed || 0) + 1;
+    s.streakBoosterBought = (s.streakBoosterBought || 0) + 1;
     showToast("🛡️ No Streak Break Activated!", "Next 10 wrong answers won't break your streak.", "fa-rocket", "gain");
   }
   updateHeaderStats();
   updateDashboard();
   updateShopUI();
   updateBoosterStatus();
+
+  // Check for new badges right after purchase
+  const earnedIds = checkBadges(s);
+  const prevBadges = new Set(s.earnedBadges || []);
+  s.earnedBadges = [...new Set([...prevBadges, ...earnedIds])];
+  const newBadges = earnedIds.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
+  for (const id of newBadges) {
+    const badge = ALL_BADGES.find(b => b.id === id);
+    if (badge) {
+      state._shownBadges.add(id);
+      setTimeout(() => showBadgeToast(badge), 600);
+    }
+  }
+  for (const id of s.earnedBadges) state._shownBadges.add(id);
+  updateBadges();
+
   saveStats();
   return true;
 }
@@ -1710,6 +1951,8 @@ function handleTimerTimeout() {
   
   if (boosters.streakActive) {
     s.noStreakBreakRemaining--;
+    // ===== NEW: streak protection used counter =====
+    s.streakProtectionUsed = (s.streakProtectionUsed || 0) + 1;
     showToast("🛡️ Streak Protected!", `${s.noStreakBreakRemaining} protections left.`, "fa-shield", "gain");
     if (s.noStreakBreakRemaining <= 0) {
       s.noStreakBreakRemaining = 0;
@@ -2032,7 +2275,7 @@ function generateNextQuestionSet() {
 }
 
 // ================================================================
-// 14. ANSWER HANDLING  (✅ Merge badges instead of replace)
+// 14. ANSWER HANDLING
 // ================================================================
 
 async function handleAnswer(answer) {
@@ -2063,6 +2306,12 @@ async function handleAnswer(answer) {
 
   const elapsed = (Date.now() - state.questionStartTime) / 1000;
   if (elapsed <= 3) s.fastAnswers = (s.fastAnswers || 0) + 1;
+  // ===== NEW: fast2s counter for x19 =====
+  if (elapsed <= 2) s.fast2s = (s.fast2s || 0) + 1;
+  // ===== NEW: focus mode counter for x20 =====
+  if (isTimerMode || state.smartMode) {
+    s.focusModeCount = (s.focusModeCount || 0) + 1;
+  }
   s.sessionQuestions = (s.sessionQuestions || 0) + 1;
 
   const hour = new Date().getHours();
@@ -2128,14 +2377,28 @@ async function handleAnswer(answer) {
       s.timerQuestionsCompleted = (s.timerQuestionsCompleted || 0) + 1;
       if (state.timerSec === 5) {
         s.timer5sCompleted = (s.timer5sCompleted || 0) + 1;
+        // ===== NEW: track medium/hard 5s =====
+        if (state.difficulty === "medium") {
+          s.timerMedium5Completed = (s.timerMedium5Completed || 0) + 1;
+        } else if (state.difficulty === "hard") {
+          s.timerHard5Completed = (s.timerHard5Completed || 0) + 1;
+        }
       } else if (state.timerSec === 10) {
         s.timer10sCompleted = (s.timer10sCompleted || 0) + 1;
+        // ===== NEW: track medium/hard 10s =====
+        if (state.difficulty === "medium") {
+          s.timerMedium10Completed = (s.timerMedium10Completed || 0) + 1;
+        } else if (state.difficulty === "hard") {
+          s.timerHard10Completed = (s.timerHard10Completed || 0) + 1;
+        }
       }
     }
   } else {
     s.wrong++;
     if (boosters.streakActive) {
       s.noStreakBreakRemaining--;
+      // ===== NEW: streak protection used counter =====
+      s.streakProtectionUsed = (s.streakProtectionUsed || 0) + 1;
       showToast("🛡️ Streak Protected!", `${s.noStreakBreakRemaining} protections left.`, "fa-shield", "gain");
       if (s.noStreakBreakRemaining <= 0) {
         s.noStreakBreakRemaining = 0;
@@ -2183,7 +2446,7 @@ async function handleAnswer(answer) {
     s.effectiveDifficulty = SMART_TRACKER.getEffectiveMode();
   }
 
-  // ✅ Merge earned badges with previous ones (never lose Leaderboard / Bring-a-Friend / etc.)
+  // ✅ Merge earned badges with previous ones
   const earnedIds = checkBadges(s);
   const prevBadges = new Set(s.earnedBadges || []);
   const mergedBadges = [...new Set([...prevBadges, ...earnedIds])];
@@ -2280,10 +2543,42 @@ function buyHint(hints, price, rubiesBonus) {
   s.coins -= price;
   s.rubies = (s.rubies || 0) - (rubiesBonus || 0);
   s.hints = (s.hints || 0) + hints;
+
+  // ===== NEW: track spending & pack purchases for x-series badges =====
+  s.totalCoinsSpent = (s.totalCoinsSpent || 0) + price;
+  s.totalRubiesSpent = (s.totalRubiesSpent || 0) + (rubiesBonus || 0);
+  if (price > 0) {
+    s.coinPurchaseCount = (s.coinPurchaseCount || 0) + 1;
+    s.maxSingleCoinSpend = Math.max(s.maxSingleCoinSpend || 0, price);
+  }
+  if ((rubiesBonus || 0) > 0) {
+    s.rubyPurchaseCount = (s.rubyPurchaseCount || 0) + 1;
+  }
+  // Pack type detection based on hints amount
+  if (hints === 1) s.hintPackSingleBought = (s.hintPackSingleBought || 0) + 1;
+  else if (hints === 10) s.hintPackStarterBought = (s.hintPackStarterBought || 0) + 1;
+  else if (hints === 20) s.hintPackProBought = (s.hintPackProBought || 0) + 1;
+  else if (hints === 50) s.hintPackMasterBought = (s.hintPackMasterBought || 0) + 1;
+
   updateHeaderStats();
   updateDashboard();
   updateShopUI();
   updateHintButton();
+
+  const earnedIds = checkBadges(s);
+  const prevBadges = new Set(s.earnedBadges || []);
+  s.earnedBadges = [...new Set([...prevBadges, ...earnedIds])];
+  const newBadges = earnedIds.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
+  for (const id of newBadges) {
+    const badge = ALL_BADGES.find(b => b.id === id);
+    if (badge) {
+      state._shownBadges.add(id);
+      setTimeout(() => showBadgeToast(badge), 500);
+    }
+  }
+  for (const id of s.earnedBadges) state._shownBadges.add(id);
+  updateBadges();
+
   showToast("Hints Purchased!", `${hints} hints added${rubiesBonus ? ` (${rubiesBonus} rubies spent)` : ""}.`, "fa-coins", "hint");
   saveStats();
 }
@@ -2296,9 +2591,32 @@ function buyCoins(coins, rubiesCost) {
   }
   s.rubies -= rubiesCost;
   s.coins += coins;
+
+  // ===== NEW: track spending & coin pack purchases for x-series badges =====
+  s.totalRubiesSpent = (s.totalRubiesSpent || 0) + rubiesCost;
+  s.rubyPurchaseCount = (s.rubyPurchaseCount || 0) + 1;
+  if (coins === 50) s.coinPackPocketBought = (s.coinPackPocketBought || 0) + 1;
+  else if (coins === 100) s.coinPackPileBought = (s.coinPackPileBought || 0) + 1;
+  else if (coins === 300) s.coinPackBagBought = (s.coinPackBagBought || 0) + 1;
+
   updateHeaderStats();
   updateDashboard();
   updateShopUI();
+
+  const earnedIds = checkBadges(s);
+  const prevBadges = new Set(s.earnedBadges || []);
+  s.earnedBadges = [...new Set([...prevBadges, ...earnedIds])];
+  const newBadges = earnedIds.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
+  for (const id of newBadges) {
+    const badge = ALL_BADGES.find(b => b.id === id);
+    if (badge) {
+      state._shownBadges.add(id);
+      setTimeout(() => showBadgeToast(badge), 500);
+    }
+  }
+  for (const id of s.earnedBadges) state._shownBadges.add(id);
+  updateBadges();
+
   showToast("Coins Purchased!", `+${coins} coins for ${rubiesCost} rubies.`, "fa-coins", "gain");
   saveStats();
 }
@@ -2367,14 +2685,12 @@ function updateBadges() {
   const grid = document.getElementById("badgesGrid");
   if (!grid) return;
 
-  // Restore expanded state from localStorage
   let expandedGroups = new Set();
   try {
     const stored = localStorage.getItem("badge_expanded_groups");
     if (stored) {
       expandedGroups = new Set(JSON.parse(stored));
     } else {
-      // Default expanded: first two groups
       expandedGroups = new Set(["leaderboard", "milestones"]);
     }
   } catch (e) {
@@ -2385,7 +2701,6 @@ function updateBadges() {
   let totalUnlocked = 0;
 
   for (const group of BADGE_GROUPS) {
-    // Resolve badge objects for this group
     const groupBadges = group.badgeIds
       .map((id) => ALL_BADGES.find((b) => b.id === id))
       .filter(Boolean);
@@ -2400,7 +2715,6 @@ function updateBadges() {
     groupEl.className = "badge-group" + (isExpanded ? " expanded" : "");
     groupEl.dataset.groupId = group.id;
 
-    // ----- Group Header -----
     const header = document.createElement("button");
     header.type = "button";
     header.className = "badge-group-header";
@@ -2424,7 +2738,6 @@ function updateBadges() {
     });
     groupEl.appendChild(header);
 
-    // ----- Group Body -----
     const body = document.createElement("div");
     body.className = "badge-group-body";
 
@@ -2455,7 +2768,6 @@ function updateBadges() {
     grid.appendChild(groupEl);
   }
 
-  // Count total unlocked across all badges
   const unlockedCount = ALL_BADGES.filter((b) => earnedIds.includes(b.id)).length;
   setText("badgeCount", `${unlockedCount} / ${ALL_BADGES.length}`);
 }
@@ -2692,7 +3004,6 @@ function renderLeaderboard() {
                 </tr>`;
   }).join("");
 
-  // ===== RANK CHECK FOR BELL NOTIFICATIONS =====
   if (currentEmail) {
     const userRank = sorted.findIndex((u) => u.email === currentEmail) + 1;
     if (userRank >= 1 && userRank <= 5 && auth.currentUser) {
@@ -2703,8 +3014,6 @@ function renderLeaderboard() {
     }
   }
 
-  // ===== LEADERBOARD BADGE CHECK =====
-  // Different rank thresholds per leaderboard type
   if (currentEmail) {
     const s = state.stats;
     const prevBadges = new Set(s.earnedBadges || []);
@@ -2712,19 +3021,10 @@ function renderLeaderboard() {
 
     const userRank = sorted.findIndex((e) => e.email === currentEmail) + 1;
 
-    // 👑 XP King → XP Leaderboard এ Top 3
     if (leaderboardSortKey === "xp" && userRank > 0 && userRank <= 3) newBadges.push("n1");
-
-    // 🏅 Points Pro → Points Leaderboard এ Top 3
     if (leaderboardSortKey === "points" && userRank > 0 && userRank <= 3) newBadges.push("n2");
-
-    // 🎯 Accuracy Ace → Accuracy Leaderboard এ Top 5
     if (leaderboardSortKey === "accuracy" && userRank > 0 && userRank <= 5) newBadges.push("n3");
-
-    // 🏆 Badge Collector → Badges Leaderboard এ Top 2
     if (leaderboardSortKey === "badges" && userRank > 0 && userRank <= 2) newBadges.push("n4");
-
-    // 🎖️ Top 10 Leaderboard
     if (userRank > 0 && userRank <= 10) newBadges.push("b51");
 
     newBadges = newBadges.filter((id) => !prevBadges.has(id) && !state._shownBadges.has(id));
@@ -2843,33 +3143,31 @@ function init() {
     showToast("Guest Mode", "Your progress is saved locally.", "fa-user", "gain");
   });
 
-  // Share button — copy link, award "Bring a Friend" and always save
+  // Share button — increments shared count each click
   document.getElementById("shareBtn").addEventListener("click", function () {
     const url = window.location.href;
 
     function awardShareBadge() {
-      if (!state.stats.shared) {
-        state.stats.shared = 1;
-        const earnedIds = checkBadges(state.stats);
-        const prevBadges = new Set(state.stats.earnedBadges || []);
-        const mergedBadges = [...new Set([...prevBadges, ...earnedIds])];
-        state.stats.earnedBadges = mergedBadges;
+      // ===== NEW: always increment shared count for x2 =====
+      state.stats.shared = (state.stats.shared || 0) + 1;
 
-        const newBadges = earnedIds.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
-        for (const id of newBadges) {
-          const badge = ALL_BADGES.find(b => b.id === id);
-          if (badge) {
-            state._shownBadges.add(id);
-            setTimeout(() => showBadgeToast(badge), 300);
-          }
+      const earnedIds = checkBadges(state.stats);
+      const prevBadges = new Set(state.stats.earnedBadges || []);
+      const mergedBadges = [...new Set([...prevBadges, ...earnedIds])];
+      state.stats.earnedBadges = mergedBadges;
+
+      const newBadges = earnedIds.filter(id => !prevBadges.has(id) && !state._shownBadges.has(id));
+      for (const id of newBadges) {
+        const badge = ALL_BADGES.find(b => b.id === id);
+        if (badge) {
+          state._shownBadges.add(id);
+          setTimeout(() => showBadgeToast(badge), 300);
         }
-        for (const id of mergedBadges) state._shownBadges.add(id);
-
-        updateBadges();
-        saveStats(); // Always save
-      } else {
-        showToast("Already Shared", "You already earned the Bring a Friend badge.", "fa-check-circle", "gain");
       }
+      for (const id of mergedBadges) state._shownBadges.add(id);
+
+      updateBadges();
+      saveStats();
     }
 
     function fallbackCopy() {
@@ -2925,12 +3223,11 @@ function init() {
     }
   });
 
-  // Javeda button — always save + localStorage backup (survives page navigation)
+  // Javeda button — always save + localStorage backup
   document.getElementById("learnJavedaBtn").addEventListener("click", function (e) {
     const s = state.stats;
     s.javedaClicks = (s.javedaClicks || 0) + 1;
 
-    // Backup to localStorage synchronously BEFORE navigation happens
     try {
       localStorage.setItem("javeda_clicks_backup", JSON.stringify({
         count: s.javedaClicks,
@@ -2958,7 +3255,7 @@ function init() {
     }
 
     updateBadges();
-    saveStats(); // ✅ Always call — even if no new badge
+    saveStats();
   });
 
   $$(".diff-btn").forEach((btn) => {
@@ -3353,7 +3650,6 @@ function init() {
   updateModeToggles();
   updateBoosterStatus();
 
-  // ===== INIT BELL NOTIFICATIONS =====
   if (auth.currentUser && typeof initBell === 'function') {
     const email = auth.currentUser.email;
     if (email) {
@@ -3362,20 +3658,17 @@ function init() {
     }
   }
 
-  // Restore javedaClicks from backup if navigation cut off the async save
   setTimeout(() => {
     try {
       const raw = localStorage.getItem("javeda_clicks_backup");
       if (!raw) return;
       const backup = JSON.parse(raw);
 
-      // Ignore if older than 5 minutes
       if (Date.now() - backup.time > 5 * 60 * 1000) {
         localStorage.removeItem("javeda_clicks_backup");
         return;
       }
 
-      // Only restore if it belongs to this user
       const currentUid = auth.currentUser ? auth.currentUser.uid : null;
       const sameUser =
         (backup.uid && currentUid && backup.uid === currentUid) ||
@@ -3394,7 +3687,7 @@ function init() {
     } catch (e) {}
   }, 2500);
 
-  console.log("📘 Version : 6.0.8 — Topic-wise collapsible badge groups added.");
+  console.log("📘 Version : 6.1.0 — x-series (38 new) badges added.");
   console.log("✅ Developed By - Faizul Islam Riyad");
 }
 
@@ -3420,5 +3713,3 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 document.addEventListener("DOMContentLoaded", init);
-
-// ei code er pore new badge add kora hoiche and line kome gese..
